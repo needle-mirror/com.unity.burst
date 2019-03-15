@@ -1,3 +1,3 @@
-2ee8a123ae4e9602e022a71ebbaa0cc7bcc6cd94
+27b5df631f60eb5d10c1b1c955a563a88a907603
 
 Repository: https://github.com/Unity-Technologies/burst
