@@ -39,9 +39,6 @@ namespace Unity.Burst
         {
             // We have added support for runtime CompileDelegate in 2018.2+
             void* function = Compile(delegateMethod);
-            if (function == null)
-                throw new InvalidOperationException($"Burst failed to compile the given delegate.");
-
             return new FunctionPointer<T>(new IntPtr(function));
         }
 

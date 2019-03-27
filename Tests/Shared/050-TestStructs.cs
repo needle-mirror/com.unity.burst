@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public partial class TestStructs
+    internal partial class TestStructs
     {
         [TestCompiler]
         public static float test_struct_func_call_by_value()

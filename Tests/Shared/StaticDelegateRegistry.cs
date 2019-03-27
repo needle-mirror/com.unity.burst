@@ -13,7 +13,7 @@ namespace Burst.Compiler.IL.Tests
     /// On .NET Framework and newer version of mono, we would not need this, so we are going to keep this code around until
     /// mono is entirely upgraded in Unity.
     /// </summary>
-    public static partial class StaticDelegateRegistry
+    internal static partial class StaticDelegateRegistry
     {
         private static readonly Dictionary<SignatureKey, StaticDelegateCallback> RegisteredDelegateTypes = new Dictionary<SignatureKey, StaticDelegateCallback>();
 
@@ -99,7 +99,7 @@ namespace Burst.Compiler.IL.Tests
 
     }
 
-    public struct StaticDelegateCallback
+    internal struct StaticDelegateCallback
     {
         public StaticDelegateCallback(Type delegateType, Func<object, object[], object> caller)
         {

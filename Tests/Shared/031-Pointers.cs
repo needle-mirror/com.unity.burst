@@ -10,7 +10,7 @@ using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public class Pointers
+    internal class Pointers
     {
 #if UNITY_2019_1_OR_NEWER
         [TestCompiler(1)]

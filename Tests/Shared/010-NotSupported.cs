@@ -7,7 +7,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Tests types
     /// </summary>
-    public class NotSupported
+    internal class NotSupported
     {
         [TestCompiler(1, ExpectCompilerException = true)]
         public static int TestDelegate(int data)

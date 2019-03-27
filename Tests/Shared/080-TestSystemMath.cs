@@ -7,7 +7,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Tests of the <see cref="System.Math"/> functions.
     /// </summary>
-    public class TestSystemMath
+    internal class TestSystemMath
     {
         // TODO: Make all these tests args more automatic and shared with ranges, inf, nan...etc.
 

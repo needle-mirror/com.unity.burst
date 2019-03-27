@@ -8,7 +8,7 @@ namespace Burst.Compiler.IL.Tests
     using System;
     using System.Runtime.InteropServices;
 
-    public static partial class StaticDelegateRegistry
+    internal static partial class StaticDelegateRegistry
     {
         static StaticDelegateRegistry()
         {
@@ -56,7 +56,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(byte),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble2Delegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble3Delegate);
-            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate);
+            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble4Delegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Doubles_Double4Int4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Doubles_Double4Int4Delegate);
             Register(typeof(double),  new Type[] {typeof(double), typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate);
             Register(typeof(double),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestUnityMath_TestSignDoubleDelegate), CallBurst_Compiler_IL_Tests_TestUnityMath_TestSignDoubleDelegate);
@@ -70,22 +70,22 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Select3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Select3Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Select4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Select4Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp2_2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp2_2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Cos2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Cos2Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp2Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Min2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Min2Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Saturate2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Saturate2Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp3_3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp3_3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_3Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp3Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Min3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Min3Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Indexers_Float3_get_IndexerByRefDelegate), CallBurst_Compiler_IL_Tests_Vectors_Indexers_Float3_get_IndexerByRefDelegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp4_4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp4_4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_4Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Lerp4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp4Delegate);
+            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Min4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Min4Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate), CallBurst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AsFloatInt2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AsFloatInt2Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AsFloatInt3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AsFloatInt3Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Constructors_Float4Int4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Constructors_Float4Int4Delegate);
             Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.uint4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AsFloatUInt4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AsFloatUInt4Delegate);
-            Register(typeof(float),  new Type[] {typeof(float), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_SmoothstepDelegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_SmoothstepDelegate);
+            Register(typeof(float),  new Type[] {typeof(float), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_LerpDelegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_LerpDelegate);
             Register(typeof(float),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate), CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate);
             Register(typeof(float),  new Type[] {typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate), CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate);
             Register(typeof(float),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate);
@@ -107,7 +107,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_HashCodes_Float2GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_Vectors_HashCodes_Float2GetHashCodeDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Equality_Float3EqualityDelegate), CallBurst_Compiler_IL_Tests_Vectors_Equality_Float3EqualityDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Equality_Float3EqualityWithFloatDelegate), CallBurst_Compiler_IL_Tests_Vectors_Equality_Float3EqualityWithFloatDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_HashCodes_Float3GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_Vectors_HashCodes_Float3GetHashCodeDelegate);
+            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Equality_Float4EqualityDelegate), CallBurst_Compiler_IL_Tests_Vectors_Equality_Float4EqualityDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_Equality_Float4EqualityWithFloatDelegate), CallBurst_Compiler_IL_Tests_Vectors_Equality_Float4EqualityWithFloatDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_HashCodes_Float4GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_Vectors_HashCodes_Float4GetHashCodeDelegate);
@@ -140,7 +140,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate);
             Register(typeof(int),  new Type[] {typeof(int).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate);
             Register(typeof(int),  new Type[] {typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ControlFlows_WhileDynamicDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_WhileDynamicDelegate);
-            Register(typeof(int),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BltDelegate), CallBurst_Compiler_IL_Tests_Expressions_BltDelegate);
+            Register(typeof(int),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_AddOverflowIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_AddOverflowIntDelegate);
             Register(typeof(int),  new Type[] {typeof(int*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate), CallBurst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate);
             Register(typeof(int),  new Type[] {typeof(long)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate);
             Register(typeof(int),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate);
@@ -170,7 +170,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(uint),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate);
             Register(typeof(uint),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate);
             Register(typeof(uint),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate);
-            Register(typeof(uint),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_BgtUnDelegate), CallBurst_Compiler_IL_Tests_Expressions_BgtUnDelegate);
+            Register(typeof(uint),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_AddOvfUnDelegate), CallBurst_Compiler_IL_Tests_Expressions_AddOvfUnDelegate);
             Register(typeof(uint),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate);
             Register(typeof(ulong),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate);
             Register(typeof(ulong),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate);
@@ -224,7 +224,6 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.TestJob).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3)}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate);
             Register(typeof(int),  new Type[] {typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate);
             Register(typeof(int),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate), CallBurst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate);
             Register(typeof(uint),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate);
@@ -234,6 +233,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate);
+            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.CopyJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate);
@@ -709,10 +709,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate(ref Unity.Mathematics.double4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate(object delegateObj, object[] p)
+        private delegate double Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble4Delegate(ref Unity.Mathematics.double4 arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble4Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble4Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.double4)p[0];
             result = d(ref arg0);
@@ -858,10 +858,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep2Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Lerp2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, float arg2);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp2Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep2Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Lerp2Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -870,10 +870,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_2Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Min2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Min2Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_2Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Min2Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -881,10 +881,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Cos2Delegate(ref Unity.Mathematics.float2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Cos2Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Saturate2Delegate(ref Unity.Mathematics.float2 arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Saturate2Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Cos2Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Saturate2Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             result = d(ref arg0);
@@ -903,10 +903,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep3Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Lerp3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, float arg2);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp3Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep3Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Lerp3Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -915,10 +915,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_3Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Min3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Min3Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_3Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Min3Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -948,10 +948,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Smoothstep4Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Lerp4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, float arg2);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Lerp4Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Smoothstep4Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Lerp4Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -960,10 +960,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_ATan2_4Delegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_Min4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_Min4Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_ATan2_4Delegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_Min4Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -1021,10 +1021,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_SmoothstepDelegate(float arg0, float arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_SmoothstepDelegate(object delegateObj, object[] p)
+        private delegate float Burst_Compiler_IL_Tests_Vectors_Maths_LerpDelegate(float arg0, float arg1, float arg2);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_Maths_LerpDelegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_SmoothstepDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Vectors_Maths_LerpDelegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             var arg1 = (float)p[1];
@@ -1249,10 +1249,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Vectors_HashCodes_Float3GetHashCodeDelegate(ref Unity.Mathematics.float3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_HashCodes_Float3GetHashCodeDelegate(object delegateObj, object[] p)
+        private delegate int Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(ref Unity.Mathematics.float3 arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Vectors_HashCodes_Float3GetHashCodeDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             result = d(ref arg0);
@@ -1607,10 +1607,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_BltDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BltDelegate(object delegateObj, object[] p)
+        private delegate int Burst_Compiler_IL_Tests_Expressions_AddOverflowIntDelegate(int arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_AddOverflowIntDelegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BltDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Expressions_AddOverflowIntDelegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
@@ -1912,10 +1912,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_BgtUnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BgtUnDelegate(object delegateObj, object[] p)
+        private delegate uint Burst_Compiler_IL_Tests_Expressions_AddOvfUnDelegate(uint arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_AddOvfUnDelegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BgtUnDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_Expressions_AddOvfUnDelegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
@@ -2440,16 +2440,6 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(Unity.Mathematics.float3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.float3)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, Burst.Compiler.IL.Tests.ABI.SmallStruct arg6);
         private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate(object delegateObj, object[] p)
         {
@@ -2543,6 +2533,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate(ref Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest)p[0];
             d(ref arg0);
             return result;
         }

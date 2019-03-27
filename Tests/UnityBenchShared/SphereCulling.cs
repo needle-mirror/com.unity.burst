@@ -1,12 +1,15 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
 
+[assembly: InternalsVisibleTo("Burst.Benchmarks")]
+
 namespace UnityBenchShared
 {
-    public struct Sphere
+    internal struct Sphere
     {
         private float x, y, z, r;
 
@@ -31,12 +34,12 @@ namespace UnityBenchShared
     /// <summary>
     /// TODO: Rename to SphereCollision instead? (as the code is more an intersection than a culling)
     /// </summary>
-    public static class SphereCulling
+    internal static class SphereCulling
     {
         public static int BenchCount = 256 * 1024 + 3;
     }
 
-    public interface IJob<T> : IJob
+    internal interface IJob<T> : IJob
     {
         T Result { get; set; }
     }
@@ -45,7 +48,7 @@ namespace UnityBenchShared
     /// <summary>
     /// Simple AOS with a Sphere struct using plain floats
     /// </summary>
-    public struct SphereCullingAOSJob : IJob<bool>, IDisposable
+    internal struct SphereCullingAOSJob : IJob<bool>, IDisposable
     {
         public Sphere Against;
 
@@ -104,7 +107,7 @@ namespace UnityBenchShared
     /// <summary>
     /// Simple AOS with a float4 for the struct and using
     /// </summary>
-    public struct SphereCullingFloat4AOSJob : IJob<bool>, IDisposable
+    internal struct SphereCullingFloat4AOSJob : IJob<bool>, IDisposable
     {
         public float4 Against;
 
@@ -170,7 +173,7 @@ namespace UnityBenchShared
     /// <summary>
     /// Simple SOA with 4 NativeArray for X,Y,Z,R
     /// </summary>
-    public struct SphereCullingSOAJob : IJob<bool>, IDisposable
+    internal struct SphereCullingSOAJob : IJob<bool>, IDisposable
     {
         [ReadOnly] public NativeArray<float> X;
         [ReadOnly] public NativeArray<float> Y;
@@ -247,7 +250,7 @@ namespace UnityBenchShared
     /// <summary>
     /// SOA with chunks of x,y,z,r using `float4`
     /// </summary>
-    public struct SphereCullingChunkSOAJob : IJob<bool>, IDisposable
+    internal struct SphereCullingChunkSOAJob : IJob<bool>, IDisposable
     {
         public struct Chunk
         {
@@ -333,7 +336,7 @@ namespace UnityBenchShared
     /// <summary>
     /// SOA with chunks of x,y,z,r using `fixed float x[4]`
     /// </summary>
-    public struct SphereCullingChunkFixedSOAJob : IJob<bool>, IDisposable
+    internal struct SphereCullingChunkFixedSOAJob : IJob<bool>, IDisposable
     {
         public unsafe struct Chunk
         {
@@ -417,7 +420,7 @@ namespace UnityBenchShared
 
     /// <summary>
     /// </summary>
-    public struct SphereCullingChunkSOAManualJob : IJob<bool>, IDisposable
+    internal struct SphereCullingChunkSOAManualJob : IJob<bool>, IDisposable
     {
         public struct Chunk
         {

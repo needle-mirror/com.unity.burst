@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests.Helpers
 {
-    public static class AssertHelper
+    internal static class AssertHelper
     {
         /// <summary>
         /// AreEqual handling specially precision for float

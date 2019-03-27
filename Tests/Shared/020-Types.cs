@@ -12,7 +12,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Tests types
     /// </summary>
-    public partial class Types
+    internal partial class Types
     {
         [TestCompiler]
         public static int Bool()

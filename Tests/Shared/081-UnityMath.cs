@@ -8,7 +8,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Tests a few single float functions for <see cref="Unity.Mathematics.math"/> functions.
     /// </summary>
-    public class TestUnityMath
+    internal class TestUnityMath
     {
         [TestCompiler(DataRange.Standard)]
         public static float TestCos(float value)

@@ -1,10 +1,13 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Jobs;
 
+[assembly: InternalsVisibleTo("Burst.Benchmarks")]
+
 namespace UnityBenchShared
 {
-    public struct SumNumbersTest : IJob, IDisposable
+    internal struct SumNumbersTest : IJob, IDisposable
     {
         public const int Count = 1000;
 

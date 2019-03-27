@@ -1,6 +1,10 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Burst.Benchmarks")]
+
 namespace UnityBenchShared
 {
-    public interface IArgumentProvider
+    internal interface IArgumentProvider
     {
         object Value { get; }
     }

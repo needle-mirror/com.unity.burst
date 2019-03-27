@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public class ControlFlows
+    internal class ControlFlows
     {
         [TestCompiler(ExpectCompilerException = true)]
         public static int TryCatch()

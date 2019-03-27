@@ -6,7 +6,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Tests of the <see cref="Interlocked"/> functions.
     /// </summary>
-    public class TestAtomics
+    internal class TestAtomics
     {
         [TestCompiler(1)]
         [TestCompiler(-1)]

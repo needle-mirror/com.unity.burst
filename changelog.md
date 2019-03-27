@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-preview.7] - 2019-03-28
+
+- Burst will now only generate debug information for AOT when targeting a Development Build.
+- Added support for locating the build tools (standalone) for generating AOT builds on windows, without having to install Visual Studio complete
+- Fix Log Timings was incorrectly being passed along to AOT builds, causing them to fail.
+- Fix editor crash if burst aborted compilation half way through (because editor was being closed)
+- Fix issue with job compilation that could be disabled when using the burst inspector
+- Fix issue with spaces in certain paths (e.g. ANDROID_NDK_ROOT) when building for AOT
+- Restore behavior of compiling ios projects from windows with burst, (burst does not support cross compiling for ios) - we still generate a valid output project, but with no burst code.
+- Add support for Android embedded NDK.
+- Fix issue where certain control flow involving object construction would crash the compiler in release mode
+
 ## [1.0.0-preview.6] - 2019-03-17
 
 - Fix invalid codegen with deep nested conditionals

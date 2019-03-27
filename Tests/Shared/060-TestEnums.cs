@@ -1,4 +1,3 @@
-﻿using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
@@ -6,7 +5,7 @@ namespace Burst.Compiler.IL.Tests
     /// <summary>
     /// Test with enums.
     /// </summary>
-    public partial class TestEnums
+    internal partial class TestEnums
     {
         [System.Flags]
         public enum MyEnum

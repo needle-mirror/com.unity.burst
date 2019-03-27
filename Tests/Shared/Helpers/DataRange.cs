@@ -8,7 +8,7 @@ using Unity.Mathematics;
 namespace Burst.Compiler.IL.Tests.Helpers
 {
     [Flags]
-    public enum DataRange
+    internal enum DataRange
     {
         // Standard Test (Zero, Minus100To100, Inf, Nan)
         Standard = Zero | Minus100To100 | Inf | NaN,
@@ -28,7 +28,7 @@ namespace Burst.Compiler.IL.Tests.Helpers
         NaN = 1 << 7,
     }
 
-    public static class DataRangeExtensions
+    internal static class DataRangeExtensions
     {
         private const int VectorsCount = 6;
 

@@ -4,7 +4,7 @@ using Unity.Mathematics;
 namespace Burst.Compiler.IL.Tests
 {
     [TestFixture]
-    public partial class Matrices
+    internal partial class Matrices
     {
         public class Statics
         {

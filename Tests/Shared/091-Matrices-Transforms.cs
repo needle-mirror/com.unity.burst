@@ -6,7 +6,7 @@ namespace Burst.Compiler.IL.Tests
     using Unity.Mathematics;
 
     [TestFixture]
-    public partial class Matrices
+    internal partial class Matrices
     {
         public class Transforms
         {

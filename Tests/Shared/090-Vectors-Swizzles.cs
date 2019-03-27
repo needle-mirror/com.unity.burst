@@ -1,10 +1,10 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
 {
     [TestFixture]
-    public partial class Vectors
+    internal partial class Vectors
     {
         public class Swizzles
         {

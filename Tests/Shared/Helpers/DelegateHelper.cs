@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Burst.Compiler.IL.Tests.Helpers
 {
-    public static class DelegateHelper
+    internal static class DelegateHelper
     {
         private static readonly Type[] _DelegateCtorSignature = new Type[2]
         {

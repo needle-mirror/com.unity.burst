@@ -6,7 +6,7 @@ namespace Burst.Compiler.IL.Tests.Helpers
 {
     // Only used to allow to call the delegate with a NativeArrayRaw
     // As we can't use a generic with pinvoke
-    public unsafe struct NativeArrayRaw : IDisposable
+    internal unsafe struct NativeArrayRaw : IDisposable
     {
         // MUST BE IN SYNC WITH NativeArray
         internal void* m_Buffer;

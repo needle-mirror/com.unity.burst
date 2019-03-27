@@ -17,7 +17,7 @@ using UnityEngine;
 namespace Burst.Compiler.IL.Tests
 {
 
-    public class TestCompilerAttribute : TestCompilerAttributeBase
+    internal class TestCompilerAttribute : TestCompilerAttributeBase
     {
 #pragma warning disable 0414
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();

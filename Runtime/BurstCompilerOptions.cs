@@ -87,6 +87,9 @@ namespace Unity.Burst
 
 #if !BURST_INTERNAL
 
+        private const string GlobalSettingsName = "global";
+        private static BurstCompilerOptions _global = null;
+
         public BurstCompilerOptions() : this(null)
         {
         }
@@ -99,7 +102,15 @@ namespace Unity.Burst
             EnableBurstSafetyChecks = true;
         }
 
-        public static readonly BurstCompilerOptions Global = new BurstCompilerOptions("global"); // naming used only for debugging
+        public static BurstCompilerOptions Global
+        {
+            get
+            {
+                // Make sure to late initialize the settings
+                return _global ?? (_global = new BurstCompilerOptions(GlobalSettingsName)); // naming used only for debugging
+            }
+        }
+
         private bool _enableEnhancedAssembly;
         private bool _disableOptimizations;
         private bool _enableFastMath;
@@ -118,11 +129,16 @@ namespace Unity.Burst
             {
                 bool changed = _enableBurstCompilation != value;
                _enableBurstCompilation = value;
-                // We need also to disable jobs as functions are being cached by the job system
-                // and when we ask for disabling burst, we are also asking the job system
-                // to no longer use the cached functions
-                JobsUtility.JobCompilerEnabled = value;
-               if (changed) OnOptionsChanged();
+
+                // Modify only JobsUtility.JobCompilerEnabled when modifying global settings
+                if (Name == GlobalSettingsName)
+               {
+                   // We need also to disable jobs as functions are being cached by the job system
+                   // and when we ask for disabling burst, we are also asking the job system
+                   // to no longer use the cached functions
+                   JobsUtility.JobCompilerEnabled = value;
+               }
+                if (changed) OnOptionsChanged();
             }
         }
 
@@ -257,7 +273,7 @@ namespace Unity.Burst
                 AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
             }
 
-            if (EnableEnhancedAssembly)
+            if (isJit && EnableEnhancedAssembly)
             {
                 AddOption(flagsBuilderOut, GetOption(OptionDebug));
             }
@@ -295,7 +311,7 @@ namespace Unity.Burst
                 AddOption(flagsBuilderOut, GetOption(OptionNoAlias));
             }
 
-            if (EnableBurstTimings)
+            if (isJit && EnableBurstTimings)
             {
                 AddOption(flagsBuilderOut, GetOption(OptionJitLogTimings));
             }

@@ -22,7 +22,7 @@ using ExecutionContext = NUnit.Framework.Internal.TestExecutionContext;
 namespace Burst.Compiler.IL.Tests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public abstract class TestCompilerAttributeBase : TestCaseAttribute, ITestBuilder, IWrapTestMethod
+    internal abstract class TestCompilerAttributeBase : TestCaseAttribute, ITestBuilder, IWrapTestMethod
     {
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
@@ -153,7 +153,7 @@ namespace Burst.Compiler.IL.Tests
         protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, Type expectedException, bool ExpectCompilerException);
     }
 
-    public abstract class TestCompilerCommandBase : TestCommand
+    internal abstract class TestCompilerCommandBase : TestCommand
     {
         protected readonly TestMethod _originalMethod;
         readonly Type _expectedException;

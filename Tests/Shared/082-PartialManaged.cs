@@ -12,7 +12,7 @@ namespace Burst.Compiler.IL.Tests
     /// Tests related to usage of partial managed objects (e.g loading null or storing null
     /// reference to a struct, typically used by NativeArray DisposeSentinel)
     /// </summary>
-    public class PartialManaged
+    internal class PartialManaged
     {
         [TestCompiler()]
         public static int TestWriteNullReference()

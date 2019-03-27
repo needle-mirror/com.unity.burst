@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public class TestConstArrays
+    internal class TestConstArrays
     {
         [TestCompiler()]
         public static int ReadFromIntArray()

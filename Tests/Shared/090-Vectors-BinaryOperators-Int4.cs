@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public partial class Vectors
+    internal partial class Vectors
     {
         [TestFixture]
         public partial class BinaryOperators

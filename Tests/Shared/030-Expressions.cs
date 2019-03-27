@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public partial class Expressions
+    internal partial class Expressions
     {
         [TestCompiler((uint)(1 << 20))]
         [TestCompiler((uint)(1 << 15))]

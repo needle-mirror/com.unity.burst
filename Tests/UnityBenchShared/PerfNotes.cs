@@ -1,18 +1,21 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+
+[assembly: InternalsVisibleTo("Burst.Benchmarks")]
 
 namespace UnityBenchShared
 {
     // These test cases are from the `doc/perf-notes.md` document
 
-    public static class PerfNotes
+    internal static class PerfNotes
     {
         public static int BenchArraySize = 20 * 1024;
     }
 
-    public struct PartialWrite : IJob, IDisposable
+    internal struct PartialWrite : IJob, IDisposable
     {
         [ReadOnly] public NativeArray<int> a;
         public NativeArray<int> b;
@@ -62,7 +65,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct PartialWriteWorkaround : IJob, IDisposable
+    internal struct PartialWriteWorkaround : IJob, IDisposable
     {
         [ReadOnly] public NativeArray<int> a;
         public NativeArray<int> b;
@@ -115,7 +118,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct IntToFloatPenalty : IJob, IDisposable
+    internal struct IntToFloatPenalty : IJob, IDisposable
     {
         [ReadOnly] public NativeArray<float> b;
 
@@ -152,7 +155,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct DivisionByScalar : IJob, IDisposable
+    internal struct DivisionByScalar : IJob, IDisposable
     {
         float divisor;
         [ReadOnly] public NativeArray<float> a;
@@ -198,7 +201,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct SquareRoot : IJob, IDisposable
+    internal struct SquareRoot : IJob, IDisposable
     {
         [ReadOnly] public NativeArray<float> a;
         public NativeArray<float> b;
@@ -243,7 +246,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct SquareRootRecip : IJob, IDisposable
+    internal struct SquareRootRecip : IJob, IDisposable
     {
         [ReadOnly] public NativeArray<float> a;
         public NativeArray<float> b;
@@ -287,7 +290,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct RedundantStore : IJob, IDisposable
+    internal struct RedundantStore : IJob, IDisposable
     {
         public int sum;
         public NativeArray<int> a;
@@ -329,7 +332,7 @@ namespace UnityBenchShared
         }
     }
 
-    public struct RedundantStoreWorkaround : IJob, IDisposable
+    internal struct RedundantStoreWorkaround : IJob, IDisposable
     {
         public int sum;
         public NativeArray<int> a;

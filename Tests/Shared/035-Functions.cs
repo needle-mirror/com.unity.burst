@@ -5,7 +5,7 @@ using Unity.Collections;
 
 namespace Burst.Compiler.IL.Tests
 {
-    public class Functions
+    internal class Functions
     {
         [TestCompiler]
         public static int CheckFunctionCall()
