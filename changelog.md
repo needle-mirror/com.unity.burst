@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.0-preview.8] - 2019-03-28
+
+- Fix for iOS symbol names growing too long, reduced footprint of function names via pretty printer and a hash
+
 ## [1.0.0-preview.7] - 2019-03-28
 
 - Burst will now only generate debug information for AOT when targeting a Development Build.
