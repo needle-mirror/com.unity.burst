@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0-preview.9] - 2019-04-03
+
+- Fix an auto-vectorizer issue not correctly detecting the safe usage of NativeArray access when performing in-place operations (e.g `nativeArray[i] += 121;`)
+- Add support for dynamic dispatch of functions based on CPU features available at runtime
+  - Fix issue when running SSE4 instructions on a pre-SSE4 CPU
+- Fix write access to `NativeArray<bool>`
+- Remove dependencies to C runtime for Windows/Linux build players (for lib_burst_generated.so/.dll)
+- Updated API documentation
+- Update User manual
+- Static link some libraries into the burst llvm wrapper to allow better support for some linux distros
+
 ## [1.0.0-preview.8] - 2019-03-28
 
 - Fix for iOS symbol names growing too long, reduced footprint of function names via pretty printer and a hash

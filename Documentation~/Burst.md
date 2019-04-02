@@ -62,32 +62,20 @@ public class MyBurst2Behavior : MonoBehaviour
 }
 ```
 
-By default within the Editor, Burst JIT compiles jobs asynchronously, but  the example above uses the option `CompileSynchronously = true` to make sure that the method is compiled on the first schedule. In general, you should use asynchronous compilation. See [`[BurstCompile]` options](#synchronous-compilation)
+By default (only within the Editor - See [AOT vs JIT](#just-in-time-jit-vs-ahead-of-time-aot-compilation)), Burst JIT compiles jobs asynchronously, but  the example above uses the option `CompileSynchronously = true` to make sure that the method is compiled on the first schedule. In general, you should use asynchronous compilation. See [`[BurstCompile]` options](#synchronous-compilation)
 
+<a name="jobs-burst-menu"></a>
 ## Jobs/Burst Menu
 
 The Burst package adds a few menu entries to the Jobs menu for controlling Burst behavior:
 
 ![Burst menu entries](images/burst-menu.png)
 
-- **Burst Inspector**: Opens the [Burst Inspector Window](#burst-inspector).
-- **Enable Burst Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked.
-- **Enable Burst Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
-- **Show Burst Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.
-
-## Burst AOT Settings
-
-When a project uses Ahead-of-Time (AOT) compilation, you can control Burst behavior using the **Burst AOT** Settings section of the **Project Settings** window. The AOT settings override the Burst settings on the **Jobs** menu when you make a standalone build of your project.
-
-![Burst AOT Settings](images/burst_aot_settings.png)
-
-- **Disable Optimizations**: Turns off Burst optimizations.
-- **Disable Safety Checks**: Turns off Burst safety checks.
-- **Disable Burst Compilation**: Turns off Burst entirely.
-
-You can set the Burst AOT settings as required for each of the supported platforms. The options are saved per platform as part of the project settings.
-
-**Note:** The Burst AOT Settings are available in Unity 2019.1+.
+- **Enable Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
+- **Enable Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked.
+- **Synchronous Compilation**: When checked, Burst will compile synchronously - See [`[BurstCompile]` options](#synchronous-compilation). Default is unchecked.
+- **Show Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.
+- **Open Inspector...**: Opens the [Burst Inspector Window](#burst-inspector).
 
 ## Burst Inspector
 
@@ -97,7 +85,7 @@ The inspector allows you to view all the Jobs that can be compiled, you can also
 
 ![Burst Inspector](images/burst-inspector.png)
 
-On the left pane of the window, **Compile Targets** provides a list of the Jobs in the project that Burst can compile. Note that the disabled Jobs in the list don't have the `[BurstCompile]` attribute.
+On the left pane of the window, **Compile Targets** provides an alphabetically sorted list of the Jobs in the project that Burst can compile. Note that the disabled Jobs in the list don't have the `[BurstCompile]` attribute.
 
 On the right pane, the window displays options for viewing the assembly and intermediate code for the selected compile target.
 
@@ -112,8 +100,8 @@ On the right pane, the window displays options for viewing the assembly and inte
    * **LLVM IR (Optimized)** provides a view on the internal LLVM IR after optimizations.
    * **LLVM IR Optimization Diagnostics** provides detailed LLVM diagnostics of the optimizations (i.e if they succeeded or failed).
 4. You can also turn on different options:
-   * The *Enhanced Disassembly* option inserts the source C# statements into the **Assembly** view, correlating the assembly code with the source file, line and statement.
-   * The *Safety Checks* option generates code that includes container access safety checks (e.g check if a job is writing to a native container that is readonly).
+   * The **Enhanced Disassembly** option inserts the source C# statements into the **Assembly** view, correlating the assembly code with the source file, line and statement.
+   * The **Safety Checks** option generates code that includes container access safety checks (e.g check if a job is writing to a native container that is readonly).
    * The **Optimizations** option allows the compiler to optimize the code.
    * The **Fast Math** option allows the compiler to collapse mathematical operations to be more efficient, at the expense of not respecting an exact mathematical correctness (See the [compiler relaxation option](#compiler-relaxation))
 
@@ -123,6 +111,15 @@ You can pass the following options to the Unity Editor on the command line to co
 
 - `--burst-disable-compilation` — turns Burst off.
 - `--burst-force-sync-compilation` — Burst always compiles synchronously. See [`[BurstCompile]` options](#synchronous-compilation).
+
+# Just-In-Time (JIT) vs Ahead-Of-Time (AOT) Compilation
+
+When working on your projects in the editor (play mode), burst works in a Just-In-Time (JIT) fashion. Burst will compile your code at the point that it is to be used. By default this is done asnychronously which means your code will be running under the default mono JIT until the compilation by burst has been completed.
+You can control this behaviour via [`[BurstCompile]` options](#synchronous-compilation).
+
+However when you build your project into a Standalone Player, burst will instead compile all the supported code Ahead-Of-Time (AOT). AOT compilation at present, requires access to some linker tools for the respective platforms (similar to the requirements of IL2CPP). See [Burst AOT Requirements](#burst-aot-requirements).
+
+See [Standalone Player Support](#standalone-player-support).
 
 # C#/.NET Language Support
 
@@ -443,49 +440,99 @@ Also, many functions from the `math` type are also mapped directly to hardware S
 
 # Standalone Player support
 
-The Burst compiler supports standalone players.
+The Burst compiler supports standalone players - see [Burst AOT Requirements](#burst-aot-requirements)
 
 ## Usage
 
-When building a player, Burst compiles a single dynamic library for all the Burst jobs in your game. Burst saves the dynamic library it compiles to a folder named according to the platfom (on Windows, it is in the path `Data/Plugins/lib_burst_generated.dll`)
+With the exception of iOS, when burst compiles code for the standalone player, it will create a single dynamic library and place it into the standard plugins folder for that particular player type. e.g. on Windows, it is in the path `Data/Plugins/lib_burst_generated.dll`<br/>
+This library is loaded by the Job system runtime the first time a burst compiled method is invoked.
 
-This library is loaded by the Job system runtime on the first job compiled by Burst.
+For iOS, static libraries are generated instead, due to requirements for submitting to Test Flight.
 
-The settings to enable the compilation are controlled by the Project Burst AOT Settings, which override the Burst settings on the **Jobs** menu.
+Prior to Unity 2019.1, the settings for AOT compilation are shared with the [Jobs Menu](#jobs-burst-menu).<br/>
+In later Unity versions (2019.1 and beyond), the settings for AOT compilation are configured via [Burst AOT Settings](#burst-aot-settings).
 
-## Supported platforms
+## Burst AOT Settings
 
-Burst supports the following platforms for standalone players:
+When a project uses AOT compilation, you can control Burst behavior using the **Burst AOT** Settings section of the **Project Settings** window. The AOT settings override the Burst settings on the **Jobs** menu when you make a standalone build of your project.
 
-- Windows
-  - Requires Visual Studio build tools and Windows 10 SDK
-- MacOS
-  - Requires Xcode
-- Linux
-  - Requires clang or gcc plus
-- Xbox One
-  - Requires native tool chains (as required for Unity IL2CPP builds)
-- PS4 
-  - Requires native tool chains (as required for Unity IL2CPP builds)
-  - Minimum PS4 SDK for Burst support is 5.5.0
-- Android (ARM v7 and v8+) 
-  - Minimum NDK for Burst support is 13
-  - ANDROID_NDK_ROOT environment variable must be set
-- iOS (ARM v7 and v8+)
-  - Requires Unity 2018.3.6f1+ or Unity 2019.1.0b4+
-  - Xcode
-- UWP 
-  - Requires Visual Studio 2017 with Universal Windows Platform Development Workload
-  - C++ Universal Windows Platform Tools
+![Burst AOT Settings](images/burst_aot_settings.png)
+
+- **Disable Optimizations**: Turns off Burst optimizations.
+- **Disable Safety Checks**: Turns off Burst safety checks.
+- **Disable Burst Compilation**: Turns off Burst entirely.
+
+You can set the Burst AOT settings as required for each of the supported platforms. The options are saved per platform as part of the project settings.
+
+**Note:** The Burst AOT Settings are available in Unity 2019.1+.
+
+## Burst AOT Requirements
+
+Burst compilation requires specific platform compilation tools (similar to IL2CPP), the below table can be used to determine the current level of support for AOT compilation.
+- If a host/target combination is not listed, it is at present not supported for burst compilation.
+- If a target is not valid (missing tools/unsupported), burst compilation will not be used (may fail), but the target will still be built without burst optimisations.
+
+<br/>
+<table>
+  <tr>
+    <th>Host Editor Platform</th>
+    <th>Target Player Platform</th>
+    <th>External Toolchain Requirements</th>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>Windows</td>
+    <td>Visual Studio (can be installed via Add Component in Unity Install), or C++ Build Tools for Visual Studio.<br/>Windows 10 SDK</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>Universal Windows Platform</td>
+    <td>Visual Studio 2017<br/>Universal Windows Platform Development Workflow<br/>C++ Universal Platform Tools</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>Android</td>
+    <td>Android NDK 13 or higher - It is preferred to use the one installed by unity (via Add Component).<br/>Will fall back to the one specified by ANDROID_NDK_ROOT environment variable if the unity external tools settings are not configured.</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>Xbox One</td>
+    <td>Visual Studio 2015<br/>Microsoft XDK</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>PS4</td>
+    <td>Minimum PS4 SDK version 5.0.0</td>
+  </tr>
+  <tr>
+    <td>macOS</td>
+    <td>macOS</td>
+    <td>Xcode with command line tools installed (xcode-select --install)</td>
+  </tr>
+  <tr>
+    <td>macOS</td>
+    <td>iOS</td>
+    <td>Xcode with command line tools installed (xcode-select --install)<br/>Requires Unity 2018.3.6f1+ or Unity 2019.1.0b4 or later</td>
+  </tr>
+  <tr>
+    <td>macOS</td>
+    <td>Android</td>
+    <td>Android NDK 13 or higher - It is preferred to use the one installed by unity (via Add Component).<br/>Will fall back to the one specified by ANDROID_NDK_ROOT environment variable if the unity external tools settings are not configured.</td>
+  </tr>
+  <tr>
+    <td>Linux</td>
+    <td>Linux</td>
+    <td>Clang or Gcc tool chains.</td>
+  </tr>
+</table>
 
 **Notes:**
 
 - Burst does not support cross-compilation between Windows, Mac, or Linux.
-- The UWP build always builds all platform binaries (X86, X64, ARMv7 and ARMv8).
- 
+- The UWP build will always compile all four targets (X86, X64, ARMv7 and ARMv8).
+
 ## Known issues
 
-- Accuracy/Precision are currently not supported 
 - The target CPU is currently hardcoded per platform (e.g SSE4 for Windows 64 bits)
 
 These known issues will be resolved in a future release of Burst.

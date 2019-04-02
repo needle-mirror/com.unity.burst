@@ -336,9 +336,14 @@ namespace Burst.Compiler.IL.Tests
         [TestCompiler(5)]
         public static int CallRecursive(int n)
         {
+            return InternalCallRecursive(n);
+        }
+
+        private static int InternalCallRecursive(int n)
+        {
             if (n <= 1)
                 return 1;
-            return n * CallRecursive(n - 1);
+            return n * InternalCallRecursive(n - 1);
         }
 
         [TestCompiler(3f, 8f)]
