@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0-preview.10] - 2019-04-05
+
+- Update known issues in the user manual
+- Improve user manual documentation about debugging, `[BurstDiscard]` attribute, CPU architectures supported...
+- Fix an issue where burst callbacks could be sent to the editor during shutdowns, causing an editor crash.
+- Improve error messages for external tool chains when building for AOT
+
 ## [1.0.0-preview.9] - 2019-04-03
 
 - Fix an auto-vectorizer issue not correctly detecting the safe usage of NativeArray access when performing in-place operations (e.g `nativeArray[i] += 121;`)

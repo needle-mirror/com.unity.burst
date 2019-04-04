@@ -77,6 +77,18 @@ namespace Unity.Burst
             // so that CompileFunctionPointer actually returns a delegate in all cases
             return function == null ? (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod) : function;
         }
+        /// <summary>
+        /// Lets the compiler service know we are shutting down, called by the event EditorApplication.quitting
+        /// </summary>
+        internal static void Shutdown()
+        {
+            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod("ShutdownMethod"), "$shutdown");
+        }
+
+        /// <summary>
+        /// Dummy empty method for Shutdown purposes
+        /// </summary>
+        private static void ShutdownMethod() { }
     }
 }
 #endif

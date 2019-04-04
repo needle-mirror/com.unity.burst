@@ -105,6 +105,8 @@ On the right pane, the window displays options for viewing the assembly and inte
    * The **Optimizations** option allows the compiler to optimize the code.
    * The **Fast Math** option allows the compiler to collapse mathematical operations to be more efficient, at the expense of not respecting an exact mathematical correctness (See the [compiler relaxation option](#compiler-relaxation))
 
+> NOTE: While the inspector can disassemble for `AVX`, `AVX2`, `AVX512` CPU architectures, these architectures are currently not supported by Burst at runtime. They will fallback to `SSE4`
+
 ## Command-line Options
 
 You can pass the following options to the Unity Editor on the command line to control Burst:
@@ -134,7 +136,6 @@ The following sections gives more details about the constructs actually supporte
 Burst supports the following primitive types:
 
 - `bool`
-- `char`
 - `sbyte`/`byte`
 - `short`/`ushort`
 - `int`/`uint`
@@ -144,6 +145,7 @@ Burst supports the following primitive types:
 
 Burst does not support the following types:
 
+- `char` (this will be supported in a future release)
 - `string` as this is a managed type
 - `decimal`
 
@@ -189,9 +191,32 @@ Specifically, it supports full instantiation of generic calls for generic types 
 
 Managed arrays are not supported by Burst. You should use instead a native container, `NativeArray<T>` for instance.
 
+Burst supports reading from readonly managed arrays loaded only from static readonly fields:
+
+```c#
+[BurstCompile]
+public struct MyJob : IJob {
+    private static readonly int[] _preComputeTable = new int[] {1,2,3,4};
+
+    public int Index {get; set;}
+
+    public void Execute()
+    {
+        int x = _preComputeTable[0];
+        int z = _preComputeTable[Index];
+    }
+}
+```
+
+Accessing a static readonly managed array has with the following restrictions:
+
+- It is not allowed to pass this static managed array around (e.g method argument), you have to use it directly
+- Elements of a readonly static managed arrays should not be modified by a C# code external to jobs, as the Burst compiler is making a readonly copy of the data at compilation time
+- Array of structs are also supported at the condition that the struct constructor doesn't have any control flow (e.g `if`/`else`) or is throwing an exception
+
 ## Language Support
 
-Burst supports the following code flows and syntaxes:
+Burst supports most of the expressions and statements:
 
 - Regular C# control flows:
   - `if`/`else`/`switch`/`case`/`for`/`while`/`break`/`continue`
@@ -199,19 +224,19 @@ Burst supports the following code flows and syntaxes:
 - Unsafe code, pointers manipulation...etc.
 - Instance methods of structs
 - By ref/out parameters
-- Calling an icall/internal function
+- DllImport and internal calls
 - Limited support for `throw` expressions, assuming simple throw patterns (e.g `throw new ArgumentException("Invalid argument")`). In that case, we will try to extract the static string exception message to include it in the generated code.
 - Some special IL opcodes like `cpblk`, `initblk`, `sizeof`
 - Loading from static readonly fields
 
 Burst does not support:
 
-- DllImport or `calli` (This should be supported in a future version) 
+- The `calli` instruction (This should be supported in a future version) 
 - `catch`
 - `try`/`finally` (which will come at some point)
 - `foreach` as it is requiring `try`/`finally` (This should be supported in a future version)
-- Loading from non readonly static fields or storing to static fields 
-- Any methods related to managed objects (e.g array access...etc.)
+- Storing to static fields
+- Any methods related to managed objects (e.g string methods...etc.)
 
 ### Intrinsics
 
@@ -237,6 +262,66 @@ Burst supports intrinsics with `noalias` only for the following `NativeArray<T>`
 - `T this[int index] { get; set; }`
 
 Any usage of other members will disable `noalias` optimizations automatically.
+
+# Debugging
+
+> NOTE: Burst does not provide currently a dedicated debugger for Burst compiled Jobs. 
+>
+> If you need to debug a job, you will need to disable the Burst compiler or comment the `[BurstCompile]` attribute from your job and attach a **regular .NET managed debugger**
+
+# Advanced usages
+
+## BurstDiscard attribute
+
+When running some code in the full C# (not inside a Burst compiled code), you may want to use some managed objects but you would like to not compile these portion of code when compiling within Burst.
+
+To mitigate this, you can use the `[BurstDiscard]` attribute on a method:
+
+```c#
+[BurstCompile]
+public struct MyJob : IJob {
+    
+    public void Execute()
+    {
+        // Only executed when running from a full .NET runtime
+        // this method call will be discard when compiling this job with
+        // [BurstCompile] attribute
+        MethodToDiscard();
+    }
+
+    [BurstDiscard]
+    private static void MethodToDiscard(int arg)
+    {
+        Debug.Log($"This is a test: {arg});
+    }
+}
+```
+
+> A method with `[BurstDiscard]` cannot have a return value or an `ref/out` parameter
+
+## Synchronous compilation
+
+By default, the Burst compiler in the editor will compile the jobs asynchronously.
+
+You can change this behavior by setting `CompileSynchronously = true` for the `[BurstCompile]` attribute:
+
+```c#
+[BurstCompile(CompileSynchronously = true)]
+public struct MyJob : IJob
+{
+    // ...
+}
+```
+
+## Dynamic dispatch based on runtime CPU features 
+
+For all `x86`/`x64` CPU desktop platforms, Burst will dispatch jobs to different version compiled by taking into account CPU features available at runtime. 
+
+Currently for for `x86` and `x64` CPU, Burst is supporting at runtime only `SSE2` and `SSE4` instruction sets. 
+
+For example, with dynamic CPU dispatch, if your CPU is supports `SSE3` and below, Burst will select `SSE2` automatically.
+
+See the table in the section [Burst AOT Requirements](#burst-aot-requirements) for more details about the supported CPU architectures.
 
 # Optimization Guidelines
 
@@ -372,23 +457,37 @@ The accuracy is defined by the following enumeration:
 ``` c#
     public enum FloatPrecision
     {
-        Standard,
-        Low,
-        Med,
-        High,
+        /// <summary>
+        /// Use the default target floating point precision - <see cref="FloatPrecision.Medium"/>.
+        /// </summary>
+        Standard = 0,
+        /// <summary>
+        /// Compute with an accuracy of 1 ULP - highly accurate, but increased runtime as a result, should not be required for most purposes.
+        /// </summary>
+        High = 1,
+        /// <summary>
+        /// Compute with an accuracy of 3.5 ULP - considered acceptable accuracy for most tasks.
+        /// </summary>
+        Medium = 2,
+        /// <summary>
+        /// Reserved for future.
+        /// </summary>
+        Low = 3,
     }
 ```
 
 Currently, the implementation is only providing the following accuracy:
 
-- `Std` is providing an accuracy of 1 ULP. This is the **default value**.
-- `High`, `Med`, `Low` are providing an accuracy of 3.5 ULP
+- `FloatPrecision.Standard` is equivalent to `FloatPrecision.Medium` providing an accuracy of 3.5 ULP. This is the **default value**.
+- `FloatPrecision.High` is providing an accuracy of 1.0 ULP
+- `FloatPrecision.Medium` is providing an accuracy of 3.5 ULP
+- `FloatPrecision.Low` has currently the same accuracy than `Medium` but it will provide lower accuracy in the future
 
-Using the `High` accuracy should be largely enough for most games.
+Using the `FloatPrecision.Standard` accuracy should be largely enough for most games.
 
 An ULP (unit in the last place or unit of least precision) is the spacing between floating-point numbers, i.e., the value the least significant digit represents if it is 1.
 
-> We expect to support more ULP accuracy for `Med` and `Low` in a future version of Burst
+> We expect to support more ULP accuracy for `FloatPrecision.Low` for a future version of Burst
 
 Note: The `FloatPrecision` Enum was named `Accuracy` in early versions of the Burst API.
 
@@ -397,38 +496,42 @@ Note: The `FloatPrecision` Enum was named `Accuracy` in early versions of the Bu
 The compiler floating point math mode is defined by the following enumeration:
 
 ```c#
+    /// <summary>
+    /// Represents the floating point optimization mode for compilation.
+    /// </summary>
     public enum FloatMode
     {
-        Default,
-        Deterministic,
-        Fast,
-        Strict
+        /// <summary>
+        /// Use the default target floating point mode - <see cref="FloatMode.Strict"/>.
+        /// </summary>
+        Default = 0,
+        /// <summary>
+        /// No floating point optimizations are performed.
+        /// </summary>
+        Strict = 1,
+        /// <summary>
+        /// Reserved for future.
+        /// </summary>
+        Deterministic = 2,
+        /// <summary>
+        /// Allows algebraically equivalent optimizations (which can alter the results of calculations), it implies :
+        /// <para/> optimizations can assume results and arguments contain no NaNs or +/- Infinity and treat sign of zero as insignificant.
+        /// <para/> optimizations can use reciprocals - 1/x * y  , instead of  y/x.
+        /// <para/> optimizations can use fused instructions, e.g. madd.
+        /// </summary>
+        Fast = 3,
     }
 ```
 
-- Strict: The compiler is not performing any re-arrangement of the calculation and will be careful at respecting special floating point values (denormals, NaN...). This is the **default value**.
-- Fast: The compiler can perform instructions re-arrangement and/or using dedicated/less precise hardware SIMD instructions.
-- Deterministic: (Preview) Uses deterministic math functions which guarantee that the same inputs always produce the same outputs.
+- `FloatMode.Default` is defaulting to `FloatMode.Strict`
+- `FloatMode.Strict`: The compiler is not performing any re-arrangement of the calculation and will be careful at respecting special floating point values (denormals, NaN...). This is the **default value**.
+- `FloatMode.Fast`: The compiler can perform instructions re-arrangement and/or using dedicated/less precise hardware SIMD instructions.
+- `FloatMode.Deterministic`: Reserved for future, when Burst will provide support for deterministic mode
 
 Typically, some hardware can support Multiply and Add (e.g mad `a * b + c`) into a single instruction. Using the Fast calculation can allow these optimizations.
 The reordering of these instructions can lead to a lower accuracy.
 
-Using the `Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
-
-<a name="synchronous-compilation"></a>
-### Synchronous compilation
-
-By default, the Burst compiler in the editor will compile the jobs asynchronously.
-
-You can change this behavior by setting `CompileSynchronously = true` for the `[BurstCompile]` attribute:
-
-```c#
-[BurstCompile(CompileSynchronously = true)]
-public struct MyJob : IJob
-{
-    // ...
-}
-```
+Using the `FloatMode.Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
 
 ## `Unity.Mathematics`
 
@@ -477,51 +580,61 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
   <tr>
     <th>Host Editor Platform</th>
     <th>Target Player Platform</th>
+    <th>Supported CPU Architectures</th>
     <th>External Toolchain Requirements</th>
   </tr>
   <tr>
     <td>Windows</td>
     <td>Windows</td>
+    <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code></td>
     <td>Visual Studio (can be installed via Add Component in Unity Install), or C++ Build Tools for Visual Studio.<br/>Windows 10 SDK</td>
   </tr>
   <tr>
     <td>Windows</td>
     <td>Universal Windows Platform</td>
+    <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code>, <code>ARM32 Thumb2/Neon32</code>, <code>ARMV8 AARCH64</code></td>
     <td>Visual Studio 2017<br/>Universal Windows Platform Development Workflow<br/>C++ Universal Platform Tools</td>
   </tr>
   <tr>
     <td>Windows</td>
     <td>Android</td>
+    <td><code>x86 SSE2</code>, <code>ARM32 Thumb2/Neon32</code>, <code>ARMV8 AARCH64</code></td>
     <td>Android NDK 13 or higher - It is preferred to use the one installed by unity (via Add Component).<br/>Will fall back to the one specified by ANDROID_NDK_ROOT environment variable if the unity external tools settings are not configured.</td>
   </tr>
   <tr>
     <td>Windows</td>
     <td>Xbox One</td>
+    <td><code>x64 SSE4</code></td>
     <td>Visual Studio 2015<br/>Microsoft XDK</td>
   </tr>
   <tr>
     <td>Windows</td>
     <td>PS4</td>
+    <td><code>x64 SSE4</code></td>
     <td>Minimum PS4 SDK version 5.0.0</td>
   </tr>
   <tr>
     <td>macOS</td>
     <td>macOS</td>
+    <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code></td>
     <td>Xcode with command line tools installed (xcode-select --install)</td>
   </tr>
   <tr>
     <td>macOS</td>
     <td>iOS</td>
+    <td><code>ARM32 Thumb2/Neon32</code>, <code>ARMV8 AARCH64</code></td>
     <td>Xcode with command line tools installed (xcode-select --install)<br/>Requires Unity 2018.3.6f1+ or Unity 2019.1.0b4 or later</td>
   </tr>
   <tr>
     <td>macOS</td>
     <td>Android</td>
+    <td><code>x86 SSE2</code>, <code>ARM32 Thumb2/Neon32</code>, <code>ARMV8 AARCH64</code></td>
     <td>Android NDK 13 or higher - It is preferred to use the one installed by unity (via Add Component).<br/>Will fall back to the one specified by ANDROID_NDK_ROOT environment variable if the unity external tools settings are not configured.</td>
   </tr>
   <tr>
     <td>Linux</td>
     <td>Linux</td>
+    <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code></td>
     <td>Clang or Gcc tool chains.</td>
   </tr>
 </table>
@@ -533,6 +646,10 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
 
 ## Known issues
 
-- The target CPU is currently hardcoded per platform (e.g SSE4 for Windows 64 bits)
+- The maximum target CPU is currently hardcoded per platform (e.g `X64_SSE4` for Windows 64 bits), see the table above.
+- Building IOS standalone player from windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
+- Building Android standalone playre from linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
+- Mathematical functions for `double2`, `double3`, `double4` are currently not optimized and using the slower scalar version
+- When building a first time a player with Burst, and after disabling Burst, rebuilding a player, the previous generated Burst shared library is not removed and will be loaded. The file has to be removed manually (A fix will come before stable 1.0)
 
 These known issues will be resolved in a future release of Burst.

@@ -84,6 +84,7 @@ namespace Unity.Burst
         public const string OptionAotKeepIntermediateFiles = "keep-intermediate-files";
         public const string OptionAotNoLink = "nolink";
         public const string OptionVerbose = "verbose";
+        public const string OptionValidateExternalToolChain = "validate-external-tool-chain";
 
 #if !BURST_INTERNAL
 

@@ -34,6 +34,8 @@ namespace Unity.Burst.Editor
             BurstEditorOptions.EnsureSynchronized();
 
             BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMember);
+
+            EditorApplication.quitting += BurstCompiler.Shutdown;
         }
 
         private static bool TryGetOptionsFromMember(MemberInfo member, out string flagsOut)
