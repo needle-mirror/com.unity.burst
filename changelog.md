@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.0-preview.12] - 2019-04-09
+
+- Fix crash when accessing a NativeArray and performing in-place operations (e.g `nativeArray[i] += 121;`)
+
+## [1.0.0-preview.11] - 2019-04-08
+
+- Improve error logging for builder player with burst
+- Fix NullReferenceException when storing to a field which is a generic type
+
 ## [1.0.0-preview.10] - 2019-04-05
 
 - Update known issues in the user manual

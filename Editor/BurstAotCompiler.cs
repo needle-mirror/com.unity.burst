@@ -2,37 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Unity.Burst.LowLevel;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Compilation;
-using UnityEditor.Scripting.Compilers;
 using UnityEditor.Callbacks;
-using UnityEditorInternal;
+using UnityEditor.Compilation;
+using UnityEditor.Scripting;
+using UnityEditor.Scripting.Compilers;
+using UnityEditor.Utils;
 using UnityEngine;
+using CompilerMessageType = UnityEditor.Scripting.Compilers.CompilerMessageType;
+using Debug = UnityEngine.Debug;
 
 namespace Unity.Burst.Editor
 {
     using static BurstCompilerOptions;
-
-    internal class BclParser : CompilerOutputParserBase
-    {
-        private static Regex sNeverMatch = new Regex(@"^\b$", RegexOptions.ExplicitCapture | RegexOptions.Compiled);
-
-        protected override string GetErrorIdentifier()
-        {
-            return "";
-        }
-
-        protected override Regex GetOutputRegex()
-        {
-            return sNeverMatch;
-        }
-    }
 
     internal class StaticPostProcessor
     {
@@ -132,7 +122,21 @@ extern ""C""
         private const string TempStagingPlugins = @"Data/Plugins/";
 
         int IOrderedCallback.callbackOrder => 0;
+
         public void OnPostBuildPlayerScriptDLLs(BuildReport report)
+        {
+            var step = report.BeginBuildStep("burst");
+            try
+            {
+                OnPostBuildPlayerScriptDLLsImpl(report);
+            }
+            finally
+            {
+                report.EndBuildStep(step);
+            }
+        }
+
+        private void OnPostBuildPlayerScriptDLLsImpl(BuildReport report)
         {
             BurstPlatformAotSettings aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(report.summary.platform);
 
@@ -397,11 +401,16 @@ extern ""C""
                     {
                         generatedDebugInformationInOutput = GetOption(OptionDebug);
                     }
-                    Runner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable), $"{generatedDebugInformationInOutput} @{responseFile}", Application.dataPath + "/..", new BclParser(), null);
+
+                    BclRunner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable),
+                        $"{generatedDebugInformationInOutput} @{responseFile}",
+                        new BclOutputErrorParser(),
+                        report);
                 }
                 catch (Exception e)
                 {
-	                Debug.LogError(e.ToString());
+                    // We don't expect any error, but in case we have one, we identify that it is burst and we print the details here
+	                Debug.LogError("Unexpected error while running the burst compiler: " + e);
                 }
             }
         }
@@ -502,6 +511,246 @@ extern ""C""
             }
         }
 
+
+        private class BclRunner
+        {
+            private static readonly Regex MatchVersion = new Regex(@"com.unity.burst@(\d+.*?)[\\/]");
+
+            public static void RunManagedProgram(string exe, string args, CompilerOutputParserBase parser, BuildReport report)
+            {
+                RunManagedProgram(exe, args, Application.dataPath + "/..", parser, report);
+            }
+
+            private static void RunManagedProgram(
+              string exe,
+              string args,
+              string workingDirectory,
+              CompilerOutputParserBase parser,
+              BuildReport report)
+            {
+                Program p;
+                if (Application.platform == RuntimePlatform.WindowsEditor)
+                {
+                    ProcessStartInfo si = new ProcessStartInfo()
+                    {
+                        Arguments = args,
+                        CreateNoWindow = true,
+                        FileName = exe
+                    };
+                    p = new Program(si);
+                }
+                else
+                {
+                    p = (Program) new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), (string) null, exe, args, false, null);
+                }
+
+                RunProgram(p, exe, args, workingDirectory, parser, report);
+            }
+
+            private static void RunProgram(
+              Program p,
+              string exe,
+              string args,
+              string workingDirectory,
+              CompilerOutputParserBase parser,
+              BuildReport report)
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                using (p)
+                {
+                    p.GetProcessStartInfo().WorkingDirectory = workingDirectory;
+                    p.Start();
+                    p.WaitForExit();
+                    stopwatch.Stop();
+
+                    Console.WriteLine("{0} exited after {1} ms.", (object)exe, (object)stopwatch.ElapsedMilliseconds);
+                    IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage> compilerMessages = null;
+                    string[] errorOutput = p.GetErrorOutput();
+                    string[] standardOutput = p.GetStandardOutput();
+                    if (parser != null)
+                    {
+                        compilerMessages = parser.Parse(errorOutput, standardOutput, true, "n/a (burst)");
+                    }
+
+                    var errorMessageBuilder = new StringBuilder();
+                    if (p.ExitCode != 0)
+                    {
+                        if (compilerMessages != null)
+                        {
+                            foreach (UnityEditor.Scripting.Compilers.CompilerMessage compilerMessage in compilerMessages)
+                            {
+                                Debug.LogPlayerBuildError(compilerMessage.message, compilerMessage.file, compilerMessage.line, compilerMessage.column);
+                            }
+                        }
+
+                        // We try to output the version in the heading error if we can
+                        var matchVersion = MatchVersion.Match(exe);
+                        errorMessageBuilder.Append(matchVersion.Success ?
+                            "Burst compiler (" + matchVersion.Groups[1].Value + ") failed running" :
+                            "Burst compiler failed running");
+                        errorMessageBuilder.AppendLine();
+                        errorMessageBuilder.AppendLine();
+                        // Don't output the path if we are not burst-debugging or the exe exist
+                        if (BurstLoader.IsDebugging || !File.Exists(exe))
+                        {
+                            errorMessageBuilder.Append(exe).Append(" ").Append(args);
+                            errorMessageBuilder.AppendLine();
+                            errorMessageBuilder.AppendLine();
+                        }
+
+                        errorMessageBuilder.AppendLine("stdout:");
+                        foreach (string str in standardOutput)
+                            errorMessageBuilder.AppendLine(str);
+                        errorMessageBuilder.AppendLine("stderr:");
+                        foreach (string str in errorOutput)
+                            errorMessageBuilder.AppendLine(str);
+
+                        // We don't use Debug.LogError as it displays a stacktrace that we really don't want to pollute our message output
+                        //report.AddMessage(LogType.Error, errorMessageBuilder.ToString());
+                        Debug.LogPlayerBuildError(errorMessageBuilder.ToString(), "unknown", 0, 0);
+
+                        // We report the error to the build player but it seems that it is not correctly reported.
+                        // In Editor\Src\BuildPipeline\BuildPlayer.cpp
+                        //    if (report.GetSuccess())
+                        //    {
+                        //        DisplayProgressNotification("Build Successful", "");
+                        //    }
+                        //
+                        //    report.UnregisterForLogMessages();
+                        //    report.EndBuildStep(buildStepToken);
+                        //    report.UpdateSummary();
+                        //
+                        // Actually report.GetSuccess() should go after the last UpdateSummary()
+                        //
+                        // We should probably have a method report.SetBuildStatus(error)
+                        report.AddMessage(LogType.Error, errorMessageBuilder.ToString());
+                    }
+                    Console.WriteLine(p.GetAllOutput());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Internal class used to parse bcl output errors
+        /// </summary>
+        private class BclOutputErrorParser : CompilerOutputParserBase
+        {
+            // Format of an error message:
+            //
+            //C:\work\burst\src\Burst.Compiler.IL.Tests\Program.cs(17,9): error: Loading a managed string literal is not supported by burst
+            // at Buggy.FuckBug() (at C:\work\burst\src\Burst.Compiler.IL.Tests\Program.cs:17)
+            //
+            //
+            //                                                                [1]    [2]         [3]        [4]         [5]
+            //                                                                path   line        col        type        message
+            private static readonly Regex MatchLocation = new Regex(@"^(.*?)\((\d+)\s*,\s*(\d+)\):\s*(\w+)\s*:\s*(.*)");
+
+            // Matches " at "
+            private static readonly Regex MatchAt = new Regex(@"^\s+at\s+");
+
+            public override IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage> Parse(
+                string[] errorOutput,
+                string[] standardOutput,
+                bool compilationHadFailure,
+                string assemblyName)
+            {
+                var messages = new List<UnityEditor.Scripting.Compilers.CompilerMessage>();
+                var textBuilder = new StringBuilder();
+                for (var i = 0; i < errorOutput.Length; i++)
+                {
+                    string line = errorOutput[i];
+
+                    var message = new UnityEditor.Scripting.Compilers.CompilerMessage {assemblyName = assemblyName};
+
+                    // If we are able to match a location, we can decode it including the following attached " at " lines
+                    textBuilder.Clear();
+
+                    var match = MatchLocation.Match(line);
+                    if (match.Success)
+                    {
+                        var path = match.Groups[1].Value;
+                        int.TryParse(match.Groups[2].Value, out message.line);
+                        int.TryParse(match.Groups[3].Value, out message.column);
+                        if (match.Groups[4].Value == "error")
+                        {
+                            message.type = CompilerMessageType.Error;
+                        }
+                        else
+                        {
+                            message.type = CompilerMessageType.Warning;
+                        }
+                        message.file = !string.IsNullOrEmpty(path) ? path : "unknown";
+                        // Replace '\' with '/' to let the editor open the file
+                        message.file = message.file.Replace('\\', '/');
+
+                        // Make path relative to project path path
+                        var projectPath = Path.GetDirectoryName(Application.dataPath)?.Replace('\\', '/');
+                        if (projectPath != null && message.file.StartsWith(projectPath))
+                        {
+                            message.file = message.file.Substring(projectPath.EndsWith("/") ? projectPath.Length : projectPath.Length + 1);
+                        }
+
+                        // debug
+                        // textBuilder.AppendLine("line: " + message.line + " column: " + message.column + " error: " + message.type + " file: " + message.file);
+                        textBuilder.Append(match.Groups[5].Value);
+                    }
+                    else
+                    {
+                        // Don't output any blank line
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue;
+                        }
+                        // Otherwise we output an error, but without source location information
+                        // so that at least the user can see it directly in the log errors
+                        message.type = CompilerMessageType.Error;
+                        message.line = 0;
+                        message.column = 0;
+                        message.file = "unknown";
+
+
+                        textBuilder.Append(line);
+                    }
+
+                    // Collect attached location call context information ("at ...")
+                    // we do it for both case (as if we have an exception in bcl we want to print this in a single line)
+                    bool isFirstAt = true;
+                    for (int j = i + 1; j < errorOutput.Length; j++)
+                    {
+                        var nextLine = errorOutput[j];
+                        if (MatchAt.Match(nextLine).Success)
+                        {
+                            i++;
+                            if (isFirstAt)
+                            {
+                                textBuilder.AppendLine();
+                                isFirstAt = false;
+                            }
+                            textBuilder.AppendLine(nextLine);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    message.message = textBuilder.ToString();
+
+                    messages.Add(message);
+                }
+                return messages;
+            }
+
+            protected override string GetErrorIdentifier()
+            {
+                throw new NotImplementedException(); // as we overriding the method Parse()
+            }
+
+            protected override Regex GetOutputRegex()
+            {
+                throw new NotImplementedException(); // as we overriding the method Parse()
+            }
+        }
     }
 }
 #endif

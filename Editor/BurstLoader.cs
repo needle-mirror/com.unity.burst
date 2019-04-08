@@ -17,10 +17,12 @@ namespace Unity.Burst.Editor
         /// </summary>
         public static string RuntimePath { get; private set; }
 
+        public static bool IsDebugging { get; private set; }
+
         static BurstLoader()
         {
-            // Un-comment the following to log compilation steps to log.txt in the .Runtime folder
-            // Environment.SetEnvironmentVariable("UNITY_BURST_DEBUG", "1");
+            // This can be setup to get more diagnostics
+            IsDebugging = Environment.GetEnvironmentVariable("UNITY_BURST_DEBUG") != null;
 
             // Try to load the runtime through an environment variable
             RuntimePath = Environment.GetEnvironmentVariable("UNITY_BURST_RUNTIME_PATH");

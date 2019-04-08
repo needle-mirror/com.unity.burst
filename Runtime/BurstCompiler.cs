@@ -2,6 +2,7 @@
 // In 2018.3 It should be fine
 #if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Unity.Burst
@@ -82,7 +83,7 @@ namespace Unity.Burst
         /// </summary>
         internal static void Shutdown()
         {
-            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod("ShutdownMethod"), "$shutdown");
+            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod("ShutdownMethod",BindingFlags.Static|BindingFlags.NonPublic), "$shutdown");
         }
 
         /// <summary>

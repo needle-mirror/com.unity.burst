@@ -241,6 +241,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.Float1Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.Float4Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate);
+            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate);
@@ -2615,6 +2616,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.Float4Job)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob)p[0];
             d(ref arg0);
             return result;
         }
