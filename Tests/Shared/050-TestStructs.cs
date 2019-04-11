@@ -597,6 +597,19 @@ namespace Burst.Compiler.IL.Tests
 
             return rValue;
         }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct Packet
+        {
+            [FieldOffset(0)] public int data;
+            [FieldOffset(0)] public fixed byte moreData[1500];
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitSizeReporting()
+        {
+            return sizeof(Packet);
+        }
     }
 }
 

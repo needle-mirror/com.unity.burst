@@ -651,5 +651,6 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
 - Building Android standalone playre from linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
 - Mathematical functions for `double2`, `double3`, `double4` are currently not optimized and using the slower scalar version
 - When building a first time a player with Burst, and after disabling Burst, rebuilding a player, the previous generated Burst shared library is not removed and will be loaded. The file has to be removed manually (A fix will come before stable 1.0)
+- `DllImport` is not available on 32bit platforms and on ARM platforms
 
 These known issues will be resolved in a future release of Burst.

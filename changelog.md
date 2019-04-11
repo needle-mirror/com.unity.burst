@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.0-preview.13] - 2019-04-12
+
+- Fix linker error on symbol `$___check_bounds already defined`
+- Fix StructLayout Explicit size calculation and backing storage
+
 ## [1.0.0-preview.12] - 2019-04-09
 
 - Fix crash when accessing a NativeArray and performing in-place operations (e.g `nativeArray[i] += 121;`)

@@ -304,7 +304,7 @@ namespace Burst.Compiler.IL.Tests
             return result.x + result.y * 10.0 + result.z * 100.0 + result.w * 1000.0;
         }
 
-        private static float ConvertToFloat(float3 result)
+        public static float ConvertToFloat(float3 result)
         {
             return result.x + result.y * 10.0f + result.z * 100.0f;
         }

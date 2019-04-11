@@ -210,6 +210,8 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate);
             Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate);
             Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate);
+            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate);
+            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate);
             Register(typeof(float),  new Type[] {typeof(UnityBenchShared.SumNumbersTest).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate), CallBurst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate);
             Register(typeof(float),  new Type[] {typeof(UnityEngine.Boids.BoidsJob).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate), CallBurst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.BigStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate);
@@ -2291,6 +2293,26 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job)p[0];
             result = d(ref arg0);
             return result;
         }
