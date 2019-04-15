@@ -644,7 +644,7 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
 - Burst does not support cross-compilation between Windows, Mac, or Linux.
 - The UWP build will always compile all four targets (X86, X64, ARMv7 and ARMv8).
 
-## Known issues
+# Known issues
 
 - The maximum target CPU is currently hardcoded per platform (e.g `X64_SSE4` for Windows 64 bits), see the table above.
 - Building IOS standalone player from windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))

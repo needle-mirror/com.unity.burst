@@ -610,6 +610,33 @@ namespace Burst.Compiler.IL.Tests
         {
             return sizeof(Packet);
         }
+
+        [TestCompiler]
+        public static float TestExplicitStructNested()
+        {
+            StructWithNestUnion b;
+            b.Value.Min = 5.0f;
+
+            return b.Value.Min;
+        }
+
+        public struct StructWithNestUnion 
+        {
+            public UnionValue Value;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+
+        public struct UnionValue
+        {
+            [FieldOffset(0)]
+            public float Min;
+            [FieldOffset(4)]
+            public float Max;
+
+            [FieldOffset(0)]
+            public uint Property;
+        }
     }
 }
 

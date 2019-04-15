@@ -313,6 +313,7 @@ extern ""C""
                 string ndkRoot = null;
 
                 // 2019.1 now has an embedded ndk
+#if UNITY_2019_1_OR_NEWER
                 if (EditorPrefs.HasKey("NdkUseEmbedded"))
                 {
                     if (EditorPrefs.GetBool("NdkUseEmbedded"))
@@ -324,6 +325,7 @@ extern ""C""
                         ndkRoot = EditorPrefs.GetString("AndroidNdkRootR16b");
                     }
                 }
+#endif
 
                 // If we still don't have a valid root, try the old key
                 if (string.IsNullOrEmpty(ndkRoot))
@@ -399,7 +401,11 @@ extern ""C""
                     string generatedDebugInformationInOutput = "";
                     if ((report.summary.options & BuildOptions.Development) != 0)
                     {
-                        generatedDebugInformationInOutput = GetOption(OptionDebug);
+                        // Workaround for apple clang development issue (due to latest being 7.0.0) - IOS is only affected because its a source level IR compatability issue
+                        if (targetPlatform != TargetPlatform.iOS)
+                        {
+                            generatedDebugInformationInOutput = GetOption(OptionDebug);
+                        }
                     }
 
                     BclRunner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable),

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0] - 2019-04-16
+
+- Release stable version
+
+## [1.0.0-preview.14] - 2019-04-15
+
+- Bump to mathematics 1.0.1
+- Fix android ndk check on windows when using the builtin toolchain
+- Fix crash when accessing a field of a struct with an explicit layout through an embedded struct
+- Fix null pointer exception on building for android if editor version is less than 2019.1
+- Workaround IR compatibility issue with AOT builds on IOS
+
 ## [1.0.0-preview.13] - 2019-04-12
 
 - Fix linker error on symbol `$___check_bounds already defined`
