@@ -229,7 +229,36 @@ namespace Burst.Compiler.IL.Tests
         {
             return StaticArrayStruct.Ints[100];
         }
-        
+
+        public struct ContainerStruct
+        {
+            public SmallStruct A;
+            public SmallStruct B;
+
+            public static readonly ContainerStruct[] CoolStructs =
+            {
+                new ContainerStruct
+                {
+                    A = new SmallStruct { a = 3, b = 5 },
+                    B = new SmallStruct { a = 9, b = 10 }
+                },
+                new ContainerStruct
+                {
+                    A = new SmallStruct { a = 1, b = 5 },
+                    B = new SmallStruct { a = 7, b = 8 }
+                }
+            };
+        }
+
+        [TestCompiler()]
+        public static int TestStaticReadonlyArrayOfStructOfStructs()
+        {
+            return ContainerStruct.CoolStructs[0].A.a + ContainerStruct.CoolStructs[0].A.b +
+                   ContainerStruct.CoolStructs[0].B.a + ContainerStruct.CoolStructs[0].B.b +
+                   ContainerStruct.CoolStructs[1].A.a + ContainerStruct.CoolStructs[1].A.b +
+                   ContainerStruct.CoolStructs[1].B.a + ContainerStruct.CoolStructs[1].B.b;
+        }
+
         /* There's currently no way of settings the safety checks on from here
         [TestCompiler(0xFFFFFFF, ExpectedException = typeof(IndexOutOfRangeException))]
         public static int TestStaticReadonlyLdelemDynamicIndexOfBounds(int x)
@@ -237,6 +266,12 @@ namespace Burst.Compiler.IL.Tests
             return StaticArrayStruct.Ints[x];
         }
         */
+
+        public struct SmallStruct
+        {
+            public int a;
+            public int b;
+        }
     }
 }
 

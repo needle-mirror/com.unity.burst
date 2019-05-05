@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
+using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -636,6 +637,37 @@ namespace Burst.Compiler.IL.Tests
 
             [FieldOffset(0)]
             public uint Property;
+        }
+
+        [TestCompiler(typeof(NetworkEndPoint.Provider),typeof(NetworkEndPoint.Provider))]
+        public static bool TestABITransformIntoExplicitLayoutTransform(NetworkEndPoint a,NetworkEndPoint b)
+        {
+            return a.Compare(b);
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct NetworkEndPoint
+        {
+            internal const int ArrayLength = 2;
+            [FieldOffset(0)]
+            internal fixed byte data[ArrayLength];
+            [FieldOffset(0)]
+            internal ushort family;
+            [FieldOffset(28)]
+            internal int length;
+
+            public bool Compare(NetworkEndPoint other)
+            {
+                if (length != other.length)
+                    return false;
+
+                return true;
+            }
+            public class Provider : IArgumentProvider
+            {
+                public object Value => default(NetworkEndPoint);
+
+            }
         }
     }
 }

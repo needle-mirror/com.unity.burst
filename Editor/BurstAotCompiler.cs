@@ -401,8 +401,8 @@ extern ""C""
                     string generatedDebugInformationInOutput = "";
                     if ((report.summary.options & BuildOptions.Development) != 0)
                     {
-                        // Workaround for apple clang development issue (due to latest being 7.0.0) - IOS is only affected because its a source level IR compatability issue
-                        if (targetPlatform != TargetPlatform.iOS)
+                        // Workaround for clang >6 development issue (due to latest being 7.0.0) - IOS & newer PS4 SDKS are affected because its a source level IR compatability issue
+                        if ((targetPlatform != TargetPlatform.iOS) && (targetPlatform != TargetPlatform.PS4))
                         {
                             generatedDebugInformationInOutput = GetOption(OptionDebug);
                         }
@@ -464,9 +464,12 @@ extern ""C""
                 case BuildTarget.StandaloneOSX:
                     targetCpu = TargetCpu.X64_SSE4;
                     return TargetPlatform.macOS;
+#if !UNITY_2019_2_OR_NEWER
+                //32 bit linux support was deprecated
                 case BuildTarget.StandaloneLinux:
                     targetCpu = TargetCpu.X86_SSE4;
                     return TargetPlatform.Linux;
+#endif
                 case BuildTarget.StandaloneLinux64:
                     targetCpu = TargetCpu.X64_SSE4;
                     return TargetPlatform.Linux;

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.2] - 2019-05-06
+
+- Fix issue with obsolete Standlone Linux build target
+
+## [1.0.1] - 2019-05-04
+
+- Fix issue where uninitialized values would be loaded instead for native containers containing big structs
+- Fix issue where noalias analysis would fail for native containers containing big structs
+- Add support for `MethodImplOptions.AggressiveInlining` to force inlining
+- Disable debug information generation for PS4 due to IR compatability issue with latest SDK
+- Fix issue when calling "internal" methods that take bool parameters
+- Fix issue in ABITransform that would cause compilation errors with certain explicit struct layouts
+
 ## [1.0.0] - 2019-04-16
 
 - Release stable version

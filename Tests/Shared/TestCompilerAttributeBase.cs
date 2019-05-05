@@ -134,16 +134,8 @@ namespace Burst.Compiler.IL.Tests
 
         TestCommand ICommandWrapper.Wrap(TestCommand command)
         {
-            if (command is TestMethodCommand)
-            {
-                var testMethodCommand = (TestMethodCommand)command;
-                var testMethod = (TestMethod)testMethodCommand.Test;
-                return GetTestCommand(testMethod, testMethod, ExpectedException, ExpectCompilerException);
-            }
-            else
-            {
-                return command;
-            }
+            var testMethod = (TestMethod)command.Test;
+            return GetTestCommand(testMethod, testMethod, ExpectedException, ExpectCompilerException);
         }
 
         protected abstract bool IsCommandLine();

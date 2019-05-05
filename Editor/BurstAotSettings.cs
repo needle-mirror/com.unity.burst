@@ -57,8 +57,16 @@ namespace Unity.Burst.Editor
             // since there is no real distinguishment from the platforms selector
             if (target == BuildTarget.StandaloneWindows64 || target == BuildTarget.StandaloneWindows)
                 return BuildTarget.StandaloneWindows;
+
+#if UNITY_2019_2_OR_NEWER
+            //32 bit linux support was deprecated
+            if (target == BuildTarget.StandaloneLinux64)
+                return BuildTarget.StandaloneLinux64;
+#else
             if (target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinux)
                 return BuildTarget.StandaloneLinux;
+#endif
+
             return target;
         }
 
