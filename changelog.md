@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.4] - 2019-05-13
+
+- Fix build player crash if a job interface is inheriting from another job interface using the same job producer
+- Add support for `in` attribute with function pointers and avoid a compiler exception
+- Fix package error with `AndroidArchitecture.X86` in BurstAotCompiler not being anymore present in Unity 2019.2+
+
+## [1.0.3] - 2019-05-09
+
+- Implement a hard cap on the length of symbols to avoid problems for platforms that ingest IR for AOT
+
 ## [1.0.2] - 2019-05-06
 
 - Fix issue with obsolete Standlone Linux build target

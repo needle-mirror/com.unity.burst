@@ -16,7 +16,8 @@ namespace Unity.Burst.Editor
     {
         public static List<BurstCompileTarget> FindExecuteMethods(AssembliesType assemblyTypes)
         {
-            var result = new List<BurstCompileTarget>();
+            var methodsToCompile = new List<BurstCompileTarget>();
+            var methodsToCompileSet = new HashSet<MethodInfo>();
 
             var valueTypes = new List<TypeToVisit>();
             var interfaceToProducer = new Dictionary<Type, Type>();
@@ -145,7 +146,7 @@ namespace Unity.Burst.Editor
                             if (method.GetCustomAttribute<BurstCompileAttribute>() != null)
                             {
                                 var target = new BurstCompileTarget(method, type, null, true);
-                                result.Add(target);
+                                methodsToCompile.Add(target);
                             }
                         }
                     }
@@ -188,8 +189,14 @@ namespace Unity.Burst.Editor
                                 throw new InvalidOperationException($"Burst reflection error. The type `{executeType}` does not contain an `Execute` method");
                             }
 
-                            var target = new BurstCompileTarget(executeMethod, type, interfaceType, false);
-                            result.Add(target);
+                            // We will not try to record more than once a method in the methods to compile
+                            // This can happen if a job interface is inheriting from another job interface which are using in the end the same
+                            // job producer type
+                            if (methodsToCompileSet.Add(executeMethod))
+                            {
+                                var target = new BurstCompileTarget(executeMethod, type, interfaceType, false);
+                                methodsToCompile.Add(target);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -199,7 +206,7 @@ namespace Unity.Burst.Editor
                 }
             }
 
-            return result;
+            return methodsToCompile;
         }
 
 

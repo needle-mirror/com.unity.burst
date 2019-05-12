@@ -355,10 +355,12 @@ extern ""C""
                 {
                     combinations.Add(new BurstOutputCombination("libs/arm64-v8a", TargetCpu.ARMV8A_AARCH64));
                 }
+#if !UNITY_2019_2_OR_NEWER
                 if ((androidTargetArch & AndroidArchitecture.X86) != 0)
                 {
                     combinations.Add(new BurstOutputCombination("libs/x86", TargetCpu.X86_SSE2));
                 }
+#endif
             }
             else if (targetPlatform == TargetPlatform.UWP)
             {
