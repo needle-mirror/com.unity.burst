@@ -6,9 +6,14 @@ using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 #if !BURST_INTERNAL
 using Unity.Jobs.LowLevel.Unsafe;
 #endif
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// NOTE: This file is shared via a csproj cs link in Burst.Compiler.IL
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #if BURST_INTERNAL
 namespace Burst.Compiler.IL
@@ -17,10 +22,9 @@ namespace Unity.Burst
 #endif
 {
     /// <summary>
-    /// Options shared between the package and the burst compiler.
-    /// NOTE: This file is shared via a csproj cs link in Burst.Compiler.IL
+    /// Options available at Editor time and partially at runtime to control the behavior of the compilation and to enable/disable burst jobs.
     /// </summary>
-    internal sealed partial class BurstCompilerOptions
+    public sealed partial class BurstCompilerOptions
     {
         private const string DisableCompilationArg = "--burst-disable-compilation";
 
@@ -33,69 +37,77 @@ namespace Unity.Burst
         private static bool _enableBurstSafetyChecks;
         private static bool _enableBurstTimings;
 
-        public const string DefaultLibraryName = "lib_burst_generated";
+        internal const string DefaultLibraryName = "lib_burst_generated";
 
         // -------------------------------------------------------
         // Common options used by the compiler
         // -------------------------------------------------------
-        public const string OptionGroup = "group";
-        public const string OptionPlatform = "platform=";
-        public const string OptionBackend = "backend=";
-        public const string OptionSafetyChecks = "safety-checks";
-        public const string OptionDisableSafetyChecks = "disable-safety-checks";
-        public const string OptionNoAlias = "noalias";
-        public const string OptionDisableNoAlias = "disable-noalias";
-        public const string OptionDisableOpt = "disable-opt";
-        public const string OptionFastMath = "fastmath";
-        public const string OptionTarget = "target=";
-        public const string OptionIROpt = "ir-opt";
-        public const string OptionCpuOpt = "cpu-opt=";
-        public const string OptionFloatPrecision = "float-precision=";
-        public const string OptionFloatMode = "float-mode=";
-        public const string OptionDump = "dump=";
-        public const string OptionFormat = "format=";
-        public const string OptionDebugTrap = "debugtrap";
-        public const string OptionDisableVectors = "disable-vectors";
-        public const string OptionDebug = "debug";
-        public const string OptionDisableDebugSymbols = "disable-load-debug-symbols";
-        public const string OptionStaticLinkage = "generate-static-linkage-methods";
+        internal const string OptionGroup = "group";
+        internal const string OptionPlatform = "platform=";
+        internal const string OptionBackend = "backend=";
+        internal const string OptionSafetyChecks = "safety-checks";
+        internal const string OptionDisableSafetyChecks = "disable-safety-checks";
+        internal const string OptionNoAlias = "noalias";
+        internal const string OptionDisableNoAlias = "disable-noalias";
+        internal const string OptionDisableOpt = "disable-opt";
+        internal const string OptionFastMath = "fastmath";
+        internal const string OptionTarget = "target=";
+        internal const string OptionIROpt = "ir-opt";
+        internal const string OptionCpuOpt = "cpu-opt=";
+        internal const string OptionFloatPrecision = "float-precision=";
+        internal const string OptionFloatMode = "float-mode=";
+        internal const string OptionDump = "dump=";
+        internal const string OptionFormat = "format=";
+        internal const string OptionDebugTrap = "debugtrap";
+        internal const string OptionDisableVectors = "disable-vectors";
+        internal const string OptionDebug = "debug";
+        internal const string OptionDisableDebugSymbols = "disable-load-debug-symbols";
+        internal const string OptionStaticLinkage = "generate-static-linkage-methods";
 
         // -------------------------------------------------------
         // Options used by the Jit compiler
         // -------------------------------------------------------
 
-        public const string OptionJitDisableFunctionCaching = "disable-function-caching";
-        public const string OptionJitEnableModuleCaching = "enable-module-caching";
-        public const string OptionJitEnableModuleCachingDebugger = "enable-module-caching-debugger";
-        public const string OptionJitEnableSynchronousCompilation = "enable-synchronous-compilation";
+        internal const string OptionJitDisableFunctionCaching = "disable-function-caching";
+        internal const string OptionJitDisableAssemblyCaching = "disable-assembly-caching";
+        internal const string OptionJitEnableAssemblyCachingLogs = "enable-assembly-caching-logs";
+        internal const string OptionJitEnableModuleCaching = "enable-module-caching";
+        internal const string OptionJitEnableModuleCachingDebugger = "enable-module-caching-debugger";
+        internal const string OptionJitEnableSynchronousCompilation = "enable-synchronous-compilation";
 
         // TODO: Remove this option and use proper dump flags or revisit how we log timings
-        public const string OptionJitLogTimings = "log-timings";
-        public const string OptionJitCacheDirectory = "cache-directory";
+        internal const string OptionJitLogTimings = "log-timings";
+        internal const string OptionJitCacheDirectory = "cache-directory";
 
         // -------------------------------------------------------
         // Options used by the Aot compiler
         // -------------------------------------------------------
-        public const string OptionAotAssemblyFolder = "assembly-folder=";
-        public const string OptionAotMethod = "method=";
-        public const string OptionAotType = "type=";
-        public const string OptionAotAssembly = "assembly=";
-        public const string OptionAotOutputPath = "output=";
-        public const string OptionAotKeepIntermediateFiles = "keep-intermediate-files";
-        public const string OptionAotNoLink = "nolink";
-        public const string OptionVerbose = "verbose";
-        public const string OptionValidateExternalToolChain = "validate-external-tool-chain";
+        internal const string OptionAotAssemblyFolder = "assembly-folder=";
+        internal const string OptionRootAssembly = "root-assembly=";
+        internal const string OptionAotMethod = "method=";
+        internal const string OptionAotType = "type=";
+        internal const string OptionAotAssembly = "assembly=";
+        internal const string OptionAotOutputPath = "output=";
+        internal const string OptionAotKeepIntermediateFiles = "keep-intermediate-files";
+        internal const string OptionAotNoLink = "nolink";
+        internal const string OptionAotPatchedAssembliesOutputFolder = "patch-assemblies-into=";
+        internal const string OptionAotPinvokeNameToPatch = "pinvoke-name=";
+        internal const string OptionAotOnlyStaticMethods = "only-static-methods";
+        internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
+        internal const string OptionAotKeyFolder = "key-folder=";
+        internal const string OptionVerbose = "verbose";
+        internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
+
+        // All the following content is exposed to the public interface
 
 #if !BURST_INTERNAL
+        internal const string GlobalSettingsName = "global";
 
-        private const string GlobalSettingsName = "global";
-        private static BurstCompilerOptions _global = null;
-
-        public BurstCompilerOptions() : this(null)
+        private BurstCompilerOptions() : this(null)
         {
         }
 
-        public BurstCompilerOptions(string name)
+        internal BurstCompilerOptions(string name)
         {
             Name = name;
             // By default, burst is enabled as well as safety checks
@@ -103,46 +115,51 @@ namespace Unity.Burst
             EnableBurstSafetyChecks = true;
         }
 
-        public static BurstCompilerOptions Global
-        {
-            get
-            {
-                // Make sure to late initialize the settings
-                return _global ?? (_global = new BurstCompilerOptions(GlobalSettingsName)); // naming used only for debugging
-            }
-        }
 
         private bool _enableEnhancedAssembly;
         private bool _disableOptimizations;
         private bool _enableFastMath;
 
-        public string Name { get; set; }
+        internal string Name { get; }
 
+        /// <summary>
+        /// Gets a boolean indicating whether burst is enabled.
+        /// </summary>
         public bool IsEnabled
         {
             get => EnableBurstCompilation && !_forceDisableBurstCompilation;
         }
-        
+
+        /// <summary>
+        /// Gets or sets a boolean to enable or disable compilation of burst jobs.
+        /// </summary>
         public bool EnableBurstCompilation
         {
             get => _enableBurstCompilation;
             set
             {
                 bool changed = _enableBurstCompilation != value;
-               _enableBurstCompilation = value;
+                _enableBurstCompilation = value;
 
                 // Modify only JobsUtility.JobCompilerEnabled when modifying global settings
                 if (Name == GlobalSettingsName)
-               {
-                   // We need also to disable jobs as functions are being cached by the job system
-                   // and when we ask for disabling burst, we are also asking the job system
-                   // to no longer use the cached functions
-                   JobsUtility.JobCompilerEnabled = value;
-               }
+                {
+                    // We need also to disable jobs as functions are being cached by the job system
+                    // and when we ask for disabling burst, we are also asking the job system
+                    // to no longer use the cached functions
+                    JobsUtility.JobCompilerEnabled = value;
+                }
+
                 if (changed) OnOptionsChanged();
             }
         }
 
+        /// <summary>
+        /// Gets or sets a boolean to force the compilation of all burst jobs synchronously.
+        /// </summary>
+        /// <remarks>
+        /// This is only available at Editor time. Does not have an impact on player mode.
+        /// </remarks>
         public bool EnableBurstCompileSynchronously
         {
             get => _enableBurstCompileSynchronously;
@@ -154,6 +171,12 @@ namespace Unity.Burst
             }
         }
 
+        /// <summary>
+        /// Gets or sets a boolean to enable or disable safety checks.
+        /// </summary>
+        /// <remarks>
+        /// This is only available at Editor time. Does not have an impact on player mode.
+        /// </remarks>
         public bool EnableBurstSafetyChecks
         {
             get => _enableBurstSafetyChecks;
@@ -165,7 +188,7 @@ namespace Unity.Burst
             }
         }
 
-        public bool EnableEnhancedAssembly
+        internal bool EnableEnhancedAssembly
         {
             get => _enableEnhancedAssembly;
             set
@@ -176,6 +199,12 @@ namespace Unity.Burst
             }
         }
 
+        /// <summary>
+        /// Gets or sets a boolean to enable or disable compiler optimizations
+        /// </summary>
+        /// <remarks>
+        /// This is only available at Editor time. Does not have an impact on player mode.
+        /// </remarks>
         public bool DisableOptimizations
         {
             get => _disableOptimizations;
@@ -187,6 +216,12 @@ namespace Unity.Burst
             }
         }
 
+        /// <summary>
+        /// Gets or sets a boolean to enable or disable fast math calculation.
+        /// </summary>
+        /// <remarks>
+        /// This is only available at Editor time. Does not have an impact on player mode.
+        /// </remarks>
         public bool EnableFastMath
         {
             get => _enableFastMath;
@@ -198,7 +233,7 @@ namespace Unity.Burst
             }
         }
 
-        public bool EnableBurstTimings
+        internal bool EnableBurstTimings
         {
             get => _enableBurstTimings;
             set
@@ -209,9 +244,9 @@ namespace Unity.Burst
             }
         }
 
-        public Action OptionsChanged { get; set; }
+        internal Action OptionsChanged { get; set; }
 
-        public BurstCompilerOptions Clone()
+        internal BurstCompilerOptions Clone()
         {
             // WARNING: for some reason MemberwiseClone() is NOT WORKING on Mono/Unity
             // so we are creating a manual clone
@@ -228,7 +263,7 @@ namespace Unity.Burst
             return clone;
         }
 
-        public bool IsSupported(MemberInfo member)
+        internal bool IsSupported(MemberInfo member)
         {
             if (member == null) throw new ArgumentNullException(nameof(member));
             BurstCompileAttribute attr;
@@ -245,18 +280,43 @@ namespace Unity.Burst
             }
 
             // Fetch options from attribute
-            attribute = member.GetCustomAttribute<BurstCompileAttribute>();
+            attribute = GetBurstCompileAttribute(member);
             return attribute != null;
         }
 
-        public bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut)
+        private static BurstCompileAttribute GetBurstCompileAttribute(MemberInfo memberInfo)
+        {
+            var result = memberInfo.GetCustomAttribute<BurstCompileAttribute>();
+            if (result != null)
+            {
+                return result;
+            }
+
+            foreach (var a in memberInfo.GetCustomAttributes())
+            {
+                if (a.GetType().FullName == "Burst.Compiler.IL.Tests.TestCompilerAttribute")
+                {
+                    return new BurstCompileAttribute(FloatPrecision.Standard, FloatMode.Default) { CompileSynchronously = true };
+                }
+            }
+
+            return null;
+        }
+
+        internal static bool HasBurstCompileAttribute(MemberInfo memberInfo) => GetBurstCompileAttribute(memberInfo) != null;
+
+        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, out bool debug)
         {
             flagsOut = null;
             BurstCompileAttribute attr;
             if (!TryGetAttribute(member, out attr))
             {
+                debug = false;
                 return false;
             }
+
+            debug = attr.Debug;
+
             var flagsBuilderOut = new StringBuilder();
 
             if (isJit && (attr.CompileSynchronously || _forceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
@@ -293,7 +353,7 @@ namespace Unity.Burst
             {
                 foreach (var option in attr.Options)
                 {
-                    if (!string.IsNullOrEmpty(option))
+                    if (!String.IsNullOrEmpty(option))
                     {
                         AddOption(flagsBuilderOut, option);
                     }
@@ -320,7 +380,7 @@ namespace Unity.Burst
             flagsOut = flagsBuilderOut.ToString();
             return true;
         }
-        
+
         private static void AddOption(StringBuilder builder, string option)
         {
             if (builder.Length != 0)
@@ -328,7 +388,7 @@ namespace Unity.Burst
 
             builder.Append(option);
         }
-        public static string GetOption(string optionName, object value = null)
+        internal static string GetOption(string optionName, object value = null)
         {
             if (optionName == null) throw new ArgumentNullException(nameof(optionName));
             return "--" + optionName + (value ?? String.Empty);
@@ -375,6 +435,7 @@ namespace Unity.Burst
         XboxOne = 6,
         WASM = 7,
         UWP = 8,
+        Lumin = 9,
     }
 
     // NOTE: This must be synchronized with Backend.TargetCpu

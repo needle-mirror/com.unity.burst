@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
-#if !UNITY_EDITOR
+#if BURST_TESTS_ONLY
 using Burst.Compiler.IL.Jit;
 #endif
 
@@ -14,6 +14,7 @@ namespace Burst.Compiler.IL.Tests
     /// </summary>
     internal class PartialManaged
     {
+#if BURST_TESTS_ONLY || ENABLE_UNITY_COLLECTIONS_CHECKS
         [TestCompiler()]
         public static int TestWriteNullReference()
         {
@@ -21,6 +22,21 @@ namespace Burst.Compiler.IL.Tests
             WriteNullReference(out element.Reference);
             return element.Value;
         }
+
+        private static void WriteNullReference(out DisposeSentinel reference)
+        {
+            reference = null;
+        }
+
+        private struct Element
+        {
+#pragma warning disable 0649
+            public int Value;
+            public DisposeSentinel Reference;
+#pragma warning restore 0649
+
+        }
+#endif
 
         [TestCompiler()]
         public static void AssignNullToLocalVariableClass()
@@ -31,12 +47,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        private static void WriteNullReference(out DisposeSentinel reference)
-        {
-            reference = null;
-        }
-
-#if !UNITY_EDITOR
+#if BURST_TESTS_ONLY
         [Test]
         public void TestThrowExceptionOnNonExistingMethod()
         {
@@ -114,16 +125,6 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning disable 0219
             var value = new MyClass();
 #pragma warning restore 0219
-        }
-
-
-        private struct Element
-        {
-#pragma warning disable 0649
-            public int Value;
-            public DisposeSentinel Reference;
-#pragma warning restore 0649
-
         }
 
         private class MyClass

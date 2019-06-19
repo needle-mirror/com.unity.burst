@@ -1,3 +1,4 @@
+#if BURST_TESTS_ONLY
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -93,3 +94,4 @@ namespace Burst.Compiler.IL.Tests.Helpers
         }
     }
 }
+#endif

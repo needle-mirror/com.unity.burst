@@ -1,27 +1,18 @@
 # Changelog
 
-## [1.0.4] - 2019-05-13
-
-- Fix build player crash if a job interface is inheriting from another job interface using the same job producer
-- Add support for `in` attribute with function pointers and avoid a compiler exception
-- Fix package error with `AndroidArchitecture.X86` in BurstAotCompiler not being anymore present in Unity 2019.2+
-
-## [1.0.3] - 2019-05-09
-
-- Implement a hard cap on the length of symbols to avoid problems for platforms that ingest IR for AOT
-
-## [1.0.2] - 2019-05-06
-
-- Fix issue with obsolete Standlone Linux build target
-
-## [1.0.1] - 2019-05-04
+## [1.1.0-preview.2] - 2019-06-20
 
 - Fix issue where uninitialized values would be loaded instead for native containers containing big structs
 - Fix issue where noalias analysis would fail for native containers containing big structs
-- Add support for `MethodImplOptions.AggressiveInlining` to force inlining
-- Disable debug information generation for PS4 due to IR compatability issue with latest SDK
 - Fix issue when calling "internal" methods that take bool parameters
+- Add support for `MethodImplOptions.AggressiveInlining` to force inlining
 - Fix issue in ABITransform that would cause compilation errors with certain explicit struct layouts
+- Disable debug information generation for PS4 due to IR compatability issue with latest SDK
+- Implemented an assembly level cache for JIT compilation to improve iteration times in the Editor
+- Implement a hard cap on the length of symbols to avoid problems for platforms that ingest IR for AOT
+- Add support for `FunctionPointer<T>` usable from Burst Jobs via `BurstCompiler.CompileFunctionPointer<T>`
+- Add `BurstCompiler.Options` to allow to control/enable/disable burst jobs compilation/run at runtime.
+- Add `BurstRuntime.GetHashCode32<T>` and `GetHashCode64<T>` to allow to generate a hash code for a specified time from a burst jobs
 
 ## [1.0.0] - 2019-04-16
 

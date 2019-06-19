@@ -2,6 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
 using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
@@ -119,7 +121,6 @@ namespace Burst.Compiler.IL.Tests
             return deep.value.value.GetValue() + deep.value.value.value;
         }
 
-        // No longer working as EmptyStruct is generating a struct with a fixed size of 1
         [TestCompiler(2)]
         public static int test_struct_empty(int x)
         {
@@ -176,6 +177,12 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler]
+        public static int TestExplicitLayoutSize()
+        {
+            return UnsafeUtility.SizeOf<Color>();
+        }
+
+        [TestCompiler]
         public static int TestExplicitLayoutStruct()
         {
             var color = new Color() { Value = 0xAABBCCDD };
@@ -213,6 +220,285 @@ namespace Burst.Compiler.IL.Tests
             color.B = v;
         }
 
+        [StructLayout(LayoutKind.Explicit, Size = 8)]
+        private unsafe struct CheckHoleInner
+        {
+            [FieldOffset(0)]
+            public byte* m_Ptr;
+        }
+
+        private struct CheckHoleOuter
+        {
+            public CheckHoleInner a;
+            public int b;
+            public CheckHoleInner c;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestCheckHoleSize()
+        {
+            return UnsafeUtility.SizeOf<CheckHoleOuter>();
+        }
+
+        [TestCompiler]
+        public static unsafe int TestCheckHoleFieldOffsetA()
+        {
+            var value = new CheckHoleOuter();
+            var addressStart = &value;
+            var addressField = &value.a;
+            return (int)((byte*)addressField - (byte*)addressStart);
+        }
+
+        [TestCompiler]
+        public static unsafe int TestCheckHoleFieldOffsetB()
+        {
+            var value = new CheckHoleOuter();
+            var addressStart = &value;
+            var addressField = &value.b;
+            return (int)((byte*)addressField - (byte*)addressStart);
+        }
+
+        [TestCompiler]
+        public static unsafe int TestCheckHoleFieldOffsetC()
+        {
+            var value = new CheckHoleOuter();
+            var addressStart = &value;
+            var addressField = &value.c;
+            return (int)((byte*)addressField - (byte*)addressStart);
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        private unsafe struct ExplicitLayoutStructUnaligned
+        {
+            [FieldOffset(0)] public int a;
+            [FieldOffset(4)] public sbyte b;
+            [FieldOffset(5)] public int c;
+            [FieldOffset(9)] public fixed int d[4];
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitLayoutStructUnaligned()
+        {
+            var value = new ExplicitLayoutStructUnaligned
+            {
+                a = -2,
+                b = -5,
+                c = 9
+            };
+
+            value.d[0] = 1;
+            value.d[1] = 2;
+            value.d[2] = 3;
+            value.d[3] = 4;
+
+            return value.a + value.b + value.c + value.d[0] + value.d[1] + value.d[2] + value.d[3];
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct ExplicitLayoutStructFixedBuffer
+        {
+            [FieldOffset(0)]
+            public int First;
+            [FieldOffset(4)]
+            public fixed int Data[128];
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new ExplicitLayoutStructFixedBuffer(3);
+            }
+
+            public ExplicitLayoutStructFixedBuffer(int x)
+            {
+                First = x;
+                fixed (int* dataPtr = Data)
+                {
+                    dataPtr[8] = x + 2;
+                }
+            }
+        }
+
+        #if UNITY_ANDROID || UNITY_IOS
+        [Ignore("This test fails on mobile platforms")]
+        #endif
+        [TestCompiler(typeof(ExplicitLayoutStructFixedBuffer.Provider))]
+        public static unsafe int TestExplicitLayoutStructFixedBuffer(ref ExplicitLayoutStructFixedBuffer x)
+        {
+            return x.First + x.Data[8];
+        }
+
+        [StructLayout(LayoutKind.Explicit, Size = 9)]
+        public struct ExplicitStructWithSize
+        {
+            [FieldOffset(0)] public int a;
+            [FieldOffset(4)] public sbyte b;
+            [FieldOffset(5)] public int c;
+        }
+
+        [TestCompiler]
+        [Ignore("UnsafeUtility not working properly with explicit sizing")]
+        public static unsafe int TestStructSizingExplicitStructWithSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructWithSize>();
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitStructWithoutSize
+        {
+            [FieldOffset(0)] public int a;
+            [FieldOffset(4)] public sbyte b;
+            [FieldOffset(5)] public int c;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingExplicitStructWithoutSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructWithoutSize>();
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitStructWithoutSize2
+        {
+            [FieldOffset(0)] public long a;
+            [FieldOffset(8)] public sbyte b;
+            [FieldOffset(9)] public int c;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingExplicitStructWithoutSize2()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructWithoutSize2>();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 9)]
+        public struct SequentialStructWithSize
+        {
+            public int a;
+            public int b;
+            public sbyte c;
+        }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingSequentialStructWithSize()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructWithSize>();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 13)]
+        public struct SequentialStructWithSize2
+        {
+            public int a;
+            public int b;
+            public sbyte c;
+        }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingSequentialStructWithSize2()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructWithSize2>();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 12)]
+        public struct SequentialStructWithSize3
+        {
+            public int a;
+            public int b;
+            public sbyte c;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingSequentialStructWithSize3()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructWithSize3>();
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SequentialStructWithoutSize
+        {
+            public int a;
+            public int b;
+            public sbyte c;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingSequentialStructWithoutSize()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructWithoutSize>();
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitStructEmpty { }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingExplicitStructEmpty()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructEmpty>();
+        }
+
+        public struct ExplicitStructEmptyContainer
+        {
+            public ExplicitStructEmpty A;
+            public int B;
+        }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestEmptyStructEmbeddedInStruct()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructEmptyContainer>();
+        }
+
+        [StructLayout(LayoutKind.Explicit, Size = 0)]
+        public struct ExplicitStructEmptyWithSize { }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingExplicitStructEmptyWithSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructEmptyWithSize>();
+        }
+
+        public struct SequentialStructEmptyNoAttributes { }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingSequentialStructEmptyNoAttributes()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructEmptyNoAttributes>();
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SequentialStructEmpty { }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingSequentialStructEmpty()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructEmpty>();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 0)]
+        public struct SequentialStructEmptyWithSize { }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestStructSizingSequentialStructEmptyWithSize()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructEmptyWithSize>();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 1)]
+        public struct SequentialStructEmptyWithNonZeroSize { }
+
+        [TestCompiler]
+        public static unsafe int TestStructSizingSequentialStructEmptyWithNonZeroSize()
+        {
+            return UnsafeUtility.SizeOf<SequentialStructEmptyWithNonZeroSize>();
+        }
+
+        [StructLayout(LayoutKind.Auto)]
+        public struct AutoStruct { }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static unsafe int TestAutoStruct()
+        {
+            return UnsafeUtility.SizeOf<AutoStruct>();
+        }
+
         [TestCompiler]
         public static int TestNestedExplicitLayouts()
         {
@@ -233,6 +519,13 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler]
+        public static int TestNestedExplicitLayoutsSize()
+        {
+
+            return UnsafeUtility.SizeOf<NestedExplicit0>();
+        }
+
+        [TestCompiler]
         public static uint TestBitcast()
         {
             return new FloatRepr()
@@ -240,13 +533,13 @@ namespace Burst.Compiler.IL.Tests
                 Value = 13.37f
             }.AsUint;
         }
-        
+
         [TestCompiler]
         public static uint TestExplicitStructFromCall()
         {
             return ReturnStruct().Value + ReturnStruct().R;
         }
-        
+
         static Color ReturnStruct()
         {
             return new Color()
@@ -257,7 +550,7 @@ namespace Burst.Compiler.IL.Tests
                 A = 255
             };
         }
-        
+
         [TestCompiler]
         public static unsafe uint TestExplicitLayoutStructWithFixedArray()
         {
@@ -273,8 +566,14 @@ namespace Burst.Compiler.IL.Tests
                 sum += x.Bytes[i];
                 if (i < 4) sum += x.Shorts[i];
             }
-            
+
             return x.UpperUInt + x.LowerUInt + sum;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitLayoutStructWithFixedArraySize()
+        {
+            return UnsafeUtility.SizeOf<FixedArrayExplitLayoutStruct>();
         }
 
         public struct StructInvalid
@@ -551,7 +850,7 @@ namespace Burst.Compiler.IL.Tests
             [FieldOffset(0)] public float Value;
             [FieldOffset(0)] public uint AsUint;
         }
-        
+
         [StructLayout(LayoutKind.Explicit, Size =  24)]
         private struct PaddedStruct
         {
@@ -583,10 +882,10 @@ namespace Burst.Compiler.IL.Tests
             c[0].Archetype = null;
             c[0].metaChunkEntity = null;
             c[0].Count = 0;
-            
+
             return TestRegressionInvalidGetElementPtrStructLayoutInternal(0, 1, &c);
         }
-        
+
         public static unsafe int TestRegressionInvalidGetElementPtrStructLayoutInternal(int index, int limit, Chunk** currentChunk)
         {
             int rValue = 0;
@@ -621,7 +920,7 @@ namespace Burst.Compiler.IL.Tests
             return b.Value.Min;
         }
 
-        public struct StructWithNestUnion 
+        public struct StructWithNestUnion
         {
             public UnionValue Value;
         }
@@ -639,7 +938,10 @@ namespace Burst.Compiler.IL.Tests
             public uint Property;
         }
 
-        [TestCompiler(typeof(NetworkEndPoint.Provider),typeof(NetworkEndPoint.Provider))]
+        #if UNITY_ANDROID || UNITY_IOS
+        [Ignore("This test fails on mobile platforms")]
+        #endif
+        [TestCompiler(typeof(NetworkEndPoint.Provider),typeof(NetworkEndPoint.Provider), ExpectCompilerException = true)]
         public static bool TestABITransformIntoExplicitLayoutTransform(NetworkEndPoint a,NetworkEndPoint b)
         {
             return a.Compare(b);
@@ -668,6 +970,60 @@ namespace Burst.Compiler.IL.Tests
                 public object Value => default(NetworkEndPoint);
 
             }
+        }
+
+        public struct SequentialStructWithPaddingAndVectorField
+        {
+            public byte a;
+            public float2 b;
+
+            public class Provider : IArgumentProvider
+            {
+                public object Value => new SequentialStructWithPaddingAndVectorField { a = 1, b = new float2(4, 5) };
+            }
+        }
+
+        #if UNITY_ANDROID || UNITY_IOS
+        [Ignore("This test fails on mobile platforms")]
+        #endif
+        [TestCompiler(typeof(SequentialStructWithPaddingAndVectorField.Provider))]
+        public static int TestSequentialStructWithPaddingAndVectorField(ref SequentialStructWithPaddingAndVectorField value)
+        {
+            return (int)value.b.x;
+        }
+
+        private static void TestSequentialStructWithPaddingAndVectorFieldRefHelper(ref SequentialStructWithPaddingAndVectorField value)
+        {
+            value.b.yx = value.b;
+            value.b = value.b.yx;
+        }
+
+        #if UNITY_ANDROID || UNITY_IOS
+        [Ignore("This test fails on mobile platforms")]
+        #endif
+        [TestCompiler(typeof(SequentialStructWithPaddingAndVectorField.Provider))]
+        public static int TestSequentialStructWithPaddingAndVectorFieldRef(ref SequentialStructWithPaddingAndVectorField value)
+        {
+            TestSequentialStructWithPaddingAndVectorFieldRefHelper(ref value);
+            return (int)value.b.x;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestSequentialStructWithPaddingAndVectorFieldPtr()
+        {
+            var vec = new float2(1, 2);
+            var vecPtr = &vec;
+            var value = new SequentialStructWithPaddingAndVectorField();
+            value.b = *vecPtr;
+            return (int)value.b.x;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestCreatingVectorTypeFromNonVectorScalarType()
+        {
+            var x = (short)4;
+            var value = new int4(x, x, x, x);
+            return value.w;
         }
     }
 }

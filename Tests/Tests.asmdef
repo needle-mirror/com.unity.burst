@@ -1,5 +1,5 @@
 {
-    "name": "Unity.Burst.Tests.EditMode",
+    "name": "Unity.Burst.Tests.UnitTests",
     "references": [
         "Unity.Burst",
         "Unity.Mathematics"
@@ -7,9 +7,7 @@
     "optionalUnityReferences": [
         "TestAssemblies"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,

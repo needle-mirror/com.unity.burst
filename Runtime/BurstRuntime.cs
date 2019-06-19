@@ -9,7 +9,7 @@ namespace Unity.Burst
     /// <summary>
     /// Provides helper intrinsics that can be used at runtime.
     /// </summary>
-    internal static class BurstRuntime
+    public static class BurstRuntime
     {
         /// <summary>
         /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.FullName"/>

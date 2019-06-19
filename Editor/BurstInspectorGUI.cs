@@ -289,7 +289,8 @@ namespace Unity.Burst.Editor
                     methodOptions.EnableBurstCompileSynchronously = true;
 
                     string defaultOptions;
-                    if (methodOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions))
+                    bool debug; // We still show disassembly even if method has [BurstCompile(Debug = true)]
+                    if (methodOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions, out debug))
                     {
                         options.Append(defaultOptions);
 

@@ -5,16 +5,9 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Unity.Burst.Editor")]
 // Make internals visible to burst tests
 [assembly: InternalsVisibleTo("btests")]
-// Make internals visible to Unity.Physics
-[assembly: InternalsVisibleTo("Unity.Physics")]
-[assembly: InternalsVisibleTo("Unity.Physics.Tests")]
-[assembly: InternalsVisibleTo("Havok.Physics")]
-[assembly: InternalsVisibleTo("Havok.Physics.Tests")]
-[assembly: InternalsVisibleTo("Unity.Audio.DSPGraph")]
-[assembly: InternalsVisibleTo("Unity.UNode")]
-[assembly: InternalsVisibleTo("Unity.UNode.Tests")]
-
-[assembly: InternalsVisibleTo("Unity.Burst.Tests.EditMode")]
+// Make internals visible to Unity burst tests
+[assembly: InternalsVisibleTo("Unity.Burst.Tests.PlayMode")]
+[assembly: InternalsVisibleTo("Unity.Burst.Tests.UnitTests")]
 
 namespace Unity.Burst
 {
@@ -97,6 +90,17 @@ namespace Unity.Burst
         /// </summary>
         /// <value>The default is false, true will force this code to be compiled synchronously on first invocation.</value>
         public bool CompileSynchronously { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to compile the code in a way that allows it to be debugged.
+        /// If this is set to <code>true</code>, the current implementation skips compilation of this method
+        /// so that the original .NET method can be debugged.
+        /// In the current implementation, this property is only used in the Editor and ignored for standalone players.
+        /// </summary>
+        /// <value>
+        /// The default is <code>false</code>.
+        /// </value>
+        public bool Debug { get; set; }
 
         internal string[] Options { get; set; }
 

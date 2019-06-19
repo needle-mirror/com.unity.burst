@@ -5,7 +5,7 @@ using UnityEditor;
 namespace Unity.Burst.Editor
 {
     /// <summary>
-    /// Responsible to synchronize <see cref="BurstCompilerOptions.Global"/> with the menu
+    /// Responsible to synchronize <see cref="BurstCompiler.Options"/> with the menu
     /// </summary>
     internal static class BurstEditorOptions
     {
@@ -15,7 +15,7 @@ namespace Unity.Burst.Editor
         private const string EnableBurstCompileSynchronouslyText = "BurstCompileSynchronously";
 
         /// <summary>
-        /// <c>true</c> if the menu options are synchronized with <see cref="BurstCompilerOptions.Global"/>
+        /// <c>true</c> if the menu options are synchronized with <see cref="BurstCompiler.Options"/>
         /// </summary>
         private static bool _isSynchronized;
 
@@ -51,7 +51,7 @@ namespace Unity.Burst.Editor
 
         private static BurstCompilerOptions GetGlobalOptions()
         {
-            var global = BurstCompilerOptions.Global;
+            var global = BurstCompiler.Options;
             // If options are not synchronize with our global instance, setup the sync
             if (!_isSynchronized)
             {
@@ -71,10 +71,10 @@ namespace Unity.Burst.Editor
         private static void GlobalOnOptionsChanged()
         {
             // We are not optimizing anything here, so whenever one option is set, we reset all of them
-            EditorPrefs.SetBool(EnableBurstCompilationText, BurstCompilerOptions.Global.EnableBurstCompilation);
-            EditorPrefs.SetBool(EnableBurstSafetyChecksText, BurstCompilerOptions.Global.EnableBurstSafetyChecks);
-            EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, BurstCompilerOptions.Global.EnableBurstCompileSynchronously);
-            EditorPrefs.SetBool(EnableBurstTimingsText, BurstCompilerOptions.Global.EnableBurstTimings);
+            EditorPrefs.SetBool(EnableBurstCompilationText, BurstCompiler.Options.EnableBurstCompilation);
+            EditorPrefs.SetBool(EnableBurstSafetyChecksText, BurstCompiler.Options.EnableBurstSafetyChecks);
+            EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, BurstCompiler.Options.EnableBurstCompileSynchronously);
+            EditorPrefs.SetBool(EnableBurstTimingsText, BurstCompiler.Options.EnableBurstTimings);
         }
     }
 }

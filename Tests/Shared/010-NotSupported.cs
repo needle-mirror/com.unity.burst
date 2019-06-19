@@ -26,5 +26,30 @@ namespace Burst.Compiler.IL.Tests
         {
             return yo(value);
         }
+
+        public struct HasMarshalAttribute
+        {
+            [MarshalAs(UnmanagedType.U1)] public bool A;
+        }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static void TestStructWithMarshalAs()
+        {
+#pragma warning disable 0219
+            var x = new HasMarshalAttribute();
+#pragma warning restore 0219
+        }
+
+        [TestCompiler(true, ExpectCompilerException = true)]
+        public static void TestMethodWithMarshalAsParameter([MarshalAs(UnmanagedType.U1)] bool x)
+        {
+        }
+
+        [TestCompiler(ExpectCompilerException = true)]
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static bool TestMethodWithMarshalAsReturnType()
+        {
+            return true;
+        }
     }
 }

@@ -5,35 +5,46 @@ using Unity.Collections.LowLevel.Unsafe;
 
 namespace Unity.Burst
 {
-#if UNITY_BURST_FEATURE_FUNCPTR
+    /// <summary>
+    /// Base interface for a function pointer.
+    /// </summary>
     public interface IFunctionPointer
-#else
-    internal interface IFunctionPointer
-#endif
     {
+        /// <summary>
+        /// Converts a pointer to a function pointer.
+        /// </summary>
+        /// <param name="ptr">The native pointer.</param>
+        /// <returns>An instance of this interface.</returns>
         IFunctionPointer FromIntPtr(IntPtr ptr);
     }
 
-#if UNITY_BURST_FEATURE_FUNCPTR
+    /// <summary>
+    /// A function pointer that can be used from a burst jobs. It needs to be compiled through <see cref="BurstCompiler.CompileFunctionPointer{T}"/>
+    /// </summary>
+    /// <typeparam name="T">Type of the delegate of this function pointer</typeparam>
     public struct FunctionPointer<T> : IFunctionPointer
-#else
-    internal struct FunctionPointer<T> : IFunctionPointer
-#endif
     {
         [NativeDisableUnsafePtrRestriction]
         private readonly IntPtr _ptr;
 
+        /// <summary>
+        /// Creates a new instance of this function pointer with the following native pointer.
+        /// </summary>
+        /// <param name="ptr"></param>
         public FunctionPointer(IntPtr ptr)
         {
             _ptr = ptr;
         }
 
-        public IFunctionPointer FromIntPtr(IntPtr ptr)
+        /// <summary>
+        /// Invoke this function pointer. Must be called from a Burst Jobs.
+        /// </summary>
+        public T Invoke => (T)(object)Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
+
+        IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr)
         {
             return new FunctionPointer<T>(ptr);
         }
-
-        public T Invoke => (T) (object) Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
     }
 }
 #endif

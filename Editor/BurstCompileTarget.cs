@@ -12,7 +12,7 @@ namespace Unity.Burst.Editor
             JobType = jobType ?? throw new ArgumentNullException(nameof(jobType));
             JobInterfaceType = interfaceType; // can be null
             // This is important to clone the options as we don't want to modify the global instance
-            Options = BurstCompilerOptions.Global.Clone();
+            Options = BurstCompiler.Options.Clone();
             // The BurstCompilerAttribute can be either on the type or on the method
             IsStaticMethod = isStaticMethod;
         }
@@ -46,16 +46,6 @@ namespace Unity.Burst.Editor
         /// Set to true if burst compilation is possible.
         /// </summary>
         public bool IsSupported => Options.IsSupported(JobType) || (IsStaticMethod && Options.IsSupported(Method));
-
-        public bool TryGetOptionsAsString(bool isJit, out string optionAsString)
-        {
-            if (IsStaticMethod)
-            {
-                return Options.TryGetOptions(Method, isJit, out optionAsString);
-            }
-
-            return Options.TryGetOptions(JobType, isJit, out optionAsString);
-        }
 
         /// <summary>
         /// Generated disassembly, or null if disassembly failed

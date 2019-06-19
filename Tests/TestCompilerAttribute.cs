@@ -87,19 +87,16 @@ namespace Burst.Compiler.IL.Tests
                 return compiledFunction;
             }
 
-#if UNITY_BURST_FEATURE_FUNCPTR
             protected override IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType)
             {
                 throw new NotImplementedException();
             }
-#endif
             protected override void Setup()
             {
             }
 
             protected override TestResult HandleCompilerException(ITestExecutionContext context, MethodInfo methodInfo)
             {
-
                 var arguments = GetArgumentsArray(_originalMethod);
                 Type[] nativeArgTypes = new Type[arguments.Length];
 
@@ -108,7 +105,9 @@ namespace Burst.Compiler.IL.Tests
                     nativeArgTypes[i] = arguments[i].GetType();
                 }
 
-                var delegateType = DelegateHelper.NewDelegateType(methodInfo.ReturnType, nativeArgTypes);
+                bool isInRegistry;
+                Func<object, object[], object> caller;
+                var delegateType = CreateNativeDelegateType(methodInfo.ReturnType, nativeArgTypes, out isInRegistry, out caller);
 
                 var functionDelegate = Delegate.CreateDelegate(delegateType, methodInfo);
                 Delegate compiledFunction = BurstCompiler.CompileDelegate(functionDelegate);

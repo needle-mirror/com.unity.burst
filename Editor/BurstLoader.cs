@@ -42,7 +42,9 @@ namespace Unity.Burst.Editor
 
         private static bool TryGetOptionsFromMember(MemberInfo member, out string flagsOut)
         {
-            return BurstCompilerOptions.Global.TryGetOptions(member, true, out flagsOut);
+            bool debug;
+            var result = BurstCompiler.Options.TryGetOptions(member, true, out flagsOut, out debug);
+            return result && !debug;
         }
     }
 }

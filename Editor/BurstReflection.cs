@@ -89,7 +89,7 @@ namespace Unity.Burst.Editor
                     try
                     {
                         // collect methods with types having a [BurstCompile] attribute
-                        bool visitStaticMethods = t.GetCustomAttribute<BurstCompileAttribute>() != null;
+                        bool visitStaticMethods = HasBurstCompileAttribute(t);
                         bool isValueType = false;
                         
                         if (t.IsInterface)
@@ -143,7 +143,7 @@ namespace Unity.Burst.Editor
                         var methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         foreach (var method in methods)
                         {
-                            if (method.GetCustomAttribute<BurstCompileAttribute>() != null)
+                            if (HasBurstCompileAttribute(method))
                             {
                                 var target = new BurstCompileTarget(method, type, null, true);
                                 methodsToCompile.Add(target);

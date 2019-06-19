@@ -13,7 +13,7 @@ using Unity.Collections;
 using Unity.Mathematics;
 using UnityBenchShared;
 
-#if UNITY_EDITOR
+#if !BURST_TESTS_ONLY
 using ExecutionContext = NUnit.Framework.Internal.ITestExecutionContext;
 #else
 using ExecutionContext = NUnit.Framework.Internal.TestExecutionContext;
@@ -40,11 +40,9 @@ namespace Burst.Compiler.IL.Tests
 
         public bool FastMath { get; set; }
 
-#if UNITY_BURST_FEATURE_FUNCPTR
         public string[] ProvidedFunctionPointers { get; set; }
 
         public string[] FunctionPointers { get; set; }
-#endif
 
         /// <summary>
         /// Use this property when the JIT calculation is wrong (e.g when using float)
@@ -185,10 +183,14 @@ namespace Burst.Compiler.IL.Tests
             }
             else
             {
+#if BURST_TESTS_ONLY
                 // Else we try to do it with a dynamic call
                 var type = DelegateHelper.NewDelegateType(returnType, arguments);
                 caller = StaticDynamicDelegateCaller;
                 return type;
+#else
+                throw new Exception("Couldn't find delegate in static registry and not able to use a dynamic call.");
+#endif
             }
         }
 
@@ -236,7 +238,7 @@ namespace Burst.Compiler.IL.Tests
             {
                 var resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
                 var resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
-                
+
                 var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");
                 if (overrideResultOnMono != null)
                 {
@@ -334,36 +336,7 @@ namespace Burst.Compiler.IL.Tests
                 var actualArgType = args[i].GetType();
                 var actualNativeArgType = nativeArgs[i].GetType();
 
-                // If the expected parameter for the native is a reference, we need to specify it here
-                if (expectedArgType.IsByRef)
-                {
-                    actualArgType = actualArgType.MakeByRefType();
-                    actualNativeArgType = actualNativeArgType.MakeByRefType();
-                }
-                if (expectedArgType == typeof(IntPtr) && actualNativeArgType == typeof(int))
-                {
-                    nativeArgs[i] = new IntPtr((int)args[i]);
-                    args[i] = new IntPtr((int)args[i]);
-                    actualNativeArgType = typeof(IntPtr);
-                    actualArgType = typeof(IntPtr);
-                }
-                if (expectedArgType == typeof(UIntPtr) && actualNativeArgType == typeof(uint))
-                {
-                    nativeArgs[i] = new UIntPtr((uint)args[i]);
-                    args[i] = new UIntPtr((uint)args[i]);
-                    actualNativeArgType = typeof(UIntPtr);
-                    actualArgType = typeof(UIntPtr);
-                }
-                if (expectedArgType.IsPointer && actualNativeArgType == typeof(IntPtr))
-                {
-                    nativeArgs[i] = args[i];
-                    args[i] = args[i];
-                    actualNativeArgType = expectedArgType;
-                    actualArgType = expectedArgType;
-                }
-
-#if UNITY_BURST_FEATURE_FUNCPTR
-                if (typeof(IFunctionPointer).IsAssignableFrom(expectedArgType) && actualNativeArgType == typeof(string))
+                if (typeof(IFunctionPointer).IsAssignableFrom(expectedArgType) || (expectedArgType.IsByRef && typeof(IFunctionPointer).IsAssignableFrom(expectedArgType.GetElementType())) && actualNativeArgType == typeof(string))
                 {
                     var methodName = (string)args[i];
                     var candidates =
@@ -371,19 +344,48 @@ namespace Burst.Compiler.IL.Tests
                             .GetMethods()
                             .Where(x => x.IsStatic && x.Name.Equals(methodName))
                             .ToArray();
-                    
+
                     if (candidates == null || candidates.Length != 1)
                     {
                         throw new ArgumentException($"Could not resolve an unambigoues static method from name {methodName}.");
                     }
 
-                    var functionPointer = CompileFunctionPointer(candidates[0], expectedArgType);
+                    var functionPointer = CompileFunctionPointer(candidates[0], expectedArgType.IsByRef ? expectedArgType.GetElementType() : expectedArgType);
                     nativeArgs[i] = functionPointer;
                     args[i] = functionPointer;
                     actualNativeArgType = expectedArgType;
                     actualArgType = expectedArgType;
                 }
-#endif
+                else
+                {
+                    // If the expected parameter for the native is a reference, we need to specify it here
+                    if (expectedArgType.IsByRef)
+                    {
+                        actualArgType = actualArgType.MakeByRefType();
+                        actualNativeArgType = actualNativeArgType.MakeByRefType();
+                    }
+                    if (expectedArgType == typeof(IntPtr) && actualNativeArgType == typeof(int))
+                    {
+                        nativeArgs[i] = new IntPtr((int)args[i]);
+                        args[i] = new IntPtr((int)args[i]);
+                        actualNativeArgType = typeof(IntPtr);
+                        actualArgType = typeof(IntPtr);
+                    }
+                    if (expectedArgType == typeof(UIntPtr) && actualNativeArgType == typeof(uint))
+                    {
+                        nativeArgs[i] = new UIntPtr((uint)args[i]);
+                        args[i] = new UIntPtr((uint)args[i]);
+                        actualNativeArgType = typeof(UIntPtr);
+                        actualArgType = typeof(UIntPtr);
+                    }
+                    if (expectedArgType.IsPointer && actualNativeArgType == typeof(IntPtr))
+                    {
+                        nativeArgs[i] = args[i];
+                        args[i] = args[i];
+                        actualNativeArgType = expectedArgType;
+                        actualArgType = expectedArgType;
+                    }
+                }
 
                 nativeArgTypes[i] = actualNativeArgType;
 
@@ -448,9 +450,8 @@ namespace Burst.Compiler.IL.Tests
 
         protected abstract Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType);
 
-#if UNITY_BURST_FEATURE_FUNCPTR
         protected abstract IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType);
-#endif
+
         protected abstract void Setup();
 
         protected abstract TestResult HandleCompilerException(ExecutionContext context, MethodInfo methodInfo);

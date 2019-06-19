@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !UNITY_EDITOR
+#if BURST_TESTS_ONLY
 using Burst.Backend;
 #endif
 using NUnit.Framework;
@@ -131,7 +131,7 @@ namespace Burst.Compiler.IL.Tests
             return b.b1;
         }
 
-#if !UNITY_EDITOR
+#if BURST_TESTS_ONLY
         [Test]
         public static void CheckStructWithPack()
         {
