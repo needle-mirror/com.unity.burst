@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0-preview.3] - 2019-06-28
+
+- Fix issue with generic resolution that could fail
+- Add support for readonly static data through generic instances
+- Add internal support for `SharedStatic<T>` for TypeManager
+- Add intrinsic support for `math.bitmask`
+
 ## [1.1.0-preview.2] - 2019-06-20
 
 - Fix issue where uninitialized values would be loaded instead for native containers containing big structs

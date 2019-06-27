@@ -236,6 +236,12 @@ namespace Burst.Compiler.IL.Tests
             }
             else
             {
+                // We are forced to run native before managed, because on IL2CPP, if a parameter
+                // is a ref, it will keep the same memory location for both managed and burst
+                // while in .NET CLR we have a different behavior
+                // The result is that on functions expecting the same input value through the ref
+                // it won't be anymore true because the managed could have modified the value before
+                // burst
                 var resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
                 var resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
 
@@ -303,6 +309,7 @@ namespace Burst.Compiler.IL.Tests
                 {
                     throw new AssertionException($"Argument number `{i}` for method `{method}` cannot be null");
                 }
+
                 if (arg.GetType() == typeof(float[]))
                 {
                     args[i] = ConvertToNativeArray((float[])arg);

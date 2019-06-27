@@ -12,7 +12,7 @@ namespace Unity.Burst
     public static class BurstRuntime
     {
         /// <summary>
-        /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.FullName"/>
+        /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>
         /// </summary>
         /// <typeparam name="T">The type to compute the hash from</typeparam>
         public static int GetHashCode32<T>()
@@ -21,12 +21,32 @@ namespace Unity.Burst
         }
 
         /// <summary>
-        /// Gets a 64-bits hashcode from a type computed for the <see cref="System.Type.FullName"/>
+        /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>
+        /// This method cannot be used from a burst job.
+        /// </summary>
+        /// <param name="type">The type to compute the hash from</param>
+        public static int GetHashCode32(Type type)
+        {
+            return HashStringWithFNV1A32(type.AssemblyQualifiedName);
+        }
+
+        /// <summary>
+        /// Gets a 64-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>
         /// </summary>
         /// <typeparam name="T">The type to compute the hash from</typeparam>
         public static long GetHashCode64<T>()
         {
             return HashCode64<T>.Value;
+        }
+
+        /// <summary>
+        /// Gets a 64-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>.
+        /// This method cannot be used from a burst job.
+        /// </summary>
+        /// <param name="type">Type to calculate a hash for</param>
+        public static long GetHashCode64(Type type)
+        {
+            return HashStringWithFNV1A64(type.AssemblyQualifiedName);
         }
 
         // method internal as it is used by the compiler directly
