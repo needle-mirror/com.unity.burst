@@ -79,10 +79,49 @@ namespace Unity.Burst.Editor
             // 1) Calculate AssemblyFolders
             // These are the folders to look for assembly resolution
             // --------------------------------------------------------------------------------------------------------
-            var assemblyFolders = new List<string>();
-            // These two assembly folder must come BEFORE stagingFolder, as the staging folder
-            // is actually containing .NET libs/mscorlibs
-            assemblyFolders.Add(stagingFolder);
+            var assemblyFolders = new List<string> { stagingFolder };
+            if (report.summary.platform == BuildTarget.WSAPlayer)
+            {
+                // On UWP, not all assemblies are copied to StagingArea, so we want to
+                // find all directories that we can reference assemblies from
+                // If we don't do this, we will crash with AssemblyResolutionException
+                // when following type references.
+                foreach (var assembly in playerAssemblies)
+                {
+                    foreach (var assemblyRef in assembly.compiledAssemblyReferences)
+                    {
+                        // Exclude folders with assemblies already compiled in the `folder`
+                        var assemblyName = Path.GetFileName(assemblyRef);
+                        if (assemblyName != null && File.Exists(Path.Combine(stagingFolder, assemblyName)))
+                        {
+                            continue;
+                        }
+
+                        var directory = Path.GetDirectoryName(assemblyRef);
+                        if (directory != null)
+                        {
+                            var fullPath = Path.GetFullPath(directory);
+                            if (IsMonoReferenceAssemblyDirectory(fullPath) || IsDotNetStandardAssemblyDirectory(fullPath))
+                            {
+                                // Don't pass reference assemblies to burst because they contain methods without implementation
+                                // If burst accidentally resolves them, it will emit calls to burst_abort.
+                                fullPath = Path.Combine(EditorApplication.applicationContentsPath, "MonoBleedingEdge/lib/mono/unityaot");
+                                fullPath = Path.GetFullPath(fullPath); // GetFullPath will normalize path separators to OS native format
+                                if (!assemblyFolders.Contains(fullPath))
+                                    assemblyFolders.Add(fullPath);
+
+                                fullPath = Path.Combine(fullPath, "Facades");
+                                if (!assemblyFolders.Contains(fullPath))
+                                    assemblyFolders.Add(fullPath);
+                            }
+                            else if (!assemblyFolders.Contains(fullPath))
+                            {
+                                assemblyFolders.Add(fullPath);
+                            }
+                        }
+                    }
+                }
+            }
 
             // Copy assembly used during staging to have a trace
             if (BurstLoader.IsDebugging)

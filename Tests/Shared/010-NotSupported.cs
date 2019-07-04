@@ -32,7 +32,8 @@ namespace Burst.Compiler.IL.Tests
             [MarshalAs(UnmanagedType.U1)] public bool A;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        //[TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler()] // Because MarshalAs is used in mathematics we cannot disable it for now
         public static void TestStructWithMarshalAs()
         {
 #pragma warning disable 0219

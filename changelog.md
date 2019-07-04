@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0-preview.4] - 2019-07-05
+
+- Burst will now report a compilation error when writing to a `[ReadOnly]` container/variable
+- Fix regression with nested generics resolution for interface calls
+- Fix issue for UWP with burst generating non appcert compliant binaries
+- Fix issue when reading/writing vector types to a field of an explicit layout
+- Fix build issue on iOS, use only hash names for platforms with clang toolchain to mitigate issues with long names in LLVM IR
+- Allow calls to intrinsic functions (e.g `System.Math.Log`) inside static constructors
+- Improve performance when detecting if a method needs to be recompiled at JIT time
+- Fix an issue with explicit struct layout and vector types
+
 ## [1.1.0-preview.3] - 2019-06-28
 
 - Fix issue with generic resolution that could fail

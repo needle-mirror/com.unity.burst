@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -1025,6 +1026,32 @@ namespace Burst.Compiler.IL.Tests
             var value = new int4(x, x, x, x);
             return value.w;
         }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitVectors
+        {
+            [FieldOffset(0)]
+            public int A;
+            [FieldOffset(4)]
+            public int2 B;      //NB: Any Vector type is sufficient
+        }
+
+        [TestCompiler]
+        public static unsafe int TestVectorLoadFromExplicitStruct()
+        {
+            var header = new ExplicitVectors{ };
+
+            return header.B.x;
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static unsafe int TestVectorStoreToExplicitStruct(ref int2 a)
+        {
+            var header = new ExplicitVectors{ B=a};
+
+            return header.B.x;
+        }
+
     }
 }
 

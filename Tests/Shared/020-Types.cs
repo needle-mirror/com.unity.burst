@@ -2,9 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if BURST_TESTS_ONLY
-using Burst.Backend;
-#endif
+using Unity.Collections.LowLevel.Unsafe;
 using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
@@ -131,22 +129,11 @@ namespace Burst.Compiler.IL.Tests
             return b.b1;
         }
 
-#if BURST_TESTS_ONLY
-        [Test]
-        public static void CheckStructWithPack()
+        [TestCompiler(ExpectCompilerException = true)]
+        public static int CheckStructWithPack()
         {
-            var assemblyLoader = new AssemblyLoader();
-            assemblyLoader.AddSearchDirectory(Path.GetDirectoryName(typeof(Types).Assembly.Location));
-            var ilCompiler = new ILCompiler(new ExtendedCompilerBackend(new NopCompilerBackend()));
-
-            // Check exception for fixed size layout
-            {
-                var structType = assemblyLoader.Resolve(typeof(StructWithPack));
-                var ex = Assert.Throws<CompilerException>(() => ilCompiler.CompileType(structType));
-                StringAssert.Contains("The packing size `8` of the struct", ex.Message);
-            }
+            return UnsafeUtility.SizeOf<StructWithPack>();
         }
-#endif
 
         [TestCompiler(ExpectCompilerException = true)]
         public static int TestUsingReferenceType()

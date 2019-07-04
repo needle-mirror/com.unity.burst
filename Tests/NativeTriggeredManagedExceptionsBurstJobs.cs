@@ -23,6 +23,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void RaiseMonoException()
         {
             var job = new RaiseMonoExceptionJob();
@@ -101,6 +103,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         [Ignore("OS Native Exceptions not currently handled")]
         public void AccessNullNativeArrayParallelFor()
         {
@@ -119,6 +123,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         [Ignore("OS Native Exceptions not currently handled")]
         public void AccessNullNativeArray()
         {
@@ -141,6 +147,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         [Ignore("OS Native Exceptions not currently handled")]
         public void AccessNullUnsafePtrParallelFor()
         {
@@ -162,6 +170,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         [Ignore("OS Native Exceptions not currently handled")]
         public void AccessNullUnsafePtr()
         {

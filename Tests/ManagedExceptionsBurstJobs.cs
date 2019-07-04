@@ -20,6 +20,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowArgumentException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("ArgumentException: A"));
@@ -38,6 +40,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowArgumentNullException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("System.ArgumentNullException: N"));
@@ -56,6 +60,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowNullReferenceException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("NullReferenceException: N"));
@@ -74,6 +80,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowInvalidOperationException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("InvalidOperationException: IO"));
@@ -92,6 +100,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowNotSupportedException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("NotSupportedException: NS"));
@@ -110,6 +120,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowUnityException()
         {
             LogAssert.Expect(LogType.Exception, new Regex("UnityException: UE"));
@@ -128,6 +140,8 @@ namespace ExceptionsFromBurstJobs
         }
 
         [Test]
+        [UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.OSXEditor, RuntimePlatform.LinuxEditor)]
+        [Description("Requires ENABLE_UNITY_COLLECTIONS_CHECKS which is currently only enabled in the Editor")]
         public void ThrowIndexOutOfRange()
         {
             LogAssert.Expect(LogType.Exception, new Regex("IndexOutOfRangeException: IOOR"));
