@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.4-preview.48
+
+- Move back com.unity.burst.experimental for function pointers support, but use internal modifier for this API
+
+## 0.2.4-preview.47
+
+- Fix an issue during publish stage which was preventing to release the binaries.
+
+## 0.2.4-preview.46
+
+- iOS player builds now use static linkage (to support TestFlight)  - Minimum supported Unity versions are 2018.3.6f1 or 2019.1.0b4
+- Fix a warning in Burst AOT settings
+- Enable forcing synchronous job compilation from menu
+
 ## 0.2.4-preview.45
 
 - Disable Burst AOT settings support for unity versions before 2019.1
