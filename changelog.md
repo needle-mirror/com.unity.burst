@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.2.4-preview.41
+
+- Fix codegen issue with Interlocked.Decrement that was instead performing an increment
+- Fix codegen issue for an invalid layout of struct with nested recursive pointer references 
+- Fix for Fogbugz case : https://fogbugz.unity3d.com/f/cases/1109514/
+- Fix codegen issue with ref bool on a method argument creating a compiler exception
+
+## 0.2.4-preview.40
+
+- Fix bug when a write to a pointer type of an argument of a generic function
+- Breaking change of API: `Accuracy` -> `FloatPrecision`, and `Support` => `FloatMode`
+- Add `FloatMode.Deterministic` mode with early preview of deterministic mathematical functions
+- Fix bug with fonts in inspector being incorrectly reloaded
+
+## 0.2.4-preview.39
+
+- Add preview support for readonly static arrays typically used for LUT
+- Fix an issue with generics incorrectly being resolved in certain situations
+- Fix ARM32/ARM64 compilation issues for some instructions
+- Fix ARM compilation issues on UWP
+- Fix issue with math.compress
+- Add support for `ldnull` for storing a managed null reference to a ref field (e.g for DisposeSentinel)
+
+## 0.2.4-preview.38
+
+- Fix issue when converting an unsigned integer constant to a larger unsigned integer (e.g (ulong)uint.MaxValue)
+- Fix crash in editor when IRAnalysis can return an empty string 
+- Fix potential crash of Cecil when reading symbols from assembly definition
+
 ## 0.2.4-preview.37
 
 - Fix a crash on Linux and MacOS in the editor with dlopen crashing when trying to load burst-llvm (linux)

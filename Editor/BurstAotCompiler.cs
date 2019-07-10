@@ -182,11 +182,13 @@ namespace Unity.Burst.Editor
             else if (targetPlatform == TargetPlatform.Android)
             {
                 // Set the ANDROID_NDK_ROOT so IL2CPP knows where to find the Android toolchain
-
-                var ndkRoot = EditorPrefs.GetString("AndroidNdkRoot");
-                if (!string.IsNullOrEmpty(ndkRoot))
+                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ANDROID_NDK_ROOT")))
                 {
-                    Environment.SetEnvironmentVariable("ANDROID_NDK_ROOT", ndkRoot);
+                    var ndkRoot = EditorPrefs.GetString("AndroidNdkRoot");
+                    if (!string.IsNullOrEmpty(ndkRoot))
+                    {
+                        Environment.SetEnvironmentVariable("ANDROID_NDK_ROOT", ndkRoot);
+                    }
                 }
 
                 var androidTargetArch = UnityEditor.PlayerSettings.Android.targetArchitectures;
@@ -233,7 +235,7 @@ namespace Unity.Burst.Editor
 
                 try
                 {
-	                Runner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable),  "@" + responseFile, Application.dataPath + "/..", new BclParser(), null);
+	                Runner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable), "--debug=true " + "@" + responseFile, Application.dataPath + "/..", new BclParser(), null);
                 }
                 catch (Exception e)
                 {
