@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.4-preview.45
+
+- Disable Burst AOT settings support for unity versions before 2019.1
+
+## 0.2.4-preview.44
+
+- Fix incorrect conversions when performing subtraction with enums and floats
+- Fix compatability issue with future unity versions
+- Fix bug with ldfld bitcast on structs with explicit layouts
+- Guard against an issue resolving debug locations if the scope is global
+
+## 0.2.4-preview.43
+
+- Add preliminary support for burst AOT settings in the player settings
+- Move BurstCompile (delegate/function pointers support) from com.unity.burst package to com.unity.burst.experimental package
+- Fix issue with stackalloc allocating a pointer size for the element type resulting in possible StackOverflowException
+- Add support for disabling burst compilation from Unity editor with the command line argument `--burst-disable-compilation` 
+- Add support for forcing synchronous compilation from Unity editor with the command line argument `--burst-force-sync-compilation`
+- Fix a compiler crash when generating debugging information
+- Fix invalid codegen involving ternary operator
+
+## 0.2.4-preview.42
+
+- Fix a compilation error when implicit/explicit operators are used returning different type for the same input type
+
 ## 0.2.4-preview.41
 
 - Fix codegen issue with Interlocked.Decrement that was instead performing an increment
