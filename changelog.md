@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.4-preview.11
+
+- Fix exception in codegen when accessing readonly static fields from different control flow paths 
+
+## 0.2.4-preview.10
+
+- Fix a potential stack overflow issue when a generic parameter constraint on a type is also referencing another generic parameter through a generic interface constraint
+- Update to latest Unity.Mathematics:
+  - Fix order of parameters and codegen for step functions
+
+## 0.2.4-preview.9
+
+- Fix bug when casting an IntPtr to an enum pointer that was causing an invalid codegen exception
+
+## 0.2.4-preview.8
+
+- Breaking change: Move Unity.Jobs.Accuracy/Support to Unity.Burst
+- Deprecate ComputeJobOptimizationAttribute in favor of BurstCompileAttribute
+- Fix bug when using enum with a different type than int
+- Fix bug with IL stind that could lead to a memory corruption.
+
 ## 0.2.4-preview.7
 
 - Add support for nested structs in SOA native arrays
