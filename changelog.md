@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.2.4-preview.30
+
+- Fix IsValueType throwing a NullReferenceException in case of using generics
+- Fix discovery for burst inspector/AOT methods inheriting from IJobProcessComponentData or interfaces with generics
+- Add NoAliasAttribute
+- Improved codegen for csum
+- Improved codegen for abs(int)
+- Improved codegen for abs on floatN/doubleN
+
+## 0.2.4-preview.29
+
+- Fix issue when calling an explicit interface method not being matched through a generic constraint
+- Fix issue with or/and binary operation on a bool returned by a function
+
+## 0.2.4-preview.28
+
+- Fix a compilation issue when storing a bool returned from a function to a component of a bool vector
+- Fix AOT compilation issue with a duplicated dictionary key 
+- Fix settings of ANDROID_NDK_ROOT if it is not setup in Unity Editor
+
+## 0.2.4-preview.27
+
+- Improve detection of jobs within nested generics for AOT/burst inspector
+- Fix compiler bug of comparison of a pointer to null pointer
+- Fix crash compilation of sincos on ARM (neon/AARCH64) 
+- Fix issue when using a pointer to a VectorType resulting in an incorrect access of a vector type
+- Add support for doubles (preview)
+- Improve AOT compiler error message/details if the compiler is failing before the linker
+
+## 0.2.4-preview.26
+
+- Added support for cosh, sinh and tanh
+
 ## 0.2.4-preview.25
 
 - Fix warning in unity editor
