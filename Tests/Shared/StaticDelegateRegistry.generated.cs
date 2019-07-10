@@ -246,6 +246,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Case1061135.NewMoveJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate), CallBurst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate);
+            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate);
@@ -2686,6 +2687,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.FullSOATestDataWrapper)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob)p[0];
             d(ref arg0);
             return result;
         }

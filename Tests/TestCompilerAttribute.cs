@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Burst.Compiler.IL.Tests.Helpers;
@@ -13,6 +14,7 @@ using Unity.Burst;
 using Unity.Mathematics;
 using UnityBenchShared;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -119,6 +121,35 @@ namespace Burst.Compiler.IL.Tests
 
                 return context.CurrentResult;
             }
+
+            string cachedLog = null;
+            bool logPresent = false;
+
+            protected override string GetLinesFromDeterminismLog()
+            {
+                if (cachedLog==null)
+                {
+                    try
+                    {
+                        TextAsset txtData = (TextAsset)Resources.Load("btests_deterministic");
+                        cachedLog = txtData.text;
+                        logPresent = true;
+                    }
+                    catch
+                    {
+                        logPresent = false;
+                    }
+                }
+
+                return cachedLog;
+            }
+
+            protected override bool IsDeterministicTest(TestMethod method)
+            {
+                return logPresent && (method.Method.ReturnType.IsType(typeof(double)) ||
+                        method.Method.ReturnType.IsType(typeof(float)));
+            }
+
         }
     }
 }

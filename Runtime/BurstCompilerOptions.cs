@@ -30,13 +30,6 @@ namespace Unity.Burst
 
         private const string ForceSynchronousCompilationArg = "--burst-force-sync-compilation";
 
-        private static bool _enableBurstCompilation;
-        private static bool _forceDisableBurstCompilation;
-        private static bool _enableBurstCompileSynchronously;
-        private static bool _forceBurstCompilationSynchronously;
-        private static bool _enableBurstSafetyChecks;
-        private static bool _enableBurstTimings;
-
         internal const string DefaultLibraryName = "lib_burst_generated";
 
         // -------------------------------------------------------
@@ -102,6 +95,13 @@ namespace Unity.Burst
 
 #if !BURST_INTERNAL
         internal const string GlobalSettingsName = "global";
+
+        private static bool _enableBurstCompilation;
+        private static bool _forceDisableBurstCompilation;
+        private static bool _enableBurstCompileSynchronously;
+        private static bool _forceBurstCompilationSynchronously;
+        private static bool _enableBurstSafetyChecks;
+        private static bool _enableBurstTimings;
 
         private BurstCompilerOptions() : this(null)
         {

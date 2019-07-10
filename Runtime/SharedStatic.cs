@@ -1,4 +1,4 @@
-#if UNITY_2019_3_OR_NEWER && UNITY_BURST_FEATURE_SHAREDSTATIC
+#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY && UNITY_2019_3_OR_NEWER && UNITY_BURST_PENDING_FEATURE_FOR_2019_3
 using System;
 using System.Collections.Generic;
 #if BURST_UNITY_MOCK
@@ -10,6 +10,10 @@ using UnityEngine;
 
 namespace Unity.Burst
 {
+    /// <summary>
+    /// A structure that allows to share mutable static data between C# and HPC#.
+    /// </summary>
+    /// <typeparam name="T">Type of the data to share (must not contain any reference types)</typeparam>
     public readonly unsafe struct SharedStatic<T> where T : struct
     {
         private readonly void* _buffer;
@@ -19,6 +23,9 @@ namespace Unity.Burst
             _buffer = buffer;
         }
 
+        /// <summary>
+        /// Get a writable reference to the shared data.
+        /// </summary>
         public ref T Data
         {
             get
@@ -27,17 +34,33 @@ namespace Unity.Burst
             }
         }
 
+        /// <summary>
+        /// Get a direct unsafe pointer to the shared data.
+        /// </summary>
         public void* UnsafeDataPointer
         {
             get { return _buffer; }
         }
 
+        /// <summary>
+        /// Creates a shared static data for the specified context (usable from both C# and HPC#)
+        /// </summary>
+        /// <typeparam name="TContext">A type class that uniquely identifies the this shared data.</typeparam>
+        /// <param name="alignment">Optional alignment</param>
+        /// <returns>A shared static for the specified context</returns>
         public static SharedStatic<T> GetOrCreate<TContext>(uint alignment = 0)
         {
             return new SharedStatic<T>(SharedStatic.GetOrCreateSharedStaticInternal(
                 BurstRuntime.GetHashCode64<TContext>(), 0, (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? 4 : alignment));
         }
 
+        /// <summary>
+        /// Creates a shared static data for the specified context and sub-context (usable from both C# and HPC#)
+        /// </summary>
+        /// <typeparam name="TContext">A type class that uniquely identifies the this shared data.</typeparam>
+        /// <typeparam name="TSubContext">A type class that uniquely identifies this shared data within a sub-context of the primary context</typeparam>
+        /// <param name="alignment">Optional alignment</param>
+        /// <returns>A shared static for the specified context</returns>
         public static SharedStatic<T> GetOrCreate<TContext, TSubContext>(uint alignment = 0)
         {
             return new SharedStatic<T>(SharedStatic.GetOrCreateSharedStaticInternal(
@@ -45,12 +68,25 @@ namespace Unity.Burst
                 (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? 4 : alignment));
         }
 
+        /// <summary>
+        /// Creates a shared static data for the specified context (reflection based, only usable from C#, but not from HPC#)
+        /// </summary>
+        /// <param name="contextType">A type class that uniquely identifies the this shared data</param>
+        /// <param name="alignment">Optional alignment</param>
+        /// <returns>A shared static for the specified context</returns>
         public static SharedStatic<T> GetOrCreate(Type contextType, uint alignment = 0)
         {
             return new SharedStatic<T>(SharedStatic.GetOrCreateSharedStaticInternal(
                 BurstRuntime.GetHashCode64(contextType), 0, (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? 4 : alignment));
         }
 
+        /// <summary>
+        /// Creates a shared static data for the specified context and sub-context (usable from both C# and HPC#)
+        /// </summary>
+        /// <param name="contextType">A type class that uniquely identifies the this shared data</param>
+        /// <param name="subContextType">A type class that uniquely identifies this shared data within a sub-context of the primary context</param>
+        /// <param name="alignment">Optional alignment</param>
+        /// <returns>A shared static for the specified context</returns>
         public static SharedStatic<T> GetOrCreate(Type contextType, Type subContextType, uint alignment = 0)
         {
             return new SharedStatic<T>(SharedStatic.GetOrCreateSharedStaticInternal(

@@ -31,7 +31,26 @@ namespace Unity.Burst
                 }
             }
         }
-        
+
+#if UNITY_2019_3_OR_NEWER && UNITY_BURST_PENDING_FEATURE_FOR_2019_3
+        /// <summary>
+        /// Sets the execution mode for all jobs spawned from now on.
+        /// </summary>
+        /// <param name="mode">Specifiy the required execution mode</param>
+        public static void SetExecutionMode(BurstExecutionEnvironment mode)
+        {
+            Burst.LowLevel.BurstCompilerService.SetCurrentExecutionMode((uint)mode);
+        }
+        /// <summary>
+        /// Retrieve the current execution mode that is configured.
+        /// </summary>
+        /// <returns>Currently configured execution mode</returns>
+        public static BurstExecutionEnvironment GetExecutionMode()
+        {
+            return (BurstExecutionEnvironment)Burst.LowLevel.BurstCompilerService.GetCurrentExecutionMode();
+        }
+#endif
+
         /// <summary>
         /// Compile the following delegate with burst and return a new delegate.
         /// </summary>

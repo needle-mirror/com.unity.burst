@@ -12,7 +12,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityBenchShared;
-
 #if !BURST_TESTS_ONLY
 using ExecutionContext = NUnit.Framework.Internal.ITestExecutionContext;
 #else
@@ -255,6 +254,9 @@ namespace Burst.Compiler.IL.Tests
                 // Use our own version (for handling correctly float precision)
                 AssertHelper.AreEqual(resultClr, resultNative, GetULP());
 
+                // Validate deterministic outputs - Disabled for now
+                //RunDeterminismValidation(_originalMethod, resultNative);
+
                 // Allow to process native result
                 ProcessNativeResult(_originalMethod, resultNative);
 
@@ -276,6 +278,14 @@ namespace Burst.Compiler.IL.Tests
 
         protected virtual void ProcessNativeResult(TestMethod method, object result)
         {
+        }
+        protected virtual string GetLinesFromDeterminismLog()
+        {
+            return "";
+        }
+        protected virtual bool IsDeterministicTest(TestMethod method)
+        {
+            return false;
         }
 
         private static void DisposeObjects(object[] arguments)
@@ -445,6 +455,59 @@ namespace Burst.Compiler.IL.Tests
             }
             else
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expected {expectedExceptionName} but no exception was thrown");
+        }
+
+        protected void RunDeterminismValidation(TestMethod method, object resultNative)
+        {
+            // GetLines first as this will allow us to ignore these tests if the log file is missing
+            //which occurs when running the "trunk" package tests, since they use their own project file
+            //a possible workaround for this is to embed the log into a .cs file and stick that in the tests
+            //folder, then we don't need the resource folder version.
+            var lines = GetLinesFromDeterminismLog();
+
+            // If the log is not found, this will also return false
+            if (!IsDeterministicTest(method))
+                return;
+
+            var allLines = lines.Split(new char[] { '\r', '\n' });
+            string matchName = $"{method.FullName}:";
+            foreach (var line in allLines)
+            {
+                if (line.StartsWith(matchName))
+                {
+                    if (resultNative.GetType() == typeof(Single))
+                    {
+                        unsafe
+                        {
+                            var val = (float)resultNative;
+                            int intvalue = *((int*)&val);
+                            var resStr = $"0x{intvalue:X4}";
+
+                            if (!line.EndsWith(resStr))
+                            {
+                                Assert.Fail($"Deterministic mismatch '{method.FullName}: {resStr}' but expected '{line}'");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Assert.That(resultNative.GetType() == typeof(Double));
+                        unsafe
+                        {
+                            var val = (double)resultNative;
+                            long longvalue = *((long*)&val);
+                            var resStr = $"0x{longvalue:X8}";
+
+                            if (!line.EndsWith(resStr))
+                            {
+                                Assert.Fail($"Deterministic mismatch '{method.FullName}: {resStr}' but expected '{line}'");
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+            Assert.Fail($"Deterministic mismatch test not present : '{method.FullName}'");
         }
 
         protected abstract int GetRunCount();

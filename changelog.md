@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1] - 2019-07-11
+
+- Fix a compiler error when using a vector type as a generic argument of a NativeHashMap container
+- Disable temporarily SharedStatic/Execution mode for current 2019.3 alpha8 and before
+- Fix detection of Android NDK for Unity 2019.3
+- Update documentation for known issues
+
+## [1.1.0] - 2019-07-09
+
+- Fix detection of Android NDK for Unity 2019.3
+- Update documentation for known issues
+
 ## [1.1.0-preview.4] - 2019-07-05
 
 - Burst will now report a compilation error when writing to a `[ReadOnly]` container/variable

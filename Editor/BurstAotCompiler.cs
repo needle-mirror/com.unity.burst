@@ -345,8 +345,10 @@ namespace Unity.Burst.Editor
                 //TODO: would be better to query AndroidNdkRoot (but thats not exposed from unity)
                 string ndkRoot = null;
 
+#if UNITY_2019_3_OR_NEWER && UNITY_ANDROID
+                ndkRoot = UnityEditor.Android.AndroidExternalToolsSettings.ndkRootPath;
+#elif UNITY_2019_1_OR_NEWER
                 // 2019.1 now has an embedded ndk
-#if UNITY_2019_1_OR_NEWER
                 if (EditorPrefs.HasKey("NdkUseEmbedded"))
                 {
                     if (EditorPrefs.GetBool("NdkUseEmbedded"))
@@ -433,13 +435,13 @@ namespace Unity.Burst.Editor
             {
                 EditorCompilationInterface.SetCompileScriptsOutputDirectory(LibraryPlayerScriptAssemblies);
 
-                // We can't use CompilationPipeline.GetAssemblies(AssembliesType.Player)
-                // because when you click "Run all in player" in the Test Runner window, PlayMode tab,
-                // we need to include the test assembly.
+                var shouldIncludeTestAssemblies = report.summary.options.HasFlag(BuildOptions.IncludeTestAssemblies);
 
+#if UNITY_2019_3_OR_NEWER
+                return CompilationPipeline.GetAssemblies(shouldIncludeTestAssemblies ? AssembliesType.Player : AssembliesType.PlayerWithoutTestAssemblies);
+#else
                 var compilationOptions = EditorCompilationInterface.GetAdditionalEditorScriptCompilationOptions();
-
-                if (report.summary.options.HasFlag(BuildOptions.IncludeTestAssemblies))
+                if (shouldIncludeTestAssemblies)
                 {
                     compilationOptions |= EditorScriptCompilationOptions.BuildingIncludingTestAssemblies;
                 }
@@ -448,6 +450,7 @@ namespace Unity.Burst.Editor
                 return CompilationPipeline.GetPlayerAssemblies(EditorCompilationInterface.Instance, compilationOptions, null);
 #else
                 return CompilationPipeline.GetPlayerAssemblies(EditorCompilationInterface.Instance, compilationOptions);
+#endif
 #endif
             }
             finally
@@ -672,7 +675,7 @@ namespace Unity.Burst.Editor
             // Format of an error message:
             //
             //C:\work\burst\src\Burst.Compiler.IL.Tests\Program.cs(17,9): error: Loading a managed string literal is not supported by burst
-            // at Buggy.FuckBug() (at C:\work\burst\src\Burst.Compiler.IL.Tests\Program.cs:17)
+            // at Buggy.NiceBug() (at C:\work\burst\src\Burst.Compiler.IL.Tests\Program.cs:17)
             //
             //
             //                                                                [1]    [2]         [3]        [4]         [5]
