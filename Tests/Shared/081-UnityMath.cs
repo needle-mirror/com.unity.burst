@@ -174,5 +174,15 @@ namespace Burst.Compiler.IL.Tests
         {
             return math.trunc(value);
         }
+
+        private readonly static float3 a = new float3(1, 2, 3);
+
+        [TestCompiler]
+        public static bool TestStaticLoad()
+        {
+            var cmp = a == new float3(1, 2, 3);
+
+            return cmp.x && cmp.y && cmp.z;
+        }
     }
 }

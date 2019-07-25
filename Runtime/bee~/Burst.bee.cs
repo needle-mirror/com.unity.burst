@@ -58,6 +58,7 @@ public abstract class BurstCompiler
                         $"--patch-assemblies-into={outputDirForPatchedAssemblies}",
                         $"--output={objectFile.Parent.Combine(pinvokeName)}",
                         $"--only-static-methods",
+                        "--method-prefix=burstedmethod_",
                         $"--pinvoke-name={pinvokeName}"
                     }.Concat(inputAssemblies.Select(asm => $"--root-assembly={asm.Path}"));
                 if (!compiler.UseOwnToolchain)

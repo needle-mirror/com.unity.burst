@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2] - 2019-07-26
+
+- Fix an issue where non-readonly static variable would not fail in burst while they are not supported
+- Fix issue with char comparison against an integer. Add partial support for C# char type
+- Improve codegen for struct layout with simple explicit layout
+- Fix NullReferenceException when using a static variable with a generic declaring type
+- Fix issue with `stackalloc` not clearing the allocated stack memory as it is done in .NET CLR
+
 ## [1.1.1] - 2019-07-11
 
 - Fix a compiler error when using a vector type as a generic argument of a NativeHashMap container

@@ -26,6 +26,12 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler]
+        public static int Char()
+        {
+            return sizeof(char);
+        }
+
+        [TestCompiler]
         public static int Int8()
         {
             return sizeof(sbyte);

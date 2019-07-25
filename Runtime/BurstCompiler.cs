@@ -32,7 +32,7 @@ namespace Unity.Burst
             }
         }
 
-#if UNITY_2019_3_OR_NEWER && UNITY_BURST_PENDING_FEATURE_FOR_2019_3
+#if UNITY_2019_3_OR_NEWER
         /// <summary>
         /// Sets the execution mode for all jobs spawned from now on.
         /// </summary>

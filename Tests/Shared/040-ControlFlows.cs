@@ -802,5 +802,20 @@ namespace Burst.Compiler.IL.Tests
         {
             return (x ? 1 : -1) * math.min(16, 1);
         }
+
+        [TestCompiler]
+        // Check unsigned ternary comparison (Bxx_Un) opcodes
+        public static ulong TestUnsignedTernary()
+        {
+            ulong a = 0;
+            ulong b = ~0UL;
+            ulong c = (a < b) ? 1UL : 0;
+            ulong d = (a <= b) ? 1UL : 0;
+            ulong e = (a > b) ? 0: 1UL;
+            ulong f = (a >= b) ? 0: 1UL;
+
+            return c + d + e + f;
+        }
+
     }
 }

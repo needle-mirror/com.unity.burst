@@ -86,6 +86,7 @@ namespace Unity.Burst
         internal const string OptionAotPatchedAssembliesOutputFolder = "patch-assemblies-into=";
         internal const string OptionAotPinvokeNameToPatch = "pinvoke-name=";
         internal const string OptionAotOnlyStaticMethods = "only-static-methods";
+        internal const string OptionMethodPrefix = "method-prefix=";
         internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
         internal const string OptionAotKeyFolder = "key-folder=";
         internal const string OptionVerbose = "verbose";

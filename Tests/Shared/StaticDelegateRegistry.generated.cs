@@ -43,6 +43,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(float),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate);
             Register(typeof(int),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate), CallBurst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate);
+            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate), CallBurst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate), CallBurst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate), CallBurst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestEnums.MyEnum)}, typeof(Burst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate), CallBurst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate);
@@ -70,6 +71,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(sbyte),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate);
             Register(typeof(short),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate);
             Register(typeof(uint),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate);
+            Register(typeof(ulong),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate);
             Register(typeof(void),  Array.Empty<Type>(), typeof(Unity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate), CallUnity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate);
             Register(typeof(void),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate), CallBurst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate);
             Register(typeof(void),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate), CallBurst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate);
@@ -90,6 +92,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate);
             Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate);
             Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStructWithPadding),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate);
+            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate);
             Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AnyBool2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AnyBool2Delegate);
             Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AnyBool3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AnyBool3Delegate);
             Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AnyBool4Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AnyBool4Delegate);
@@ -119,6 +122,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(bool),  new Type[] {typeof(long), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate);
             Register(typeof(bool),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate);
             Register(typeof(byte),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate);
+            Register(typeof(char),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble2Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble2Delegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_AbsDouble3Delegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_AbsDouble3Delegate);
             Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate), CallBurst_Compiler_IL_Tests_Vectors_Maths_Cos4dDelegate);
@@ -177,6 +181,9 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.TestJob).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate);
+            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.ParentStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate);
+            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate);
+            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.NativeArrayInt).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate), CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Bools_Bool2NotDelegate), CallBurst_Compiler_IL_Tests_Vectors_Bools_Bool2NotDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Vectors_Bools_Bool3NotDelegate), CallBurst_Compiler_IL_Tests_Vectors_Bools_Bool3NotDelegate);
@@ -209,6 +216,8 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(bool), typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_Vectors_Constructors_Bool33BoolsDelegate), CallBurst_Compiler_IL_Tests_Vectors_Constructors_Bool33BoolsDelegate);
             Register(typeof(int),  new Type[] {typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_Vectors_Constructors_Bool22IntsDelegate), CallBurst_Compiler_IL_Tests_Vectors_Constructors_Bool22IntsDelegate);
             Register(typeof(int),  new Type[] {typeof(byte), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate);
+            Register(typeof(int),  new Type[] {typeof(char).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate);
+            Register(typeof(int),  new Type[] {typeof(char)}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate);
             Register(typeof(int),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Vectors_BinaryOperators_Float2_EqualityDelegate), CallBurst_Compiler_IL_Tests_Vectors_BinaryOperators_Float2_EqualityDelegate);
             Register(typeof(int),  new Type[] {typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate);
             Register(typeof(int),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate), CallBurst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate);
@@ -235,7 +244,6 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(uint),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate);
             Register(typeof(uint),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_BgtUnDelegate), CallBurst_Compiler_IL_Tests_Expressions_BgtUnDelegate);
             Register(typeof(uint),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate);
-            Register(typeof(ulong),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate);
             Register(typeof(ulong),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate);
             Register(typeof(ulong),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate);
             Register(typeof(ulong),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate);
@@ -261,6 +269,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate);
+            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate);
             Register(typeof(void),  new Type[] {typeof(UnityBenchShared.DivisionByScalar).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate);
             Register(typeof(void),  new Type[] {typeof(UnityBenchShared.IntToFloatPenalty).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate);
             Register(typeof(void),  new Type[] {typeof(UnityBenchShared.PartialWrite).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate);
@@ -587,6 +596,17 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate(ref Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc arg0, int arg1);
+        private unsafe static object CallBurst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc)p[0];
+            var arg1 = (int)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int Burst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate(ref Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed arg0, int arg1);
         private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate(object delegateObj, object[] p)
         {
@@ -865,6 +885,15 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate();
+        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate)delegateObj;
+            object result = null;
+            result = d();
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void Unity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate();
         private unsafe static object CallUnity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate(object delegateObj, object[] p)
         {
@@ -1042,6 +1071,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate)delegateObj;
             object result = null;
             result = d();
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SomeStruct)p[0];
+            result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -1345,6 +1384,15 @@ namespace Burst.Compiler.IL.Tests
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate char Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate();
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate)delegateObj;
+            object result = null;
+            result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -1965,6 +2013,36 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.ParentStruct arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.ParentStruct)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SomeStruct)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate(ref Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate(ref Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.NativeArrayInt arg0);
         private unsafe static object CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate(object delegateObj, object[] p)
         {
@@ -2311,6 +2389,26 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate(ref char arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate)delegateObj;
+            object result = null;
+            var arg0 = (char)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate(char arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate)delegateObj;
+            object result = null;
+            var arg0 = (char)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int Burst_Compiler_IL_Tests_Vectors_BinaryOperators_Float2_EqualityDelegate(float arg0, float arg1);
         private unsafe static object CallBurst_Compiler_IL_Tests_Vectors_BinaryOperators_Float2_EqualityDelegate(object delegateObj, object[] p)
         {
@@ -2582,15 +2680,6 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate)delegateObj;
-            object result = null;
-            result = d();
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate(double arg0);
         private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate(object delegateObj, object[] p)
         {
@@ -2840,6 +2929,16 @@ namespace Burst.Compiler.IL.Tests
             var arg1 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)p[1];
             var arg2 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)p[2];
             d(ref arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.AnsiStruct arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.AnsiStruct)p[0];
+            d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

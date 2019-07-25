@@ -921,6 +921,20 @@ namespace Burst.Compiler.IL.Tests
             return b.Value.Min;
         }
 
+        [TestCompiler]
+        public static float TestExplicitStructNestedAsArgument()
+        {
+            float Helper(StructWithNestUnion outer)
+            {
+                return outer.Value.Min;
+            }
+
+            return Helper(new StructWithNestUnion
+            {
+                Value = new UnionValue { Min = 5.0f }
+            });
+        }
+
         public struct StructWithNestUnion
         {
             public UnionValue Value;
@@ -1051,7 +1065,5 @@ namespace Burst.Compiler.IL.Tests
 
             return header.B.x;
         }
-
     }
 }
-
