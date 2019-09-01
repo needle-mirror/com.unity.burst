@@ -89,6 +89,7 @@ namespace Unity.Burst
         internal const string OptionMethodPrefix = "method-prefix=";
         internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
         internal const string OptionAotKeyFolder = "key-folder=";
+        internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
         internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
 
@@ -437,6 +438,8 @@ namespace Unity.Burst
         WASM = 7,
         UWP = 8,
         Lumin = 9,
+        Switch = 10,
+        Stadia = 11,
     }
 
     // NOTE: This must be synchronized with Backend.TargetCpu

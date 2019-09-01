@@ -23,6 +23,10 @@ namespace Unity.Burst.Editor
         {
             // This can be setup to get more diagnostics
             IsDebugging = Environment.GetEnvironmentVariable("UNITY_BURST_DEBUG") != null;
+            if(IsDebugging)
+            {
+                UnityEngine.Debug.LogWarning("[com.unity.burst] Extra debugging is turned on.");
+            }
 
             // Try to load the runtime through an environment variable
             RuntimePath = Environment.GetEnvironmentVariable("UNITY_BURST_RUNTIME_PATH");
@@ -31,6 +35,11 @@ namespace Unity.Burst.Editor
             if (!Directory.Exists(RuntimePath))
             {
                 RuntimePath = Path.GetFullPath("Packages/com.unity.burst/.Runtime");
+            }
+
+            if(IsDebugging)
+            {
+                UnityEngine.Debug.LogWarning($"[com.unity.burst] Runtime directory set to {RuntimePath}");
             }
 
             BurstEditorOptions.EnsureSynchronized();

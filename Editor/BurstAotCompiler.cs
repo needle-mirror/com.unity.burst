@@ -23,8 +23,52 @@ using Debug = UnityEngine.Debug;
 
 namespace Unity.Burst.Editor
 {
+    // For static builds, there are two different approaches:
+    // Postprocessing adds the libraries after Unity is done building,
+    // for platforms that need to build a project file, etc.
+    // Preprocessing simply adds the libraries to the Unity build,
+    // for platforms where Unity can directly build an app.
     using static BurstCompilerOptions;
+    internal class StaticPreProcessor : IPreprocessBuildWithReport
+    {
+        private const string TempSourceLibrary = @"Temp/StagingArea/SourcePlugins";
+        private const string TempStaticLibrary = @"Temp/StagingArea/NativePlugins";
+        public int callbackOrder { get { return 0; } }
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(report.summary.platform);
 
+            // Early exit if burst is not activated
+            if (aotSettingsForTarget.DisableBurstCompilation)
+            {
+                return;
+            }
+            if(report.summary.platform == BuildTarget.Switch)
+            {
+                // add the static lib, and the c++ shim
+                string burstCppLinkFile = "lib_burst_generated.cpp";
+                string burstStaticLibFile = "lib_burst_generated.a";
+                string cppPath = Path.Combine(TempSourceLibrary, burstCppLinkFile);
+                string libPath = Path.Combine(TempStaticLibrary, burstStaticLibFile);
+                if(!Directory.Exists(TempSourceLibrary))
+                {
+                    Directory.CreateDirectory(TempSourceLibrary);
+                    Directory.CreateDirectory(TempSourceLibrary);
+                }
+                File.WriteAllText(cppPath, @"
+extern ""C""
+{
+    void Staticburst_initialize(void* );
+    void* StaticBurstStaticMethodLookup(void* );
+
+    int burst_enable_static_linkage = 1;
+    void burst_initialize(void* i) { Staticburst_initialize(i); }
+    void* BurstStaticMethodLookup(void* i) { return StaticBurstStaticMethodLookup(i); }
+}
+");
+            }
+        }
+    }
     /// <summary>
     /// Integration of the burst AOT compiler into the Unity build player pipeline
     /// </summary>
@@ -69,6 +113,7 @@ namespace Unity.Burst.Editor
             // grab the location of the root of the player folder - for handling nda platforms that require keys
             var keyFolder = BuildPipeline.GetPlaybackEngineDirectory(report.summary.platform, BuildOptions.None);
             commonOptions.Add(GetOption(OptionAotKeyFolder, keyFolder));
+            commonOptions.Add(GetOption(OptionAotDecodeFolder, Path.Combine(Environment.CurrentDirectory, "Library", "Burst")));
 
             // Extract the TargetPlatform and Cpu from the current build settings
             TargetCpu targetCpu;
@@ -80,7 +125,8 @@ namespace Unity.Burst.Editor
             // These are the folders to look for assembly resolution
             // --------------------------------------------------------------------------------------------------------
             var assemblyFolders = new List<string> { stagingFolder };
-            if (report.summary.platform == BuildTarget.WSAPlayer)
+            if (report.summary.platform == BuildTarget.WSAPlayer
+                || report.summary.platform == BuildTarget.XboxOne)
             {
                 // On UWP, not all assemblies are copied to StagingArea, so we want to
                 // find all directories that we can reference assemblies from
@@ -217,7 +263,7 @@ namespace Unity.Burst.Editor
                     GetOption(OptionTarget, combination.TargetCpu)
                 };
 
-                if (targetPlatform == TargetPlatform.iOS)
+                if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.Switch)
                 {
                     options.Add(GetOption(OptionStaticLinkage));
                 }
@@ -338,9 +384,9 @@ namespace Unity.Burst.Editor
             }
             else if (targetPlatform == TargetPlatform.Android)
             {
-                //TODO: would be better to query AndroidNdkRoot (but thats not exposed from unity)
+                // TODO: would be better to query AndroidNdkRoot (but thats not exposed from unity)
                 string ndkRoot = null;
-
+                var targetAPILevel = PlayerSettings.Android.GetMinTargetAPILevel();
 #if UNITY_2019_3_OR_NEWER && UNITY_ANDROID
                 ndkRoot = UnityEditor.Android.AndroidExternalToolsSettings.ndkRootPath;
 #elif UNITY_2019_1_OR_NEWER
@@ -375,6 +421,8 @@ namespace Unity.Burst.Editor
                 {
                     Environment.SetEnvironmentVariable("ANDROID_NDK_ROOT", ndkRoot);
                 }
+
+                Environment.SetEnvironmentVariable("BURST_ANDROID_MIN_API_LEVEL", $"{targetAPILevel}");
 
                 var androidTargetArch = UnityEditor.PlayerSettings.Android.targetArchitectures;
                 if ((androidTargetArch & AndroidArchitecture.ARMv7) != 0)
@@ -414,6 +462,16 @@ namespace Unity.Burst.Editor
                 }
                 combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
             }
+            else if (targetPlatform == TargetPlatform.Switch)
+            {
+                combinations.Add(new BurstOutputCombination("NativePlugins/", targetCpu));
+            }
+#if UNITY_2019_3_OR_NEWER
+            else if (targetPlatform == TargetPlatform.Stadia)
+            {
+                combinations.Add(new BurstOutputCombination("NativePlugins", targetCpu));
+            }
+#endif
             else
             {
                 combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
@@ -525,6 +583,14 @@ namespace Unity.Burst.Editor
                 case BuildTarget.Lumin:
                     targetCpu = TargetCpu.ARMV8A_AARCH64;
                     return TargetPlatform.Lumin;
+                case BuildTarget.Switch:
+                    targetCpu = TargetCpu.ARMV8A_AARCH64;
+                    return TargetPlatform.Switch;
+#if UNITY_2019_3_OR_NEWER
+                case BuildTarget.Stadia:
+                    targetCpu = TargetCpu.AVX2;
+                    return TargetPlatform.Stadia;
+#endif
             }
             return null;
         }

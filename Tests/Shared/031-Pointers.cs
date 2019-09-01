@@ -538,5 +538,50 @@ namespace Burst.Compiler.IL.Tests
                         throw new InvalidOperationException("The BlobAssetReference is not valid. Likely it has already been unloaded or released");
             }
         }
+
+        internal unsafe struct StackAllocCheck
+        {
+            public int* ptr;
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public void AddToPtr(int* otherPtr)
+            {
+                *otherPtr = 42;
+                *ptr += 1;
+                *ptr += *otherPtr;
+            }
+
+            public class Provider : IArgumentProvider
+            {
+                public object Value => new StackAllocCheck();
+            }
+        }
+
+        [TestCompiler(typeof(StackAllocCheck.Provider))]
+        public static unsafe bool StackAllocAliasCheck(ref StackAllocCheck stackAllocCheck)
+        {
+            int* ptr = stackalloc int[1];
+            *ptr = 13;
+
+            stackAllocCheck.ptr = ptr;
+
+            stackAllocCheck.AddToPtr(ptr);
+
+            if (*ptr != 86)
+            {
+                return false;
+            }
+
+            *stackAllocCheck.ptr = -4;
+            *ptr += 1;
+            *ptr += *stackAllocCheck.ptr;
+
+            if (*ptr != -6)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

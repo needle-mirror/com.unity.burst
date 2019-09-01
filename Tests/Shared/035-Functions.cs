@@ -39,13 +39,37 @@ namespace Burst.Compiler.IL.Tests
         {
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestCallsOfDiscardedMethodRegression()
         {
             // The regression was that we would queue all calls of a method, but if we encountered a discardable one
             // We would stop visiting pending methods. This resulting in method bodies not being visited.
             Discardable();
             return NotDiscardable();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int NoInline(int x)
+        {
+            return x;
+        }
+
+        [TestCompiler(42)]
+        public static int TestNoInline(int x)
+        {
+            return NoInline(x);
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public static int NoOptimization(int x)
+        {
+            return x;
+        }
+
+        [TestCompiler(42)]
+        public static int TestNoOptimization(int x)
+        {
+            return NoOptimization(x);
         }
     }
 }

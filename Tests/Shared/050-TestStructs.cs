@@ -912,6 +912,72 @@ namespace Burst.Compiler.IL.Tests
             return sizeof(Packet);
         }
 
+        [StructLayout(LayoutKind.Explicit)]
+        private struct ExplicitStructPackedButWithHoles
+        {
+            [FieldOffset(0)]
+            public byte A;
+
+            [FieldOffset(1)]
+            public long B;
+
+            [FieldOffset(21)]
+            public byte C;
+        }
+
+        [TestCompiler]
+        public static int TestExplicitStructPackedButWithHolesSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructPackedButWithHoles>();
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitStructPackedButWithHolesOffsetC()
+        {
+            var value = new ExplicitStructPackedButWithHoles();
+            var addressStart = &value;
+            var addressField = &value.C;
+            return (int)((byte*)addressField - (byte*)addressStart);
+        }
+
+        private struct ExplicitStructPackedButWithHolesContainer
+        {
+            public ExplicitStructPackedButWithHoles A;
+            public int B;
+            public ExplicitStructPackedButWithHoles C;
+        }
+
+        [TestCompiler]
+        public static int TestExplicitStructPackedButWithHolesContainerSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructPackedButWithHolesContainer>();
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitStructPackedButWithHolesContainerOffsetC()
+        {
+            var value = new ExplicitStructPackedButWithHolesContainer();
+            var addressStart = &value;
+            var addressField = &value.C;
+            return (int)((byte*)addressField - (byte*)addressStart);
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct ExplicitStructNotPackedWithHoles
+        {
+            [FieldOffset(4)]
+            public int A;
+
+            [FieldOffset(12)]
+            public int B;
+        }
+
+        [TestCompiler]
+        public static int TestExplicitStructNotPackedWithHolesSize()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStructNotPackedWithHoles>();
+        }
+
         [TestCompiler]
         public static float TestExplicitStructNested()
         {

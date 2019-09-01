@@ -96,5 +96,18 @@ namespace Burst.Compiler.IL.Tests
             var c = (char)i;
             return fp.FunctionPointer.Invoke(c);
         }
+
+        static private readonly half3 h3_h = new half3(new half(42.0f));
+        static private readonly half3 h3_d = new half3(0.5);
+        static private readonly half3 h3_v2s = new half3(new half2(new half(1.0f), new half(2.0f)), new half(0.5f));
+        static private readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
+        static private readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
+
+        [TestCompiler(ExpectCompilerException = true)]
+        public static float TestStaticHalf3()
+        {
+            var result = (float3)h3_h + h3_d + h3_v2s + h3_sv2 + h3_v3;
+            return result.x + result.y + result.z;
+        }
     }
 }

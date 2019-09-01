@@ -603,6 +603,12 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
   </tr>
   <tr>
     <td>Windows</td>
+    <td>Magic Leap</td>
+    <td><code>ARMV8 AARCH64</code></td>
+    <td>Lumin SDK must be installed via Magic Leap Package Manager and configured in the Unity Editor's External Tools Preferences.</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
     <td>Xbox One</td>
     <td><code>x64 SSE4</code></td>
     <td>Visual Studio 2015<br/>Microsoft XDK</td>
@@ -630,6 +636,12 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
     <td>Android</td>
     <td><code>x86 SSE2</code>, <code>ARM32 Thumb2/Neon32</code>, <code>ARMV8 AARCH64</code></td>
     <td>Android NDK 13 or higher - It is preferred to use the one installed by unity (via Add Component).<br/>Will fall back to the one specified by ANDROID_NDK_ROOT environment variable if the unity external tools settings are not configured.</td>
+  </tr>
+  <tr>
+    <td>macOS</td>
+    <td>Magic Leap</td>
+    <td><code>ARMV8 AARCH64</code></td>
+    <td>Lumin SDK must be installed via Magic Leap Package Manager and configured in the Unity Editor's External Tools Preferences.</td>
   </tr>
   <tr>
     <td>Linux</td>

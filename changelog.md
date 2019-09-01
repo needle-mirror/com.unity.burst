@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.3-preview.3] - 2019-09-02
+
+- Query android API target level from player settings when building android standalone players.
+- Add calli opcode support to support bindings to native code.
+
+## [1.1.3-preview.2] - 2019-08-29
+
+- Fix to allow calling [BurstDiscard] functions from static constructors.
+- Correctly error if a DLLImport function uses a struct passed by value, but allow handle structs (structs with a single pointer/integer in them) as these require no ABI pain.
+- Upgraded burst to use LLVM Version 8 by default, bringing the latest optimisation improvements from the LLVM project.
+- Added support for multiple LLVM versions, this does increase the package size, however it allows us to retain compatability with platforms that still require older versions of LLVM.
+- Fix bug in assembly caching, subsequent runs should now correctly use cached jit code as appropriate.
+- Add support for Lumin platform
+
+## [1.1.3-preview.1] - 2019-08-26
+
+- Add support for use of the MethodImpl(MethodImplOptions.NoOptimization) on functions.
+- Fix an issue whereby static readonly vector variables could not be constructed unless using the constructor whose number of elements matched the width of the vector.
+- Fix an issue whereby static readonly vector variables could not be struct initialized.
+- Improve codegen for structs with explicit layout and overlapping fields.
+- Fix a bug causing SSE4 instructions to be run on unsupported processors.
+- Fix an issue where storing a pointer would fail as our type normalizer would cast the pointer to an i8.
+- Begin to add Burst-specific aliasing information by instructing LLVM on our stack-allocation and global variables rules.
+
 ## [1.1.2] - 2019-07-26
 
 - Fix an issue where non-readonly static variable would not fail in burst while they are not supported
