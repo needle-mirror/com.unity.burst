@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0-preview.1] - 2019-09-09
+
+- Fix assembly caching issue, cache usage now conservative (Deals with methods that require resolving multiple assemblies prior to starting the compilation - generics).
+- Fix Mac OS compatibility of burst (10.10 and up) - fixes undefined symbol _futimens
+
 ## [1.1.3-preview.3] - 2019-09-02
 
 - Query android API target level from player settings when building android standalone players.

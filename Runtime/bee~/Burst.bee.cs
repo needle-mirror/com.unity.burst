@@ -93,13 +93,13 @@ public abstract class BurstCompiler
                     inputAssemblies);
 
                 var inputPaths = AddDebugSymbolPaths(inputAssemblies);
-                var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName)).Append(objectFile);
+                var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName)).Concat(new []{ objectFile });
 
                 Backend.Current.AddAction(
                     "Burst",
                     //todo: make burst process pdbs
                     targetFiles.ToArray(),
-                    inputPaths.Append(BurstExecutable).ToArray(),
+                    inputPaths.Concat(new []{ BurstExecutable }).ToArray(),
                     executableStringFor,
                     commandLineArgs);
             });
@@ -134,13 +134,13 @@ public abstract class BurstCompiler
                     inputAssemblies);
 
                 var inputPaths = AddDebugSymbolPaths(inputAssemblies);
-                var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName)).Append(targetNativeLibrary);
+                var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName)).Concat(new [] { targetNativeLibrary });
 
                 Backend.Current.AddAction(
                     "Burst",
                     //todo: make burst process pdbs
                     targetFiles.ToArray(),
-                    inputPaths.Append(BurstExecutable).ToArray(),
+                    inputPaths.Concat(new []{ BurstExecutable }).ToArray(),
                     executableStringFor,
                     commandLineArgs);
             });
