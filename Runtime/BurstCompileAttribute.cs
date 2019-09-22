@@ -6,9 +6,8 @@ using System.Runtime.CompilerServices;
 // Make internals visible to burst tests
 [assembly: InternalsVisibleTo("btests")]
 // Make internals visible to Unity burst tests
-[assembly: InternalsVisibleTo("Unity.Burst.Tests.PlayMode")]
 [assembly: InternalsVisibleTo("Unity.Burst.Tests.UnitTests")]
-
+[assembly: InternalsVisibleTo("Unity.Burst.Editor.Tests")]
 namespace Unity.Burst
 {
     // FloatMode and FloatPrecision must be kept in sync with burst.h / Burst.Backend
@@ -139,13 +138,5 @@ namespace Unity.Burst
             FloatMode = floatMode;
             FloatPrecision = floatPrecision;
         }
-    }
-
-    /// <summary>
-    /// Can be used to specify that a parameter to a function will not alias. (Advanced - see User Manual for a description of Aliasing).
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter)]
-    public class NoAliasAttribute : System.Attribute
-    {
     }
 }

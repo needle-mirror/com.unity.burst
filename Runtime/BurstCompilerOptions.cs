@@ -72,6 +72,8 @@ namespace Unity.Burst
         internal const string OptionJitLogTimings = "log-timings";
         internal const string OptionJitCacheDirectory = "cache-directory";
 
+        internal const string OptionJitIsForFunctionPointer = "is-for-function-pointer";
+
         // -------------------------------------------------------
         // Options used by the Aot compiler
         // -------------------------------------------------------
@@ -92,6 +94,9 @@ namespace Unity.Burst
         internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
         internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
+
+        internal const string CompilerCommandShutdown = "$shutdown";
+        internal const string CompilerCommandCancel = "$cancel";
 
         // All the following content is exposed to the public interface
 

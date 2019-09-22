@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0-preview.5] - 2019-09-23
+
+- Fix crashing issue during the shutdown of the editor
+
+## [1.2.0-preview.4] - 2019-09-20
+
+- Fix a logging issue on shutdown
+
+## [1.2.0-preview.3] - 2019-09-20
+
+- Fix potential logging of an error while shutting down the editor
+
+## [1.2.0-preview.2] - 2019-09-20
+
+- New multi-threaded compilation of jobs/function pointers in the editor
+- Improve caching of compiled jobs/function pointers
+- Fix a caching issue where some jobs/function pointers would not be updated in the editor when updating their code
+- Fix an issue where type initializers with interdependencies were not executed in the correct order.
+- Fix an issue with `Failed to resolve assembly Windows, Version=255.255.255.255...` when building for Xbox One
+- Fix compilation error on ARM32 when calling an external function
+- Fix an issue with function pointers that would generate invalid code if a non-blittable type is used in a struct passed by ref
+- Fix an issue with function pointers that would generate invalid code in case containers/pointers passed to the function are memory aliased
+- Report a compiler error if a function pointer is trying to be compiled without having the `[BurstCompile]` attribute on the method and owning type
+
 ## [1.2.0-preview.1] - 2019-09-09
 
 - Fix assembly caching issue, cache usage now conservative (Deals with methods that require resolving multiple assemblies prior to starting the compilation - generics).

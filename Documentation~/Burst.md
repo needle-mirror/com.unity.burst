@@ -439,6 +439,36 @@ The same loop with the **noalias analysis disabled** will be **copying only a si
 
 As we can see, the performance difference can be significant here. That's why noalias aware native code generation is fundamental, and that's what Burst is trying to solve.
 
+### Aliasing Checks
+
+Since aliasing is so key to the compilers ability to optimize for performance, we've added some experimental aliasing intrinsics:
+
+- `Unity.Burst.Aliasing.ExpectAlias` expects that the two pointers **do** alias, and generates a compiler error if not.
+- `Unity.Burst.Aliasing.ExpectNoAlias` expects that the two pointers **do not** alias, and generates a compiler error if not.
+
+These are **experimental at present** and beyond basic pointer deductions they may produce false negatives.
+
+An example:
+
+```c#
+[BurstCompile]
+private struct CopyJob : IJob
+{
+    [ReadOnly]
+    public NativeArray<float> Input;
+
+    [WriteOnly]
+    public NativeArray<float> Output;
+
+    public unsafe void Execute()
+    {
+        Unity.Burst.Aliasing.ExpectNoAlias(Input.getUnsafePtr(), Output.getUnsafePtr());
+    }
+}
+```
+
+The above would **not** generate a compiler error, because the two pointers are deduced not to alias because of our `IJob` rules.
+
 ## Compiler options
 
 When compiling a job, you can change the behavior of the compiler:

@@ -61,7 +61,7 @@ namespace Unity.Burst
         internal static unsafe T CompileDelegate<T>(T delegateMethod) where T : class
         {
             // We have added support for runtime CompileDelegate in 2018.2+
-            void* function = Compile(delegateMethod);
+            void* function = Compile(delegateMethod, false);
             object res = System.Runtime.InteropServices.Marshal.GetDelegateForFunctionPointer((IntPtr)function, delegateMethod.GetType());
             return (T)res;
         }
@@ -75,11 +75,11 @@ namespace Unity.Burst
         public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : class
         {
             // We have added support for runtime CompileDelegate in 2018.2+
-            void* function = Compile(delegateMethod);
+            void* function = Compile(delegateMethod, true);
             return new FunctionPointer<T>(new IntPtr(function));
         }
 
-        private static unsafe void* Compile<T>(T delegateObj) where T : class
+        private static unsafe void* Compile<T>(T delegateObj, bool isFunctionPointer) where T : class
         {
             if (delegateObj == null) throw new ArgumentNullException(nameof(delegateObj));
             if (!(delegateObj is Delegate)) throw new ArgumentException("object instance must be a System.Delegate", nameof(delegateObj));
@@ -91,6 +91,10 @@ namespace Unity.Burst
             }
 
             string defaultOptions = "--enable-synchronous-compilation";
+            if (isFunctionPointer)
+            {
+                defaultOptions += "\n--is-for-function-pointer";
+            }
             // TODO: Disable this part as it is using Editor code that is not accessible from the runtime. We will have to move the editor code to here
             string extraOptions;
             bool debug;
@@ -129,13 +133,27 @@ namespace Unity.Burst
         /// </summary>
         internal static void Shutdown()
         {
-            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod("ShutdownMethod",BindingFlags.Static|BindingFlags.NonPublic), "$shutdown");
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandShutdown);
         }
 
         /// <summary>
-        /// Dummy empty method for Shutdown purposes
+        /// Cancel any compilation being processed by the JIT Compiler in the background.
         /// </summary>
-        private static void ShutdownMethod() { }
+        internal static void Cancel()
+        {
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandCancel);
+        }
+
+        private static void SendCommandToCompiler(string commandName)
+        {
+            if (commandName == null) throw new ArgumentNullException(nameof(commandName));
+            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic), commandName);
+        }
+
+        /// <summary>
+        /// Dummy empty method for being able to send a command to the compiler
+        /// </summary>
+        private static void DummyMethod() { }
     }
 }
 #endif
