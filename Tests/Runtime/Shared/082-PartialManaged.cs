@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Burst;
 #if BURST_TESTS_ONLY
 using Burst.Compiler.IL.Jit;
 #endif
@@ -57,7 +58,7 @@ namespace Burst.Compiler.IL.Tests
         }
 #endif
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
         public static int GetIndexOfCharFomString()
         {
             return "abc".IndexOf('b');
@@ -75,7 +76,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0649
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
         public static int AccessClassFromStruct()
         {
             var val = new StructWithManaged();
@@ -83,7 +84,7 @@ namespace Burst.Compiler.IL.Tests
             return val.myClassValue.value;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
         public static void AccessStringFromStruct()
         {
             var val = new StructWithManaged();
@@ -92,7 +93,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
         public static void AccessObjectFromStruct()
         {
             var val = new StructWithManaged();
@@ -102,7 +103,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
         public static void AccessArrayFromStruct()
         {
             var val = new StructWithManaged();
@@ -119,7 +120,7 @@ namespace Burst.Compiler.IL.Tests
             return val.value;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionNewobjWithManagedTypeNotSupported)]
         public static void NewMyClass()
         {
 #pragma warning disable 0219

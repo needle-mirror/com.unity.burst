@@ -155,7 +155,7 @@ namespace Unity.Burst.Editor
             _fastMath = GUILayout.Toggle(_fastMath, contentFastMath, EditorStyles.toggle);
             FlowToNewLine(ref remainingWidth,width, EditorStyles.toggle, contentFastMath);
 
-            EditorGUI.BeginDisabledGroup(!target.IsSupported);
+            EditorGUI.BeginDisabledGroup(!target.HasRequiredBurstCompileAttributes);
             _codeGenOptions = EditorGUILayout.Popup(_codeGenOptions, CodeGenOptions, EditorStyles.popup);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.popup, contentCodeGenOptions);
 
@@ -281,6 +281,7 @@ namespace Unity.Burst.Editor
                     // TODO: refactor this code with a proper AppendOption to avoid these "\n"
                     var options = new StringBuilder();
 
+                    methodOptions.EnableBurstCompilation = true;
                     methodOptions.EnableBurstSafetyChecks = _safetyChecks;
                     methodOptions.EnableEnhancedAssembly = _enhancedDisassembly;
                     methodOptions.DisableOptimizations = !_optimizations;
@@ -289,8 +290,7 @@ namespace Unity.Burst.Editor
                     methodOptions.EnableBurstCompileSynchronously = true;
 
                     string defaultOptions;
-                    bool debug; // We still show disassembly even if method has [BurstCompile(Debug = true)]
-                    if (methodOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions, out debug))
+                    if (methodOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions))
                     {
                         options.Append(defaultOptions);
 
@@ -438,7 +438,7 @@ namespace Unity.Burst.Editor
         {
             var target = Targets[args.item.id - 1];
             var wasEnabled = GUI.enabled;
-            GUI.enabled = target.IsSupported;
+            GUI.enabled = target.HasRequiredBurstCompileAttributes;
             base.RowGUI(args);
             GUI.enabled = wasEnabled;
         }

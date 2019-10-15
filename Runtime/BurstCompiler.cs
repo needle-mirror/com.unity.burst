@@ -89,51 +89,86 @@ namespace Unity.Burst
             {
                 throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be static. Instance methods are not supported");
             }
+            if (delegateMethod.Method.IsGenericMethod)
+            {
+                throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be a non-generic method");
+            }
 
-            string defaultOptions = "--enable-synchronous-compilation";
+            void* function;
+
+#if UNITY_EDITOR
+            string defaultOptions;
+
             if (isFunctionPointer)
             {
-                defaultOptions += "\n--is-for-function-pointer";
+                defaultOptions = "--" + BurstCompilerOptions.OptionJitIsForFunctionPointer + "\n";
+                var managedFunctionPointer = Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                defaultOptions += "--" + BurstCompilerOptions.OptionJitManagedFunctionPointer + "0x" + managedFunctionPointer.ToInt64().ToString("X16");
             }
-            // TODO: Disable this part as it is using Editor code that is not accessible from the runtime. We will have to move the editor code to here
+            else
+            {
+                defaultOptions = "--" + BurstCompilerOptions.OptionJitEnableSynchronousCompilation;
+            }
+
             string extraOptions;
-            bool debug;
-
-            void* function = null;
-
             // The attribute is directly on the method, so we recover the underlying method here
-            if (Options.TryGetOptions(delegateMethod.Method, false, out extraOptions, out debug))
+            if (Options.TryGetOptions(delegateMethod.Method, true, out extraOptions))
             {
                 if (!string.IsNullOrWhiteSpace(extraOptions))
                 {
                     defaultOptions += "\n" + extraOptions;
                 }
 
-                int delegateMethodID = Unity.Burst.LowLevel.BurstCompilerService.CompileAsyncDelegateMethod(delegateObj, defaultOptions);
-                function = Unity.Burst.LowLevel.BurstCompilerService.GetAsyncCompiledAsyncDelegateMethod(delegateMethodID);
+                var delegateMethodId = Unity.Burst.LowLevel.BurstCompilerService.CompileAsyncDelegateMethod(delegateObj, defaultOptions);
+                function = Unity.Burst.LowLevel.BurstCompilerService.GetAsyncCompiledAsyncDelegateMethod(delegateMethodId);
             }
-
-            if (!debug && Options.IsEnabled && function == null)
+#else
+            // The attribute is directly on the method, so we recover the underlying method here
+            if (BurstCompilerOptions.HasBurstCompileAttribute(delegateMethod.Method))
             {
-                var builder = new StringBuilder();
-                builder.AppendLine(delegateMethod.Method.ToString());
-                foreach (var attribute in delegateMethod.Method.GetCustomAttributes())
+                if (Options.EnableBurstCompilation)
                 {
-                    builder.AppendLine("   attribute: " + attribute.GetType().FullName);
+                    var delegateMethodId = Unity.Burst.LowLevel.BurstCompilerService.CompileAsyncDelegateMethod(delegateObj, string.Empty);
+                    function = Unity.Burst.LowLevel.BurstCompilerService.GetAsyncCompiledAsyncDelegateMethod(delegateMethodId);
                 }
-                throw new InvalidOperationException("Burst failed to compile the given delegate: " + builder.ToString());
+                else
+                {
+                    // If we are in a standalone player, and burst is disabled and we are actually
+                    // trying to load a function pointer, in that case we need to support it
+                    // so we are then going to use the managed function directly
+                    // NOTE: When running under IL2CPP, this could lead to a `System.NotSupportedException : To marshal a managed method, please add an attribute named 'MonoPInvokeCallback' to the method definition.`
+                    // so in that case, the method needs to have `MonoPInvokeCallback`
+                    // but that's a requirement for IL2CPP, not an issue with burst
+                    function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                }
+            }
+#endif
+            else
+            {
+                throw new InvalidOperationException($"Burst cannot compile the function pointer `{delegateMethod.Method}` because the `[BurstCompile]` attribute is missing");
             }
 
-            // When burst compilation is disabled, we are still returning a valid function pointer (the a pointer to the managed function)
+            // Should not happen but in that case, we are still trying to generated an error
+            // It can be null if we are trying to compile a function in a standalone player
+            // and the function was not compiled. In that case, we need to output an error
+            if (function == null)
+            {
+                throw new InvalidOperationException($"Burst failed to compile the function pointer `{delegateMethod.Method}`");
+            }
+
+            // When burst compilation is disabled, we are still returning a valid stub function pointer (the a pointer to the managed function)
             // so that CompileFunctionPointer actually returns a delegate in all cases
-            return function == null ? (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod) : function;
+            return function;
         }
+
         /// <summary>
         /// Lets the compiler service know we are shutting down, called by the event EditorApplication.quitting
         /// </summary>
         internal static void Shutdown()
         {
+#if UNITY_EDITOR
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandShutdown);
+#endif
         }
 
         /// <summary>
@@ -141,19 +176,39 @@ namespace Unity.Burst
         /// </summary>
         internal static void Cancel()
         {
+#if UNITY_EDITOR
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandCancel);
+#endif
         }
 
+        internal static void Enable()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandEnableCompiler);
+#endif
+        }
+
+        internal static void Disable()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandDisableCompiler);
+#endif
+        }
+
+#if UNITY_EDITOR
         private static void SendCommandToCompiler(string commandName)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));
-            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(typeof(BurstCompiler).GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic), commandName);
+            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(DummyMethodInfo, commandName);
         }
+
+        private static readonly MethodInfo DummyMethodInfo = typeof(BurstCompiler).GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic);
 
         /// <summary>
         /// Dummy empty method for being able to send a command to the compiler
         /// </summary>
         private static void DummyMethod() { }
+#endif
     }
 }
 #endif

@@ -1,19 +1,23 @@
 using System;
-using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Burst;
 using Unity.Mathematics;
-using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
     /// <summary>
     /// Tests types
     /// </summary>
+    [BurstCompile]
     internal class NotSupported
     {
-        [TestCompiler(1, ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_OnlyStaticMethodsAllowed)]
+        public int InstanceMethod()
+        {
+            return 1;
+        }
+
+        [TestCompiler(1, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static int TestDelegate(int data)
         {
             return ProcessData(i => i + 1, data);
@@ -50,12 +54,25 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(true, ExpectCompilerException = true)]
+        public struct HasMarshalAsSysIntAttribute
+        {
+            [MarshalAs(UnmanagedType.SysInt)] public bool A;
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnFieldNotSupported)]
+        public static void TestStructWithMarshalAsSysInt()
+        {
+#pragma warning disable 0219
+            var x = new HasMarshalAsSysIntAttribute();
+#pragma warning restore 0219
+        }
+
+        [TestCompiler(true, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnParameterNotSupported)]
         public static void TestMethodWithMarshalAsParameter([MarshalAs(UnmanagedType.U1)] bool x)
         {
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnReturnTypeNotSupported)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static bool TestMethodWithMarshalAsReturnType()
         {
@@ -64,7 +81,7 @@ namespace Burst.Compiler.IL.Tests
 
         private static float3 a = new float3(1, 2, 3);
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromNonReadonlyStaticFieldNotSupported)]
         public static bool TestStaticLoad()
         {
             var cmp = a == new float3(1, 2, 3);
@@ -72,7 +89,7 @@ namespace Burst.Compiler.IL.Tests
             return cmp.x && cmp.y && cmp.z;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromManagedNonReadonlyStaticFieldNotSupported)]
         public static void TestStaticStore()
         {
             a.x = 42;
@@ -80,6 +97,9 @@ namespace Burst.Compiler.IL.Tests
 
         public delegate char CharbyValueDelegate(char c);
 
+#if BURST_TESTS_ONLY
+        [BurstCompile]
+#endif
         public static char CharbyValue(char c)
         {
             return c;
@@ -95,7 +115,7 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler("CharbyValue", 0x1234, ExpectCompilerException = true)]
+        [TestCompiler(nameof(CharbyValue), 0x1234, ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TypeNotBlittableForFunctionPointer, DiagnosticId.ERR_StructsWithNonUnicodeCharsNotSupported })]
         public static int TestCharbyValue(ref CharbyValueFunc fp, int i)
         {
             var c = (char)i;
@@ -108,7 +128,7 @@ namespace Burst.Compiler.IL.Tests
         static private readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
         static private readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InternalCompilerErrorInInstruction)]
         public static float TestStaticHalf3()
         {
             var result = (float3)h3_h + h3_d + h3_v2s + h3_sv2 + h3_v3;

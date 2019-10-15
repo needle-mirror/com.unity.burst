@@ -29,7 +29,7 @@ namespace Unity.Burst.Editor
         private static bool EnableBurstCompilationValidate()
         {
             Menu.SetChecked(EnableBurstCompilationText, BurstEditorOptions.EnableBurstCompilation);
-            return BurstCompilerService.IsInitialized;
+            return BurstCompilerService.IsInitialized && (BurstEditorOptions.EnableBurstCompilation || !EditorApplication.isPlayingOrWillChangePlaymode);
         }
 
         // ----------------------------------------------------------------------------------------------

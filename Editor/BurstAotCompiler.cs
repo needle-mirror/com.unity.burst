@@ -323,7 +323,7 @@ extern ""C""
                     }
 
                     BclRunner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable),
-                        $"{generatedDebugInformationInOutput} @{responseFile}",
+                        $"{generatedDebugInformationInOutput} \"@{responseFile}\"",
                         new BclOutputErrorParser(),
                         report);
                 }

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
 using NUnit.Framework;
+using Unity.Burst;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -135,13 +136,13 @@ namespace Burst.Compiler.IL.Tests
             return b.b1;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructWithPackNotSupported)]
         public static int CheckStructWithPack()
         {
             return UnsafeUtility.SizeOf<StructWithPack>();
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
         public static int TestUsingReferenceType()
         {
             return "this is not supported by burst".Length;

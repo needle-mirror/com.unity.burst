@@ -1,15 +1,15 @@
 using System;
 
-#if BURST_INTERNAL
-namespace Burst.Compiler.IL
-#else
 namespace Unity.Burst
-#endif
 {
     /// <summary>
     /// Provides helper intrinsics that can be used at runtime.
     /// </summary>
+#if BURST_INTERNAL
+    internal static class BurstRuntimeInternal
+#else
     public static class BurstRuntime
+#endif
     {
         /// <summary>
         /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>

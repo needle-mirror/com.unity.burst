@@ -19,9 +19,19 @@ namespace Unity.Burst
         public unsafe static void ExpectAlias(void* a, void* b) { }
 
         /// <summary>
+        /// Will cause a compiler error in Burst-compiled code if a and b do not alias.
+        /// </summary>
+        public static void ExpectAlias<T, U>(ref T a, ref U b) where T : struct where U : struct { }
+
+        /// <summary>
         /// Will cause a compiler error in Burst-compiled code if a and b can alias.
         /// </summary>
         public unsafe static void ExpectNoAlias(void* a, void* b) { }
+
+        /// <summary>
+        /// Will cause a compiler error in Burst-compiled code if a and b can alias.
+        /// </summary>
+        public static void ExpectNoAlias<T, U>(ref T a, ref U b) where T : struct where U : struct { }
     }
 #endif
 }

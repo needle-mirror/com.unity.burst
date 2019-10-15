@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Unity.Burst;
 using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
@@ -81,7 +82,7 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdlenNonConstantLengthNotSupported)]
         public static int TestStaticReadonlyArrayNonConstantLength()
         {
             return StructP.Value.Length;
@@ -102,7 +103,7 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingManagedArrayNotSupported)]
         public static int TestStaticReadonlyArrayWithNonConstantStelemIndex()
         {
             return StructQ.Value[1];
@@ -120,7 +121,7 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromNonReadonlyStaticFieldNotSupported)]
         public static int TestStaticReadonlyArrayExplicitConstructionOfUninitialized()
         {
             return StructR.Value.Length;
@@ -146,7 +147,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         // Right now we don't support initialization of readonly arrays outside the array constructor
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingManagedArrayNotSupported)]
         public static int TestStaticReadonlyArrayExplicitConstruction()
         {
             int sum = 0;
@@ -224,7 +225,7 @@ namespace Burst.Compiler.IL.Tests
         }
         
         [TestCompiler(ExpectedException = typeof(System.IndexOutOfRangeException))]
-        [Platform(Exclude = "Win")]
+        [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int TestStaticReadonlyLdelemConstantIndexOutOfBounds()
         {
             return StaticArrayStruct.Ints[100];

@@ -16,7 +16,7 @@ namespace Burst.Compiler.IL.Tests
             return 150;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_UnableToAccessManagedMethod)]
         public static void Boxing()
         {
             var a = new CustomStruct();

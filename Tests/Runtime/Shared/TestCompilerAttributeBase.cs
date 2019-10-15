@@ -36,9 +36,13 @@ namespace Burst.Compiler.IL.Tests
 
         public bool ExpectCompilerException { get; set; }
 
-        public string ExceptionMessageContains { get; set; }
+        public DiagnosticId ExpectedDiagnosticId
+        {
+            get => throw new InvalidOperationException();
+            set => ExpectedDiagnosticIds = new DiagnosticId[] { value };
+        }
 
-        public string DiagnosticMessageContains { get; set; }
+        public DiagnosticId[] ExpectedDiagnosticIds { get; set; } = new DiagnosticId[0];
 
         public bool FastMath { get; set; }
 
@@ -131,14 +135,14 @@ namespace Burst.Compiler.IL.Tests
         TestCommand ICommandWrapper.Wrap(TestCommand command)
         {
             var testMethod = (TestMethod)command.Test;
-            return GetTestCommand(testMethod, testMethod, ExpectedException, ExpectCompilerException, ExceptionMessageContains, DiagnosticMessageContains);
+            return GetTestCommand(testMethod, testMethod, ExpectedException, ExpectCompilerException, ExpectedDiagnosticIds);
         }
 
         protected abstract bool IsCommandLine();
 
         protected abstract bool IsMono();
 
-        protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, string exceptionMessageContains, string diagnosticMessageContains);
+        protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds);
     }
 
     internal abstract class TestCompilerCommandBase : TestCommand
@@ -146,16 +150,14 @@ namespace Burst.Compiler.IL.Tests
         protected readonly TestMethod _originalMethod;
         readonly Type _expectedException;
         protected readonly bool _expectCompilerException;
-        protected readonly string _exceptionMessageContains;
-        protected readonly string _diagnosticContainsMessage;
+        protected readonly DiagnosticId[] _expectedDiagnosticIds;
 
-        public TestCompilerCommandBase(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, string exceptionMessageContains, string diagnosticContainsMessage) : base(test)
+        public TestCompilerCommandBase(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test)
         {
             _originalMethod = originalMethod;
             _expectedException = expectedException;
             _expectCompilerException = expectCompilerException;
-            _exceptionMessageContains = exceptionMessageContains;
-            _diagnosticContainsMessage = diagnosticContainsMessage;
+            _expectedDiagnosticIds = expectedDiagnosticIds;
         }
 
         public override TestResult Execute(ExecutionContext context)
@@ -205,7 +207,7 @@ namespace Burst.Compiler.IL.Tests
             if (_expectCompilerException)
             {
                 // We still need to transform arguments here in case there's a function pointer that we expect to fail compilation.
-                var caughtException = TryExpectedException(
+                var expectedExceptionResult = TryExpectedException(
                     context,
                     () => TransformArguments(_originalMethod.Method.MethodInfo, arguments, out _, out _),
                     "Transforming arguments",
@@ -213,7 +215,7 @@ namespace Burst.Compiler.IL.Tests
                     "Any exception",
                     false,
                     false);
-                if (caughtException)
+                if (expectedExceptionResult != TryExpectedExceptionResult.DidNotThrowException)
                 {
                     return context.CurrentResult;
                 }
@@ -241,10 +243,14 @@ namespace Burst.Compiler.IL.Tests
             // Special case if we have an expected exception
             if (_expectedException != null)
             {
-                TryExpectedException(context, () => _originalMethod.Method.Invoke(context.TestObject, arguments), ".NET", type => type == _expectedException, _expectedException.FullName, false);
-                if (context.CurrentResult.ResultState.Equals(ResultState.Success))
+                if (TryExpectedException(context, () => _originalMethod.Method.Invoke(context.TestObject, arguments), ".NET", type => type == _expectedException, _expectedException.FullName, false) != TryExpectedExceptionResult.ThrewExpectedException)
                 {
-                    TryExpectedException(context, () => nativeDelegateCaller(compiledFunction, nativeArgs), "Native", type => type == _expectedException, _expectedException.FullName, true);
+                    return context.CurrentResult;
+                }
+
+                if (TryExpectedException(context, () => nativeDelegateCaller(compiledFunction, nativeArgs), "Native", type => type == _expectedException, _expectedException.FullName, true) != TryExpectedExceptionResult.ThrewExpectedException)
+                {
+                    return context.CurrentResult;
                 }
             }
             else
@@ -435,7 +441,14 @@ namespace Burst.Compiler.IL.Tests
             return nativeArray;
         }
 
-        protected bool TryExpectedException(ExecutionContext context, Action action, string contextName, Func<Type, bool> expectedException, string expectedExceptionName, bool isTargetException, bool requireException = true)
+        protected enum TryExpectedExceptionResult
+        {
+            ThrewExpectedException,
+            ThrewUnexpectedException,
+            DidNotThrowException,
+        }
+
+        protected TryExpectedExceptionResult TryExpectedException(ExecutionContext context, Action action, string contextName, Func<Type, bool> expectedException, string expectedExceptionName, bool isTargetException, bool requireException = true)
         {
             Type caughtType = null;
 
@@ -461,38 +474,38 @@ namespace Burst.Compiler.IL.Tests
 
             if (caughtException == null && !requireException)
             {
-                return false;
+                return TryExpectedExceptionResult.DidNotThrowException;
             }
 
             if (caughtType != null && expectedException(caughtType))
             {
-                var exceptionMessage = caughtException.ToString();
-                if (_exceptionMessageContains != null && !exceptionMessage.Contains(_exceptionMessageContains))
+                var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
+                var expectedDiagnosticIds = _expectedDiagnosticIds.OrderBy(x => x);
+                string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds) => string.Join(",", diagnosticIds);
+                if (!loggedDiagnosticIds.SequenceEqual(expectedDiagnosticIds))
                 {
-                    context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting exception to contain the message `{_exceptionMessageContains}` but the actual message is `{exceptionMessage}`");
-                }
-                else if (_diagnosticContainsMessage != null && !HasLoggedDiagnosticMessage(_diagnosticContainsMessage))
-                {
-                    context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic to be logged containing the message `{_diagnosticContainsMessage}` but no such diagnostic was logged");
+                    context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic(s) to be logged with IDs {GetDiagnosticIds(_expectedDiagnosticIds)} but instead the following diagnostic(s) were logged: {GetDiagnosticIds(loggedDiagnosticIds)}");
+                    return TryExpectedExceptionResult.ThrewUnexpectedException;
                 }
                 else
                 {
                     context.CurrentResult.SetResult(ResultState.Success);
+                    return TryExpectedExceptionResult.ThrewExpectedException;
                 }
             }
             else if (caughtType != null)
             {
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expected {expectedExceptionName} but got {caughtType.Name}. Exception: {caughtException}");
+                return TryExpectedExceptionResult.ThrewUnexpectedException;
             }
             else
             {
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expected {expectedExceptionName} but no exception was thrown");
+                return TryExpectedExceptionResult.ThrewUnexpectedException;
             }
-
-            return true;
         }
 
-        protected virtual bool HasLoggedDiagnosticMessage(string message) => false;
+        protected virtual IEnumerable<DiagnosticId> GetLoggedDiagnosticIds() => Array.Empty<DiagnosticId>();
 
         protected void RunDeterminismValidation(TestMethod method, object resultNative)
         {

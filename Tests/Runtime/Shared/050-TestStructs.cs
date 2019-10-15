@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
+using Unity.Burst;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityBenchShared;
@@ -130,11 +131,6 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
 
-        //[TestCompiler(typeof(StructInvalidProvider), ExpectedException = typeof(CompilerException))]
-        //public static void test_struct_unsupported_class_in_struct(StructInvalid value)
-        //{
-        //}
-
         [TestCompiler]
         public static float test_struct_with_static_fields()
         {
@@ -163,14 +159,14 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionStsfldNotSupported)]
         public static void TestStructWithStaticFieldWrite()
         {
             var test = new StructWithStaticField();
             test.CheckWrite();
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromNonReadonlyStaticFieldNotSupported)]
         public static void TestStructWithStaticFieldRead()
         {
             var test = new StructWithStaticField();
@@ -378,7 +374,7 @@ namespace Burst.Compiler.IL.Tests
             public sbyte c;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructSizeNotSupported)]
         public static unsafe int TestStructSizingSequentialStructWithSize()
         {
             return UnsafeUtility.SizeOf<SequentialStructWithSize>();
@@ -392,7 +388,7 @@ namespace Burst.Compiler.IL.Tests
             public sbyte c;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructSizeNotSupported)]
         public static unsafe int TestStructSizingSequentialStructWithSize2()
         {
             return UnsafeUtility.SizeOf<SequentialStructWithSize2>();
@@ -429,7 +425,7 @@ namespace Burst.Compiler.IL.Tests
         [StructLayout(LayoutKind.Explicit)]
         public struct ExplicitStructEmpty { }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructZeroSizeNotSupported)]
         public static unsafe int TestStructSizingExplicitStructEmpty()
         {
             return UnsafeUtility.SizeOf<ExplicitStructEmpty>();
@@ -441,7 +437,7 @@ namespace Burst.Compiler.IL.Tests
             public int B;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructZeroSizeNotSupported)]
         public static unsafe int TestEmptyStructEmbeddedInStruct()
         {
             return UnsafeUtility.SizeOf<ExplicitStructEmptyContainer>();
@@ -450,7 +446,7 @@ namespace Burst.Compiler.IL.Tests
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public struct ExplicitStructEmptyWithSize { }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructZeroSizeNotSupported)]
         public static unsafe int TestStructSizingExplicitStructEmptyWithSize()
         {
             return UnsafeUtility.SizeOf<ExplicitStructEmptyWithSize>();
@@ -467,7 +463,7 @@ namespace Burst.Compiler.IL.Tests
         [StructLayout(LayoutKind.Sequential)]
         public struct SequentialStructEmpty { }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructZeroSizeNotSupported)]
         public static unsafe int TestStructSizingSequentialStructEmpty()
         {
             return UnsafeUtility.SizeOf<SequentialStructEmpty>();
@@ -476,7 +472,7 @@ namespace Burst.Compiler.IL.Tests
         [StructLayout(LayoutKind.Sequential, Size = 0)]
         public struct SequentialStructEmptyWithSize { }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructZeroSizeNotSupported)]
         public static unsafe int TestStructSizingSequentialStructEmptyWithSize()
         {
             return UnsafeUtility.SizeOf<SequentialStructEmptyWithSize>();
@@ -492,9 +488,12 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [StructLayout(LayoutKind.Auto)]
-        public struct AutoStruct { }
+        public struct AutoStruct
+        {
+            public int a;
+        }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructWithAutoLayoutNotSupported)]
         public static unsafe int TestAutoStruct()
         {
             return UnsafeUtility.SizeOf<AutoStruct>();
@@ -1022,8 +1021,8 @@ namespace Burst.Compiler.IL.Tests
         #if UNITY_ANDROID || UNITY_IOS
         [Ignore("This test fails on mobile platforms")]
         #endif
-        [TestCompiler(typeof(NetworkEndPoint.Provider),typeof(NetworkEndPoint.Provider), ExpectCompilerException = true)]
-        public static bool TestABITransformIntoExplicitLayoutTransform(NetworkEndPoint a,NetworkEndPoint b)
+        [TestCompiler(typeof(NetworkEndPoint.Provider), typeof(NetworkEndPoint.Provider), ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructByValueNotSupported)]
+        public static bool TestABITransformIntoExplicitLayoutTransform(NetworkEndPoint a, NetworkEndPoint b)
         {
             return a.Compare(b);
         }
@@ -1132,7 +1131,7 @@ namespace Burst.Compiler.IL.Tests
             return header.B.x;
         }
 
-        [TestCompiler(typeof(StructWithNonBlittableTypes), ExpectCompilerException = true, DiagnosticMessageContains = "is not blittable")]
+        [TestCompiler(typeof(StructWithNonBlittableTypes), ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotBlittableForFunctionPointer)]
         public static unsafe int TestStructWithNonBlittableTypes(ref StructWithNonBlittableTypes a)
         {
             var checksum = 0;
@@ -1171,7 +1170,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 #if BURST_TESTS_ONLY
-        [TestCompiler(typeof(StructWithNonBlittableTypes), ExpectCompilerException = true, DiagnosticMessageContains = "is not blittable")]
+        [TestCompiler(typeof(StructWithNonBlittableTypes), ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotBlittableForFunctionPointer)]
         public static int TestStructWithNonBlittableTypesOffset(ref StructWithNonBlittableTypes a)
         {
             return Unsafe.ByteOffset(ref a.a0, ref a.a1).ToInt32();
@@ -1188,6 +1187,13 @@ namespace Burst.Compiler.IL.Tests
             checksum = (checksum * 397) ^ a.d.x;
             checksum = (checksum * 397) ^ a.d.y;
             return checksum;
+        }
+
+        [TestCompiler]
+        public static int TestStructWithPointerDependency()
+        {
+            var test = new StructWithPointerDependency();
+            return test.DirectNoDependency.Value;
         }
 
         public struct StructWithBlittableTypes : IArgumentProvider
@@ -1270,6 +1276,18 @@ namespace Burst.Compiler.IL.Tests
 
 
             public object Value => new StructWithNonBlittableTypesWithMarshalAs(1, 2, 3, true, 5, 6, 7, false, 0x12345678);
+        }
+
+        public unsafe struct StructWithPointerDependency
+        {
+            public StructWithNoDependency* PointerToNoDependency;
+
+            public StructWithNoDependency DirectNoDependency;
+        }
+
+        public struct StructWithNoDependency
+        {
+            public int Value;
         }
     }
 }

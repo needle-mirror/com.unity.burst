@@ -169,7 +169,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(float.NaN, ExpectedException = typeof(ArithmeticException))]
-        [Ignore("burst.abort not working with .NET CLR")]
+        [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int TestSignException(float value)
         {
             return Math.Sign(value);

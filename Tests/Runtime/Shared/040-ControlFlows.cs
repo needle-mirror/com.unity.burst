@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -8,7 +9,7 @@ namespace Burst.Compiler.IL.Tests
 {
     internal class ControlFlows
     {
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionLeaveNotSupported })]
         public static int TryCatch()
         {
             try
@@ -505,6 +506,15 @@ namespace Burst.Compiler.IL.Tests
             return value;
         }
 
+#if BURST_TESTS_ONLY
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool CheckDup(bool value)
+        {
+            return ILTestsHelper.CheckDupBeforeJump(value);
+        }
+#endif
+
         [TestCompiler(1)]
         public static int WhileIfContinue(int a)
         {
@@ -523,7 +533,7 @@ namespace Burst.Compiler.IL.Tests
             return a;
         }
 
-        [TestCompiler(ExpectCompilerException = true)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionEndfinallyNotSupported, DiagnosticId.WRN_DisablingNoaliasStoringImplicitNativeContainerToField })]
         public static int ForEachDispose()
         {
             var array = new NativeArray<int>();
@@ -684,14 +694,14 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(ExpectedException = typeof(InvalidOperationException))]
-        [Ignore("Not working with .NET, but working in Mono")]
+        [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int ExceptionReachedReturn()
         {
             throw new InvalidOperationException("This is bad 1");
         }
 
         [TestCompiler(ExpectedException = typeof(InvalidOperationException))]
-        [Ignore("Not working with .NET, but working in Mono")]
+        [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static void ExceptionReached()
         {
             throw new InvalidOperationException("This is bad 2");

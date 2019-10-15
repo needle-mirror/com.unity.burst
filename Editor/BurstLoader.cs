@@ -106,9 +106,7 @@ namespace Unity.Burst.Editor
 
         private static bool TryGetOptionsFromMember(MemberInfo member, out string flagsOut)
         {
-            bool debug;
-            var result = BurstCompiler.Options.TryGetOptions(member, true, out flagsOut, out debug);
-            return result && !debug;
+            return BurstCompiler.Options.TryGetOptions(member, true, out flagsOut);
         }
     }
 }

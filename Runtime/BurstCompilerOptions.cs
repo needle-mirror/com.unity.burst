@@ -15,11 +15,7 @@ using Unity.Jobs.LowLevel.Unsafe;
 // NOTE: This file is shared via a csproj cs link in Burst.Compiler.IL
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#if BURST_INTERNAL
-namespace Burst.Compiler.IL
-#else
 namespace Unity.Burst
-#endif
 {
     /// <summary>
     /// Options available at Editor time and partially at runtime to control the behavior of the compilation and to enable/disable burst jobs.
@@ -31,6 +27,8 @@ namespace Unity.Burst
         private const string ForceSynchronousCompilationArg = "--burst-force-sync-compilation";
 
         internal const string DefaultLibraryName = "lib_burst_generated";
+
+        internal const string BurstInitializeName = "burst.initialize";
 
         // -------------------------------------------------------
         // Common options used by the compiler
@@ -74,6 +72,8 @@ namespace Unity.Burst
 
         internal const string OptionJitIsForFunctionPointer = "is-for-function-pointer";
 
+        internal const string OptionJitManagedFunctionPointer = "managed-function-pointer=";
+
         // -------------------------------------------------------
         // Options used by the Aot compiler
         // -------------------------------------------------------
@@ -94,9 +94,13 @@ namespace Unity.Burst
         internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
         internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
+        internal const string OptionCompilerThreads = "threads=";
+        internal const string OptionChunkSize= "chunk-size=";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";
+        internal const string CompilerCommandEnableCompiler = "$enable_compiler";
+        internal const string CompilerCommandDisableCompiler = "$disable_compiler";
 
         // All the following content is exposed to the public interface
 
@@ -145,7 +149,20 @@ namespace Unity.Burst
             get => _enableBurstCompilation;
             set
             {
+                // If we are in the global settings, and we are forcing to no burst compilation
+                if (Name == GlobalSettingsName && _forceDisableBurstCompilation) value = false;
+
                 bool changed = _enableBurstCompilation != value;
+
+#if UNITY_EDITOR
+                // Prevent Burst compilation being enabled while in PlayMode, because
+                // we can't currently support this for jobs.
+                if (Name == GlobalSettingsName && changed && value && UnityEngine.Application.isPlaying)
+                {
+                    throw new InvalidOperationException("Burst compilation can't be switched on while in PlayMode");
+                }
+#endif
+
                 _enableBurstCompilation = value;
 
                 // Modify only JobsUtility.JobCompilerEnabled when modifying global settings
@@ -155,9 +172,25 @@ namespace Unity.Burst
                     // and when we ask for disabling burst, we are also asking the job system
                     // to no longer use the cached functions
                     JobsUtility.JobCompilerEnabled = value;
+
+                    if (changed)
+                    {
+                        // Send the command to the compiler service
+                        if (value)
+                        {
+                            BurstCompiler.Enable();
+                        }
+                        else
+                        {
+                            BurstCompiler.Disable();
+                        }
+                    }
                 }
 
-                if (changed) OnOptionsChanged();
+                if (changed)
+                {
+                    OnOptionsChanged();
+                }
             }
         }
 
@@ -270,18 +303,11 @@ namespace Unity.Burst
             return clone;
         }
 
-        internal bool IsSupported(MemberInfo member)
-        {
-            if (member == null) throw new ArgumentNullException(nameof(member));
-            BurstCompileAttribute attr;
-            return TryGetAttribute(member, out attr);
-        }
-
-        private bool TryGetAttribute(MemberInfo member, out BurstCompileAttribute attribute)
+        private static bool TryGetAttribute(MemberInfo member, out BurstCompileAttribute attribute)
         {
             attribute = null;
             // We don't fail if member == null as this method is being called by native code and doesn't expect to crash
-            if (!IsEnabled || member == null)
+            if (member == null)
             {
                 return false;
             }
@@ -310,19 +336,28 @@ namespace Unity.Burst
             return null;
         }
 
-        internal static bool HasBurstCompileAttribute(MemberInfo memberInfo) => GetBurstCompileAttribute(memberInfo) != null;
+        internal static bool HasBurstCompileAttribute(MemberInfo member)
+        {
+            if (member == null) throw new ArgumentNullException(nameof(member));
+            BurstCompileAttribute attr;
+            return TryGetAttribute(member, out attr);
+        }
 
-        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, out bool debug)
+        /// <summary>
+        /// Gets the options for the specified member. Returns <c>false</c> if the `[BurstCompile]` attribute was not found
+        /// </summary>
+        /// <returns><c>false</c> if the `[BurstCompile]` attribute was not found; otherwise <c>true</c></returns>
+        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut)
         {
             flagsOut = null;
             BurstCompileAttribute attr;
             if (!TryGetAttribute(member, out attr))
             {
-                debug = false;
                 return false;
             }
 
-            debug = attr.Debug;
+            // Add debug to Jit options instead of passing it here
+            // attr.Debug
 
             var flagsBuilderOut = new StringBuilder();
 
@@ -525,7 +560,10 @@ namespace Unity.Burst
         /// </summary>
         ILPre = 1 << 8,
 
-        All = IL | ILPre | Backend | IR | IROptimized | Asm | Function | Analysis | IRPassAnalysis
+        /// <summary>
+        /// Dumps all normal output.
+        /// </summary>
+        All = IL | ILPre | IR | IROptimized | Asm | Function | Analysis | IRPassAnalysis
     }
 }
 #endif

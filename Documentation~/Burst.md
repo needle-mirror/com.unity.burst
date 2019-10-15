@@ -617,7 +617,7 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
     <td>Windows</td>
     <td>Windows</td>
     <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code></td>
-    <td>Visual Studio (can be installed via Add Component in Unity Install), or C++ Build Tools for Visual Studio.<br/>Windows 10 SDK</td>
+    <td>Visual Studio (can be installed via Add Component in Unity Install) and C++ Build Tools for Visual Studio (use visual studio installer to add this).<br/>Windows 10 SDK</td>
   </tr>
   <tr>
     <td>Windows</td>
