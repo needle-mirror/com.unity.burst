@@ -19,7 +19,8 @@ namespace Unity.Burst
     }
 
     /// <summary>
-    /// A function pointer that can be used from a burst jobs. It needs to be compiled through <see cref="BurstCompiler.CompileFunctionPointer{T}"/>
+    /// A function pointer that can be used from a Burst Job or from regular C#.
+    /// It needs to be compiled through <see cref="BurstCompiler.CompileFunctionPointer{T}"/>
     /// </summary>
     /// <typeparam name="T">Type of the delegate of this function pointer</typeparam>
     public struct FunctionPointer<T> : IFunctionPointer
@@ -37,7 +38,10 @@ namespace Unity.Burst
         }
 
         /// <summary>
-        /// Invoke this function pointer. Must be called from a Burst Jobs.
+        /// Gets the delegate associated to this function pointer in order to call the function pointer.
+        /// This delegate can be called from a Burst Job or from regular C#.
+        /// If calling from regular C#, it is recommended to cache the returned delegate of this property
+        /// instead of using this property every time you need to call the delegate.
         /// </summary>
         public T Invoke => (T)(object)Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
 

@@ -14,6 +14,9 @@ namespace Unity.Burst.Editor
             // This is important to clone the options as we don't want to modify the global instance
             Options = BurstCompiler.Options.Clone();
             Options.EnableBurstCompilation = true;
+            // Enable safety checks by default to match inspector default behavior
+            Options.EnableBurstSafetyChecks = true;
+            TargetCpu = TargetCpu.Auto;
             // The BurstCompilerAttribute can be either on the type or on the method
             IsStaticMethod = isStaticMethod;
         }
@@ -43,6 +46,8 @@ namespace Unity.Burst.Editor
         /// </summary>
         public readonly BurstCompilerOptions Options;
 
+        public TargetCpu TargetCpu { get; set; }
+
         /// <summary>
         /// Set to true if burst compilation is actually requested via proper `[BurstCompile]` attribute:
         /// - On the job if it is a job only
@@ -51,9 +56,18 @@ namespace Unity.Burst.Editor
         public bool HasRequiredBurstCompileAttributes => BurstCompilerOptions.HasBurstCompileAttribute(JobType) && (!IsStaticMethod || BurstCompilerOptions.HasBurstCompileAttribute(Method));
 
         /// <summary>
-        /// Generated disassembly, or null if disassembly failed
+        /// Generated raw disassembly (IR, IL, ASM...), or null if disassembly failed (only valid for the current TargetCpu)
         /// </summary>
-        public string[] Disassembly;
+        public string RawDisassembly;
+
+        /// <summary>
+        /// Formatted disassembly for the associated <see cref="RawDisassembly"/>, currently only valid for <see cref="Unity.Burst.Editor.DisassemblyKind.Asm"/>
+        /// </summary>
+        public string FormattedDisassembly;
+
+        public DisassemblyKind DisassemblyKind;
+
+        public bool IsDarkMode { get; set; }
 
         public string GetDisplayName()
         {

@@ -1,54 +1,167 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Unity.Burst.Editor
 {
     /// <summary>
-    /// Improves the output of the default burst disassembler by adding colors
+    /// Disassembler for Intel and ARM
     /// </summary>
-    internal class BurstDisassembler
+    internal partial class BurstDisassembler
     {
         private readonly Dictionary<int, string> _fileName;
         private readonly Dictionary<int, string[]> _fileList;
+        private readonly List<AsmToken> _tokens;
+
+        private static readonly StringSlice FileDirective = new StringSlice(".file");
+        private static readonly StringSlice LocDirective = new StringSlice(".loc");
+
+        // Colors used for the tokens
+        // TODO: Make this configurable via some editor settings?
+        private const string DarkColorLineDirective = "#FFFF00";
+        private const string DarkColorDirective = "#CCCCCC";
+        private const string DarkColorIdentifier = "#d4d4d4";
+        private const string DarkColorQualifier = "#DCDCAA";
+        private const string DarkColorInstruction = "#4EC9B0";
+        private const string DarkColorInstructionSIMD = "#C586C0";
+        private const string DarkColorRegister = "#d7ba7d";
+        private const string DarkColorNumber = "#9cdcfe";
+        private const string DarkColorString = "#ce9178";
+        private const string DarkColorComment = "#6A9955";
+
+        private const string LightColorLineDirective = "#888800";
+        private const string LightColorDirective = "#444444";
+        private const string LightColorIdentifier = "#1c1c1c";
+        private const string LightColorQualifier = "#267f99";
+        private const string LightColorInstruction = "#0451a5";
+        private const string LightColorInstructionSIMD = "#0000ff";
+        private const string LightColorRegister = "#811f3f";
+        private const string LightColorNumber = "#007ACC";
+        private const string LightColorString = "#a31515";
+        private const string LightColorComment = "#008000";
+
+        private string ColorLineDirective;
+        private string ColorDirective;
+        private string ColorIdentifier;
+        private string ColorQualifier;
+        private string ColorInstruction;
+        private string ColorInstructionSIMD;
+        private string ColorRegister;
+        private string ColorNumber;
+        private string ColorString;
+        private string ColorComment;
 
         public BurstDisassembler()
         {
             _fileName= new Dictionary<int, string>();
             _fileList=new Dictionary<int, string[]>();
+            _tokens = new List<AsmToken>();
         }
 
-        public string Process(string input)
+        public enum AsmKind
+        {
+            Intel,
+            ARM
+        }
+
+        public string Process(string input, AsmKind asmKind, bool useDarkSkin = true)
+        {
+            UseSkin(useDarkSkin);
+#if BURST_INTERNAL
+            return ProcessImpl(input, asmKind);
+#else
+            try
+            {
+                return ProcessImpl(input, asmKind);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.Log($"Error while trying to disassemble the input: {ex}");
+            }
+            // in case of an error, return the input as-is at least
+            return input;
+#endif
+        }
+
+        private void UseSkin(bool useDarkSkin)
+        {
+            if (useDarkSkin)
+            {
+                ColorLineDirective      = DarkColorLineDirective;
+                ColorDirective          = DarkColorDirective;
+                ColorIdentifier         = DarkColorIdentifier;
+                ColorQualifier          = DarkColorQualifier;
+                ColorInstruction        = DarkColorInstruction;
+                ColorInstructionSIMD    = DarkColorInstructionSIMD;
+                ColorRegister           = DarkColorRegister;
+                ColorNumber             = DarkColorNumber;
+                ColorString             = DarkColorString;
+                ColorComment            = DarkColorComment;
+            }
+            else
+            {
+                ColorLineDirective      = LightColorLineDirective;
+                ColorDirective          = LightColorDirective;
+                ColorIdentifier         = LightColorIdentifier;
+                ColorQualifier          = LightColorQualifier;
+                ColorInstruction        = LightColorInstruction;
+                ColorInstructionSIMD    = LightColorInstructionSIMD;
+                ColorRegister           = LightColorRegister;
+                ColorNumber             = LightColorNumber;
+                ColorString             = LightColorString;
+                ColorComment            = LightColorComment;
+            }
+        }
+
+        private string ProcessImpl(string input, AsmKind asmKind)
         {
             _fileList.Clear();
             _fileName.Clear();
-            var tokenizer = new GASTokenizer();
+            _tokens.Clear();
 
-            var tokens = tokenizer.Tokenize(input).ToList();
+            var tokenizer = new AsmTokenizer(input, asmKind, asmKind == AsmKind.Intel ? (AsmTokenKindProvider)X86AsmTokenKindProvider.Instance : ARM64AsmTokenKindProvider.Instance);
 
-            var output = new StringBuilder();
-            int prevStart = 0;
-            for (int tokenIdx = 0; tokenIdx < tokens.Count; tokenIdx++)
+            // Adjust token size
+            var pseudoTokenSizeMax = input.Length / 7;
+            if (pseudoTokenSizeMax > _tokens.Capacity)
             {
-                var t = tokens[tokenIdx];
-                if (t.Token == TokenType.Preprocessor)
+                _tokens.Capacity = pseudoTokenSizeMax;
+            }
+
+            // Read all tokens
+            while (tokenizer.TryGetNextToken(out var nextToken))
+            {
+                _tokens.Add(nextToken);
+            }
+
+            // Process all tokens
+            var output = new StringBuilder();
+            for (int i = 0; i < _tokens.Count; i++)
+            {
+                var token = _tokens[i];
+                var slice = token.Slice(input);
+                if (token.Kind == AsmTokenKind.Directive && i + 1 < _tokens.Count)
                 {
-                    if (t.Literal == ".file")
+                    if (slice == FileDirective)
                     {
-                        int start = t.Start;
                         // File is followed by an index and a string or just a string with an implied index = 0
-                        tokenIdx++;
+                        i++;
                         int index = 0;
-                        if (tokens[tokenIdx].Token == TokenType.Number)
+
+                        SkipSpaces(_tokens, ref i);
+
+                        if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
                         {
-                            index = int.Parse(tokens[tokenIdx].Literal);
-                            tokenIdx++;
+                            var numberAsStr = _tokens[i].ToString(input);
+                            index = int.Parse(numberAsStr);
+                            i++;
                         }
 
-                        if (tokens[tokenIdx].Token == TokenType.String)
+                        SkipSpaces(_tokens, ref i);
+
+                        if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.String)
                         {
-                            var filename = tokens[tokenIdx].Literal.Trim('"');
+                            var filename = _tokens[i].ToString(input).Trim('"');
                             string[] fileLines;
 
                             try
@@ -64,225 +177,140 @@ namespace Unity.Burst.Editor
                             _fileName.Add(index, filename);
                             _fileList.Add(index, fileLines);
                         }
-
-                        while (tokens[tokenIdx].Token != TokenType.EndOfLine)
-                        {
-                            tokenIdx++;
-                            if (tokens[tokenIdx].Token == TokenType.EndOfInput)
-                                break;
-                        }
-
-                        output.Append(input, prevStart, start - prevStart);
-                        prevStart = tokens[tokenIdx].Start;
                         continue;
                     }
 
-                    if (t.Literal == ".loc")
+                    if (slice == LocDirective)
                     {
-                        int start = t.Start;
-                        // Fileno lineno [column] [options] -
+                        // .loc {fileno} {lineno} [column] [options] -
                         int fileno = 0;
+                        int colno = 0;
                         int lineno = 0;        // NB 0 indicates no information given
-                        tokenIdx++;
-                        if (tokens[tokenIdx].Token == TokenType.Number)
+                        i++;
+                        SkipSpaces(_tokens, ref i);
+                        if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
                         {
-                            fileno = int.Parse(tokens[tokenIdx].Literal);
-                            tokenIdx++;
+                            var numberAsStr = _tokens[i].ToString(input);
+                            fileno = int.Parse(numberAsStr);
+                            i++;
                         }
-                        if (tokens[tokenIdx].Token == TokenType.Number)
+                        SkipSpaces(_tokens, ref i);
+                        if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
                         {
-                            lineno = int.Parse(tokens[tokenIdx].Literal);
-                            tokenIdx++;
+                            var numberAsStr = _tokens[i].ToString(input);
+                            lineno = int.Parse(numberAsStr);
+                            i++;
+                        }
+                        SkipSpaces(_tokens, ref i);
+                        if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
+                        {
+                            var numberAsStr = _tokens[i].ToString(input);
+                            colno = int.Parse(numberAsStr);
+                            i++;
                         }
 
-                        while (tokens[tokenIdx].Token != TokenType.EndOfLine)
+                        // Skip until end of line
+                        for (;i < _tokens.Count; i++)
                         {
-                            tokenIdx++;
-                            if (tokens[tokenIdx].Token == TokenType.EndOfInput)
+                            var tokenToSkip = _tokens[i];
+                            if (tokenToSkip.Kind == AsmTokenKind.NewLine)
+                            {
                                 break;
+                            }
                         }
 
-                        output.Append(input, prevStart, start - prevStart);
-                        prevStart = tokens[tokenIdx].Start;
-
-                        // If the file is 0, then its unknown, we should just reset any file tracking information
+                        // If the file number is 0, skip the line
                         if (fileno == 0)
                         {
-                            uint color = 0xFFFF00FF;
-                            output.Append("<color=#"+color.ToString("x8")+$">(-)</color>");
                         }
                         // If the line number is 0, then we can update the file tracking, but still not output a line
                         else if (lineno == 0)
                         {
-                            uint color = 0xFFFF00FF;
-                            output.Append("<color=#" +color.ToString("x8")+$">({fileno} : {System.IO.Path.GetFileName(_fileName[fileno])})</color>");
-
+                            output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("</color>\n");
                         }
                         // We have a source line and number -- can we load file and extract this line?
                         else
                         {
-                            lineno--;
-                            if (_fileList.ContainsKey(fileno) && _fileList[fileno] != null && lineno<_fileList[fileno].Length)
+                            if (_fileList.ContainsKey(fileno) && _fileList[fileno] != null && lineno - 1 < _fileList[fileno].Length)
                             {
-                                uint color = 0xFFFF00FF; //(0x11110000u * (uint)lineno)+0xFFu;
-                                output.Append("<color=#" + color.ToString("x8") + $">({fileno},{lineno} : {System.IO.Path.GetFileName(_fileName[fileno])})" + _fileList[fileno][lineno] + "</color>\n");
+                                output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")").Append(_fileList[fileno][lineno-1]).Append("</color>\n");
                             }
                             else
                             {
-                                uint color = 0xFFFF00FF;//(0x11110000u * (uint)lineno)+0xFFu;
-                                output.Append("<color=#"+color.ToString("x8")+$">({fileno},{lineno} : {System.IO.Path.GetFileName(_fileName[fileno])})</color>");
+                                output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")").Append("</color>\n");
                             }
                         }
                         continue;
-
                     }
                 }
 
-                if (t.Token == TokenType.EndOfInput)
+                switch (token.Kind)
                 {
-                    output.Append(input.Substring(prevStart));
-                    break;
-                }
+                    case AsmTokenKind.Directive:
+                        output.Append("<color=").Append(ColorDirective).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Identifier:
+                        output.Append("<color=").Append(ColorIdentifier).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Qualifier:
+                        output.Append("<color=").Append(ColorQualifier).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Instruction:
+                        output.Append("<color=").Append(ColorInstruction).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.InstructionSIMD:
+                        output.Append("<color=").Append(ColorInstructionSIMD).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Register:
+                        output.Append("<color=").Append(ColorRegister).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Number:
+                        output.Append("<color=").Append(ColorNumber).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.String:
+                        output.Append("<color=").Append(ColorString).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
+                    case AsmTokenKind.Comment:
+                        output.Append("<color=").Append(ColorComment).Append(">");
+                        output.Append(input, slice.Position, slice.Length);
+                        output.Append("</color>");
+                        break;
 
+                    default:
+                        output.Append(input, slice.Position, slice.Length);
+                        break;
+                }
             }
 
             return output.ToString();
         }
 
-        private enum TokenType
-        {
-            Preprocessor,
-            String,
-            Number,
-            HexNumber,
-            Label,
-            Comma,
-            Other,
-            EndOfLine,
-            EndOfInput
-        }
 
-        private struct TokenMatch
+        private static void SkipSpaces(List<AsmToken> tokens, ref int i)
         {
-            public TokenType Token { get; set; }
-            public string Literal { get; set; }
-            public int StartIndex { get; set; }
-            public int EndIndex { get; set; }
-            public int Priority { get; set; }
-        }
-
-        private class GASToken
-        {
-            private readonly Regex _matchExpression;
-            private readonly TokenType _tokenType;
-            private readonly int _matchPriority;
-
-            public GASToken(string matchPattern, TokenType type, int priority)
+            for(; i < tokens.Count; i++)
             {
-                _matchExpression = new Regex(matchPattern, RegexOptions.Compiled | RegexOptions.Multiline);
-                _tokenType = type;
-                _matchPriority = priority;
-
-            }
-
-            public IEnumerable<TokenMatch> FindMatches(string toSearch)
-            {
-                MatchCollection matches = _matchExpression.Matches(toSearch);
-                foreach (Match match in matches)
+                var kind = tokens[i].Kind;
+                if (kind != AsmTokenKind.Misc)
                 {
-                    yield return new TokenMatch()
-                    {
-                        Token = _tokenType,
-                        Literal = match.Groups.Count > 1 ? match.Groups[1].Value : match.Value,
-                        StartIndex = match.Index,
-                        EndIndex = match.Index + match.Length,
-                        Priority = _matchPriority
-                    };
+                    return;
                 }
-            }
-        }
-
-        private struct TokenValue
-        {
-            public TokenValue(TokenType type)
-            {
-                Token = type;
-                Literal = "";
-                Start = 1;
-                End = 0;
-            }
-
-            public TokenValue(TokenType type, string value, int start, int end)
-            {
-                Token = type;
-                Literal = value;
-                Start = start;
-                End = end;
-            }
-
-            public TokenType Token { get; }
-            public string Literal { get; }
-            public int Start { get; }
-            public int End { get; }
-
-            public override string ToString()
-            {
-                return $"{nameof(Token)}: {Token}, {nameof(Literal)}: {Literal}, {nameof(Start)}: {Start}, {nameof(End)}: {End}";
-            }
-        }
-
-        // TODO: The Tokenizer is not optimized speed/memory wise (using regex)
-        private class GASTokenizer
-        {
-            private readonly List<GASToken> _tokens;
-
-            public GASTokenizer()
-            {
-                _tokens = new List<GASToken>
-                {
-                    new GASToken(@"^\s*(\.[\w._]+)", TokenType.Preprocessor, 2),
-                    new GASToken(@"^\.?[\w._]+:?", TokenType.Label, 1),
-                    new GASToken(@"""[^""]*""", TokenType.String, 1),
-                    new GASToken(@"\d+", TokenType.Number, 2),
-                    new GASToken(@"0x[0-9a-fA-F]+", TokenType.HexNumber, 1),
-                    new GASToken(@",", TokenType.Comma, 1),
-                    new GASToken(@"$", TokenType.EndOfLine, 1),
-                    new GASToken(@"[\w._]+", TokenType.Other, 3)
-                };
-            }
-
-            public IEnumerable<TokenValue> Tokenize(string input)
-            {
-                var tokenMatches = TokenizeMatches(input);
-
-                var groupedByIndex = tokenMatches.GroupBy(x => x.StartIndex)
-                    .OrderBy(x => x.Key)
-                    .ToList();
-
-                var lastMatch = new TokenMatch();
-                for (int i = 0; i < groupedByIndex.Count; i++)
-                {
-                    var bestMatch = groupedByIndex[i].OrderBy(x => x.Priority).First();
-                    if (lastMatch.Literal != null && bestMatch.StartIndex < lastMatch.EndIndex)
-                        continue;
-
-                    yield return new TokenValue(bestMatch.Token, bestMatch.Literal, bestMatch.StartIndex, bestMatch.EndIndex);
-
-                    lastMatch = bestMatch;
-                }
-
-                yield return new TokenValue(TokenType.EndOfInput);
-            }
-
-            private List<TokenMatch> TokenizeMatches(string input)
-            {
-                var matches = new List<TokenMatch>();
-                foreach (var token in _tokens)
-                {
-                    matches.AddRange(token.FindMatches(input));
-                }
-
-                return matches;
             }
         }
     }

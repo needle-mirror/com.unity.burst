@@ -27,7 +27,7 @@ namespace Unity.Burst
                 lock (GlobalLock)
                 {
                     // Make sure to late initialize the settings
-                    return _global ?? (_global = new BurstCompilerOptions(BurstCompilerOptions.GlobalSettingsName)); // naming used only for debugging
+                    return _global ?? (_global = new BurstCompilerOptions(true));
                 }
             }
         }
@@ -67,11 +67,11 @@ namespace Unity.Burst
         }
 
         /// <summary>
-        /// Compile the following delegate into a function pointer with burst, only invokable from a burst jobs.
+        /// Compile the following delegate into a function pointer with burst, invokable from a Burst Job or from regular C#.
         /// </summary>
         /// <typeparam name="T">Type of the delegate of the function pointer</typeparam>
         /// <param name="delegateMethod">The delegate to compile</param>
-        /// <returns>A function pointer invokable from a burst jobs</returns>
+        /// <returns>A function pointer invokable from a Burst Job or from regular C#</returns>
         public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : class
         {
             // We have added support for runtime CompileDelegate in 2018.2+
@@ -102,6 +102,8 @@ namespace Unity.Burst
             if (isFunctionPointer)
             {
                 defaultOptions = "--" + BurstCompilerOptions.OptionJitIsForFunctionPointer + "\n";
+                // Make sure that the delegate will never be collected
+                GCHandle.Alloc(delegateMethod);
                 var managedFunctionPointer = Marshal.GetFunctionPointerForDelegate(delegateMethod);
                 defaultOptions += "--" + BurstCompilerOptions.OptionJitManagedFunctionPointer + "0x" + managedFunctionPointer.ToInt64().ToString("X16");
             }
@@ -133,6 +135,8 @@ namespace Unity.Burst
                 }
                 else
                 {
+                    // Make sure that the delegate will never be collected
+                    GCHandle.Alloc(delegateMethod);
                     // If we are in a standalone player, and burst is disabled and we are actually
                     // trying to load a function pointer, in that case we need to support it
                     // so we are then going to use the managed function directly

@@ -6,7 +6,12 @@ using NUnit.Framework.Internal;
 namespace Burst.Compiler.IL.Tests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class MonoOnlyAttribute : IgnoreAttribute, IApplyToTest
+#if BURST_INTERNAL
+    public
+#else
+    internal
+#endif
+    class MonoOnlyAttribute : IgnoreAttribute, IApplyToTest
     {
 #pragma warning disable CS0414
         public MonoOnlyAttribute(string reason) : base(reason)

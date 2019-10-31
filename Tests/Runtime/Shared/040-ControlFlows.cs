@@ -533,7 +533,7 @@ namespace Burst.Compiler.IL.Tests
             return a;
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionEndfinallyNotSupported, DiagnosticId.WRN_DisablingNoaliasStoringImplicitNativeContainerToField })]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionEndfinallyNotSupported })]
         public static int ForEachDispose()
         {
             var array = new NativeArray<int>();

@@ -15,11 +15,13 @@ public abstract class BurstCompiler
     public abstract string ObjectFormat { get; }
     public abstract string ObjectFileExtension { get; }
     public abstract bool UseOwnToolchain { get; }
+	public virtual bool OnlyStaticMethods { get; set; } = false;
 
     // Options
     public virtual bool SafetyChecks { get; } = false;
     public virtual bool DisableVectors { get; } = false;
     public virtual bool Link { get; set; } = true;
+	public virtual bool Verbose { get; set; } = false;
     public abstract string FloatPrecision { get; }
 
     static string[] GetBurstCommandLineArgs(BurstCompiler compiler, NPath outputPrefixForObjectFile, NPath outputDirForPatchedAssemblies, string pinvokeName, DotNetAssembly[] inputAssemblies)
@@ -35,10 +37,10 @@ public abstract class BurstCompiler
             compiler.Link ? "" : "--nolink",
             $"--float-precision={compiler.FloatPrecision}",
             $"--keep-intermediate-files",
-            "--verbose",
+            compiler.Verbose ? "--verbose" : "",
             $"--patch-assemblies-into={outputDirForPatchedAssemblies}",
             $"--output={outputPrefixForObjectFile}",
-            $"--only-static-methods",
+			compiler.OnlyStaticMethods ? "--only-static-methods": "",
             "--method-prefix=burstedmethod_",
             $"--pinvoke-name={pinvokeName}"
         }.Concat(inputAssemblies.Select(asm => $"--root-assembly={asm.Path}"));

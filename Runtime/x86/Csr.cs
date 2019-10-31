@@ -171,8 +171,8 @@ namespace Unity.Burst.Intrinsics
         }
 
 #if !BURST_INTERNAL
-        static private void BurstIntrinsicSetCSRFromManaged(int bits) { }
-        static private int BurstIntrinsicGetCSRFromManaged() { return 0;  }
+        private static void BurstIntrinsicSetCSRFromManaged(int bits) { }
+        private static int BurstIntrinsicGetCSRFromManaged() { return 0;  }
 
         [BurstCompile]
         private static void _DoSetCSRTrampoline(int bits) { BurstIntrinsicSetCSRFromManaged(bits); }

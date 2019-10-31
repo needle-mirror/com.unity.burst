@@ -862,6 +862,13 @@ extern ""C""
                 //this keeps the behaviour consistent with how it was before static linkage was introduced
                 if (target == BuildTarget.iOS)
                 {
+                    var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.iOS);
+
+                    // Early exit if burst is not activated
+                    if (aotSettingsForTarget.DisableBurstCompilation)
+                    {
+                        return;
+                    }
                     PostAddStaticLibraries(path);
                 }
             }

@@ -122,11 +122,11 @@ namespace Burst.Compiler.IL.Tests
             return fp.FunctionPointer.Invoke(c);
         }
 
-        static private readonly half3 h3_h = new half3(new half(42.0f));
-        static private readonly half3 h3_d = new half3(0.5);
-        static private readonly half3 h3_v2s = new half3(new half2(new half(1.0f), new half(2.0f)), new half(0.5f));
-        static private readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
-        static private readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
+        private static readonly half3 h3_h = new half3(new half(42.0f));
+        private static readonly half3 h3_d = new half3(0.5);
+        private static readonly half3 h3_v2s = new half3(new half2(new half(1.0f), new half(2.0f)), new half(0.5f));
+        private static readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
+        private static readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
 
         [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InternalCompilerErrorInInstruction)]
         public static float TestStaticHalf3()

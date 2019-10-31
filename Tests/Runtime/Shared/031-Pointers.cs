@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -384,7 +385,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(typeof(PointerConditional.Provider))]
-        public static unsafe bool TestConditionalPointer(ref PointerConditional job)
+        public static unsafe bool TestConditionalPointer([NoAlias] ref PointerConditional job)
         {
             job.Execute();
             return job.t->a == job.t->b;
@@ -558,7 +559,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(typeof(StackAllocCheck.Provider))]
-        public static unsafe bool StackAllocAliasCheck(ref StackAllocCheck stackAllocCheck)
+        public static unsafe bool StackAllocAliasCheck([NoAlias] ref StackAllocCheck stackAllocCheck)
         {
             int* ptr = stackalloc int[1];
             *ptr = 13;
@@ -582,6 +583,12 @@ namespace Burst.Compiler.IL.Tests
             }
 
             return true;
+        }
+
+        [TestCompiler(1)]
+        public static unsafe int NativeIntAddCheck(int a)
+        {
+            return (int)(&a + 1) - (int)&a;
         }
     }
 }

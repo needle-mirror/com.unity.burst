@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Unity.Burst.LowLevel;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -41,20 +42,10 @@ namespace Unity.Burst.Editor
             "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IRPassAnalysis)
         };
 
-        private static readonly string[] CodeGenOptions =
-        {
-            "auto",
-            "x86_sse2",
-            "x86_sse4",
-            "x64_sse2",
-            "x64_sse4",
-            "avx",
-            "avx2",
-            "avx512",
-            "armv7a_neon32",
-            "armv8a_aarch64",
-            "thumb2_neon32",
-        };
+        private static readonly SplitterState TreeViewSplitterState = new SplitterState(new float[] { 30, 70 }, new int[] { 128, 128 }, null);
+
+
+        private static readonly string[] TargetCpuNames = Enum.GetNames(typeof(TargetCpu));
 
         private static readonly int[] FontSizes =
         {
@@ -63,11 +54,12 @@ namespace Unity.Burst.Editor
 
         private static string[] _fontSizesText;
 
-        [SerializeField] private int _codeGenOptions = 0;
+        [NonSerialized]
+        private readonly BurstDisassembler _burstDisassembler;
+
+        [SerializeField] private TargetCpu _targetCpu = TargetCpu.Auto;
 
         [SerializeField] private DisassemblyKind _disasmKind = DisassemblyKind.Asm;
-
-        [SerializeField] private bool _fastMath = true;
 
         [NonSerialized]
         private GUIStyle _fixedFontStyle;
@@ -75,10 +67,11 @@ namespace Unity.Burst.Editor
         [NonSerialized]
         private int _fontSizeIndex = -1;
 
-        [SerializeField] private bool _optimizations = true;
+        [NonSerialized]
+        private int _previousTargetIndex = -1;
 
-        [SerializeField] private bool _safetyChecks = true;
-        [SerializeField] private bool _enhancedDisassembly = false;
+        [SerializeField] private bool _safetyChecks;
+        [SerializeField] private bool _enhancedDisassembly = true;
         private Vector2 _scrollPos;
         private SearchField _searchField;
 
@@ -98,9 +91,16 @@ namespace Unity.Burst.Editor
 
         private int FontSize => FontSizes[_fontSizeIndex];
 
+
+        public BurstInspectorGUI()
+        {
+            _burstDisassembler = new BurstDisassembler();
+        }
+
         public void OnEnable()
         {
             if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState());
+            _safetyChecks = BurstCompiler.Options.EnableBurstSafetyChecks;
         }
 
         private void CleanupFont()
@@ -130,42 +130,34 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private void RenderButtonBars(float width, BurstCompileTarget target, out bool doRefresh, out bool doCopy, out int fontIndex)
+        private void RenderButtonBars(float width, BurstCompileTarget target, out bool doCopy, out int fontIndex)
         {
             float remainingWidth = width;
 
             var contentDisasm = new GUIContent("Enhanced Disassembly");
             var contentSafety = new GUIContent("Safety Checks");
-            var contentOptimizations = new GUIContent("Optimizations");
-            var contentFastMath = new GUIContent("Fast Math");
             var contentCodeGenOptions = new GUIContent("Auto");
             var contentLabelFontSize = new GUIContent("Font Size");
             var contentFontSize = new GUIContent("99");
-            var contentRefresh = new GUIContent("Refresh Disassembly");
             var contentCopyToClip = new GUIContent("Copy to Clipboard");
 
             GUILayout.BeginHorizontal();
 
             _enhancedDisassembly = GUILayout.Toggle(_enhancedDisassembly, contentDisasm, EditorStyles.toggle);
-            FlowToNewLine(ref remainingWidth,width, EditorStyles.toggle, contentDisasm);
+            FlowToNewLine(ref remainingWidth, width, EditorStyles.toggle, contentDisasm);
+
             _safetyChecks = GUILayout.Toggle(_safetyChecks, contentSafety, EditorStyles.toggle);
-            FlowToNewLine(ref remainingWidth,width, EditorStyles.toggle, contentSafety);
-            _optimizations = GUILayout.Toggle(_optimizations, contentOptimizations, EditorStyles.toggle);
-            FlowToNewLine(ref remainingWidth,width, EditorStyles.toggle, contentOptimizations);
-            _fastMath = GUILayout.Toggle(_fastMath, contentFastMath, EditorStyles.toggle);
-            FlowToNewLine(ref remainingWidth,width, EditorStyles.toggle, contentFastMath);
+            FlowToNewLine(ref remainingWidth, width, EditorStyles.toggle, contentSafety);
 
             EditorGUI.BeginDisabledGroup(!target.HasRequiredBurstCompileAttributes);
-            _codeGenOptions = EditorGUILayout.Popup(_codeGenOptions, CodeGenOptions, EditorStyles.popup);
+
+            _targetCpu = (TargetCpu)EditorGUILayout.Popup((int)_targetCpu, TargetCpuNames, EditorStyles.popup);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.popup, contentCodeGenOptions);
 
             GUILayout.Label("Font Size", EditorStyles.label);
             fontIndex = EditorGUILayout.Popup(_fontSizeIndex, _fontSizesText, EditorStyles.popup);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.label,contentLabelFontSize);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.popup,contentFontSize);
-
-            doRefresh = GUILayout.Button(contentRefresh, EditorStyles.miniButton);
-            FlowToNewLine(ref remainingWidth, width, EditorStyles.miniButton,contentRefresh);
 
             doCopy = GUILayout.Button(contentCopyToClip, EditorStyles.miniButton);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.miniButton,contentCopyToClip);
@@ -174,7 +166,6 @@ namespace Unity.Burst.Editor
             GUILayout.EndHorizontal();
 
             _disasmKind = (DisassemblyKind) GUILayout.Toolbar((int) _disasmKind, DisassemblyKindNames, GUILayout.Width(width));
-
         }
 
         public void OnGUI()
@@ -238,6 +229,9 @@ namespace Unity.Burst.Editor
 
             GUILayout.BeginHorizontal();
 
+            // SplitterGUILayout.BeginHorizontalSplit is internal in Unity but we don't have much choice
+            SplitterGUILayout.BeginHorizontalSplit(TreeViewSplitterState);
+
             GUILayout.BeginVertical(GUILayout.Width(position.width / 3));
 
             GUILayout.Label("Compile Targets", EditorStyles.boldLabel);
@@ -250,8 +244,7 @@ namespace Unity.Burst.Editor
                 _treeView.Reload();
             }
 
-            _treeView.OnGUI(GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandHeight(true),
-                GUILayout.ExpandWidth(true)));
+            _treeView.OnGUI(GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)));
 
             GUILayout.EndVertical();
 
@@ -260,78 +253,101 @@ namespace Unity.Burst.Editor
             var selection = _treeView.GetSelection();
             if (selection.Count == 1)
             {
-                var id = selection[0];
-                var target = _targets[id - 1];
+                var targetIndex = selection[0];
+                var target = _targets[targetIndex - 1];
+                var targetOptions = target.Options;
+
                 // Stash selected item name to handle domain reloads more gracefully
                 _selectedItem = target.GetDisplayName();
+                
+                // Refresh if any options are changed
+                bool doCopy;
+                int fontSize;
+                // -14 to add a little bit of space for the vertical scrollbar to display correctly
+                RenderButtonBars((position.width*2)/3 - 14, target, out doCopy, out fontSize);
 
-                bool doRefresh = false;
-                bool doCopy = false;
-                int fsi = _fontSizeIndex;
+                // We are currently formatting only Asm output
+                var isTextFormatted = _enhancedDisassembly && _disasmKind == DisassemblyKind.Asm;
 
-                RenderButtonBars((position.width*2)/3, target, out doRefresh, out doCopy, out fsi);
+                // Depending if we are formatted or not, we don't render the same text
+                var textToRender = isTextFormatted ? target.FormattedDisassembly : target.RawDisassembly;
 
-                var disasm = target.Disassembly != null ? target.Disassembly[(int) _disasmKind] : null;
+                // Only refresh if we are switching to a new selection that hasn't been disassembled yet
+                // Or we are changing disassembly settings (safety checks / enhanced disassembly)
+                var targetRefresh = textToRender == null
+                                    || target.DisassemblyKind != _disasmKind
+                                    || targetOptions.EnableBurstSafetyChecks != _safetyChecks
+                                    || target.TargetCpu != _targetCpu
+                                    || target.IsDarkMode != EditorGUIUtility.isProSkin;
 
+                bool targetChanged = _previousTargetIndex != targetIndex;
 
-                var methodOptions = target.Options.Clone();
-
-                if (doRefresh)
+                _previousTargetIndex = targetIndex;
+                
+                if (targetRefresh)
                 {
                     // TODO: refactor this code with a proper AppendOption to avoid these "\n"
                     var options = new StringBuilder();
 
-                    methodOptions.EnableBurstCompilation = true;
-                    methodOptions.EnableBurstSafetyChecks = _safetyChecks;
-                    methodOptions.EnableEnhancedAssembly = _enhancedDisassembly;
-                    methodOptions.DisableOptimizations = !_optimizations;
-                    methodOptions.EnableFastMath = _fastMath;
-                    // force synchronouze compilation for the inspector
-                    methodOptions.EnableBurstCompileSynchronously = true;
+                    target.TargetCpu = _targetCpu;
+                    target.DisassemblyKind = _disasmKind;
+                    targetOptions.EnableBurstSafetyChecks = _safetyChecks;
+                    target.IsDarkMode = EditorGUIUtility.isProSkin;
+                    targetOptions.EnableBurstCompileSynchronously = true;
 
                     string defaultOptions;
-                    if (methodOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions))
+                    if (targetOptions.TryGetOptions(target.IsStaticMethod ? (MemberInfo)target.Method : target.JobType, true, out defaultOptions))
                     {
                         options.Append(defaultOptions);
 
-                        options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionTarget, CodeGenOptions[_codeGenOptions]));
+                        options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionTarget, TargetCpuNames[(int)_targetCpu]));
+
+                        options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDebug));
 
                         var baseOptions = options.ToString().Trim('\n', ' ');
 
-                        target.Disassembly = new string[DisasmOptions.Length];
+                        target.RawDisassembly = GetDisassembly(target.Method, baseOptions + DisasmOptions[(int)_disasmKind]);
 
-                        for (var i = 0; i < DisasmOptions.Length; ++i)
-                            target.Disassembly[i] = GetDisassembly(target.Method, baseOptions + DisasmOptions[i]);
-
-                        if (_enhancedDisassembly && (int)DisassemblyKind.Asm < target.Disassembly.Length)
+                        if (isTextFormatted)
                         {
-                            var processor = new BurstDisassembler();
-                            target.Disassembly[(int)DisassemblyKind.Asm] = processor.Process(target.Disassembly[(int)DisassemblyKind.Asm]);
+                            // Store the formatted version
+                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, IsIntel(_targetCpu) ? BurstDisassembler.AsmKind.Intel : BurstDisassembler.AsmKind.ARM, target.IsDarkMode);
+                            textToRender = target.FormattedDisassembly;
                         }
-
-                        disasm = target.Disassembly[(int)_disasmKind];
+                        else
+                        {
+                            target.FormattedDisassembly = null;
+                            textToRender = target.RawDisassembly;
+                        }
                     }
                 }
 
-                if (disasm != null)
+                if (textToRender != null)
                 {
-                    _textArea.Text = disasm;
-                    _scrollPos = GUILayout.BeginScrollView(_scrollPos);
+                    _textArea.Text = textToRender;
+                    if (targetChanged) _scrollPos = Vector2.zero;
+                    _scrollPos = GUILayout.BeginScrollView(_scrollPos, true, true);
                     _textArea.Render(_fixedFontStyle);
                     GUILayout.EndScrollView();
                 }
 
-                if (doCopy) EditorGUIUtility.systemCopyBuffer = disasm == null ? "" : disasm;
-
-                if (fsi != _fontSizeIndex)
+                if (doCopy)
                 {
-                    _fontSizeIndex = fsi;
-                    EditorPrefs.SetInt(FontSizeIndexPref, fsi);
+                    // When copying to the clipboard, we copy the non-formatted version
+                    EditorGUIUtility.systemCopyBuffer = target.RawDisassembly ?? string.Empty;
+                }
+
+                if (fontSize != _fontSizeIndex)
+                {
+                    _fontSizeIndex = fontSize;
+                    EditorPrefs.SetInt(FontSizeIndexPref, fontSize);
                     _fixedFontStyle = null;
                 }
             }
 
             GUILayout.EndVertical();
+
+            SplitterGUILayout.EndHorizontalSplit();
 
             GUILayout.EndHorizontal();
         }
@@ -341,7 +357,19 @@ namespace Unity.Burst.Editor
             try
             {
                 var result = BurstCompilerService.GetDisassembly(method, options);
-                return TabsToSpaces(result);
+                if (result.IndexOf('\t') >= 0)
+                {
+                    result = result.Replace("\t", "   ");
+                }
+
+                // Workaround to remove timings
+                var index = result.IndexOf("While compiling", StringComparison.Ordinal);
+                if (index > 0)
+                {
+                    result = result.Substring(index);
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -349,34 +377,21 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static string TabsToSpaces(string s)
+        private static bool IsIntel(TargetCpu cpu)
         {
-            const int tabSize = 8;
-            var lineLength = 0;
-            var result = new StringBuilder(s.Length);
-            foreach (var ch in s)
-                switch (ch)
-                {
-                    case '\n':
-                        result.Append(ch);
-                        lineLength = 0;
-                        break;
-                    case '\t':
-                    {
-                        var spaceCount = tabSize - lineLength % tabSize;
-                        for (var i = 0; i < spaceCount; ++i) result.Append(' ');
-
-                        lineLength += spaceCount;
-                        break;
-                    }
-
-                    default:
-                        result.Append(ch);
-                        lineLength++;
-                        break;
-                }
-
-            return result.ToString();
+            switch (cpu)
+            {
+                case TargetCpu.Auto:
+                case TargetCpu.X86_SSE2:
+                case TargetCpu.X86_SSE4:
+                case TargetCpu.X64_SSE2:
+                case TargetCpu.X64_SSE4:
+                case TargetCpu.AVX:
+                case TargetCpu.AVX2:
+                case TargetCpu.AVX512:
+                    return true;
+            }
+            return false;
         }
     }
 
@@ -384,10 +399,12 @@ namespace Unity.Burst.Editor
     {
         public BurstMethodTreeView(TreeViewState state) : base(state)
         {
+            showBorder = true;
         }
 
         public BurstMethodTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader)
         {
+            showBorder = true;
         }
 
         public List<BurstCompileTarget> Targets { get; set; }

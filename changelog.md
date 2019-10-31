@@ -1,9 +1,25 @@
 # Changelog
 
+## [1.2.0-preview.8] - 2019-11-01
+
+- Fix a `NullReferenceException` happening in a call stack involving `CecilExtensions.IsDelegate(...)`.
+
+## [1.2.0-preview.7] - 2019-10-30
+
+- Many improvements to the Inspector:
+  - New assembly syntax colorization!
+  - Fix issue with menu settings being modified when opening the Inspector.
+  - Make compile targets left pane resizable.
+  - Fix vertical scrollbar size.
+  - Add automatic refresh when selecting a target to compile.
+- Fix an issue where `ref readonly` of a struct type, returned from a function, would cause a compiler crash.
+- Add support for `Interlocked.Exchange` and `Interlocked.CompareExchange` for float and double arguments.
+- Fix bug preventing iOS builds from working, if burst is disabled in AOT Settings.
+
 ## [1.2.0-preview.6] - 2019-10-16
 
 - New multi-threaded compilation support when building a standalone player.
-- Improve `BurstCompiler.CompileFunctionPointer` to compile asynchronously function pointers in the Editor
+- Improve `BurstCompiler.CompileFunctionPointer` to compile asynchronously function pointers in the Editor.
 - Improve of error codes and messages infrastructure.
 - Upgraded Burst to use LLVM Version 8.0.1 by default, bringing the latest optimization improvements from the LLVM project.
 - Fix issue with libtinfo5 missing on Linux.
@@ -12,7 +28,7 @@
 - Fix potential failure when loading MDB debugging file.
 - Fix linker issue with folder containing spaces.
 - Fix issue with package validation by removing ifdef around namespaces.
-- Fix issue with an internal compiler exception related to an empty stack
+- Fix issue with an internal compiler exception related to an empty stack.
 
 ## [1.2.0-preview.5] - 2019-09-23
 

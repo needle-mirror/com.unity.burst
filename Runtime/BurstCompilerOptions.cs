@@ -38,8 +38,6 @@ namespace Unity.Burst
         internal const string OptionBackend = "backend=";
         internal const string OptionSafetyChecks = "safety-checks";
         internal const string OptionDisableSafetyChecks = "disable-safety-checks";
-        internal const string OptionNoAlias = "noalias";
-        internal const string OptionDisableNoAlias = "disable-noalias";
         internal const string OptionDisableOpt = "disable-opt";
         internal const string OptionFastMath = "fastmath";
         internal const string OptionTarget = "target=";
@@ -105,40 +103,38 @@ namespace Unity.Burst
         // All the following content is exposed to the public interface
 
 #if !BURST_INTERNAL
-        internal const string GlobalSettingsName = "global";
+        // These fields are only setup at startup
+        private static readonly bool ForceDisableBurstCompilation;
+        private static readonly bool ForceBurstCompilationSynchronously;
 
-        private static bool _enableBurstCompilation;
-        private static bool _forceDisableBurstCompilation;
-        private static bool _enableBurstCompileSynchronously;
-        private static bool _forceBurstCompilationSynchronously;
-        private static bool _enableBurstSafetyChecks;
-        private static bool _enableBurstTimings;
+        private bool _enableBurstCompilation;
+        private bool _enableBurstCompileSynchronously;
+        private bool _enableBurstSafetyChecks;
+        private bool _enableBurstTimings;
 
-        private BurstCompilerOptions() : this(null)
+        private BurstCompilerOptions() : this(false)
         {
         }
 
-        internal BurstCompilerOptions(string name)
+        internal BurstCompilerOptions(bool isGlobal)
         {
-            Name = name;
+            IsGlobal = isGlobal;
             // By default, burst is enabled as well as safety checks
             EnableBurstCompilation = true;
             EnableBurstSafetyChecks = true;
         }
 
-
-        private bool _enableEnhancedAssembly;
-        private bool _disableOptimizations;
-        private bool _enableFastMath;
-
-        internal string Name { get; }
+        /// <summary>
+        /// <c>true</c> if this option is the global options that affects menus
+        /// </summary>
+        private bool IsGlobal { get; }
 
         /// <summary>
         /// Gets a boolean indicating whether burst is enabled.
         /// </summary>
         public bool IsEnabled
         {
-            get => EnableBurstCompilation && !_forceDisableBurstCompilation;
+            get => EnableBurstCompilation && !ForceDisableBurstCompilation;
         }
 
         /// <summary>
@@ -150,14 +146,14 @@ namespace Unity.Burst
             set
             {
                 // If we are in the global settings, and we are forcing to no burst compilation
-                if (Name == GlobalSettingsName && _forceDisableBurstCompilation) value = false;
+                if (IsGlobal && ForceDisableBurstCompilation) value = false;
 
                 bool changed = _enableBurstCompilation != value;
 
 #if UNITY_EDITOR
                 // Prevent Burst compilation being enabled while in PlayMode, because
                 // we can't currently support this for jobs.
-                if (Name == GlobalSettingsName && changed && value && UnityEngine.Application.isPlaying)
+                if (IsGlobal && changed && value && UnityEngine.Application.isPlaying)
                 {
                     throw new InvalidOperationException("Burst compilation can't be switched on while in PlayMode");
                 }
@@ -166,7 +162,7 @@ namespace Unity.Burst
                 _enableBurstCompilation = value;
 
                 // Modify only JobsUtility.JobCompilerEnabled when modifying global settings
-                if (Name == GlobalSettingsName)
+                if (IsGlobal)
                 {
                     // We need also to disable jobs as functions are being cached by the job system
                     // and when we ask for disabling burst, we are also asking the job system
@@ -228,48 +224,29 @@ namespace Unity.Burst
             }
         }
 
-        internal bool EnableEnhancedAssembly
-        {
-            get => _enableEnhancedAssembly;
-            set
-            {
-                bool changed = _enableEnhancedAssembly != value;
-                _enableEnhancedAssembly = value;
-                if (changed) OnOptionsChanged();
-            }
-        }
-
         /// <summary>
-        /// Gets or sets a boolean to enable or disable compiler optimizations
+        /// This property is no longer used and will be removed in a future major release.
         /// </summary>
-        /// <remarks>
-        /// This is only available at Editor time. Does not have an impact on player mode.
-        /// </remarks>
+        [Obsolete("This property is no longer used and will be removed in a future major release")]
         public bool DisableOptimizations
         {
-            get => _disableOptimizations;
+            get => false;
             set
             {
-                bool changed = _disableOptimizations != value;
-                _disableOptimizations = value;
-                if (changed) OnOptionsChanged();
             }
         }
 
         /// <summary>
-        /// Gets or sets a boolean to enable or disable fast math calculation.
+        /// This property is no longer used and will be removed in a future major release. Use the [BurstCompile(FloatMode = FloatMode.Fast)] on the method directly to enable this feature
         /// </summary>
-        /// <remarks>
-        /// This is only available at Editor time. Does not have an impact on player mode.
-        /// </remarks>
+        [Obsolete("This property is no longer used and will be removed in a future major release. Use the [BurstCompile(FloatMode = FloatMode.Fast)] on the method directly to enable this feature")]
         public bool EnableFastMath
         {
-            get => _enableFastMath;
+            get => true;
+
             set
             {
-                bool changed = _enableFastMath != value;
-                _enableFastMath = value;
-                if (changed) OnOptionsChanged();
+                // ignored
             }
         }
 
@@ -295,9 +272,6 @@ namespace Unity.Burst
                 EnableBurstCompilation = EnableBurstCompilation,
                 EnableBurstCompileSynchronously = EnableBurstCompileSynchronously,
                 EnableBurstSafetyChecks = EnableBurstSafetyChecks,
-                EnableEnhancedAssembly = EnableEnhancedAssembly,
-                EnableFastMath = EnableFastMath,
-                DisableOptimizations = DisableOptimizations,
                 EnableBurstTimings = EnableBurstTimings
             };
             return clone;
@@ -361,7 +335,7 @@ namespace Unity.Burst
 
             var flagsBuilderOut = new StringBuilder();
 
-            if (isJit && (attr.CompileSynchronously || _forceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
+            if (isJit && (attr.CompileSynchronously || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
             {
                 AddOption(flagsBuilderOut, GetOption(OptionJitEnableSynchronousCompilation));
             }
@@ -374,21 +348,6 @@ namespace Unity.Burst
             if (attr.FloatPrecision != FloatPrecision.Standard)
             {
                 AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
-            }
-
-            if (isJit && EnableEnhancedAssembly)
-            {
-                AddOption(flagsBuilderOut, GetOption(OptionDebug));
-            }
-
-            if (DisableOptimizations)
-            {
-                AddOption(flagsBuilderOut, GetOption(OptionDisableOpt));
-            }
-
-            if (EnableFastMath)
-            {
-                AddOption(flagsBuilderOut, GetOption(OptionFastMath));
             }
 
             if (attr.Options != null)
@@ -410,8 +369,6 @@ namespace Unity.Burst
             else
             {
                 AddOption(flagsBuilderOut, GetOption(OptionDisableSafetyChecks));
-                // Enable NoAlias ahen safety checks are disable
-                AddOption(flagsBuilderOut, GetOption(OptionNoAlias));
             }
 
             if (isJit && EnableBurstTimings)
@@ -452,10 +409,10 @@ namespace Unity.Burst
                 switch (arg)
                 {
                     case DisableCompilationArg:
-                        _forceDisableBurstCompilation = true;
+                        ForceDisableBurstCompilation = true;
                         break;
                     case ForceSynchronousCompilationArg:
-                        _forceBurstCompilationSynchronously = false;
+                        ForceBurstCompilationSynchronously = false;
                         break;
                 }
             }

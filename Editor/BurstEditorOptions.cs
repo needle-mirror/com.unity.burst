@@ -70,11 +70,12 @@ namespace Unity.Burst.Editor
 
         private static void GlobalOnOptionsChanged()
         {
+            var global = BurstCompiler.Options;
             // We are not optimizing anything here, so whenever one option is set, we reset all of them
-            EditorPrefs.SetBool(EnableBurstCompilationText, BurstCompiler.Options.EnableBurstCompilation);
-            EditorPrefs.SetBool(EnableBurstSafetyChecksText, BurstCompiler.Options.EnableBurstSafetyChecks);
-            EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, BurstCompiler.Options.EnableBurstCompileSynchronously);
-            EditorPrefs.SetBool(EnableBurstTimingsText, BurstCompiler.Options.EnableBurstTimings);
+            EditorPrefs.SetBool(EnableBurstCompilationText, global.EnableBurstCompilation);
+            EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+            EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, global.EnableBurstCompileSynchronously);
+            EditorPrefs.SetBool(EnableBurstTimingsText, global.EnableBurstTimings);
         }
     }
 }

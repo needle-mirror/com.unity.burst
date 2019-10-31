@@ -112,5 +112,49 @@ namespace Burst.Compiler.IL.Tests
             Interlocked.Decrement(ref test);
             return test;
         }
+
+        [TestCompiler(42.0f)]
+        public static float ExchangeFloat(ref float f)
+        {
+            if (Interlocked.Exchange(ref f, 13) == 42)
+            {
+                return f;
+            }
+
+            return 0;
+        }
+
+        [TestCompiler(42.0)]
+        public static double ExchangeDouble(ref double d)
+        {
+            if (Interlocked.Exchange(ref d, 13) == 42)
+            {
+                return d;
+            }
+
+            return 0;
+        }
+
+        [TestCompiler(42.0f)]
+        public static float CompareExchangeFloat(ref float f)
+        {
+            if (Interlocked.CompareExchange(ref f, 13, 42) == 42)
+            {
+                return f;
+            }
+
+            return 0;
+        }
+
+        [TestCompiler(42.0)]
+        public static double CompareExchangeDouble(ref double d)
+        {
+            if (Interlocked.CompareExchange(ref d, 13, 42) == 42)
+            {
+                return d;
+            }
+
+            return 0;
+        }
     }
 }
