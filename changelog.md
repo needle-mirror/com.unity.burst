@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0-preview.9] - 2019-11-06
+
+- Fix compilation requests being lost when using asynchronous compilation.
+- Prevent Burst compilation being toggled on while in play mode, either via "Enable Compilation" menu item or programmatically - was previously technically possible but produced unpredictable results.
+
 ## [1.2.0-preview.8] - 2019-11-01
 
 - Fix a `NullReferenceException` happening in a call stack involving `CecilExtensions.IsDelegate(...)`.

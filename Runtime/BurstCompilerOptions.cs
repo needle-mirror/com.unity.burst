@@ -107,6 +107,10 @@ namespace Unity.Burst
         private static readonly bool ForceDisableBurstCompilation;
         private static readonly bool ForceBurstCompilationSynchronously;
 
+#if UNITY_EDITOR
+        private readonly bool _isConstructing;
+#endif
+
         private bool _enableBurstCompilation;
         private bool _enableBurstCompileSynchronously;
         private bool _enableBurstSafetyChecks;
@@ -118,10 +122,23 @@ namespace Unity.Burst
 
         internal BurstCompilerOptions(bool isGlobal)
         {
-            IsGlobal = isGlobal;
-            // By default, burst is enabled as well as safety checks
-            EnableBurstCompilation = true;
-            EnableBurstSafetyChecks = true;
+#if UNITY_EDITOR
+            _isConstructing = true;
+#endif
+
+            try
+            {
+                IsGlobal = isGlobal;
+                // By default, burst is enabled as well as safety checks
+                EnableBurstCompilation = true;
+                EnableBurstSafetyChecks = true;
+            }
+            finally
+            {
+#if UNITY_EDITOR
+                _isConstructing = false;
+#endif
+            }
         }
 
         /// <summary>
@@ -153,7 +170,7 @@ namespace Unity.Burst
 #if UNITY_EDITOR
                 // Prevent Burst compilation being enabled while in PlayMode, because
                 // we can't currently support this for jobs.
-                if (IsGlobal && changed && value && UnityEngine.Application.isPlaying)
+                if (!_isConstructing && IsGlobal && changed && value && UnityEngine.Application.isPlaying)
                 {
                     throw new InvalidOperationException("Burst compilation can't be switched on while in PlayMode");
                 }
