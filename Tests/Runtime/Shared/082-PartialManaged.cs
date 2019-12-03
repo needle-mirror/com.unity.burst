@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Burst;
 #if BURST_TESTS_ONLY
+using Burst.Compiler.IL.DebugInfo;
 using Burst.Compiler.IL.Jit;
 #endif
 
@@ -53,7 +54,7 @@ namespace Burst.Compiler.IL.Tests
         public void TestThrowExceptionOnNonExistingMethod()
         {
             MethodInfo info = typeof(PartialManaged).GetMethod("NonExistingMethod");
-            JitCompiler compiler = new JitCompiler();
+            JitCompiler compiler = new JitCompiler(new PortablePdbCache());
             Assert.Throws<ArgumentNullException>(() => compiler.CompileMethod(info));
         }
 #endif

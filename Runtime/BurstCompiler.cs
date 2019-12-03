@@ -1,6 +1,6 @@
 // For some reasons Unity.Burst.LowLevel is not part of UnityEngine in 2018.2 but only in UnityEditor
 // In 2018.3 It should be fine
-#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
+#if !UNITY_DOTSPLAYER && !NET_DOTS && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
 using System.Text;
 using System;
 using System.Reflection;
@@ -128,7 +128,7 @@ namespace Unity.Burst
             // The attribute is directly on the method, so we recover the underlying method here
             if (BurstCompilerOptions.HasBurstCompileAttribute(delegateMethod.Method))
             {
-                if (Options.EnableBurstCompilation)
+                if (Options.EnableBurstCompilation && BurstCompilerHelper.IsBurstGenerated)
                 {
                     var delegateMethodId = Unity.Burst.LowLevel.BurstCompilerService.CompileAsyncDelegateMethod(delegateObj, string.Empty);
                     function = Unity.Burst.LowLevel.BurstCompilerService.GetAsyncCompiledAsyncDelegateMethod(delegateMethodId);
@@ -212,7 +212,45 @@ namespace Unity.Burst
         /// Dummy empty method for being able to send a command to the compiler
         /// </summary>
         private static void DummyMethod() { }
+#else
+        /// <summary>
+        /// Internal class to detect at standalone player time if AOT settings were enabling burst.
+        /// </summary>
+        [BurstCompile]
+        internal static class BurstCompilerHelper
+        {
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+            private delegate bool IsBurstEnabledDelegate();
+            private static readonly IsBurstEnabledDelegate IsBurstEnabledImpl = new IsBurstEnabledDelegate(IsBurstEnabled);
+
+            [BurstCompile]
+            private static bool IsBurstEnabled()
+            {
+                bool result = true;
+                DiscardedMethod(ref result);
+                return result;
+            }
+
+            [BurstDiscard]
+            private static void DiscardedMethod(ref bool value)
+            {
+                value = false;
+            }
+
+            private static unsafe bool IsCompiledByBurst(Delegate del)
+            {
+                var delegateMethodId = Unity.Burst.LowLevel.BurstCompilerService.CompileAsyncDelegateMethod(del, string.Empty);
+                // We don't try to run the method, having a pointer is already enough to tell us that burst was active for AOT settings
+                return Unity.Burst.LowLevel.BurstCompilerService.GetAsyncCompiledAsyncDelegateMethod(delegateMethodId) != (void*)0;
+            }
+
+            /// <summary>
+            /// Gets a boolean indicating whether burst was enabled for standalone player, used only at runtime.
+            /// </summary>
+            public static readonly bool IsBurstGenerated = IsCompiledByBurst(IsBurstEnabledImpl);
+        }
 #endif
+
     }
 }
 #endif

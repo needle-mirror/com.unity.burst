@@ -108,6 +108,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate);
             Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Types.MyEnum)}, typeof(Burst_Compiler_IL_Tests_Types_EnumByParamDelegate), CallBurst_Compiler_IL_Tests_Types_EnumByParamDelegate);
+            Register(typeof(int),  new Type[] {typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate), CallBurst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate);
             Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate);
@@ -1321,6 +1322,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_Types_EnumByParamDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Types.MyEnum)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate(System.IntPtr arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate)delegateObj;
+            object result = null;
+            var arg0 = (System.IntPtr)p[0];
             result = d(arg0);
             return result;
         }

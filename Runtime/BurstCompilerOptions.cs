@@ -1,5 +1,5 @@
 // As BurstCompiler.Compile is not supported on Tiny/ZeroPlayer, we can ifdef the entire file
-#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY
+#if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -50,7 +50,6 @@ namespace Unity.Burst
         internal const string OptionDebugTrap = "debugtrap";
         internal const string OptionDisableVectors = "disable-vectors";
         internal const string OptionDebug = "debug";
-        internal const string OptionDisableDebugSymbols = "disable-load-debug-symbols";
         internal const string OptionStaticLinkage = "generate-static-linkage-methods";
 
         // -------------------------------------------------------
@@ -415,7 +414,7 @@ namespace Unity.Burst
             OptionsChanged?.Invoke();
         }
 
-#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY
+#if !UNITY_DOTSPLAYER && !NET_DOTS
         /// <summary>
         /// Static initializer based on command line arguments
         /// </summary>

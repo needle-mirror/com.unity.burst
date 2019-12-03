@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0-preview.10] - 2019-12-04
+
+- Fix issue with debugging source locations that were no longer generated for standalone players.
+- Fix out-of-sync issue with JIT cache.
+- Fix potential data race on JIT cache when a domain reload is happening.
+- Fix issue with an exception occurring in `mono_string_len`.
+- Fix issue with burst Inspector disabled when disabling Burst from the main menu.
+- Fix issue with burst Inspector that was not showing any more compilation errors.
+- Fix issue with BurstCompiler.CompileFunctionPointer not working in a standalone player if Burst was disabled via standalone player build settings.
+- Fix issue on iOS where standalone player builds could fail, depending on number of burst-able functions found.
+- Fix a potential NullReferenceException when editing Burst AOT settings for standalone players.
+- Add documentation example for SharedStatic.
+- Enabled support for DOTS Runtime SharedStatics. Due to the nature of DOTS Runtime, only the generic versions of `SharedStatic.GetOrCreate<TContext>` are supported.
+
 ## [1.2.0-preview.9] - 2019-11-06
 
 - Fix compilation requests being lost when using asynchronous compilation.

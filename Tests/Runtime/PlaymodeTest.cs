@@ -1,5 +1,6 @@
 using System.Collections;
 using NUnit.Framework;
+using Unity.Burst;
 using UnityEngine;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine.TestTools;
@@ -8,14 +9,17 @@ using UnityEngine.TestTools;
 
 public class PlaymodeTest
 {
-    private bool jobCompilerStatusStorage;
-    
+    private bool _jobCompilerStatusStorage;
+    private bool _burstSynchronousCompilationState;
+
     [SetUp]
     public void Setup()
     {
-        jobCompilerStatusStorage = JobsUtility.JobCompilerEnabled;
+        _jobCompilerStatusStorage = JobsUtility.JobCompilerEnabled;
+        _burstSynchronousCompilationState = BurstCompiler.Options.EnableBurstCompileSynchronously;
+        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
     }
-    
+
     [UnityTest]
     public IEnumerator CheckBurstJobEnabled()
     {
@@ -38,13 +42,13 @@ public class PlaymodeTest
     public IEnumerator CheckBurstJobDisabled()
     {
         JobsUtility.JobCompilerEnabled = false;
-        
+
         yield return null;
         yield return null;
         yield return null;
         yield return null;
         yield return null;
-        
+
         using (var jobTester = new BurstJobTester())
         {
             var result = jobTester.Calculate();
@@ -55,6 +59,7 @@ public class PlaymodeTest
     [TearDown]
     public void Restore()
     {
-        JobsUtility.JobCompilerEnabled = jobCompilerStatusStorage;
+        JobsUtility.JobCompilerEnabled = _jobCompilerStatusStorage;
+        BurstCompiler.Options.EnableBurstCompileSynchronously = _burstSynchronousCompilationState;
     }
 }

@@ -132,6 +132,35 @@ public class BurstJobTester : IDisposable
         }
     }
 
+    [BurstCompile(CompileSynchronously = false)]
+    public struct MyJobAsync : IJob
+    {
+        [WriteOnly]
+        public NativeArray<float> Result;
+
+        public void Execute()
+        {
+            Result[0] = ChangeValue();
+            EraseRotation();
+        }
+
+        private float ChangeValue()
+        {
+            return 1.0f + ChangeValueStatic();
+        }
+
+        private static float ChangeValueStatic()
+        {
+            return 2.0f;
+        }
+
+        [BurstDiscard]
+        private void EraseRotation()
+        {
+            Result[0] = 0.0f;
+        }
+    }
+
     [BurstCompile]
     public struct MyJobWithDefaultOptimizations : IJob
     {

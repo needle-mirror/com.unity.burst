@@ -1,4 +1,4 @@
-#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY && UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
 using System;
 using System.Collections.Generic;
 #if BURST_UNITY_MOCK
@@ -30,7 +30,11 @@ namespace Unity.Burst
         {
             get
             {
+#if NET_DOTS
+                return ref UnsafeUtility.AsRef<T>(_buffer);
+#else
                 return ref Unsafe.AsRef<T>(_buffer);
+#endif
             }
         }
 
@@ -68,6 +72,7 @@ namespace Unity.Burst
                 (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? 4 : alignment));
         }
 
+#if !NET_DOTS
         /// <summary>
         /// Creates a shared static data for the specified context (reflection based, only usable from C#, but not from HPC#)
         /// </summary>
@@ -93,10 +98,12 @@ namespace Unity.Burst
                 BurstRuntime.GetHashCode64(contextType), BurstRuntime.GetHashCode64(subContextType),
                 (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? (uint)4 : alignment));
         }
+#endif
     }
 
     internal static class SharedStatic
     {
+#if !NET_DOTS
         private static readonly Dictionary<long, Type> HashToType = new Dictionary<long, Type>();
 
         public static unsafe void* GetOrCreateSharedStaticInternal(Type typeContext, Type subTypeContext, uint sizeOf,
@@ -107,18 +114,6 @@ namespace Unity.Burst
 
         }
             
-        public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
-        {
-            if (sizeOf == 0) throw new ArgumentException("sizeOf must be > 0", nameof(sizeOf));
-            var hash128 = new Hash128((ulong) getHashCode64, (ulong) getSubHashCode64);
-            var result = BurstCompilerService.GetOrCreateSharedMemory(ref hash128, sizeOf, alignment);
-            if (result == null)
-            {
-                throw new InvalidOperationException("Unable to create a SharedStatic for this key. It is likely that the same key was used to allocate a shared memory with a smaller size while the new size requested is bigger");
-            }
-            return result;
-        }
-
         private static long GetSafeHashCode64(Type type)
         {
             var hash = BurstRuntime.GetHashCode64(type);
@@ -142,6 +137,18 @@ namespace Unity.Burst
                 }
             }
             return hash;
+        }
+#endif
+        public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
+        {
+            if (sizeOf == 0) throw new ArgumentException("sizeOf must be > 0", nameof(sizeOf));
+            var hash128 = new Hash128((ulong)getHashCode64, (ulong)getSubHashCode64);
+            var result = BurstCompilerService.GetOrCreateSharedMemory(ref hash128, sizeOf, alignment);
+            if (result == null)
+            {
+                throw new InvalidOperationException("Unable to create a SharedStatic for this key. It is likely that the same key was used to allocate a shared memory with a smaller size while the new size requested is bigger");
+            }
+            return result;
         }
     }
 }

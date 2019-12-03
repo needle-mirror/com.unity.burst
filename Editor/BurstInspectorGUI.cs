@@ -359,14 +359,17 @@ namespace Unity.Burst.Editor
                 var result = BurstCompilerService.GetDisassembly(method, options);
                 if (result.IndexOf('\t') >= 0)
                 {
-                    result = result.Replace("\t", "   ");
+                    result = result.Replace("\t", "        ");
                 }
 
                 // Workaround to remove timings
-                var index = result.IndexOf("While compiling", StringComparison.Ordinal);
-                if (index > 0)
+                if (result.Contains("Burst timings"))
                 {
-                    result = result.Substring(index);
+                    var index = result.IndexOf("While compiling", StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        result = result.Substring(index);
+                    }
                 }
 
                 return result;

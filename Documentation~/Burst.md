@@ -382,7 +382,7 @@ Let's take the example of accessing an `int` static field that could be changed 
 ```C#
     public abstract class MutableStaticTest
     {
-        public static SharedStatic<int> IntField = SharedStatic<int>.GetOrCreate<MutableStaticTest, IntFieldKey>();
+        public static readonly SharedStatic<int> IntField = SharedStatic<int>.GetOrCreate<MutableStaticTest, IntFieldKey>();
 
         // Define a Key type to identify IntField
         private class IntFieldKey {}

@@ -1,4 +1,4 @@
-#if !UNITY_ZEROPLAYER && !UNITY_CSHARP_TINY
+#if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;

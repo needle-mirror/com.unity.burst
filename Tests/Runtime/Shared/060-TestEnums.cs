@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
@@ -52,11 +53,37 @@ namespace Burst.Compiler.IL.Tests
             return (value & MyEnum.Hello) != 0 ? 3 : 4;
         }
 
+        [TestCompiler(1)]
+        [TestCompiler(2)]
+        public static int TestEnumSwitchCase(IntPtr value)
+        {
+            var enumValue = (SmallEnum) value.ToInt32();
+            // Need at least 3 cases to generate a proper switch
+            // otherwise Roslyn will generate an if/else
+            switch (enumValue)
+            {
+                case SmallEnum.One:
+                    return 7;
+                case SmallEnum.Two:
+                    return 8;
+                case SmallEnum.Three:
+                    return 9;
+                default:
+                    return 10;
+            }
+        }
+
+        private static int GetToInt32(int value)
+        {
+            return value;
+        }
+
         [TestCompiler]
         public static int test_enum_sizeof_small_enum()
         {
             return sizeof(SmallEnum);
         }
+        
 
         [TestCompiler(SmallEnum.Three)]
         public static int test_enum_sizeof_small_enum_in_struct_access(SmallEnum value)

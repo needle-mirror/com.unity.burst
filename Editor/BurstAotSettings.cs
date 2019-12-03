@@ -54,7 +54,7 @@ namespace Unity.Burst.Editor
         internal static BuildTarget ResolveTarget(BuildTarget target)
         {
             // Treat the 32/64 platforms the same from the point of view of burst settings
-            // since there is no real distinguishment from the platforms selector
+            // since there is no real way to distinguish from the platforms selector
             if (target == BuildTarget.StandaloneWindows64 || target == BuildTarget.StandaloneWindows)
                 return BuildTarget.StandaloneWindows;
 
@@ -64,7 +64,7 @@ namespace Unity.Burst.Editor
                 return BuildTarget.StandaloneLinux64;
 #else
             if (target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinux)
-                return BuildTarget.StandaloneLinux;
+                return BuildTarget.StandaloneLinux64;
 #endif
 
             return target;
@@ -141,24 +141,67 @@ namespace Unity.Burst.Editor
                 var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
                 for (int p = 0; p < validPlatforms.Length; p++)
                 {
-                    m_PlatformSettings[p] = BurstPlatformAotSettings.GetSerializedSettings(validPlatforms[p].defaultTarget);
-                    m_PlatformProperties[p]=new SerializedProperty[platformFields.Length];
-                    m_PlatformToolTips[p]=new GUIContent[platformFields.Length];
-                    for (int i = 0; i < platformFields.Length; i++)
-                    {
-                        m_PlatformProperties[p][i] = m_PlatformSettings[p].FindProperty(platformFields[i].Name);
-                        m_PlatformToolTips[p][i] = EditorGUIUtility.TrTextContent(
-                            typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_DisplayName", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string,
-                            typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_ToolTip", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string);
-                    }
+                    InitialiseSettingsForPlatform(p,platformFields);
+                }
+            }
+
+            private void InitialiseSettingsForPlatform(int platform,FieldInfo[] platformFields)
+            {
+                if (validPlatforms[platform].targetGroup == BuildTargetGroup.Standalone)
+                    m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(EditorUserBuildSettings.selectedStandaloneTarget);
+                else
+                    m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(validPlatforms[platform].defaultTarget);
+                m_PlatformProperties[platform] = new SerializedProperty[platformFields.Length];
+                m_PlatformToolTips[platform] = new GUIContent[platformFields.Length];
+                for (int i = 0; i < platformFields.Length; i++)
+                {
+                    m_PlatformProperties[platform][i] = m_PlatformSettings[platform].FindProperty(platformFields[i].Name);
+                    var displayName = typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_DisplayName", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string;
+                    var toolTip = typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_ToolTip", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string;
+                    m_PlatformToolTips[platform][i] = EditorGUIUtility.TrTextContent(displayName, toolTip);
+                }
+            }
+
+            private string FetchStandaloneTargetName()
+            {
+                switch (EditorUserBuildSettings.selectedStandaloneTarget)
+                {
+                    case BuildTarget.StandaloneOSX:
+                        return "Mac OS X";    // Matches the Build Settings Dialog names
+                    case BuildTarget.StandaloneWindows:
+                    case BuildTarget.StandaloneWindows64:
+                        return "Windows";
+                    default:
+                        return "Linux";
                 }
             }
 
             public override void OnGUI(string searchContext)
             {
-                EditorGUILayout.BeginVertical();
+                var rect = EditorGUILayout.BeginVertical();
+
+                EditorGUIUtility.labelWidth = rect.width / 2;
 
                 int selectedPlatform = EditorGUILayout.BeginPlatformGrouping(validPlatforms, null);
+
+                // During a build and other cases, the settings object can become invalid, if it does, we re-build it for the current platform
+                // this fixes the settings failing to save if modified after a build has finished, and the settings were still open
+                if (!m_PlatformSettings[selectedPlatform].isValid)
+                {
+                    var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+                    InitialiseSettingsForPlatform(selectedPlatform, platformFields);
+                }
+
+                var selectedTarget = validPlatforms[selectedPlatform].defaultTarget;
+                if (validPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
+                    selectedTarget = EditorUserBuildSettings.selectedStandaloneTarget;
+
+                if (validPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
+                {
+                    // Note burst treats Windows and Windows32 as the same target from a settings point of view (same for linux)
+                    // So we only display the standalone platform
+                    EditorGUILayout.LabelField(EditorGUIUtility.TrTextContent("Target Platform", "Shows the currently selected standalone build target, can be switched in the Build Settings dialog"), EditorGUIUtility.TrTextContent(FetchStandaloneTargetName()));
+                }
 
                 for (int i = 0; i < m_PlatformProperties[selectedPlatform].Length; i++)
                 {
@@ -172,7 +215,7 @@ namespace Unity.Burst.Editor
                 if (m_PlatformSettings[selectedPlatform].hasModifiedProperties)
                 {
                     m_PlatformSettings[selectedPlatform].ApplyModifiedPropertiesWithoutUndo();
-                    ((BurstPlatformAotSettings)m_PlatformSettings[selectedPlatform].targetObject).Save(validPlatforms[selectedPlatform].defaultTarget);
+                    ((BurstPlatformAotSettings)m_PlatformSettings[selectedPlatform].targetObject).Save(selectedTarget);
                 }
             }
         }
