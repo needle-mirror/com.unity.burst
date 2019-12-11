@@ -141,5 +141,10 @@ namespace Unity.Burst
         ERR_BinaryOperationNotSupported = 1097,
         ERR_CalliWithThisNotSupported = 1098,
         ERR_CalliNonCCallingConventionNotSupported = 1099,
+        
+        // LdfldaTransform
+        ERR_UnsupportedSpillTransform = 1300,
+        ERR_UnsupportedSpillTransformTooManyUsers = 1301,
+
     }
 }

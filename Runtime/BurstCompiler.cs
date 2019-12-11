@@ -199,11 +199,25 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void TriggerRecompilation()
+        {
 #if UNITY_EDITOR
-        private static void SendCommandToCompiler(string commandName)
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandTriggerRecompilation, Options.GetOptions(true));
+#endif
+        }
+
+#if UNITY_EDITOR
+        private static void SendCommandToCompiler(string commandName, string commandArgs = null)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));
-            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(DummyMethodInfo, commandName);
+
+            var compilerOptions = commandName;
+            if (commandArgs != null)
+            {
+                compilerOptions += " " + commandArgs;
+            }
+
+            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(DummyMethodInfo, compilerOptions);
         }
 
         private static readonly MethodInfo DummyMethodInfo = typeof(BurstCompiler).GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic);

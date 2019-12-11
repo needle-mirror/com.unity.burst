@@ -98,6 +98,7 @@ namespace Unity.Burst
         internal const string CompilerCommandCancel = "$cancel";
         internal const string CompilerCommandEnableCompiler = "$enable_compiler";
         internal const string CompilerCommandDisableCompiler = "$disable_compiler";
+        internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
 
         // All the following content is exposed to the public interface
 
@@ -166,7 +167,7 @@ namespace Unity.Burst
 
                 bool changed = _enableBurstCompilation != value;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !UNITY_2019_3_OR_NEWER // Enabling Burst while in PlayMode is only supported in 2019.3+
                 // Prevent Burst compilation being enabled while in PlayMode, because
                 // we can't currently support this for jobs.
                 if (!_isConstructing && IsGlobal && changed && value && UnityEngine.Application.isPlaying)
@@ -191,6 +192,7 @@ namespace Unity.Burst
                         if (value)
                         {
                             BurstCompiler.Enable();
+                            MaybeTriggerRecompilation();
                         }
                         else
                         {
@@ -236,7 +238,11 @@ namespace Unity.Burst
             {
                 bool changed = _enableBurstSafetyChecks != value;
                 _enableBurstSafetyChecks = value;
-                if (changed) OnOptionsChanged();
+                if (changed)
+                {
+                    OnOptionsChanged();
+                    MaybeTriggerRecompilation();
+                }
             }
         }
 
@@ -346,33 +352,42 @@ namespace Unity.Burst
                 return false;
             }
 
+            flagsOut = GetOptions(isJit, attr);
+            return true;
+        }
+
+        internal string GetOptions(bool isJit, BurstCompileAttribute attr = null)
+        {
             // Add debug to Jit options instead of passing it here
             // attr.Debug
 
             var flagsBuilderOut = new StringBuilder();
 
-            if (isJit && (attr.CompileSynchronously || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
+            if (isJit && ((attr?.CompileSynchronously ?? false) || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
             {
                 AddOption(flagsBuilderOut, GetOption(OptionJitEnableSynchronousCompilation));
             }
 
-            if (attr.FloatMode != FloatMode.Default)
+            if (attr != null)
             {
-                AddOption(flagsBuilderOut, GetOption(OptionFloatMode, attr.FloatMode));
-            }
-
-            if (attr.FloatPrecision != FloatPrecision.Standard)
-            {
-                AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
-            }
-
-            if (attr.Options != null)
-            {
-                foreach (var option in attr.Options)
+                if (attr.FloatMode != FloatMode.Default)
                 {
-                    if (!String.IsNullOrEmpty(option))
+                    AddOption(flagsBuilderOut, GetOption(OptionFloatMode, attr.FloatMode));
+                }
+
+                if (attr.FloatPrecision != FloatPrecision.Standard)
+                {
+                    AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
+                }
+
+                if (attr.Options != null)
+                {
+                    foreach (var option in attr.Options)
                     {
-                        AddOption(flagsBuilderOut, option);
+                        if (!String.IsNullOrEmpty(option))
+                        {
+                            AddOption(flagsBuilderOut, option);
+                        }
                     }
                 }
             }
@@ -392,8 +407,7 @@ namespace Unity.Burst
                 AddOption(flagsBuilderOut, GetOption(OptionJitLogTimings));
             }
 
-            flagsOut = flagsBuilderOut.ToString();
-            return true;
+            return flagsBuilderOut.ToString();
         }
 
         private static void AddOption(StringBuilder builder, string option)
@@ -412,6 +426,16 @@ namespace Unity.Burst
         private void OnOptionsChanged()
         {
             OptionsChanged?.Invoke();
+        }
+
+        private void MaybeTriggerRecompilation()
+        {
+#if UNITY_EDITOR
+            if (IsGlobal && IsEnabled && !_isConstructing)
+            {
+                BurstCompiler.TriggerRecompilation();
+            }
+#endif
         }
 
 #if !UNITY_DOTSPLAYER && !NET_DOTS

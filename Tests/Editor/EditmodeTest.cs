@@ -20,12 +20,12 @@ public class EditModeTest
     {
         jobCompilerStatusStorage = JobsUtility.JobCompilerEnabled;
     }
-    
+
     [UnityTest]
     public IEnumerator CheckBurstJobEnabled()
     {
         JobsUtility.JobCompilerEnabled = true;
-        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+//        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
         yield return null;
         yield return null;
         yield return null;
@@ -44,7 +44,7 @@ public class EditModeTest
     public IEnumerator CheckBurstFunctionPointerException()
     {
         JobsUtility.JobCompilerEnabled = true;
-        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+ //       BurstCompiler.Options.EnableBurstCompileSynchronously = true;
         yield return null;
         yield return null;
         yield return null;
@@ -63,13 +63,13 @@ public class EditModeTest
     public IEnumerator CheckBurstJobDisabled()
     {
         JobsUtility.JobCompilerEnabled = false;
-        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+ //       BurstCompiler.Options.EnableBurstCompileSynchronously = true;
         yield return null;
         yield return null;
         yield return null;
         yield return null;
         yield return null;
-        
+
         using (var jobTester = new BurstJobTester())
         {
             var result = jobTester.Calculate();
@@ -77,7 +77,10 @@ public class EditModeTest
         }
     }
 
+    // Note: this test generates instabilities when running on linux that needs further investigation.
+    // Running on windows and OSX only for now
     [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
     public IEnumerator CheckBurstAsyncJob()
     {
         JobsUtility.JobCompilerEnabled = true;
@@ -100,7 +103,7 @@ public class EditModeTest
         array.Dispose();
         Assert.AreNotEqual(0.0f, result, "The test timed out. Probably async compilation is not working properly.");
         BurstCompiler.Options.EnableBurstCompileSynchronously = true;
-	Thread.Sleep(10000);
+        Thread.Sleep(10000);
     }
 
     [TearDown]

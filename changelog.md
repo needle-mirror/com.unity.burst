@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0-preview.11] - 2019-12-12
+
+- Fix issue ldflda opcode when the input on the stack is a value and not a pointer.
+- Add mechanism to trigger recompilation of jobs and function pointers.
+- Fix issue with a TypeLoadException related when trying to load PDB.
+- Fix issue for UWP to avoid an AssemblyResolutionException for types within `Windows.*` WinMd assemblies.
+
 ## [1.2.0-preview.10] - 2019-12-04
 
 - Fix issue with debugging source locations that were no longer generated for standalone players.
