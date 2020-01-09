@@ -307,6 +307,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate);
+            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate);
@@ -3370,6 +3371,16 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate(object delegateObj, object[] p)
+        {
+            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction)p[0];
             d(ref arg0);
             return result;
         }

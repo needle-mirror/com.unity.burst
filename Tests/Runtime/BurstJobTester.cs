@@ -172,6 +172,36 @@ public class BurstJobTester : IDisposable
         }
     }
 
+    /// <summary>
+    /// This Job is checking that we can allocate and dispose a NativeArray from a Burst Job
+    /// </summary>
+    [BurstCompile(CompileSynchronously = true)]
+    public struct MyJobCreatingAndDisposingNativeArray : IJob
+    {
+        public int Length;
+
+        public NativeArray<int> Result;
+
+        public void Execute()
+        {
+            var array = new NativeArray<float>(Length, Allocator.Temp);
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = i;
+            }
+            int result = array.Length;
+            array.Dispose();
+            DiscardFromManaged(ref result);
+            Result[0] = result;
+        }
+
+        [BurstDiscard]
+        public static void DiscardFromManaged(ref int result)
+        {
+            result = 0;
+        }
+    }
+
     // Used only to check that compilation is working for different burst compile options
     [BurstCompile(FloatPrecision.Low, FloatMode.Fast)]
     public struct MyJobWithFastOptimizations : IJob

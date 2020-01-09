@@ -12,24 +12,26 @@ using System.Threading;
 [TestFixture]
 public class EditModeTest
 {
-    private bool jobCompilerStatusStorage;
     private const int MaxIterations = 500;
 
-    [SetUp]
-    public void Setup()
-    {
-        jobCompilerStatusStorage = JobsUtility.JobCompilerEnabled;
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckBurstJobEnabledDisabled() {
+        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+#if UNITY_2019_3_OR_NEWER
+        foreach(var item in CheckBurstJobDisabled()) yield return item;
+        foreach(var item in CheckBurstJobEnabled()) yield return item;
+#else
+        foreach(var item in CheckBurstJobEnabled()) yield return item;
+        foreach(var item in CheckBurstJobDisabled()) yield return item;
+#endif
+        BurstCompiler.Options.EnableBurstCompilation = true;
     }
 
-    [UnityTest]
-    public IEnumerator CheckBurstJobEnabled()
+    private IEnumerable CheckBurstJobEnabled()
     {
-        JobsUtility.JobCompilerEnabled = true;
-//        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
+        BurstCompiler.Options.EnableBurstCompilation = true;
+
         yield return null;
 
         using (var jobTester = new BurstJobTester())
@@ -39,16 +41,55 @@ public class EditModeTest
         }
     }
 
+    private IEnumerable CheckBurstJobDisabled()
+    {
+        BurstCompiler.Options.EnableBurstCompilation = false;
+
+        yield return null;
+
+        using (var jobTester = new BurstJobTester())
+        {
+            var result = jobTester.Calculate();
+            Assert.AreEqual(0.0f, result);
+        }
+    }
+
+#if UNITY_2019_3_OR_NEWER
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckJobWithNativeArray()
+    {
+        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+        BurstCompiler.Options.EnableBurstCompilation = true;
+
+        yield return null;
+
+        var job = new BurstJobTester.MyJobCreatingAndDisposingNativeArray()
+        {
+            Length = 128,
+            Result = new NativeArray<int>(16, Allocator.TempJob)
+        };
+        var handle = job.Schedule();
+        handle.Complete();
+        try
+        {
+            Assert.AreEqual(job.Length, job.Result[0]);
+        }
+        finally
+        {
+            job.Result.Dispose();
+        }
+    }
+#endif
+
+
 #if UNITY_BURST_BUG_FUNCTION_POINTER_FIXED
     [UnityTest]
     public IEnumerator CheckBurstFunctionPointerException()
     {
-        JobsUtility.JobCompilerEnabled = true;
- //       BurstCompiler.Options.EnableBurstCompileSynchronously = true;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
+        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+        BurstCompiler.Options.EnableBurstCompilation = true;
+
         yield return null;
 
         using (var jobTester = new BurstJobTester())
@@ -60,31 +101,11 @@ public class EditModeTest
 #endif
 
     [UnityTest]
-    public IEnumerator CheckBurstJobDisabled()
-    {
-        JobsUtility.JobCompilerEnabled = false;
- //       BurstCompiler.Options.EnableBurstCompileSynchronously = true;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-
-        using (var jobTester = new BurstJobTester())
-        {
-            var result = jobTester.Calculate();
-            Assert.AreEqual(0.0f, result);
-        }
-    }
-
-    // Note: this test generates instabilities when running on linux that needs further investigation.
-    // Running on windows and OSX only for now
-    [UnityTest]
     [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
     public IEnumerator CheckBurstAsyncJob()
     {
-        JobsUtility.JobCompilerEnabled = true;
         BurstCompiler.Options.EnableBurstCompileSynchronously = false;
+        BurstCompiler.Options.EnableBurstCompilation = true;
 
         var iteration = 0;
         var result = 0.0f;
@@ -99,16 +120,7 @@ public class EditModeTest
             iteration++;
             yield return null;
         }
-        Debug.Log($"{iteration} frames showed before burst-compiled job executed.");
         array.Dispose();
-        Assert.AreNotEqual(0.0f, result, "The test timed out. Probably async compilation is not working properly.");
-        BurstCompiler.Options.EnableBurstCompileSynchronously = true;
-        Thread.Sleep(10000);
-    }
-
-    [TearDown]
-    public void Restore()
-    {
-        JobsUtility.JobCompilerEnabled = jobCompilerStatusStorage;
+        Assert.AreNotEqual(0.0f, result);
     }
 }

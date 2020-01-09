@@ -4,31 +4,25 @@ using Unity.Burst;
 using UnityEngine;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine.TestTools;
+using System;
 
 [TestFixture]
-
 public class PlaymodeTest
 {
-    private bool _jobCompilerStatusStorage;
-    private bool _burstSynchronousCompilationState;
-
-    [SetUp]
-    public void Setup()
+    [UnityTest]
+    public IEnumerator CheckBurstJobEnabledDisabled()
     {
-        _jobCompilerStatusStorage = JobsUtility.JobCompilerEnabled;
-        _burstSynchronousCompilationState = BurstCompiler.Options.EnableBurstCompileSynchronously;
         BurstCompiler.Options.EnableBurstCompileSynchronously = true;
+#if UNITY_2019_3_OR_NEWER
+        foreach(var item in CheckBurstJobDisabled()) yield return item;
+#endif
+        foreach(var item in CheckBurstJobEnabled()) yield return item;
     }
 
-    [UnityTest]
-    public IEnumerator CheckBurstJobEnabled()
+    private IEnumerable CheckBurstJobEnabled()
     {
-        JobsUtility.JobCompilerEnabled = true;
+        BurstCompiler.Options.EnableBurstCompilation = true;
 
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
         yield return null;
 
         using (var jobTester = new BurstJobTester())
@@ -38,15 +32,10 @@ public class PlaymodeTest
         }
     }
 
-    [UnityTest]
-    public IEnumerator CheckBurstJobDisabled()
+    private IEnumerable CheckBurstJobDisabled()
     {
-        JobsUtility.JobCompilerEnabled = false;
+        BurstCompiler.Options.EnableBurstCompilation = false;
 
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
         yield return null;
 
         using (var jobTester = new BurstJobTester())
@@ -54,12 +43,5 @@ public class PlaymodeTest
             var result = jobTester.Calculate();
             Assert.AreEqual(0.0f, result);
         }
-    }
-
-    [TearDown]
-    public void Restore()
-    {
-        JobsUtility.JobCompilerEnabled = _jobCompilerStatusStorage;
-        BurstCompiler.Options.EnableBurstCompileSynchronously = _burstSynchronousCompilationState;
     }
 }

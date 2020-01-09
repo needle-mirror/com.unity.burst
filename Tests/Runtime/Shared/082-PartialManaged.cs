@@ -25,6 +25,7 @@ namespace Burst.Compiler.IL.Tests
             return element.Value;
         }
 
+        [BurstDiscard]
         private static void WriteNullReference(out DisposeSentinel reference)
         {
             reference = null;

@@ -17,7 +17,7 @@ namespace Burst.Compiler.IL.Tests
             return 1;
         }
 
-        [TestCompiler(1, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
+        [TestCompiler(1, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromManagedNonReadonlyStaticFieldNotSupported)]
         public static int TestDelegate(int data)
         {
             return ProcessData(i => i + 1, data);

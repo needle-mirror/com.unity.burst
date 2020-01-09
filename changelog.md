@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0-preview.12] - 2020-01-10
+
+- Fix issue with sizeof on a struct defined in another assembly and would return the size of a pointer type instead of a real struct layout.
+- Fix issue with a potential InvalidOperationException related to ABI layout when compiling a function pointer on Linux/Mac.
+- Fix issue with a potential NullReferenceException when building a player for UWP.
+- Fix issue with a potential ArgumentException `The output byte buffer is too small` happening in the Editor when Burst is trying to compile a function that is producing a large log error.
+
 ## [1.2.0-preview.11] - 2019-12-12
 
 - Fix issue ldflda opcode when the input on the stack is a value and not a pointer.
