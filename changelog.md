@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0] - 2020-01-15
+
+- Update to stable version.
+
 ## [1.2.0-preview.12] - 2020-01-10
 
 - Fix issue with sizeof on a struct defined in another assembly and would return the size of a pointer type instead of a real struct layout.
