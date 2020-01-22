@@ -58,7 +58,7 @@ namespace ExceptionsFromBurstJobs
             jobData.test = testArray;
 
             LogAssert.Expect(LogType.Exception, new Regex(
-                "System::InvalidOperationException: The .+ has been declared as \\[ReadOnly\\] in the job, but you are writing to it." + "[\\s]*" +
+                "System::InvalidOperationException: The .+ has been declared as \\[ReadOnly\\] in the job( .+)?, but you are writing to it\\." + "[\\s]*" +
                 "This Exception was thrown from a job compiled with Burst, which has limited exception support."
                 ));
             jobData.Run();

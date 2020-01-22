@@ -99,6 +99,8 @@ namespace Unity.Burst
         internal const string CompilerCommandEnableCompiler = "$enable_compiler";
         internal const string CompilerCommandDisableCompiler = "$disable_compiler";
         internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
+        internal const string CompilerCommandDomainReload = "$domain_reload";
+        internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";
 
         // All the following content is exposed to the public interface
 

@@ -215,7 +215,7 @@ namespace Unity.Burst.Editor
         /// </summary>
         /// <param name="assemblyTypes">The assembly type</param>
         /// <returns>The list of assemblies valid for this platform</returns>
-        private static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes)
+        public static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes)
         {
             // TODO: Not sure there is a better way to match assemblies returned by CompilationPipeline.GetAssemblies
             // with runtime assemblies contained in the AppDomain.CurrentDomain.GetAssemblies()

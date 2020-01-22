@@ -784,7 +784,6 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
 - For iOS, only clang `10.0.0` is supported (`clang-1000.11.45.2` and `clang-1000.11.45.5`), newer version of clang are not compatible with burst.
 - Building Android standalone playre from linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
 - Mathematical functions for `double2`, `double3`, `double4` are currently not optimized and using the slower scalar version
-- When building a first time a player with Burst, and after disabling Burst, rebuilding a player, the previous generated Burst shared library is not removed and will be loaded. The file has to be removed manually (A fix will come before stable 1.0)
 - `DllImport` is not available on 32bit platforms and on ARM platforms
 - For all `DllImport` and internal calls, only primitive types (including pointers) are supported. Passing a struct by value is not supported, you need to pass it through a pointer/reference.
 - If you update to a newer version of burst via the Package Manager in your project which has loaded already burst, you need to close the editor, remove your library folder and restart the editor

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Unity.Burst.LowLevel;
 using UnityEditor;
@@ -52,11 +54,6 @@ namespace Unity.Burst.Editor
 
             BurstEditorOptions.EnsureSynchronized();
 
-            if (DebuggingLevel > 2)
-            {
-                UnityEngine.Debug.Log("Burst - Domain Reload");
-            }
-
             BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMember);
 
             EditorApplication.quitting += BurstCompiler.Shutdown;
@@ -64,6 +61,51 @@ namespace Unity.Burst.Editor
             CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
             CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
             EditorApplication.playModeStateChanged += EditorApplicationOnPlayModeStateChanged;
+
+            // Workaround to update the list of assembly folders as soon as possible
+            // in order for the JitCompilerService to not fail with AssemblyResolveExceptions.
+            try
+            {
+                var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor);
+                var assemblyFolders = new HashSet<string>();
+                foreach (var assembly in assemblyList)
+                {
+                    try
+                    {
+                        var fullPath = Path.GetFullPath(assembly.Location);
+                        var assemblyFolder = Path.GetDirectoryName(fullPath);
+                        if (!string.IsNullOrEmpty(assemblyFolder))
+                        {
+                            assemblyFolders.Add(assemblyFolder);
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
+                // Notify the compiler
+                var assemblyFolderList = assemblyFolders.ToList();
+                if (IsDebugging)
+                {
+                    UnityEngine.Debug.Log($"Burst - Change of list of assembly folders:\n{string.Join("\n", assemblyFolderList)}");
+                }
+                BurstCompiler.UpdateAssemblerFolders(assemblyFolderList);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            // Notify the compiler about a domain reload
+            if (IsDebugging)
+            {
+                UnityEngine.Debug.Log("Burst - Domain Reload");
+            }
+
+            // Notify the JitCompilerService about a domain reload
+            BurstCompiler.DomainReload();
         }
 
         private static void EditorApplicationOnPlayModeStateChanged(PlayModeStateChange state)

@@ -3,6 +3,7 @@
 #if !UNITY_DOTSPLAYER && !NET_DOTS && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
 using System.Text;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -174,6 +175,18 @@ namespace Unity.Burst
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandShutdown);
 #endif
         }
+
+#if UNITY_EDITOR
+        internal static void DomainReload()
+        {
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandDomainReload);
+        }
+
+        internal static void UpdateAssemblerFolders(List<string> folders)
+        {
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandUpdateAssemblyFolders, $"{string.Join(";", folders)}");
+        }
+#endif
 
         /// <summary>
         /// Cancel any compilation being processed by the JIT Compiler in the background.

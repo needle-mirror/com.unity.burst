@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.1] - 2020-01-23
+
+
+### Fixed
+- Fix issue with function pointers being corrupted after a domain reload that could lead to unexpected function pointer calls.
+- Fix potential deadlock between Burst and the Asset Database if burst is being used when building the database.
+- Fix `AssemblyResolveException` when loading a project with dependent packages that are using Burst in static initializers or `InitializeOnLoad`.
+
+### Known Issues
+- The fix for the deadlock requires to temporarily disable the ability to click on a compilation error in the Unity Editor to jump to the source IDE.
+
 ## [1.2.0] - 2020-01-15
 
 - Update to stable version.
