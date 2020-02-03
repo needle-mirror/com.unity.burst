@@ -156,5 +156,16 @@ namespace Burst.Compiler.IL.Tests
 
             return 0;
         }
+
+        [TestCompiler(42L)]
+        public static double Read(ref long l)
+        {
+            if (Interlocked.Read(ref l) == 42)
+            {
+                return l;
+            }
+
+            return 0;
+        }
     }
 }

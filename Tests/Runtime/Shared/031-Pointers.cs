@@ -51,12 +51,42 @@ namespace Burst.Compiler.IL.Tests
             return *pEnum;
         }
 
+        [TestCompiler(0, 0)]
+        [TestCompiler(0, 1)]
+        [TestCompiler(1, 0)]
+        public static unsafe bool PointerCompare(IntPtr a, IntPtr b)
+        {
+            return a == b;
+        }
+
         [TestCompiler(0)]
         [TestCompiler(1)]
         [TestCompiler(2)]
-        public static unsafe bool PointerCompare(IntPtr value)
+        public static unsafe bool RawPointerCompare(IntPtr value)
         {
             return (void*)value == (void*)1;
+        }
+
+        [TestCompiler(0)]
+        [TestCompiler(1)]
+        [TestCompiler(42424242)]
+        public static unsafe int PointerHash(IntPtr value)
+        {
+            return value.GetHashCode();
+        }
+
+        [TestCompiler(0)]
+        [TestCompiler(1)]
+        [TestCompiler(42424242)]
+        public static unsafe IntPtr PointerToPointer(IntPtr value)
+        {
+            return new IntPtr(value.ToPointer());
+        }
+
+        [TestCompiler(0, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MethodNotSupported)]
+        public static unsafe int PointerToString(IntPtr value)
+        {
+            return value.ToString().Length;
         }
 
         [TestCompiler(1)]

@@ -12,17 +12,22 @@ public abstract class BurstCompiler
     public static NPath BurstExecutable { get; set; }
     public abstract string TargetPlatform { get; }
     public abstract string TargetArchitecture { get; set; }
+    public virtual string MinTargetArch => TargetArchitecture;
     public abstract string ObjectFormat { get; }
     public abstract string ObjectFileExtension { get; }
     public abstract bool UseOwnToolchain { get; }
-	public virtual bool OnlyStaticMethods { get; set; } = false;
+    public virtual bool OnlyStaticMethods { get; set; } = false;
 
     // Options
     public virtual bool SafetyChecks { get; } = false;
     public virtual bool DisableVectors { get; } = false;
     public virtual bool Link { get; set; } = true;
-	public virtual bool Verbose { get; set; } = false;
+    public virtual bool Verbose { get; set; } = false;
     public abstract string FloatPrecision { get; }
+    public virtual int Threads { get; set; } = 9;
+    public virtual bool DisableOpt { get; set; } = false;
+    public virtual bool EnableGuard { get; set; } = false;
+    public virtual string ExecuteMethodName { get; set; } = "ProducerExecuteFn_Gen";
 
     static string[] GetBurstCommandLineArgs(BurstCompiler compiler, NPath outputPrefixForObjectFile, NPath outputDirForPatchedAssemblies, string pinvokeName, DotNetAssembly[] inputAssemblies)
     {
@@ -30,6 +35,7 @@ public abstract class BurstCompiler
         {
             $"--platform={compiler.TargetPlatform}",
             $"--target={compiler.TargetArchitecture}",
+	    $"--mintarget={compiler.MinTargetArch}",
             $"--format={compiler.ObjectFormat}",
             compiler.SafetyChecks ? "--safety-checks" : "",
             $"--dump=\"None\"",
@@ -42,7 +48,12 @@ public abstract class BurstCompiler
             $"--output={outputPrefixForObjectFile}",
 			compiler.OnlyStaticMethods ? "--only-static-methods": "",
             "--method-prefix=burstedmethod_",
-            $"--pinvoke-name={pinvokeName}"
+            $"--pinvoke-name={pinvokeName}",
+	    $"--execute-method-name={compiler.ExecuteMethodName}",
+	    "--debug",
+	    compiler.DisableOpt ? "--disable-opt" : "",
+	    $"--threads={compiler.Threads}",
+	    compiler.EnableGuard ? "--enable-guard" : ""
         }.Concat(inputAssemblies.Select(asm => $"--root-assembly={asm.Path}"));
         if (!compiler.UseOwnToolchain)
             commandLineArguments = commandLineArguments.Concat(new[] { "--no-native-toolchain" });
@@ -171,7 +182,7 @@ public class BurstCompilerForWindows : BurstCompiler
     //--target=VALUE         Target CPU <Auto|X86_SSE2|X86_SSE4|X64_SSE2|X64_
     //    SSE4|AVX|AVX2|AVX512|WASM32|ARMV7A_NEON32|ARMV8A_
     //    AARCH64|THUMB2_NEON32> Default: Auto
-    public override string TargetArchitecture { get; set; } = "X86_SSE2";
+    public override string TargetArchitecture { get; set; } = "X64_SSE2";
     public override string ObjectFormat { get; } = "Coff";
     public override string FloatPrecision { get; } = "High";
     public override bool SafetyChecks { get; } = true;

@@ -71,7 +71,11 @@ namespace Unity.Burst.Editor
 
         public string GetDisplayName()
         {
-            return IsStaticMethod ? Pretty(Method) : $"{Pretty(JobType)} - ({Pretty(JobInterfaceType)})";
+            var displayName = IsStaticMethod ? Pretty(Method) : $"{Pretty(JobType)} - ({Pretty(JobInterfaceType)})";
+
+            // Remove the '<>c__DisplayClass_' part of the name - this is only added for C# Entities.ForEach jobs to trick the C# debugging tools into
+            // treating them like lambdas. This is removed wherever possible from user facing tools (like the Unity profiler), so we should do the same.
+            return displayName.Replace("<>c__DisplayClass_", "");
         }
 
         private static string Pretty(MethodInfo method)

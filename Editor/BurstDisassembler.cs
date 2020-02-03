@@ -16,6 +16,19 @@ namespace Unity.Burst.Editor
         private static readonly StringSlice FileDirective = new StringSlice(".file");
         private static readonly StringSlice LocDirective = new StringSlice(".loc");
 
+        // This is used to aligned instructions and there operands so they look like this
+        //
+        // mulps   x,x,x
+        // shufbps x,x,x
+        //
+        // instead of
+        //
+        // mulps x,x,x
+        // shufbps x,x,x
+        //
+        // Notice if instruction name is longer than this no alignment will be done. 
+        private const int InstructionAlignment = 10;
+
         // Colors used for the tokens
         // TODO: Make this configurable via some editor settings?
         private const string DarkColorLineDirective = "#FFFF00";
@@ -61,7 +74,8 @@ namespace Unity.Burst.Editor
         public enum AsmKind
         {
             Intel,
-            ARM
+            ARM,
+            Wasm
         }
 
         public string Process(string input, AsmKind asmKind, bool useDarkSkin = true)
@@ -113,13 +127,38 @@ namespace Unity.Burst.Editor
             }
         }
 
+        private void AlignInstruction(StringBuilder output, int instructionLength, AsmKind asmKind)
+        {
+            // Only support Intel for now
+            if (instructionLength >= InstructionAlignment || asmKind != AsmKind.Intel)
+                return;
+
+            output.Append(' ', InstructionAlignment - instructionLength);
+        }
+
         private string ProcessImpl(string input, AsmKind asmKind)
         {
             _fileList.Clear();
             _fileName.Clear();
             _tokens.Clear();
 
-            var tokenizer = new AsmTokenizer(input, asmKind, asmKind == AsmKind.Intel ? (AsmTokenKindProvider)X86AsmTokenKindProvider.Instance : ARM64AsmTokenKindProvider.Instance);
+            AsmTokenKindProvider asmTokenProvider = default;
+
+            switch (asmKind)
+            {
+                case AsmKind.Intel:
+                    asmTokenProvider = (AsmTokenKindProvider)X86AsmTokenKindProvider.Instance;
+                    break;
+                case AsmKind.ARM:
+                    asmTokenProvider = (AsmTokenKindProvider)ARM64AsmTokenKindProvider.Instance;
+                    break;
+                case AsmKind.Wasm:
+                    asmTokenProvider = (AsmTokenKindProvider)WasmAsmTokenKindProvider.Instance;
+                    break;
+            }
+
+
+            var tokenizer = new AsmTokenizer(input, asmKind, asmTokenProvider);
 
             // Adjust token size
             var pseudoTokenSizeMax = input.Length / 7;
@@ -265,11 +304,13 @@ namespace Unity.Burst.Editor
                         output.Append("<color=").Append(ColorInstruction).Append(">");
                         output.Append(input, slice.Position, slice.Length);
                         output.Append("</color>");
+                        AlignInstruction(output, slice.Length, asmKind);
                         break;
                     case AsmTokenKind.InstructionSIMD:
                         output.Append("<color=").Append(ColorInstructionSIMD).Append(">");
                         output.Append(input, slice.Position, slice.Length);
                         output.Append("</color>");
+                        AlignInstruction(output, slice.Length, asmKind);
                         break;
                     case AsmTokenKind.Register:
                         output.Append("<color=").Append(ColorRegister).Append(">");

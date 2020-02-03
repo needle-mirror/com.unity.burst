@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Runtime.InteropServices;
 using Unity.Burst;
@@ -22,18 +23,6 @@ namespace Burst.Compiler.IL.Tests
         {
             return ProcessData(i => i + 1, data);
         }
-
-        // TODO: Try to find a way to re-enable this test.
-        // For now it's disabled because it's not testing the right thing -
-        // it fails because of the `object` parameter, not because of the
-        // `as` expression.
-
-        //[TestCompiler(1, ExpectCompilerException = true)]
-        //public static bool TestIsOfType(object data)
-        //{
-        //    var check = data as NotSupported;
-        //    return (check != null);
-        //}
 
         private static int ProcessData(Func<int, int> yo, int value)
         {
@@ -133,6 +122,24 @@ namespace Burst.Compiler.IL.Tests
         {
             var result = (float3)h3_h + h3_d + h3_v2s + h3_sv2 + h3_v3;
             return result.x + result.y + result.z;
+        }
+
+        [TestCompiler(42, 13, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AssertTypeNotSupported)]
+        public static void TestAreEqual(int a, int b)
+        {
+            Assert.AreEqual(a, b, "unsupported", new object[0]);
+        }
+
+        [BurstDiscard]
+        private static int BurstDiscarded()
+        {
+            return 42;
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_CallingBurstDiscardMethodWithReturnValueNotSupported)]
+        public static int TestBurstDiscard()
+        {
+            return BurstDiscarded();
         }
     }
 }

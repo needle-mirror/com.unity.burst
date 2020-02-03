@@ -1196,6 +1196,18 @@ namespace Burst.Compiler.IL.Tests
             return test.DirectNoDependency.Value;
         }
 
+        [TestCompiler]
+        public static uint TestExplicitStructNestedFieldAccess()
+        {
+            var buffer = new StructWithNestUnionContainer();
+            return buffer.Something.Value.Property;
+        }
+
+        public struct StructWithNestUnionContainer
+        {
+            public StructWithNestUnion Something => new StructWithNestUnion { Value = new UnionValue { Property = 42 } };
+        }
+
         public struct StructWithBlittableTypes : IArgumentProvider
         {
             public StructWithBlittableTypes(int a, int b, int c, int2 d)

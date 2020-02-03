@@ -255,14 +255,45 @@ Burst supports all methods of `System.IntPtr`/`System.UIntPtr`, including the st
 
 Burst supports atomic memory intrinsics for all methods provided by `System.Threading.Interlocked` (e.g `Interlocked.Increment`...etc.)
 
-#### `NativeArray<T>`
+Care must be taken when using the interlocked methods that the source location being atomically accessed is _naturally aligned_ - EG. the alignment of the pointer is a multiple of the pointed-to-type.
 
-Burst supports intrinsics with `noalias` only for the following `NativeArray<T>` methods:
+For example:
 
-- `int Length { get; }`
-- `T this[int index] { get; set; }`
+```c#
+[StructLayout(LayoutKind.Explicit)]
+struct Foo
+{
+    [FieldOffset(0)] public long a;
+    [FieldOffset(5)] public long b;
 
-Any usage of other members will disable `noalias` optimizations automatically.
+    public long AtomicReadAndAdd()
+    {
+        return Interlocked.Read(ref a) + Interlocked.Read(ref b);
+    }
+}
+```
+
+And lets assume that the pointer to the struct `Foo` has an alignment of 8 - the natural alignment of a `long` value. The `Interlocked.Read` of `a` would be successful because it lies on a _naturally aligned_ address, but `b` would not. Undefined behaviour will occur at the load of `b` as a result.
+
+### Unity.Burst.Intrinsics
+
+Burst provides low level close-to-the-metal intrinsics via th `Unity.Burst.Intrinsics` namespace.
+
+#### Common
+
+The `Unity.Burst.Intrinsics.Common` intrinsics are for functionality that is shared across the hardware targets that Burst supports.
+
+##### Pause
+
+The `Unity.Burst.Intrinsics.Common.Pause` is an **experimental** intrinsic that provides a hint that the current thread should pause. It maps to `pause` on x86, and `yield` on ARM.
+
+It is used primarily to stop spin locks over contending on an atomic access, to reduce contention and power on that section of code.
+
+The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC` preprocessor define.
+
+##### umul128
+
+The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users to access 128-bit unsigned multiplication. These multiplies have become increasingly prevalent in hashing functions. It maps 1:1 with hardware instructions on x86 and ARM targets.
 
 # Debugging
 
@@ -280,8 +311,8 @@ To mitigate this, you can use the `[BurstDiscard]` attribute on a method:
 
 ```c#
 [BurstCompile]
-public struct MyJob : IJob {
-    
+public struct MyJob : IJob
+{
     public void Execute()
     {
         // Only executed when running from a full .NET runtime
@@ -293,14 +324,14 @@ public struct MyJob : IJob {
     [BurstDiscard]
     private static void MethodToDiscard(int arg)
     {
-        Debug.Log($"This is a test: {arg});
+        Debug.Log($"This is a test: {arg}");
     }
 }
 ```
 
 > A method with `[BurstDiscard]` cannot have a return value or an `ref/out` parameter
 
-## Synchronous compilation
+## Synchronous Compilation
 
 By default, the Burst compiler in the editor will compile the jobs asynchronously.
 
@@ -313,6 +344,14 @@ public struct MyJob : IJob
     // ...
 }
 ```
+
+When running a Burst job in the editor, the first attempt to call the job will cause the asynchronous compilation of the Burst job to be kicked off in the background, while running the managed C# job in the mean time. This minimizes any frame hitching and keeps the experience for you and your users responsive.
+
+When `CompileSynchronously = true` is set, no asynchronous compilation can occur. Burst is focused on providing highly performance oriented code-generation and as a result will take a little longer than a traditional JIT to compile. Crucially this pause for compilation _will affect the current running frame_, meaning that hitches can occur and it could provide an unresponsive experience for users. In general the only legitimate uses of `CompileSynchronously = true` are:
+
+- If you have a long running job that will only run once, the performance of the compiled code could out-weigh the cost of doing the compilation.
+- If you are profiling a Burst job and thus want to be certain that the code that is being tested is from the Burst compiler. In this scenario you should perform a warmup to throw away any timing measurements from the first call to the job as that would include the compilation cost and skew the result.
+- If you suspect that there are some crucial differences between managed and Burst compiled code. This is really only as a debugging aid, as the Burst compiler strives to match any and all behaviour that managed code could produce.
 
 ## Function pointers
 
@@ -470,31 +509,9 @@ Worse, if the compiler was not aware of this memory aliasing, it would still try
 
 The result of this code would be invalid and could lead to very serious bugs if they are not identified by the compiler.
 
-### The solution with `burst` and the JobSystem
+#### Example of Generated Code
 
-To ensure that a Job can be safely vectorized (when there is a loop), Burst relies on:
-
-- The assumption brought by the safety of the JobSystem regarding the data in input/output that you can specify in the Job: It means that by default, all data accessed safety through a job are not aliasing
-- A further analysis of Burst on the code to make sure that the code is also safe
-
-The alias analysis in Burst is currently relying on a few constraints that your code needs to follow in order to let the auto-vectorizer to work correctly:
-
-- Only `NativeArray<T>` is used and only the property `Length` and or the indexer `this[index]` are used
-- Native containers (e.g `NativeArray<T>`) or a struct containing indirectly a container should not be copied to a local variable
-- Native containers can be passed by value to a method argument, at the condition that all arguments are coming from identified source, either from fields or other arguments from static methods, but not both and that the method is static
-- Native Containers or a struct containing indirectly a container are not stored to a field of a struct
-- Assuming that the option **Enable Burst Safety Checks** is unchecked in the [Jobs menu](#jobsburst-menu)
-
-We are expecting to improve the alias analysis with a finer grained model that will allow to relax a few of these constraints.
-
-### Example of generated code with noalias analysis
-
-Let's take the example of the `CopyJob`, with the compiled to native code with the `noalias` analysis disabled.
-
-The following loop is the result of the compilation `x64` using `AVX2` instructions with **noalias analysis enabled**:
-(Note that we are only copying the core loop, not the full prolog, epilog of the whole method)
-
-The instruction `vmovups` is moving 8 floats  here, so a single auto-vectorized loop is now moving 4 x 8 = **32 floats copied per loop iteration** instead of one! (So there will be /32th of loop step iterations compare to the original loop)
+Let's take the example of the `x64` assembly targeted at `AVX2` for the loop in the `CopyJob` above:
 
 ```
 .LBB0_4:
@@ -513,8 +530,9 @@ The instruction `vmovups` is moving 8 floats  here, so a single auto-vectorized 
     test    r10d, r10d
     je      .LBB0_8
 ```
+As can be seen, the instruction `vmovups` is moving 8 floats here, so a single auto-vectorized loop is now moving 4 x 8 = **32 floats copied per loop iteration** instead of just one!
 
-The same loop with the **noalias analysis disabled** will be **copying only a single float per loop iteration**:
+If we compile the same loop but artificially disable Burst's knowledge of aliasing, we get the following code:
 
 ```
 .LBB0_2:
@@ -528,20 +546,449 @@ The same loop with the **noalias analysis disabled** will be **copying only a si
     jl      .LBB0_2
 ```
 
-As we can see, the performance difference can be significant here. That's why noalias aware native code generation is fundamental, and that's what Burst is trying to solve.
+Which is entirely scalar, and will run roughly 32 times slower than the highly optimized vectorized variant that our alias analysis can produce.
+
+### Burst and the JobSystem
+
+Unity's job-system infrastructure imposes certain rules on what can alias within a job struct:
+
+- Structs attributed with `[NativeContainer]`, for example `NativeArray` and `NativeSlice`, that are members of a job struct **do not alias**.
+- But job struct members with the `[NativeDisableContainerSafetyRestriction]` attribute, these **can alias** with other members (because you as the user have explicitly opted in to this aliasing).
+- Pointers to structs attributed with `[NativeContainer]` cannot appear within other structs attributed with `[NativeContainer]`. For example you cannot have a `NativeArray<NativeSlice<T>>`. This kind of spaghetti code is awful for optimizing compilers to understand.
+
+Let us now look at an example job:
+
+```c#
+[BurstCompile]
+private struct MyJob : IJob
+{
+    public NativeArray<float> a;
+    public NativeArray<float> b;
+    public NativeSlice<int> c;
+
+    [NativeDisableContainerSafetyRestriction]
+    public NativeArray<byte> d;
+
+    public void Execute() { ... }
+}
+```
+
+In the above example:
+
+- `a`, `b`, and `c` do not alias with each other.
+- But `d` **can alias** with `a`, `b`, or `c`.
+
+Those of you used to C/C++'s [Type Based Alias Analysis (TBAA)](https://en.wikipedia.org/wiki/Alias_analysis#Type-based_alias_analysis) might think _'But `d` has a different type from `a`, `b`, or `c`, so it should not alias!'_ - pointers in C\# do not have any assumption that pointing to a different type results in no aliasing though. So `d` must be assumed to alias with `a`, `b`, or `c`.
+
+### The NoAlias Attribute
+
+Burst has a `[NoAlias]` attribute that can be used to give the compiler additional information on the aliasing of pointers and structs. There are four uses of this attribute:
+
+- On a function parameter it signifies that the parameter does not alias with any other parameter to the function.
+- On a struct field it signifies that the field does not alias with any other field of the struct.
+- On a struct itself it signifies that the address of the struct cannot appear within the struct itself.
+- On a function return value it signifies that the returned pointer does not alias with any other pointer returned from the same function.
+
+These attributes do not need to be used when dealing with `[NativeContainer]` attributed structs, or with fields in job structs - the Burst compiler is smart enough to infer the no-alias information about these without manual intervention from you, our users. This leads onto a general rule of thumb - the use of the `[NoAlias]` attribute is generally not required for user code, and we advise against its use. The attribute is exposed primarily for those constructing complex data structures where the aliasing cannot be inferred by the compiler. Any use of `[NoAlias]` on a pointer that could alias with another could result in undefined behaviour and hard to track down bugs.
+
+#### NoAlias Function Parameter
+
+Lets take a look at the following classic aliasing example:
+
+```c#
+int Foo(ref int a, ref int b)
+{
+    b = 13;
+    a = 42;
+    return b;
+}
+```
+
+For this the compiler produces the following assembly:
+
+```
+mov     dword ptr [rdx], 13
+mov     dword ptr [rcx], 42
+mov     eax, dword ptr [rdx]
+ret
+```
+
+As can be seen it:
+
+- Stores 13 into `b`.
+- Stores 42 into `a`.
+- Reloads the value from `b` to return it.
+
+It has to reload `b` because the compiler _does not know_ whether `a` and `b` are backed by the same memory or not.
+
+Let's now add a `[NoAlias]` attribute and see what we get:
+
+```c#
+int Foo([NoAlias] ref int a, ref int b)
+{
+    b = 13;
+    a = 42;
+    return b;
+}
+```
+
+Which turns into:
+
+```
+mov     dword ptr [rdx], 13
+mov     dword ptr [rcx], 42
+mov     eax, 13
+ret
+```
+
+Notice that the load from `b` has been replaced with moving the constant 13 into the return register.
+
+#### NoAlias Struct Field
+
+Let's take the same example from above but apply it to a struct instead:
+
+```c#
+struct Bar
+{
+    public NativeArray<int> a;
+    public NativeArray<float> b;
+}
+
+int Foo(ref Bar bar)
+{
+    bar.b[0] = 42.0f;
+    bar.a[0] = 13;
+    return (int)bar.b[0];
+}
+```
+
+The above produces the following assembly:
+
+```
+mov     rax, qword ptr [rcx + 16]
+mov     dword ptr [rax], 1109917696
+mov     rcx, qword ptr [rcx]
+mov     dword ptr [rcx], 13
+cvttss2si       eax, dword ptr [rax]
+ret
+```
+
+As can be seen it:
+
+- Loads the address of the data in `b` into `rax`.
+- Stores 42 into it (1109917696 is 0x‭42280000‬ which is 42.0f).
+- Loads the address of the data in `a` into `rcx`.
+- Stores 13 into it.
+- Reloads the data in `b` and converts it to an integer for returning.
+
+Let's assume that you as the user know that the two NativeArray's are not backed by the same memory, you could:
+
+```c#
+struct Bar
+{
+    [NoAlias]
+    public NativeArray<int> a;
+
+    [NoAlias]
+    public NativeArray<float> b;
+}
+
+int Foo(ref Bar bar)
+{
+    bar.b[0] = 42.0f;
+    bar.a[0] = 13;
+    return (int)bar.b[0];
+}
+```
+
+By attributing both `a` and `b` with `[NoAlias]` we have told the compiler that they definitely do not alias with each other within the struct, which produces the following assembly:
+
+```
+mov     rax, qword ptr [rcx + 16]
+mov     dword ptr [rax], 1109917696
+mov     rax, qword ptr [rcx]
+mov     dword ptr [rax], 13
+mov     eax, 42
+ret
+```
+
+Notice that the compiler can now just return the integer constant 42!
+
+#### NoAlias Struct
+
+Nearly all structs you will create as a user will be able to have the assumption that the pointer to the struct does not appear within the struct itself. Let's take a look at a classic example where this **is not** true:
+
+```c#
+unsafe struct CircularList
+{
+    public CircularList* next;
+
+    public CircularList()
+    {
+        // The 'empty' list just points to itself.
+        next = this;
+    }
+}
+```
+
+Lists are one of the few structures where it is normal to have the pointer to the struct accessible from somewhere within the struct itself.
+
+Now onto a more concrete example of where `[NoAlias]` on a struct can help:
+
+```c#
+unsafe struct Bar
+{
+    public int i;
+    public void* p;
+}
+
+float Foo(ref Bar bar)
+{
+    *(int*)bar.p = 42;
+    return ((float*)bar.p)[bar.i];
+}
+```
+
+Which produces the following assembly:
+
+```
+mov     rax, qword ptr [rcx + 8]
+mov     dword ptr [rax], 42
+mov     rax, qword ptr [rcx + 8]
+mov     ecx, dword ptr [rcx]
+movss   xmm0, dword ptr [rax + 4*rcx]
+ret
+```
+
+As can be seen it:
+- Loads `p` into `rax`.
+- Stores 42 into `p`.
+- Loads `p` into `rax` again.
+- Loads `i` into `ecx`.
+- Returns the index into `p` by `i`.
+
+Notice that it loaded `p` twice - why? The reason is that the compiler does not know whether `p` points to the address of the struct `bar` itself - so once it has stored 42 into `p`, it has to reload the address of `p` from bar, just incase. A wasted load!
+
+Lets add `[NoAlias]` now:
+
+```c#
+[NoAlias]
+unsafe struct Bar
+{
+    public int i;
+    public void* p;
+}
+
+float Foo(ref Bar bar)
+{
+    *(int*)bar.p = 42;
+    return ((float*)bar.p)[bar.i];
+}
+```
+
+Which produces the following assembly:
+
+```
+mov     rax, qword ptr [rcx + 8]
+mov     dword ptr [rax], 42
+mov     ecx, dword ptr [rcx]
+movss   xmm0, dword ptr [rax + 4*rcx]
+ret
+```
+
+Notice that it only loaded the address of `p` once, because we've told the compiler that `p` cannot be the pointer to `bar`!
+
+#### NoAlias Function Return
+
+Some functions can only return a unique pointer. For instance, `malloc` will only ever give you a unique pointer. For these cases `[return:NoAlias]` can provide the compiler with some useful information.
+
+Lets take an example using a bump allocator backed with a stack allocation:
+
+```c#
+// Only ever returns a unique address into the stackalloc'ed memory.
+// We've made this no-inline as the compiler will always try and inline
+// small functions like these, which would defeat the purpose of this
+// example!
+[MethodImpl(MethodImplOptions.NoInlining)]
+unsafe int* BumpAlloc(int* alloca)
+{
+    int location = alloca[0]++;
+    return alloca + location;
+}
+
+unsafe int Func()
+{
+    int* alloca = stackalloc int[128];
+
+    // Store our size at the start of the alloca.
+    alloca[0] = 1;
+
+    int* ptr1 = BumpAlloc(alloca);
+    int* ptr2 = BumpAlloc(alloca);
+
+    *ptr1 = 42;
+    *ptr2 = 13;
+
+    return *ptr1;
+}
+```
+
+Which produces the following assembly:
+
+```
+push    rsi
+push    rdi
+push    rbx
+sub     rsp, 544
+lea     rcx, [rsp + 36]
+movabs  rax, offset memset
+mov     r8d, 508
+xor     edx, edx
+call    rax
+mov     dword ptr [rsp + 32], 1
+movabs  rbx, offset "BumpAlloc(int* alloca)"
+lea     rsi, [rsp + 32]
+mov     rcx, rsi
+call    rbx
+mov     rdi, rax
+mov     rcx, rsi
+call    rbx
+mov     dword ptr [rdi], 42
+mov     dword ptr [rax], 13
+mov     eax, dword ptr [rdi]
+add     rsp, 544
+pop     rbx
+pop     rdi
+pop     rsi
+ret
+```
+
+It's quite a lot of assembly, but the key bit is that it:
+
+- Has `ptr1` in `rdi`.
+- Has `ptr2` in `rax`.
+- Stores 42 into `ptr1`.
+- Stores 13 into `ptr2`.
+- Loads `ptr1` again to return it.
+
+Let's now add our `[return: NoAlias]` attribute:
+
+```c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+[return: NoAlias]
+unsafe int* BumpAlloc(int* alloca)
+{
+    int location = alloca[0]++;
+    return alloca + location;
+}
+
+unsafe int Func()
+{
+    int* alloca = stackalloc int[128];
+
+    // Store our size at the start of the alloca.
+    alloca[0] = 1;
+
+    int* ptr1 = BumpAlloc(alloca);
+    int* ptr2 = BumpAlloc(alloca);
+
+    *ptr1 = 42;
+    *ptr2 = 13;
+
+    return *ptr1;
+}
+```
+
+Which produces:
+
+```
+push    rsi
+push    rdi
+push    rbx
+sub     rsp, 544
+lea     rcx, [rsp + 36]
+movabs  rax, offset memset
+mov     r8d, 508
+xor     edx, edx
+call    rax
+mov     dword ptr [rsp + 32], 1
+movabs  rbx, offset "BumpAlloc(int* alloca)"
+lea     rsi, [rsp + 32]
+mov     rcx, rsi
+call    rbx
+mov     rdi, rax
+mov     rcx, rsi
+call    rbx
+mov     dword ptr [rdi], 42
+mov     dword ptr [rax], 13
+mov     eax, 42
+add     rsp, 544
+pop     rbx
+pop     rdi
+pop     rsi
+ret
+```
+
+And notice that the compiler doesn't reload `ptr2` but simply moves 42 into the return register.
+
+`[return: NoAlias]` should only ever be used on functions that are **100% guaranteed to produce a unique pointer**, like with the bump-allocating example above, or with things like `malloc`. It is also important to note that the compiler aggressively inlines functions for performance considerations, and so small functions like the above will likely be inlined into their parents and produce the same result without the attribute (which is why we had to force no-inlining on the called function).
+
+### Function Cloning for Better Aliasing Deduction
+
+For function calls where Burst knows about the aliasing between parameters to the function, Burst can infer the aliasing and propagate this onto the called function to allow for greater optimization opportunities. Lets look at an example:
+
+```c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+int Bar(ref int a, ref int b)
+{
+    a = 42;
+    b = 13;
+    return a;
+}
+
+int Foo()
+{
+    var a = 53;
+    var b = -2;
+
+    return Bar(ref a, ref b);
+}
+```
+
+Previously the code for `Bar` would be:
+
+```
+mov     dword ptr [rcx], 42
+mov     dword ptr [rdx], 13
+mov     eax, dword ptr [rcx]
+ret
+```
+
+This is because within the `Bar` function, the compiler did not know the aliasing of `a` and `b`. This is in line with what other compiler technologies will do with this code snippet.
+
+Burst is smarter than this though, and through a process of function cloning Burst will create a copy of `Bar` where the aliasing properties of `a` and `b` are known not to alias, and replace the original call to `Bar` with a call to the copy. This results in the following assembly:
+
+```
+mov     dword ptr [rcx], 42
+mov     dword ptr [rdx], 13
+mov     eax, 42
+ret
+```
+
+Which as we can see doesn't perform the second load from `a`.
 
 ### Aliasing Checks
 
-Since aliasing is so key to the compilers ability to optimize for performance, we've added some experimental aliasing intrinsics:
+Since aliasing is so key to the compilers ability to optimize for performance, we've added some aliasing intrinsics:
 
-- `Unity.Burst.Aliasing.ExpectAlias` expects that the two pointers **do** alias, and generates a compiler error if not.
-- `Unity.Burst.Aliasing.ExpectNoAlias` expects that the two pointers **do not** alias, and generates a compiler error if not.
-
-These are **experimental at present** and beyond basic pointer deductions they may produce false negatives.
+- `Unity.Burst.CompilerServices.Aliasing.ExpectAliased` expects that the two pointers **do** alias, and generates a compiler error if not.
+- `Unity.Burst.CompilerServices.Aliasing.ExpectNotAliased` expects that the two pointers **do not** alias, and generates a compiler error if not.
 
 An example:
 
 ```c#
+using static Unity.Burst.CompilerServices.Aliasing;
+
 [BurstCompile]
 private struct CopyJob : IJob
 {
@@ -553,14 +1000,26 @@ private struct CopyJob : IJob
 
     public unsafe void Execute()
     {
-        Unity.Burst.Aliasing.ExpectNoAlias(Input.getUnsafePtr(), Output.getUnsafePtr());
+        // NativeContainer attributed structs (like NativeArray) cannot alias with each other in a job struct!
+        ExpectNotAliased(Input.getUnsafePtr(), Output.getUnsafePtr());
+
+        // NativeContainer structs cannot appear in other NativeContainer structs.
+        ExpectNotAliased(in Input, in Output);
+        ExpectNotAliased(in Input, Input.getUnsafePtr());
+        ExpectNotAliased(in Input, Output.getUnsafePtr());
+        ExpectNotAliased(in Output, Input.getUnsafePtr());
+        ExpectNotAliased(in Output, Output.getUnsafePtr());
+
+        // But things definitely alias with themselves!
+        ExpectAliased(in Input, in Input);
+        ExpectAliased(Input.getUnsafePtr(), Input.getUnsafePtr());
+        ExpectAliased(in Output, in Output);
+        ExpectAliased(Output.getUnsafePtr(), Output.getUnsafePtr());
     }
 }
 ```
 
-The above would **not** generate a compiler error, because the two pointers are deduced not to alias because of our `IJob` rules.
-
-## Compiler options
+## Compiler Options
 
 When compiling a job, you can change the behavior of the compiler:
 
@@ -591,7 +1050,7 @@ The accuracy is defined by the following enumeration:
         /// </summary>
         Medium = 2,
         /// <summary>
-        /// Reserved for future.
+        /// Compute with an accuracy lower than or equal to <see cref="FloatPrecision.Medium"/>, with some range restrictions (defined per function).
         /// </summary>
         Low = 3,
     }
@@ -600,17 +1059,33 @@ The accuracy is defined by the following enumeration:
 Currently, the implementation is only providing the following accuracy:
 
 - `FloatPrecision.Standard` is equivalent to `FloatPrecision.Medium` providing an accuracy of 3.5 ULP. This is the **default value**.
-- `FloatPrecision.High` is providing an accuracy of 1.0 ULP
-- `FloatPrecision.Medium` is providing an accuracy of 3.5 ULP
-- `FloatPrecision.Low` has currently the same accuracy than `Medium` but it will provide lower accuracy in the future
+- `FloatPrecision.High` provides an accuracy of 1.0 ULP.
+- `FloatPrecision.Medium` provides an accuracy of 3.5 ULP.
+- `FloatPrecision.Low` has an accuracy defined per function, and functions may specify a restricted range of valid inputs.
 
 Using the `FloatPrecision.Standard` accuracy should be largely enough for most games.
 
 An ULP (unit in the last place or unit of least precision) is the spacing between floating-point numbers, i.e., the value the least significant digit represents if it is 1.
 
-> We expect to support more ULP accuracy for `FloatPrecision.Low` for a future version of Burst
-
 Note: The `FloatPrecision` Enum was named `Accuracy` in early versions of the Burst API.
+
+#### FloatPrecision.Low
+
+The following table describes the precision and range restrictions for using the `FloatPrecision.Low` mode. Any function **not** described in the table will inherit the ULP requirement from `FloatPrecision.Medium`.
+
+<br/>
+<table>
+  <tr><th>Function</th><th>Precision</th><th>Range</th></tr>
+  <tr><td>Unity.Mathematics.math.sin(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.cos(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.exp(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.exp2(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.exp10(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.log(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.log2(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.log10(x)</td><td>350.0 ULP</td><td></td></tr>
+  <tr><td>Unity.Mathematics.math.pow(x, y)</td><td>350.0 ULP</td><td>Negative `x` to the power of a fractional `y` are not supported.</td></tr>
+</table>
 
 ### Compiler floating point math mode
 
@@ -654,6 +1129,72 @@ The reordering of these instructions can lead to a lower accuracy.
 
 Using the `FloatMode.Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
 
+### Assume Intrinsics
+
+Being able to tell the compiler that an integer lies within a certain range can open up optimization opportunities. The `AssumeRange` attribute allows users to tell the compiler that a given scalar-integer lies within a certain constrained range:
+
+```c#
+[return:AssumeRange(0u, 13u)]
+static uint WithConstrainedRange([AssumeRange(0, 26)] int x)
+{
+    return (uint)x / 2u;
+}
+```
+
+The above code makes two promises to the compiler:
+
+- That the variable `x` is in the closed-interval range `[0..26]`, or more plainly that `x >= 0 && x <= 26`.
+- That the return value from `WithConstrainedRange` is in the closed-interval range `[0..13]`, or more plainly that `x >= 0 && x <= 13`.
+
+These assumptions are fed into the optimizer and allow for better codegen as a result. There are some restrictions:
+
+- You can **only** place these on scalar-integer (signed or unsigned) types.
+- The type of the range arguments **must match** the type being attributed.
+
+We've also added in some deductions for the `.Length` property of `NativeArray` and `NativeSlice` to tell the optimizer that these always return non-negative integers.
+
+```c#
+static bool IsLengthNegative(NativeArray<float> na)
+{
+    // The compiler will always replace this with the constant false!
+    return na.Length < 0;
+}
+```
+
+Lets assume you have your own container:
+
+```c#
+struct MyContainer
+{
+    public int Length;
+    
+    // Some other data...
+}
+```
+
+And you wanted to tell Burst that `Length` was always a positive integer. You would do that like so:
+
+```c#
+struct MyContainer
+{
+    private int _length;
+
+    [return: AssumeRange(0, int.MaxValue)]
+    private int LengthGetter()
+    {
+        return _length;
+    }
+
+    public int Length
+    {
+        get => LengthGetter();
+        set => _length = value;
+    }
+
+    // Some other data...
+}
+```
+
 ## `Unity.Mathematics`
 
 The `Unity.Mathematics` provides vector types (`float4`, `float3`...) that are directly mapped to hardware SIMD registers.
@@ -682,9 +1223,17 @@ When a project uses AOT compilation, you can control Burst behavior using the **
 
 ![Burst AOT Settings](images/burst_aot_settings.png)
 
-- **Disable Optimizations**: Turns off Burst optimizations.
-- **Disable Safety Checks**: Turns off Burst safety checks.
-- **Disable Burst Compilation**: Turns off Burst entirely.
+- **Target Platform**: Shows the current desktop platform - can be changed via the Unity Build Settings.. dialog.
+- **Enable Burst Compilation**: Turns Burst entirely on/off for the currently selected platform.
+- **Enable Optimizations**: Turns Burst optimizations on/off.
+- **Enable Safety Checks**: Turns Burst safety checks on/off.
+- **Use Platform SDK Linker**: Disables cross compilation support (Only applicable to Windows/macOS/Linux standalone players) (see [Burst AOT Requirements](#burst-aot-requirements)).
+- **Min Target 32Bit CPU Architecture**: Allows you to specify the minimum cpu architecture supported for 32 bit builds (shown when supported).
+- **Max Target 32Bit CPU Architecture**: Allows you to specify the maximum cpu architecture supported for 32 bit builds (shown when supported).
+- **Min Target 64Bit CPU Architecture**: Allows you to specify the minimum CPU architecture supported for 64-bit builds (shown when supported).
+- **Max Target 64Bit CPU Architecture**: Allows you to specify the maximum CPU architecture supported for 64-bit builds (shown when supported).
+
+CPU Architecture is currently only supported for Windows, macOS, and Linux. Burst will generate a standalone player that supports CPU features between the minimum and maximum, inclusive. A special dispatch is generated into the module, so that the code generated will detect the CPU features and select the appropriate architecture level at runtime.
 
 You can set the Burst AOT settings as required for each of the supported platforms. The options are saved per platform as part of the project settings.
 
@@ -692,7 +1241,9 @@ You can set the Burst AOT settings as required for each of the supported platfor
 
 ## Burst AOT Requirements
 
-Burst compilation requires specific platform compilation tools (similar to IL2CPP), the below table can be used to determine the current level of support for AOT compilation.
+Burst compilation for desktop platforms (macOS, Linux, Windows) no longer requires external toolchain support when building a standalone player (since Burst 1.3.0-preview.1). This should work out of the box, but can be disabled in [Burst AOT Settings](#burst-aot-settings) if needed.
+
+If compiling for a non desktop platform, or you have disabled cross compilation support, then burst compilation requires specific platform compilation tools (similar to IL2CPP), the below table can be used to determine the current level of support for AOT compilation.
 - If a host/target combination is not listed, it is at present not supported for burst compilation.
 - If a target is not valid (missing tools/unsupported), burst compilation will not be used (may fail), but the target will still be built without burst optimisations.
 
@@ -741,6 +1292,12 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
     <td>Minimum PS4 SDK version 5.0.0</td>
   </tr>
   <tr>
+    <td>Windows</td>
+    <td>Nintendo Switch</td>
+    <td><code>ARMV8 AARCH64</code></td>
+    <td>Minimum Nintendo Switch NDK 8.2.0<br/>Requires 2019.3 Unity Editor or greater</td>
+  </tr>
+  <tr>
     <td>macOS</td>
     <td>macOS</td>
     <td><code>x86 (SSE2, SSE4)</code>, <code>x64 (SSE2, SSE4)</code></td>
@@ -774,22 +1331,31 @@ Burst compilation requires specific platform compilation tools (similar to IL2CP
 
 **Notes:**
 
-- Burst does not support cross-compilation between Windows, Mac, or Linux.
-- The UWP build will always compile all four targets (X86, X64, ARMv7 and ARMv8).
+- Burst by default now supports cross compilation between desktop platforms (macOS/Linux/Windows)
+- The UWP build will always compile all four targets (x86, x64, ARMv7 and ARMv8).
 
 # Known issues
 
 - The maximum target CPU is currently hardcoded per platform (e.g `X64_SSE4` for Windows 64 bits), see the table above.
-- Building IOS standalone player from windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
-- For iOS, only clang `10.0.0` is supported (`clang-1000.11.45.2` and `clang-1000.11.45.5`), newer version of clang are not compatible with burst.
-- Building Android standalone playre from linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
+- Building iOS player from Windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
+- Building Android player from Linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
 - Mathematical functions for `double2`, `double3`, `double4` are currently not optimized and using the slower scalar version
 - `DllImport` is not available on 32bit platforms and on ARM platforms
 - For all `DllImport` and internal calls, only primitive types (including pointers) are supported. Passing a struct by value is not supported, you need to pass it through a pointer/reference.
-- If you update to a newer version of burst via the Package Manager in your project which has loaded already burst, you need to close the editor, remove your library folder and restart the editor
+- If you update to a newer version of Burst via the Package Manager in your project which has loaded already Burst, you need to close the editor, remove your library folder and restart the editor
 - Function pointers are not working in playmode tests before 2019.3. The feature will be backported.
 - Struct with explicit layout can generate non optimal native code
 - `BurstCompiler.SetExecutionMode` does not affect the runtime yet for deterministic mode
 - Burst does not support scheduling generic Jobs through generic methods. While this would work in the editor, it will not work in the standalone player.
 
 Some of these issues may be resolved in a future release of Burst.
+
+# Presentations
+
+Conference presentations given by the Burst team:
+
+* [Getting started with Burst - Unite Copenhagen 2019](https://www.youtube.com/watch?v=Tzn-nX9hK1o) ([slides](https://docs.google.com/presentation/d/1id50G18EnRroQaq1apIDU9MrcxhaSihhqPoQrmn1mBg))
+* [Intrinsics: Low-level engine development with Burst - Unite Copenhagen 2019](https://www.youtube.com/watch?v=BpwvXkoFcp8) ([slides](https://www.slideshare.net/unity3d/intrinsics-lowlevel-engine-development-with-burst))
+* [Behind the burst compiler, converting .NET IL to highly optimized native code - DotNext 2018](https://www.youtube.com/watch?v=LKpyaVrby04)
+* [Deep Dive into the Burst Compiler - Unite LA 2018](https://www.youtube.com/watch?v=QkM6zEGFhDY)
+* [C# to Machine Code - GDC 2018](https://www.youtube.com/watch?v=NF6kcNS6U80)

@@ -1,6 +1,5 @@
 using System;
 using Burst.Compiler.IL.Tests.Helpers;
-using NUnit.Framework;
 
 namespace Burst.Compiler.IL.Tests
 {

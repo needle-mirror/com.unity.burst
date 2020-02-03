@@ -65,15 +65,22 @@ namespace Unity.Burst.Editor
                                 // In that case, MyNestedGeneric<T1> is closed in the context of MClass<int>, so we don't process them
                                 if (nestedType.GetGenericArguments().Length == parentGenericTypeArguments.Length)
                                 {
-                                    var instanceNestedType = nestedType.MakeGenericType(parentGenericTypeArguments);
-                                    types.Add(instanceNestedType);
+                                    try
+                                    {
+                                        var instanceNestedType = nestedType.MakeGenericType(parentGenericTypeArguments);
+                                        types.Add(instanceNestedType);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        var error = $"Unexpected Burst Inspector error. Invalid generic type instance. Trying to instantiate the generic type {nestedType.FullName} with the generic arguments <{string.Join(", ", parentGenericTypeArguments.Select(x => x.FullName))}> is not supported: {ex}";
+                                        Debug.LogWarning(error);
+                                    }
                                 }
                             }
                             else
                             {
                                 types.Add(nestedType);
                             }
-
                         }
                     }
                 }

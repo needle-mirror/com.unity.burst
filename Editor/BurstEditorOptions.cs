@@ -13,6 +13,7 @@ namespace Unity.Burst.Editor
         private const string EnableBurstCompilationText = "BurstCompilation";
         private const string EnableBurstTimingsText = "BurstShowTimings";
         private const string EnableBurstCompileSynchronouslyText = "BurstCompileSynchronously";
+        private const string EnableBurstDebugText = "BurstDebug";
 
         /// <summary>
         /// <c>true</c> if the menu options are synchronized with <see cref="BurstCompiler.Options"/>
@@ -48,6 +49,11 @@ namespace Unity.Burst.Editor
             set => GetGlobalOptions().EnableBurstTimings = value;
         }
 
+        public static bool EnableBurstDebug
+        {
+            get => GetGlobalOptions().EnableBurstDebug;
+            set => GetGlobalOptions().EnableBurstDebug = value;
+        }
 
         private static BurstCompilerOptions GetGlobalOptions()
         {
@@ -60,6 +66,7 @@ namespace Unity.Burst.Editor
                 global.EnableBurstSafetyChecks = EditorPrefs.GetBool(EnableBurstSafetyChecksText, true);
                 global.EnableBurstCompileSynchronously = EditorPrefs.GetBool(EnableBurstCompileSynchronouslyText, false);
                 global.EnableBurstTimings = EditorPrefs.GetBool(EnableBurstTimingsText, false);
+                global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
 
                 global.OptionsChanged += GlobalOnOptionsChanged;
                 _isSynchronized = true;
@@ -76,6 +83,7 @@ namespace Unity.Burst.Editor
             EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
             EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, global.EnableBurstCompileSynchronously);
             EditorPrefs.SetBool(EnableBurstTimingsText, global.EnableBurstTimings);
+            EditorPrefs.SetBool(EnableBurstDebugText, global.EnableBurstDebug);
         }
     }
 }

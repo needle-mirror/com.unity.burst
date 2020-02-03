@@ -40,6 +40,7 @@ namespace Unity.Burst
         internal const string OptionDisableSafetyChecks = "disable-safety-checks";
         internal const string OptionDisableOpt = "disable-opt";
         internal const string OptionFastMath = "fastmath";
+        internal const string OptionMinTarget = "mintarget=";
         internal const string OptionTarget = "target=";
         internal const string OptionIROpt = "ir-opt";
         internal const string OptionCpuOpt = "cpu-opt=";
@@ -50,6 +51,7 @@ namespace Unity.Burst
         internal const string OptionDebugTrap = "debugtrap";
         internal const string OptionDisableVectors = "disable-vectors";
         internal const string OptionDebug = "debug";
+        internal const string OptionDebugMode = "debugMode";
         internal const string OptionStaticLinkage = "generate-static-linkage-methods";
 
         // -------------------------------------------------------
@@ -59,8 +61,6 @@ namespace Unity.Burst
         internal const string OptionJitDisableFunctionCaching = "disable-function-caching";
         internal const string OptionJitDisableAssemblyCaching = "disable-assembly-caching";
         internal const string OptionJitEnableAssemblyCachingLogs = "enable-assembly-caching-logs";
-        internal const string OptionJitEnableModuleCaching = "enable-module-caching";
-        internal const string OptionJitEnableModuleCachingDebugger = "enable-module-caching-debugger";
         internal const string OptionJitEnableSynchronousCompilation = "enable-synchronous-compilation";
 
         // TODO: Remove this option and use proper dump flags or revisit how we log timings
@@ -71,11 +71,14 @@ namespace Unity.Burst
 
         internal const string OptionJitManagedFunctionPointer = "managed-function-pointer=";
 
+        internal const string OptionJitProvider = "jit-provider=";
+
         // -------------------------------------------------------
         // Options used by the Aot compiler
         // -------------------------------------------------------
         internal const string OptionAotAssemblyFolder = "assembly-folder=";
         internal const string OptionRootAssembly = "root-assembly=";
+        internal const string OptionIncludeRootAssemblyReferences = "include-root-assembly-references=";
         internal const string OptionAotMethod = "method=";
         internal const string OptionAotType = "type=";
         internal const string OptionAotAssembly = "assembly=";
@@ -84,6 +87,9 @@ namespace Unity.Burst
         internal const string OptionAotNoLink = "nolink";
         internal const string OptionAotPatchedAssembliesOutputFolder = "patch-assemblies-into=";
         internal const string OptionAotPinvokeNameToPatch = "pinvoke-name=";
+        internal const string OptionAotExecuteMethodNameToFind = "execute-method-name=";
+
+        internal const string OptionAotUsePlatformSDKLinkers = "use-platform-sdk-linkers";
         internal const string OptionAotOnlyStaticMethods = "only-static-methods";
         internal const string OptionMethodPrefix = "method-prefix=";
         internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
@@ -99,6 +105,7 @@ namespace Unity.Burst
         internal const string CompilerCommandEnableCompiler = "$enable_compiler";
         internal const string CompilerCommandDisableCompiler = "$disable_compiler";
         internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
+        internal const string CompilerCommandReset = "$reset";
         internal const string CompilerCommandDomainReload = "$domain_reload";
         internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";
 
@@ -117,6 +124,7 @@ namespace Unity.Burst
         private bool _enableBurstCompileSynchronously;
         private bool _enableBurstSafetyChecks;
         private bool _enableBurstTimings;
+        private bool _enableBurstDebug;
 
         private BurstCompilerOptions() : this(false)
         {
@@ -248,6 +256,21 @@ namespace Unity.Burst
             }
         }
 
+        public bool EnableBurstDebug
+        {
+            get => _enableBurstDebug;
+            set
+            {
+                bool changed = _enableBurstDebug != value;
+                _enableBurstDebug = value;
+                if (changed)
+                {
+                    OnOptionsChanged();
+                    MaybeTriggerRecompilation();
+                }
+            }
+        }
+
         /// <summary>
         /// This property is no longer used and will be removed in a future major release.
         /// </summary>
@@ -296,7 +319,8 @@ namespace Unity.Burst
                 EnableBurstCompilation = EnableBurstCompilation,
                 EnableBurstCompileSynchronously = EnableBurstCompileSynchronously,
                 EnableBurstSafetyChecks = EnableBurstSafetyChecks,
-                EnableBurstTimings = EnableBurstTimings
+                EnableBurstTimings = EnableBurstTimings,
+                EnableBurstDebug = EnableBurstDebug
             };
             return clone;
         }
@@ -409,6 +433,11 @@ namespace Unity.Burst
                 AddOption(flagsBuilderOut, GetOption(OptionJitLogTimings));
             }
 
+            if (EnableBurstDebug || (attr?.Debug ?? false))
+            {
+                AddOption(flagsBuilderOut, GetOption(OptionDebugMode));
+            }
+
             return flagsBuilderOut.ToString();
         }
 
@@ -491,11 +520,11 @@ namespace Unity.Burst
         X64_SSE4 = 4,
         AVX = 5,
         AVX2 = 6,
-        AVX512 = 7,
-        WASM32 = 8,
-        ARMV7A_NEON32 = 9,
-        ARMV8A_AARCH64 = 10,
-        THUMB2_NEON32 = 11,
+        WASM32 = 7,
+        ARMV7A_NEON32 = 8,
+        ARMV8A_AARCH64 = 9,
+        THUMB2_NEON32 = 10,
+        ARMV8A_AARCH64_HALFFP = 11,
     }
 #endif
 
@@ -535,7 +564,7 @@ namespace Unity.Burst
         IROptimized = 1 << 3,
 
         /// <summary>
-        /// Dumps the generated ASM code (by default will also compile the function as using <see cref="Function"/> flag)
+        /// Dumps the generated ASM code
         /// </summary>
         Asm = 1 << 4,
 

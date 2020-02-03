@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 // Make internals visible to Unity burst tests
 [assembly: InternalsVisibleTo("Unity.Burst.Tests.UnitTests")]
 [assembly: InternalsVisibleTo("Unity.Burst.Editor.Tests")]
+[assembly: InternalsVisibleTo("Unity.Burst.Benchmarks")]
 namespace Unity.Burst
 {
     // FloatMode and FloatPrecision must be kept in sync with burst.h / Burst.Backend
@@ -56,7 +57,7 @@ namespace Unity.Burst
         /// </summary>
         Medium = 2,
         /// <summary>
-        /// Reserved for future.
+        /// Compute with an accuracy lower than or equal to <see cref="FloatPrecision.Medium"/>, with some range restrictions (defined per function).
         /// </summary>
         Low = 3,
     }

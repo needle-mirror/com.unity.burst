@@ -219,6 +219,13 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void Reset()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandReset);
+#endif
+        }
+
 #if UNITY_EDITOR
         private static void SendCommandToCompiler(string commandName, string commandArgs = null)
         {

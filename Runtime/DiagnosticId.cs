@@ -33,7 +33,7 @@ namespace Unity.Burst
         ERR_LoadingArgumentWithManagedTypeNotSupported = 1012,
         ERR_CallingBurstDiscardMethodWithReturnValueNotSupported = 1015,
         ERR_CallingManagedMethodNotSupported = 1016,
-        ERR_BinaryPointerOperationNotSupported = 1017,
+        //ERR_BinaryPointerOperationNotSupported = 1017,
         //ERR_AddingPointersWithNonPointerResultNotSupported = 1018,
         ERR_InstructionUnboxNotSupported = 1019,
         ERR_InstructionBoxNotSupported = 1020,
@@ -47,7 +47,7 @@ namespace Unity.Burst
         ERR_InstructionNewarrNotSupported = 1028,
         ERR_InstructionRethrowNotSupported = 1029,
         ERR_InstructionCastclassNotSupported = 1030,
-        ERR_InstructionIsinstNotSupported = 1031,
+        //ERR_InstructionIsinstNotSupported = 1031,
         ERR_InstructionLdftnNotSupported = 1032,
         ERR_InstructionLdstrNotSupported = 1033,
         ERR_InstructionStsfldNotSupported = 1034,
@@ -141,10 +141,21 @@ namespace Unity.Burst
         ERR_BinaryOperationNotSupported = 1097,
         ERR_CalliWithThisNotSupported = 1098,
         ERR_CalliNonCCallingConventionNotSupported = 1099,
-        
+
+        // CheckIntrinsicUsageTransform
+        ERR_InstructionTargetCpuFeatureNotAllowedInThisBlock = 1200,
+
+        // AssumeRange
+        ERR_AssumeRangeTypeMustBeInteger = 1201,
+        ERR_AssumeRangeTypeMustBeSameSign = 1202,
+
         // LdfldaTransform
         ERR_UnsupportedSpillTransform = 1300,
         ERR_UnsupportedSpillTransformTooManyUsers = 1301,
 
+        // Intrinsics
+        ERR_MethodNotSupported = 1302,
+        ERR_VectorsLoadFieldIsAddress = 1303,
+        ERR_ConstantExpressionRequired = 1304,
     }
 }

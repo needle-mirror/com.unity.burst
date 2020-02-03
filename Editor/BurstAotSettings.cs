@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System;
+using System.Text;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
@@ -9,15 +11,21 @@ using UnityEngine.UIElements;
 
 namespace Unity.Burst.Editor
 {
-    // To add a setting,
-    //  Add a
-    //          [SerializeField] internal type settingname;
-    //  Add a
-    //          internal static readonly string settingname_DisplayName = "Name of option to be displayed in the editor (and searched for)";
-    //  Add a
-    //          internal static readonly string settingname_ToolTip = "tool tip information to display when hovering mouse
+    internal enum AvailX86Targets
+    {
+        SSE2 = (int)TargetCpu.X86_SSE2,
+        SSE4 = (int)TargetCpu.X86_SSE4,
+    }
 
-    class BurstPlatformAotSettings : ScriptableObject
+    internal enum AvailX64Targets
+    {
+        SSE2 = (int)TargetCpu.X64_SSE2,
+        SSE4 = (int)TargetCpu.X64_SSE4,
+        AVX = (int)TargetCpu.AVX,
+        AVX2 = (int)TargetCpu.AVX2,
+    }
+
+    class BurstPlatformLegacySettings : ScriptableObject
     {
         [SerializeField]
         internal bool DisableOptimisations;
@@ -26,14 +34,108 @@ namespace Unity.Burst.Editor
         [SerializeField]
         internal bool DisableBurstCompilation;
 
-        internal static readonly string DisableOptimisations_DisplayName = "Disable Optimisations";
-        internal static readonly string DisableOptimisations_ToolTip = "Disables all optimisations for the currently selected platform.";
+        BurstPlatformLegacySettings(BuildTarget target)
+        {
+            DisableSafetyChecks = true;
+            DisableBurstCompilation = false;
+            DisableOptimisations = false;
+        }
+    }
 
-        internal static readonly string DisableSafetyChecks_DisplayName = "Disable Safety Checks";
-        internal static readonly string DisableSafetyChecks_ToolTip = "Disables safety checks, results in faster runtime, but Out Of Bounds checks etc are not validated.";
 
-        internal static readonly string DisableBurstCompilation_DisplayName = "Disable Burst Compilation";
-        internal static readonly string DisableBurstCompilation_ToolTip = "Disables burst compilation for the selected platform.";
+    // To add a setting,
+    //  Add a
+    //          [SerializeField] internal type settingname;
+    //  Add a
+    //          internal static readonly string settingname_DisplayName = "Name of option to be displayed in the editor (and searched for)";
+    //  Add a
+    //          internal static readonly string settingname_ToolTip = "tool tip information to display when hovering mouse
+    // If the setting should be restricted to e.g. Standalone platform :
+    //
+    //  Add a
+    //          internal static bool settingname_Display(BuildTarget selectedTarget) {}
+
+    class BurstPlatformAotSettings : ScriptableObject
+    {
+        [SerializeField]
+        internal int Version;
+        [SerializeField]
+        internal bool EnableBurstCompilation;
+        [SerializeField]
+        internal bool EnableOptimisations;
+        [SerializeField]
+        internal bool EnableSafetyChecks;
+        [SerializeField]
+        internal bool UsePlatformSDKLinker;
+        [SerializeField]
+        internal AvailX86Targets CpuMinTargetX32;
+        [SerializeField]
+        internal AvailX86Targets CpuMaxTargetX32;
+        [SerializeField]
+        internal AvailX64Targets CpuMinTargetX64;
+        [SerializeField]
+        internal AvailX64Targets CpuMaxTargetX64;
+
+        internal static readonly string EnableOptimisations_DisplayName = "Enable Optimisations";
+        internal static readonly string EnableOptimisations_ToolTip = "Enables all optimisations for the currently selected platform.";
+
+        internal static readonly string EnableSafetyChecks_DisplayName = "Enable Safety Checks";
+        internal static readonly string EnableSafetyChecks_ToolTip = "Enables safety checks, results in faster runtime, but Out Of Bounds checks etc are not validated.";
+
+        internal static readonly string EnableBurstCompilation_DisplayName = "Enable Burst Compilation";
+        internal static readonly string EnableBurstCompilation_ToolTip = "Enables burst compilation for the selected platform.";
+
+        internal static readonly string UsePlatformSDKLinker_DisplayName = "Use Platform SDK Linker";
+        internal static readonly string UsePlatformSDKLinker_ToolTip = "Enabling this option will disable cross compilation support for desktops, and will require platform specific tools for Windows/Linux/Mac - use only if you encounter problems with the burst builtin solution.";
+        internal static bool UsePlatformSDKLinker_Display(BuildTarget selectedTarget)
+        {
+            return IsStandalone(selectedTarget);
+        }
+
+        internal static readonly string CpuMinTargetX32_DisplayName = "Min Target 32Bit CPU Architecture";
+        internal static readonly string CpuMinTargetX32_ToolTip = "Use this to specify the minimum target architecture to support for the currently selected platform.";
+        internal static bool CpuMinTargetX32_Display(BuildTarget selectedTarget)
+        {
+            return IsStandalone(selectedTarget) && Has32BitSupport(selectedTarget);
+        }
+
+        internal static readonly string CpuMinTargetX64_DisplayName = "Min Target 64Bit CPU Architecture";
+        internal static readonly string CpuMinTargetX64_ToolTip = "Use this to specify the minimum target architecture to support for the currently selected platform.";
+        internal static bool CpuMinTargetX64_Display(BuildTarget selectedTarget)
+        {
+            return IsStandalone(selectedTarget);
+        }
+
+        internal static readonly string CpuMaxTargetX32_DisplayName = "Max Target 32Bit CPU Architecture";
+        internal static readonly string CpuMaxTargetX32_ToolTip = "Use this to specify the maximum target architecture to support for the currently selected platform.";
+        internal static bool CpuMaxTargetX32_Display(BuildTarget selectedTarget)
+        {
+            return IsStandalone(selectedTarget) && Has32BitSupport(selectedTarget);
+        }
+
+        internal static readonly string CpuMaxTargetX64_DisplayName = "Max Target 64Bit CPU Architecture";
+        internal static readonly string CpuMaxTargetX64_ToolTip = "Use this to specify the maximum target architecture to support for the currently selected platform.";
+        internal static bool CpuMaxTargetX64_Display(BuildTarget selectedTarget)
+        {
+            return IsStandalone(selectedTarget);
+        }
+
+        internal static bool IsStandalone(BuildTarget target)
+        {
+            switch (target)
+            {
+#if !UNITY_2019_2_OR_NEWER
+                case BuildTarget.StandaloneLinux:
+#endif
+                case BuildTarget.StandaloneLinux64:
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                case BuildTarget.StandaloneOSX:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         BurstPlatformAotSettings(BuildTarget target)
         {
@@ -41,9 +143,15 @@ namespace Unity.Burst.Editor
         }
         internal void InitialiseDefaults(BuildTarget target)
         {
-            DisableSafetyChecks = true;
-            DisableBurstCompilation = false;
-            DisableOptimisations = false;
+            Version = 2;
+            EnableSafetyChecks = false;
+            EnableBurstCompilation = true;
+            EnableOptimisations = true;
+            UsePlatformSDKLinker = false;   // Only applicable for LLD targets (Windows/Mac/Linux)
+            CpuMinTargetX32 = AvailX86Targets.SSE2;
+            CpuMaxTargetX32 = AvailX86Targets.SSE4;
+            CpuMinTargetX64 = AvailX64Targets.SSE2;
+            CpuMaxTargetX64 = AvailX64Targets.SSE4;
         }
 
         internal static string GetPath(BuildTarget target)
@@ -80,7 +188,7 @@ namespace Unity.Burst.Editor
             if (File.Exists(path))
             {
                 var json = File.ReadAllText(path);
-                EditorJsonUtility.FromJsonOverwrite(json, settings);
+                settings = SerialiseIn(target, json);
             }
             else
             {
@@ -90,15 +198,134 @@ namespace Unity.Burst.Editor
             return settings;
         }
 
+        delegate bool SerialiseItem(BuildTarget selectedPlatform);
+
+        internal static BurstPlatformAotSettings SerialiseIn(BuildTarget target, string json)
+        {
+            // Deal with pre version 2 format
+            BurstPlatformLegacySettings legacy = (BurstPlatformLegacySettings)ScriptableObject.CreateInstance<BurstPlatformLegacySettings>();
+            EditorJsonUtility.FromJsonOverwrite(json, legacy);
+
+            BurstPlatformAotSettings versioned = (BurstPlatformAotSettings)ScriptableObject.CreateInstance<BurstPlatformAotSettings>();
+            EditorJsonUtility.FromJsonOverwrite(json, versioned);
+
+            if (versioned.Version == 0)
+            {
+                // legacy file, upgrade it
+                versioned.InitialiseDefaults(target);
+                versioned.EnableOptimisations = !legacy.DisableOptimisations;
+                versioned.EnableBurstCompilation = !legacy.DisableBurstCompilation;
+                versioned.EnableSafetyChecks = !legacy.DisableSafetyChecks;
+            }
+
+            // Otherwise should be a modern file with a valid version (we can use that to upgrade when the time comes)
+            return versioned;
+        }
+
+        internal string SerialiseOut(BuildTarget target)
+        {
+            // Version 2 and onwards serialise a custom object in order to avoid serialising all the settings.
+            StringBuilder s = new StringBuilder();
+            s.Append("{\n");
+            s.Append("  \"MonoBehaviour\": {\n");
+            var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            int total = 0;
+            for (int i = 0; i < platformFields.Length; i++)
+            {
+                var method = typeof(BurstPlatformAotSettings).GetMethod(platformFields[i].Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
+                if (method != null)
+                {
+                    var shouldSerialise = (SerialiseItem)Delegate.CreateDelegate(typeof(SerialiseItem), method);
+                    if (!shouldSerialise(target))
+                        continue;
+                }
+
+                total++;
+            }
+            for (int i = 0; i < platformFields.Length; i++)
+            {
+                var method = typeof(BurstPlatformAotSettings).GetMethod(platformFields[i].Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
+                if (method != null)
+                {
+                    var shouldSerialise = (SerialiseItem)Delegate.CreateDelegate(typeof(SerialiseItem), method);
+                    if (!shouldSerialise(target))
+                        continue;
+                }
+
+                s.Append($"    \"{platformFields[i].Name}\": ");
+                if (platformFields[i].FieldType.IsEnum)
+                    s.Append((int)platformFields[i].GetValue(this));
+                else if (platformFields[i].FieldType == typeof(string))
+                    s.Append($"\"{platformFields[i].GetValue(this)}\"");
+                else if (platformFields[i].FieldType == typeof(bool))
+                    s.Append(((bool)platformFields[i].GetValue(this)) ? "true" : "false");
+                else
+                    s.Append((int)platformFields[i].GetValue(this));
+
+                total--;
+                if (total != 0)
+                    s.Append(",");
+                s.Append("\n");
+            }
+            s.Append("  }\n");
+            s.Append("}\n");
+
+            return s.ToString();
+        }
+
         internal void Save(BuildTarget target)
         {
             target = ResolveTarget(target);
-            File.WriteAllText(GetPath(target), EditorJsonUtility.ToJson(this, true));
+            var path = GetPath(target);
+#if UNITY_2019_3_OR_NEWER
+            if (!AssetDatabase.IsOpenForEdit(path))
+            {
+                if (!AssetDatabase.MakeEditable(path))
+                {
+                    Debug.LogWarning($"Burst could not save AOT settings file {path}");
+                    return;
+                }
+            }
+#endif
+
+            File.WriteAllText(path, SerialiseOut(target));
         }
 
         internal static SerializedObject GetSerializedSettings(BuildTarget target)
         {
             return new SerializedObject(GetOrCreateSettings(target));
+        }
+
+        internal static bool Has32BitSupport(BuildTarget target)
+        {
+            switch (target)
+            {
+#if !UNITY_2019_2_OR_NEWER
+                case BuildTarget.StandaloneLinux:
+                case BuildTarget.StandaloneLinux64:
+#endif
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal MinMaxTargetCpu GetDesktopCpu32Bit()
+        {
+            MinMaxTargetCpu cpu;
+            cpu.min = (TargetCpu)((int)CpuMinTargetX32);
+            cpu.max = (TargetCpu)((int)CpuMaxTargetX32);
+            return cpu;
+        }
+
+        internal MinMaxTargetCpu GetDesktopCpu64Bit()
+        {
+            MinMaxTargetCpu cpu;
+            cpu.min = (TargetCpu)((int)CpuMinTargetX64);
+            cpu.max = (TargetCpu)((int)CpuMaxTargetX64);
+            return cpu;
         }
     }
 
@@ -108,9 +335,21 @@ namespace Unity.Burst.Editor
         {
             SerializedObject[] m_PlatformSettings;
             SerializedProperty[][] m_PlatformProperties;
+            DisplayItem[][] m_PlatformVisibility;
             GUIContent[][] m_PlatformToolTips;
 
             BuildPlatform[] validPlatforms;
+
+            delegate bool DisplayItem(BuildTarget selectedTarget);
+
+            static bool DefaultShow(BuildTarget selectedTarget)
+            {
+                return true;
+            }
+            static bool DefaultHide(BuildTarget selectedTarget)
+            {
+                return false;
+            }
 
             public BurstAotSettingsProvider()
                 : base("Project/Burst AOT Settings", SettingsScope.Project, null)
@@ -133,6 +372,7 @@ namespace Unity.Burst.Editor
 
                 m_PlatformSettings = new SerializedObject[validPlatforms.Length];
                 m_PlatformProperties = new SerializedProperty[validPlatforms.Length][];
+                m_PlatformVisibility = new DisplayItem[validPlatforms.Length][];
                 m_PlatformToolTips=new GUIContent[validPlatforms.Length][];
             }
 
@@ -153,12 +393,30 @@ namespace Unity.Burst.Editor
                     m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(validPlatforms[platform].defaultTarget);
                 m_PlatformProperties[platform] = new SerializedProperty[platformFields.Length];
                 m_PlatformToolTips[platform] = new GUIContent[platformFields.Length];
+                m_PlatformVisibility[platform] = new DisplayItem[platformFields.Length];
                 for (int i = 0; i < platformFields.Length; i++)
                 {
                     m_PlatformProperties[platform][i] = m_PlatformSettings[platform].FindProperty(platformFields[i].Name);
                     var displayName = typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_DisplayName", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string;
                     var toolTip = typeof(BurstPlatformAotSettings).GetField(platformFields[i].Name + "_ToolTip", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as string;
                     m_PlatformToolTips[platform][i] = EditorGUIUtility.TrTextContent(displayName, toolTip);
+
+                    var method = typeof(BurstPlatformAotSettings).GetMethod(platformFields[i].Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
+                    if (method == null)
+                    {
+                        if (displayName == null)
+                        {
+                            m_PlatformVisibility[platform][i] = DefaultHide;
+                        }
+                        else
+                        {
+                            m_PlatformVisibility[platform][i] = DefaultShow;
+                        }
+                    }
+                    else
+                    {
+                        m_PlatformVisibility[platform][i] = (DisplayItem)Delegate.CreateDelegate(typeof(DisplayItem), method);
+                    }
                 }
             }
 
@@ -205,7 +463,10 @@ namespace Unity.Burst.Editor
 
                 for (int i = 0; i < m_PlatformProperties[selectedPlatform].Length; i++)
                 {
-                    EditorGUILayout.PropertyField(m_PlatformProperties[selectedPlatform][i], m_PlatformToolTips[selectedPlatform][i]);
+                    if (m_PlatformVisibility[selectedPlatform][i](selectedTarget))
+                    {
+                        EditorGUILayout.PropertyField(m_PlatformProperties[selectedPlatform][i], m_PlatformToolTips[selectedPlatform][i]);
+                    }
                 }
 
                 EditorGUILayout.EndPlatformGrouping();
@@ -233,19 +494,37 @@ namespace Unity.Burst.Editor
 {
     class BurstPlatformAotSettings
     {
-        internal bool DisableOptimisations;
-        internal bool DisableSafetyChecks;
-        internal bool DisableBurstCompilation;
+        internal bool EnableOptimisations;
+        internal bool EnableSafetyChecks;
+        internal bool EnableBurstCompilation;
+        internal bool UsePlatformSDKLinker;
 
         internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget target)
         {
             BurstPlatformAotSettings settings = new BurstPlatformAotSettings();
 
-            settings.DisableOptimisations = false;
-            settings.DisableSafetyChecks=!BurstEditorOptions.EnableBurstSafetyChecks;
-            settings.DisableBurstCompilation=!BurstEditorOptions.EnableBurstCompilation;
+            settings.EnableOptimisations = true;
+            settings.EnableSafetyChecks=BurstEditorOptions.EnableBurstSafetyChecks;
+            settings.EnableBurstCompilation=BurstEditorOptions.EnableBurstCompilation;
+            settings.UsePlatformSDKLinker = false;
 
             return settings;
+        }
+
+        internal MinMaxTargetCpu GetDesktopCpu32Bit()
+        {
+            MinMaxTargetCpu cpu;
+            cpu.min = TargetCpu.X86_SSE2;
+            cpu.max = TargetCpu.X86_SSE4;
+            return cpu;
+        }
+
+        internal MinMaxTargetCpu GetDesktopCpu64Bit()
+        {
+            MinMaxTargetCpu cpu;
+            cpu.min = TargetCpu.X64_SSE2;
+            cpu.max = TargetCpu.X64_SSE4;
+            return cpu;
         }
     }
 }

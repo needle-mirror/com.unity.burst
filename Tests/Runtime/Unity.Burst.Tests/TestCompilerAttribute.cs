@@ -45,18 +45,15 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        protected override TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod,
-            Type expectedException,
-            Boolean ExpectCompilerException, DiagnosticId[] expectedDiagnosticIds)
+        protected override TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool ExpectCompilerException, DiagnosticId[] expectedDiagnosticIds)
         {
-            return new TestCompilerCommand(test, originalMethod, expectedException, ExpectCompilerException, expectedDiagnosticIds);
+            return new TestCompilerCommand(test, originalMethod, compileOnly, expectedException, ExpectCompilerException, expectedDiagnosticIds);
         }
 
 
         public class TestCompilerCommand : TestCompilerCommandBase
         {
-            public TestCompilerCommand(Test test, TestMethod originalMethod, Type expectedException,
-                bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test, originalMethod, expectedException, expectCompilerException, expectedDiagnosticIds)
+            public TestCompilerCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test, originalMethod, compileOnly, expectedException, expectCompilerException, expectedDiagnosticIds)
             {
             }
 
@@ -80,19 +77,27 @@ namespace Burst.Compiler.IL.Tests
                 return method.parms.Arguments.ToArray();
             }
 
-            protected override Delegate CompileDelegate(ITestExecutionContext context, MethodInfo methodInfo,
-                Type delegateType)
+            protected unsafe override Delegate CompileDelegate(ITestExecutionContext context, MethodInfo methodInfo,
+                Type delegateType, byte* returnBox, out Type returnBoxType)
             {
+                returnBoxType = null;
+
                 var functionDelegate = Delegate.CreateDelegate(delegateType, methodInfo);
                 var compiledFunction = BurstCompiler.CompileDelegate(functionDelegate);
 
                 return compiledFunction;
             }
 
+            protected override void CompileDelegateForArm(MethodInfo methodInfo)
+            {
+                // This is a no-op here; used to generate Arm asm files and compare them to gold files.
+            }
+
             protected override IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType)
             {
                 throw new NotImplementedException();
             }
+
             protected override void Setup()
             {
             }

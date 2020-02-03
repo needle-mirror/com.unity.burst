@@ -15,9 +15,17 @@ namespace Unity.Burst
         /// Gets a 32-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>
         /// </summary>
         /// <typeparam name="T">The type to compute the hash from</typeparam>
+        /// <returns>The 32-bit hashcode.</returns>
         public static int GetHashCode32<T>()
         {
+#if !UNITY_DOTSPLAYER_IL2CPP
             return HashCode32<T>.Value;
+#else
+            // DOTS Runtime IL2CPP Builds do not use C#'s lazy static initialization order (it uses a C like order, aka random)
+            // As such we cannot rely on static init for caching types since any static constructor calling this function
+            // may return uninitialized/default-initialized memory
+            return HashStringWithFNV1A32(typeof(T).AssemblyQualifiedName);
+#endif
         }
 
         /// <summary>
@@ -25,6 +33,7 @@ namespace Unity.Burst
         /// This method cannot be used from a burst job.
         /// </summary>
         /// <param name="type">The type to compute the hash from</param>
+        /// <returns>The 32-bit hashcode.</returns>
         public static int GetHashCode32(Type type)
         {
             return HashStringWithFNV1A32(type.AssemblyQualifiedName);
@@ -34,9 +43,17 @@ namespace Unity.Burst
         /// Gets a 64-bits hashcode from a type computed for the <see cref="System.Type.AssemblyQualifiedName"/>
         /// </summary>
         /// <typeparam name="T">The type to compute the hash from</typeparam>
+        /// <returns>The 64-bit hashcode.</returns>
         public static long GetHashCode64<T>()
         {
+#if !UNITY_DOTSPLAYER_IL2CPP
             return HashCode64<T>.Value;
+#else
+            // DOTS Runtime IL2CPP Builds do not use C#'s lazy static initialization order (it uses a C like order, aka random)
+            // As such we cannot rely on static init for caching types since any static constructor calling this function
+            // may return uninitialized/default-initialized memory
+            return HashStringWithFNV1A64(typeof(T).AssemblyQualifiedName);
+#endif
         }
 
         /// <summary>
@@ -44,6 +61,7 @@ namespace Unity.Burst
         /// This method cannot be used from a burst job.
         /// </summary>
         /// <param name="type">Type to calculate a hash for</param>
+        /// <returns>The 64-bit hashcode.</returns>
         public static long GetHashCode64(Type type)
         {
             return HashStringWithFNV1A64(type.AssemblyQualifiedName);

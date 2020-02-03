@@ -106,6 +106,9 @@ namespace Unity.Burst.Editor
 
             // Notify the JitCompilerService about a domain reload
             BurstCompiler.DomainReload();
+
+            // Make sure that the X86 CSR function pointers are compiled
+            Intrinsics.X86.CompileManagedCsrAccessors();
         }
 
         private static void EditorApplicationOnPlayModeStateChanged(PlayModeStateChange state)

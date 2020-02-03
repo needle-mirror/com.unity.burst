@@ -1040,33 +1040,6 @@ namespace Burst.Compiler.IL.Tests
         }
 
         // ---------------------------------------------------------
-        // tan
-        // ---------------------------------------------------------
-        [TestCompiler(DataRange.Standard)]
-        public static float Tan4(ref float4 input)
-        {
-            return Vectors.ConvertToFloat(math.tan(input));
-        }
-
-        [TestCompiler(DataRange.Standard)]
-        public static float Tan3(ref float3 input)
-        {
-            return Vectors.ConvertToFloat(math.tan(input));
-        }
-
-        [TestCompiler(DataRange.Standard)]
-        public static float Tan2(ref float2 input)
-        {
-            return Vectors.ConvertToFloat(math.tan(input));
-        }
-
-        [TestCompiler(DataRange.Standard)]
-        public static float Tan(float input)
-        {
-            return math.tan(input);
-        }
-
-        // ---------------------------------------------------------
         // tanh
         // ---------------------------------------------------------
         [TestCompiler(DataRange.Standard)]

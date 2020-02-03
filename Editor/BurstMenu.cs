@@ -13,6 +13,7 @@ namespace Unity.Burst.Editor
         private const string EnableBurstCompilationText = "Jobs/Burst/Enable Compilation";
         private const string EnableSafetyChecksText = "Jobs/Burst/Safety Checks";
         private const string ForceSynchronousCompilesText = "Jobs/Burst/Synchronous Compilation";
+        private const string EnableDebugCompilationText = "Jobs/Burst/Native Debug Mode Compilation";
         private const string ShowBurstTimingsText = "Jobs/Burst/Show Timings";
         private const string BurstInspectorText = "Jobs/Burst/Open Inspector...";
 
@@ -69,7 +70,23 @@ namespace Unity.Burst.Editor
         }
 
         // ----------------------------------------------------------------------------------------------
-        // #4 Show Timings
+        // #4 Synchronous Compilation
+        // ----------------------------------------------------------------------------------------------
+        [MenuItem(EnableDebugCompilationText, false)]
+        private static void EnableDebugMode()
+        {
+            BurstEditorOptions.EnableBurstDebug = !BurstEditorOptions.EnableBurstDebug;
+        }
+
+        [MenuItem(EnableDebugCompilationText, true)]
+        private static bool EnableDebugModeValidate()
+        {
+            Menu.SetChecked(EnableDebugCompilationText, BurstEditorOptions.EnableBurstDebug);
+            return BurstCompilerService.IsInitialized && BurstEditorOptions.EnableBurstCompilation;
+        }
+
+        // ----------------------------------------------------------------------------------------------
+        // #5 Show Timings
         // ----------------------------------------------------------------------------------------------
         [MenuItem(ShowBurstTimingsText, false)]
         private static void ShowBurstTimings()
@@ -85,7 +102,7 @@ namespace Unity.Burst.Editor
         }
 
         // ----------------------------------------------------------------------------------------------
-        // #5 Open Inspector...
+        // #6 Open Inspector...
         // ----------------------------------------------------------------------------------------------
         [MenuItem(BurstInspectorText)]
         private static void BurstInspector()

@@ -1,47 +1,62 @@
 # Changelog
 
-## [1.2.1] - 2020-01-23
+## [1.3.0-preview.1] - 2020-02-04
 
+
+### Added
+- Enabled lower precision variants for `pow`, `sin`, `cos`, `log`, `log2`, `log10`, `exp`, `exp2`, and `exp10` when `BurstPrecision.Low` is specified.
+- Add CPU minimum and maximum target for desktop platforms Standalone Player builds.
+- Append a newline between IRPassDiagnostic messages, fixes pass diagnostics readability in the inspector.
+- Add a new attribute `[AssumeRange]` that lets users tag function parameters and returns of an integer type with a constrained range that the value is allowed to inhabit. `NativeArray.Length` and `NativeSlice.Length` have automatic detection that the property is always positive. This assumption feeds into the optimizer and can produce better codegen.
+- Enabled support for DOTS Runtime SharedStatics. Due to the nature of DOTS Runtime, only the generic versions of `SharedStatic.GetOrCreate<TContext>` are supported.
+- Add a new intrinsic `Unity.Burst.Intrinsics.Common.Pause()` which causes a thread pause to occur for the current thread. This is useful for spin-locks to stop over contention on the lock.
+- Add some new Burst aliasing deductions to substantially improve the aliasing detection in the compiler, resulting in better codegen.
+- Add syntax colouring to WASM.
+- Add `IsCreated` to the `FunctionPointer` class to allow checks on whether a given function pointer has a valid (non null) pointer within it.
+- Add AVX2 intrinsics
+- Add some missing intrinsics from SSE, SSE2 and AVX
+- X86 intrinsics from SSE-AVX2
+- AVX and AVX2 CPU targets are now available for x64 AOT builds
+- Allow handle structs (structs with a single pointer/integer in them) to be inside another struct as long as they are the single member, as these require no ABI pain.
+- Added support for `Interlocked.Read`.
+- Added a new intrinsic `Common.umul128` which lets you get the low and high components of a 64-bit multiplication. This is especially useful for things like large hash creation.
+- Menu option to allow all burst jobs to be more easily debugged in a native debugger.
+
+### Removed
+
+### Changed
+- Upgraded Burst to use LLVM Version 9.0.1 by default, bringing the latest optimization improvements from the LLVM project.
+- Upgraded Burst to use SLEEF 3.4.1, bringing the latest performance improvements to mathematics functions as used in Burst.
+- Improved Burst performance in the Editor by caching compiled libraries on-disk, meaning that in subsequent runs of the Editor, assemblies that haven't changed won't be recompiled.
+- Update the documentation of `CompileSynchronously` to advise against any general use of setting `CompileSynchronously = true`.
+- Take the `Unity.Burst.CompilerServices.Aliasing` intrinsics out of experimental. These intrinsics form part of our strategy to give users more insight into how the compiler understands their code, by producing compiler errors when user expectations are not met. Questions like _'Does A alias with B?'_ can now be definitively answered for developers. See the **Aliasing Checks** section of the Burst documentation for information.
+- Align disassembly instruction output in Inspector (x86/x64 only).
+- Renamed `m128` to `v128`
+- Renamed `m256` to `v256`
+- BurstCompile(Debug=true), now modifies the burst code generator (reducing some optimisations) in order to allow a better experience in debugging in a native debugger.
 
 ### Fixed
-- Fix issue with function pointers being corrupted after a domain reload that could lead to unexpected function pointer calls.
-- Fix potential deadlock between Burst and the Asset Database if burst is being used when building the database.
-- Fix `AssemblyResolveException` when loading a project with dependent packages that are using Burst in static initializers or `InitializeOnLoad`.
+- Fix a bug where floating-point != comparisons were using a stricter NaN-aware comparison than was required.
+- Fix inspector for ARMV7_NEON target.
+- Fix some issues with Burst AOT Settings, including changing the settings to be Enable rather than Disable.
+- Fix an issue where WASM was being incorrectly shown in the disassembly view.
+- Fixed an issue where if the `Unity.Entities.StaticTypeRegistry` assembly wasn't present in a build, Burst would throw a `NullReferenceException`.
+- Fix issue with type conversion in m128/m256 table initializers
+- Fix inspector source line information (and source debug information) from being lost depending on inlining.
+- Fix occasional poor code generation for on stack AVX2 variables
+- Fix `xor_ps` was incorrectly downcoded
+- Fix reference version of AVX2 64-bit variable shifts intrinsics
+- Fix reference version of SSE4.2 `cmpestrz`
+- Fix bitwise correctness issue with SSE4.2/AVX explicit rounding in CEIL mode for negative numbers that round to zero (was not correctly computing negative zero like the h/w)
+- Fix calls to `SHUFFLE`, `SHUFFLE_PS` and similar macro-like functions would not work in non-entrypoint functions
+- Source location information was offset by one on occasions.
+- Debug metadata is now tracked on branch/switch instructions
+- Fix poor error reporting when intrinsic immediates were not specified as literals
+- Fix basic loads and stores (using explicit calls) were not unaligned and sometimes non-temporal when they shouldn't be
+- Removed the  `<>c__DisplayClass_` infix that was inserted into every `Entities.ForEach` in the Burst inspector to clean up the user experience when searching for Entities.ForEach jobs.
+- Fix background compile errors accessing X86 `MXCSR` from job threads
 
 ### Known Issues
-- The fix for the deadlock requires to temporarily disable the ability to click on a compilation error in the Unity Editor to jump to the source IDE.
-
-## [1.2.0] - 2020-01-15
-
-- Update to stable version.
-
-## [1.2.0-preview.12] - 2020-01-10
-
-- Fix issue with sizeof on a struct defined in another assembly and would return the size of a pointer type instead of a real struct layout.
-- Fix issue with a potential InvalidOperationException related to ABI layout when compiling a function pointer on Linux/Mac.
-- Fix issue with a potential NullReferenceException when building a player for UWP.
-- Fix issue with a potential ArgumentException `The output byte buffer is too small` happening in the Editor when Burst is trying to compile a function that is producing a large log error.
-
-## [1.2.0-preview.11] - 2019-12-12
-
-- Fix issue ldflda opcode when the input on the stack is a value and not a pointer.
-- Add mechanism to trigger recompilation of jobs and function pointers.
-- Fix issue with a TypeLoadException related when trying to load PDB.
-- Fix issue for UWP to avoid an AssemblyResolutionException for types within `Windows.*` WinMd assemblies.
-
-## [1.2.0-preview.10] - 2019-12-04
-
-- Fix issue with debugging source locations that were no longer generated for standalone players.
-- Fix out-of-sync issue with JIT cache.
-- Fix potential data race on JIT cache when a domain reload is happening.
-- Fix issue with an exception occurring in `mono_string_len`.
-- Fix issue with burst Inspector disabled when disabling Burst from the main menu.
-- Fix issue with burst Inspector that was not showing any more compilation errors.
-- Fix issue with BurstCompiler.CompileFunctionPointer not working in a standalone player if Burst was disabled via standalone player build settings.
-- Fix issue on iOS where standalone player builds could fail, depending on number of burst-able functions found.
-- Fix a potential NullReferenceException when editing Burst AOT settings for standalone players.
-- Add documentation example for SharedStatic.
-- Enabled support for DOTS Runtime SharedStatics. Due to the nature of DOTS Runtime, only the generic versions of `SharedStatic.GetOrCreate<TContext>` are supported.
 
 ## [1.2.0-preview.9] - 2019-11-06
 

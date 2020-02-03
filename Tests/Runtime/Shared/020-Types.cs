@@ -26,6 +26,18 @@ namespace Burst.Compiler.IL.Tests
             return !value;
         }
 
+        private static bool BoolArgAndReturnSubFunction(bool value)
+        {
+            return !value;
+        }
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolArgAndReturnCall(bool value)
+        {
+            return BoolArgAndReturnSubFunction(value);
+        }
+
         [TestCompiler]
         public static int Char()
         {

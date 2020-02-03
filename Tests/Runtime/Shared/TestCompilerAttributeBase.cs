@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -20,20 +21,38 @@ using ExecutionContext = NUnit.Framework.Internal.TestExecutionContext;
 
 namespace Burst.Compiler.IL.Tests
 {
+    /// <summary>
+    /// When used as a type in TestCompiler arguments signifies that the corresponding parameter is a pointer output.
+    /// </summary>
+    internal struct ReturnBox { }
+
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     internal abstract class TestCompilerAttributeBase : TestCaseAttribute, ITestBuilder, IWrapTestMethod
     {
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
-        public const string GoldFolder = "gold";
-        public const string GeneratedFolder = "generated";
+        public const string GoldFolder = "gold/x86";
+        public const string GoldFolderArm = "gold/arm";
+        public const string GeneratedFolder = "generated/x86";
+        public const string GeneratedFolderArm = "generated/arm";
 
         public TestCompilerAttributeBase(params object[] arguments) : base(arguments)
         {
         }
 
+        /// <summary>
+        /// Whether the test should only be compiled and not run. Useful for having tests that would produce infinitely running code which could ICE the compiler.
+        /// </summary>
+        public bool CompileOnly { get; set; }
+
+        /// <summary>
+        /// The type of exception the test expects to be thrown.
+        /// </summary>
         public Type ExpectedException { get; set; }
 
+        /// <summary>
+        /// Whether the test is expected to throw a compiler exception or not.
+        /// </summary>
         public bool ExpectCompilerException { get; set; }
 
         public DiagnosticId ExpectedDiagnosticId
@@ -62,8 +81,19 @@ namespace Burst.Compiler.IL.Tests
 
             var expectResult = !method.ReturnType.IsType(typeof(void));
             var name = method.Name;
-            var arguments = this.Arguments;
-            var permutations = CreatePermutation(0, arguments, method.GetParameters());
+            var arguments = new List<object>(this.Arguments);
+
+            // Expand arguments with IntRangeAttributes if we have them
+            foreach (var param in method.GetParameters())
+            {
+                var attrs = param.GetCustomAttributes<IntRangeAttribute>(false);
+                if (attrs == null || attrs.Length != 1)
+                    continue;
+
+                arguments.Add(attrs[0]);
+            }
+
+            IEnumerable<object[]> permutations = CreatePermutation(0, arguments.ToArray(), method.GetParameters());
 
             // TODO: Workaround for a scalability bug with R# or Rider
             // Run only one testcase if not running from the commandline
@@ -125,6 +155,23 @@ namespace Burst.Compiler.IL.Tests
                         }
                     }
                 }
+                else if (arg is IntRangeAttribute)
+                {
+                    var ir = (IntRangeAttribute)arg;
+                    if (ir != null)
+                    {
+                        for (int x = ir.Lo; x <= ir.Hi; ++x)
+                        {
+                            copyArgs[index] = x;
+
+                            foreach (var subPermutation in CreatePermutation(index + 1, copyArgs, parameters))
+                            {
+                                hasRange = true;
+                                yield return subPermutation;
+                            }
+                        }
+                    }
+                }
             }
             if (!hasRange)
             {
@@ -135,26 +182,28 @@ namespace Burst.Compiler.IL.Tests
         TestCommand ICommandWrapper.Wrap(TestCommand command)
         {
             var testMethod = (TestMethod)command.Test;
-            return GetTestCommand(testMethod, testMethod, ExpectedException, ExpectCompilerException, ExpectedDiagnosticIds);
+            return GetTestCommand(testMethod, testMethod, CompileOnly, ExpectedException, ExpectCompilerException, ExpectedDiagnosticIds);
         }
 
         protected abstract bool IsCommandLine();
 
         protected abstract bool IsMono();
 
-        protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds);
+        protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds);
     }
 
     internal abstract class TestCompilerCommandBase : TestCommand
     {
         protected readonly TestMethod _originalMethod;
-        readonly Type _expectedException;
+        private readonly bool _compileOnly;
+        private readonly Type _expectedException;
         protected readonly bool _expectCompilerException;
         protected readonly DiagnosticId[] _expectedDiagnosticIds;
 
-        public TestCompilerCommandBase(Test test, TestMethod originalMethod, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test)
+        public TestCompilerCommandBase(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test)
         {
             _originalMethod = originalMethod;
+            _compileOnly = compileOnly;
             _expectedException = expectedException;
             _expectCompilerException = expectCompilerException;
             _expectedDiagnosticIds = expectedDiagnosticIds;
@@ -196,8 +245,12 @@ namespace Burst.Compiler.IL.Tests
 
         private static Func<object, object[], object> StaticDynamicDelegateCaller = new Func<object, object[], object>((del, arguments) => ((Delegate)del).DynamicInvoke(arguments));
 
-        private TestResult ExecuteMethod(ExecutionContext context)
+        private static readonly int MaxReturnBoxSize = 512;
+
+        private unsafe TestResult ExecuteMethod(ExecutionContext context)
         {
+            byte* returnBox = stackalloc byte[MaxReturnBoxSize];
+
             Setup();
             var methodInfo = _originalMethod.Method.MethodInfo;
 
@@ -209,7 +262,7 @@ namespace Burst.Compiler.IL.Tests
                 // We still need to transform arguments here in case there's a function pointer that we expect to fail compilation.
                 var expectedExceptionResult = TryExpectedException(
                     context,
-                    () => TransformArguments(_originalMethod.Method.MethodInfo, arguments, out _, out _),
+                    () => TransformArguments(_originalMethod.Method.MethodInfo, arguments, out _, out _, returnBox, out _),
                     "Transforming arguments",
                     type => true,
                     "Any exception",
@@ -225,7 +278,7 @@ namespace Burst.Compiler.IL.Tests
 
             object[] nativeArgs;
             Type[] nativeArgTypes;
-            TransformArguments(_originalMethod.Method.MethodInfo, arguments, out nativeArgs, out nativeArgTypes);
+            TransformArguments(_originalMethod.Method.MethodInfo, arguments, out nativeArgs, out nativeArgTypes, returnBox, out Type returnBoxType);
 
             bool isInRegistry = false;
             Func<object, object[], object> nativeDelegateCaller;
@@ -235,13 +288,18 @@ namespace Burst.Compiler.IL.Tests
                 Console.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
             }
 
-            var compiledFunction = CompileDelegate(context, methodInfo, delegateType);
+            var compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
+
+            Assert.IsTrue(returnBoxType == null || Marshal.SizeOf(returnBoxType) <= MaxReturnBoxSize);
 
             if (compiledFunction == null)
                 return context.CurrentResult;
 
-            // Special case if we have an expected exception
-            if (_expectedException != null)
+            if (_compileOnly) // If the test only wants to compile the code, bail now.
+            {
+                return context.CurrentResult;
+            }
+            else if (_expectedException != null) // Special case if we have an expected exception
             {
                 if (TryExpectedException(context, () => _originalMethod.Method.Invoke(context.TestObject, arguments), ".NET", type => type == _expectedException, _expectedException.FullName, false) != TryExpectedExceptionResult.ThrewExpectedException)
                 {
@@ -262,7 +320,18 @@ namespace Burst.Compiler.IL.Tests
                 // it won't be anymore true because the managed could have modified the value before
                 // burst
                 var resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
+
+                if (returnBoxType != null)
+                {
+                    resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                }
+
                 var resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
+
+                if (returnBoxType != null)
+                {
+                    resultClr = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                }
 
                 var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");
                 if (overrideResultOnMono != null)
@@ -286,10 +355,12 @@ namespace Burst.Compiler.IL.Tests
             // Check that the method is actually in the registry
             Assert.True(isInRegistry, "The test method is not in the registry, recompile the project with the updated StaticDelegateRegistry.generated.cs");
 
+            // Compile the method once again, this time for Arm CPU to check against gold asm images
+            CompileDelegateForArm(methodInfo);
+
             // Make an attempt to clean up arguments (to reduce wasted native heap memory)
             DisposeObjects(arguments);
             DisposeObjects(nativeArgs);
-
 
             CompleteTest(context);
 
@@ -327,8 +398,10 @@ namespace Burst.Compiler.IL.Tests
             return newArguments;
         }
 
-        protected void TransformArguments(MethodInfo method, object[] args, out object[] nativeArgs, out Type[] nativeArgTypes)
+        protected unsafe void TransformArguments(MethodInfo method, object[] args, out object[] nativeArgs, out Type[] nativeArgTypes, byte* returnBox, out Type returnBoxType)
         {
+            returnBoxType = null;
+
             // Transform Arguments if necessary
             nativeArgs = (object[])args.Clone();
 
@@ -361,6 +434,11 @@ namespace Burst.Compiler.IL.Tests
                         // Duplicate the input for C#/Burst in case the code is modifying the data
                         args[i] = argumentProvider.Value;
                         nativeArgs[i] = argumentProvider.Value;
+                    }
+                    else if (typeof(ReturnBox).IsAssignableFrom(attrType))
+                    {
+                        args[i] = (IntPtr)returnBox;
+                        nativeArgs[i] = (IntPtr)returnBox;
                     }
                 }
             }
@@ -417,8 +495,16 @@ namespace Burst.Compiler.IL.Tests
                     }
                     if (expectedArgType.IsPointer && actualNativeArgType == typeof(IntPtr))
                     {
+                        if ((IntPtr)args[i] == (IntPtr)returnBox)
+                        {
+                            if (returnBoxType != null)
+                            {
+                                throw new ArgumentException($"Only one ReturnBox allowed");
+                            }
+                            returnBoxType = expectedArgType.GetElementType();
+                        }
+
                         nativeArgs[i] = args[i];
-                        args[i] = args[i];
                         actualNativeArgType = expectedArgType;
                         actualArgType = expectedArgType;
                     }
@@ -568,12 +654,24 @@ namespace Burst.Compiler.IL.Tests
 
         protected abstract object[] GetArgumentsArray(TestMethod method);
 
-        protected abstract Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType);
+        protected abstract unsafe Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType, byte* returnBox, out Type returnBoxType);
+
+        protected abstract void CompileDelegateForArm(MethodInfo methodInfo);
 
         protected abstract IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType);
 
         protected abstract void Setup();
 
         protected abstract TestResult HandleCompilerException(ExecutionContext context, MethodInfo methodInfo);
+    }
+
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    internal sealed class IntRangeAttribute : Attribute
+    {
+        public readonly int Lo;
+        public readonly int Hi;
+
+        public IntRangeAttribute(int hi) { Hi = hi; }
+        public IntRangeAttribute(int lo, int hi) { Lo = lo; Hi = hi; }
     }
 }

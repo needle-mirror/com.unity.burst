@@ -45,10 +45,20 @@ namespace Unity.Burst
         /// </summary>
         public T Invoke => (T)(object)Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
 
+        /// <summary>
+        /// Converts a pointer to a function pointer.
+        /// </summary>
+        /// <param name="ptr">The native pointer.</param>
+        /// <returns>A new instance of this struct.</returns>
         IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr)
         {
             return new FunctionPointer<T>(ptr);
         }
+
+        /// <summary>
+        /// Whether the function pointer is valid (not null).
+        /// </summary>
+        public unsafe bool IsCreated => _ptr.ToPointer() != null;
     }
 }
 #endif

@@ -91,7 +91,6 @@ namespace Unity.Burst.Editor
 
         private int FontSize => FontSizes[_fontSizeIndex];
 
-
         public BurstInspectorGUI()
         {
             _burstDisassembler = new BurstDisassembler();
@@ -310,8 +309,7 @@ namespace Unity.Burst.Editor
 
                         if (isTextFormatted)
                         {
-                            // Store the formatted version
-                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, IsIntel(_targetCpu) ? BurstDisassembler.AsmKind.Intel : BurstDisassembler.AsmKind.ARM, target.IsDarkMode);
+                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, FetchAsmKind(_targetCpu), target.IsDarkMode);
                             textToRender = target.FormattedDisassembly;
                         }
                         else
@@ -380,21 +378,19 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static bool IsIntel(TargetCpu cpu)
+        private static BurstDisassembler.AsmKind FetchAsmKind(TargetCpu cpu)
         {
             switch (cpu)
             {
-                case TargetCpu.Auto:
-                case TargetCpu.X86_SSE2:
-                case TargetCpu.X86_SSE4:
-                case TargetCpu.X64_SSE2:
-                case TargetCpu.X64_SSE4:
-                case TargetCpu.AVX:
-                case TargetCpu.AVX2:
-                case TargetCpu.AVX512:
-                    return true;
+                case TargetCpu.ARMV7A_NEON32:
+                case TargetCpu.ARMV8A_AARCH64:
+                case TargetCpu.ARMV8A_AARCH64_HALFFP:
+                case TargetCpu.THUMB2_NEON32:
+                    return BurstDisassembler.AsmKind.ARM;
+                case TargetCpu.WASM32:
+                    return BurstDisassembler.AsmKind.Wasm;
             }
-            return false;
+            return BurstDisassembler.AsmKind.Intel;
         }
     }
 

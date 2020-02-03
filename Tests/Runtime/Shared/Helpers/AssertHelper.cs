@@ -2,12 +2,35 @@ using System;
 using System.Numerics;
 using NUnit.Framework;
 
+#if BURST_INTERNAL
+using System.Text;
+using Unity.Burst.Intrinsics;
+#endif
+
 namespace Burst.Compiler.IL.Tests.Helpers
 {
     internal static class AssertHelper
     {
+#if BURST_INTERNAL
+        // Workaround for Mono broken Equals() on v64/v128/v256
+        private static bool AreVectorsEqual(v64 a, v64 b)
+        {
+            return a.SLong0 == b.SLong0;
+        }
+
+        private static bool AreVectorsEqual(v128 a, v128 b)
+        {
+            return a.SLong0 == b.SLong0 && a.SLong1 == b.SLong1;
+        }
+
+        private static bool AreVectorsEqual(v256 a, v256 b)
+        {
+            return AreVectorsEqual(a.Lo128, b.Lo128) && AreVectorsEqual(a.Hi128, b.Hi128);
+        }
+#endif
+
         /// <summary>
-        /// AreEqual handling specially precision for float
+        /// AreEqual handling specially precision for float and intrinsic vector types
         /// </summary>
         /// <param name="expected">The expected result</param>
         /// <param name="result">the actual result</param>
@@ -31,8 +54,107 @@ namespace Burst.Compiler.IL.Tests.Helpers
                 return;
             }
 
+#if BURST_INTERNAL
+            if (expected is v64 && result is v64)
+            {
+                if (!AreVectorsEqual((v64)expected, (v64)result))
+                {
+                    Assert.Fail(FormatVectorFailure64((v64)expected, (v64)result));
+                }
+                return;
+            }
+
+            if (expected is v128 && result is v128)
+            {
+                if (!AreVectorsEqual((v128)expected, (v128)result))
+                {
+                    Assert.Fail(FormatVectorFailure128((v128)expected, (v128)result));
+                }
+                return;
+            }
+
+            if (expected is v256 && result is v256)
+            {
+                if (!AreVectorsEqual((v256)expected, (v256)result))
+                {
+                    Assert.Fail(FormatVectorFailure256((v256)expected, (v256)result));
+                }
+                return;
+            }
+#endif
+
             Assert.AreEqual(expected, result);
         }
+
+#if BURST_INTERNAL
+        private unsafe static string FormatVectorFailure64(v64 expected, v64 result)
+        {
+            var b = new StringBuilder();
+            b.AppendLine("64-bit vectors differ!");
+            b.AppendLine("Expected:");
+            FormatVector(b, (void*)&expected, 8);
+            b.AppendLine();
+            b.AppendLine("But was :");
+            FormatVector(b, (void*)&result, 8);
+            b.AppendLine();
+            return b.ToString();
+        }
+
+        private unsafe static string FormatVectorFailure128(v128 expected, v128 result)
+        {
+            var b = new StringBuilder();
+            b.AppendLine("128-bit vectors differ!");
+            b.AppendLine("Expected:");
+            FormatVector(b, (void*) &expected, 16);
+            b.AppendLine();
+            b.AppendLine("But was :");
+            FormatVector(b, (void*) &result, 16);
+            b.AppendLine();
+            return b.ToString();
+        }
+
+        private unsafe static string FormatVectorFailure256(v256 expected, v256 result)
+        {
+            var b = new StringBuilder();
+            b.AppendLine("256-bit vectors differ!");
+            b.AppendLine("Expected:");
+            FormatVector(b, (void*) &expected, 32);
+            b.AppendLine();
+            b.AppendLine("But was :");
+            FormatVector(b, (void*) &result, 32);
+            b.AppendLine();
+            return b.ToString();
+        }
+
+        private unsafe static void FormatVector(StringBuilder b, void* v, int bytes)
+        {
+            b.Append("Double: ");
+            for (int i = 0; i < bytes / 8; ++i)
+            {
+                if (i > 0)
+                    b.AppendFormat(" | ");
+                b.AppendFormat("{0:G17}", ((double*)v)[i]);
+            }
+            b.AppendLine();
+            b.Append("Float : ");
+            for (int i = 0; i < bytes / 4; ++i)
+            {
+                if (i > 0)
+                    b.AppendFormat(" | ");
+                b.AppendFormat("{0:G15}", ((float*)v)[i]);
+            }
+
+            b.AppendLine();
+            b.Append("UInt32: ");
+            for (int i = 0; i < bytes / 4; ++i)
+            {
+                if (i > 0)
+                    b.AppendFormat(" | ");
+                b.AppendFormat("{0:X8}", ((uint*)v)[i]);
+            }
+            b.AppendLine();
+        }
+#endif
 
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.

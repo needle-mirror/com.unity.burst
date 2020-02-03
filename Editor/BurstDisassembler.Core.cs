@@ -31,6 +31,11 @@ namespace Unity.Burst.Editor
             {
                 return slice.Length <= _maximumLength && _tokenKinds.TryGetValue(slice, out var tokenKind) ? tokenKind : AsmTokenKind.Identifier;
             }
+
+            public virtual bool AcceptsCharAsIdentifierOrRegisterEnd(char c)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -53,7 +58,7 @@ namespace Unity.Burst.Editor
                 _tokenKindProvider = tokenKindProvider;
                 _position = 0;
                 _nextPosition = 0;
-                _commentStartChar = asmKind == AsmKind.Intel ? '#' : ';';
+                _commentStartChar = (asmKind == AsmKind.Intel || asmKind == AsmKind.Wasm) ? '#' : ';';
                 _c = (char)0;
                 NextChar();
             }
@@ -158,6 +163,12 @@ namespace Unity.Burst.Editor
             {
                 var endPosition = _position;
                 while (_c >= 'a' && _c <= 'z' || _c >= 'A' && _c <= 'Z' || _c >= '0' && _c <= '9' || _c == '_' || _c == '@')
+                {
+                    endPosition = _position;
+                    NextChar();
+                }
+
+                if (_tokenKindProvider.AcceptsCharAsIdentifierOrRegisterEnd(_c))
                 {
                     endPosition = _position;
                     NextChar();

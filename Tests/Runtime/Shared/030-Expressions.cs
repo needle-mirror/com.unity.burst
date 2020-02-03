@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
 
@@ -368,6 +367,113 @@ namespace Burst.Compiler.IL.Tests
         public static bool CompareLessOrEqualInt32(int left, int right)
         {
             return left <= right;
+        }
+
+        [TestCompiler]
+        public static bool CompareEqualFloatConstant()
+        {
+            return 0 == float.NaN;
+        }
+
+        [TestCompiler]
+        public static bool CompareNotEqualFloatConstant()
+        {
+            return 0 != float.NaN;
+        }
+
+        [TestCompiler]
+        public static bool CompareLessThanFloatConstant()
+        {
+            return 0 < float.NaN;
+        }
+
+        [TestCompiler]
+        public static bool CompareLessThanEqualFloatConstant()
+        {
+            return 0 <= float.NaN;
+        }
+
+        [TestCompiler]
+        public static bool CompareGreaterThanFloatConstant()
+        {
+            return 0 > float.NaN;
+        }
+
+        [TestCompiler]
+        public static bool CompareLGreaterThanEqualFloatConstant()
+        {
+            return 0 >= float.NaN;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareEqualFloat(float left, float right)
+        {
+            return left == right;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, -0)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareNotEqualFloat(float left, float right)
+        {
+            return left != right;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, -0)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareLessThanFloat(float left, float right)
+        {
+            return left < right;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, -0)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareLessThanEqualFloat(float left, float right)
+        {
+            return left <= right;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, -0)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareGreaterThanFloat(float left, float right)
+        {
+            return left > right;
+        }
+
+        [TestCompiler(DataRange.Minus100To100, DataRange.Minus100To100)]
+        [TestCompiler(0, -0)]
+        [TestCompiler(0, float.NaN)]
+        [TestCompiler(float.NaN, float.NaN)]
+        [TestCompiler(float.PositiveInfinity, float.NegativeInfinity)]
+        [TestCompiler(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCompiler(float.NegativeInfinity, float.NegativeInfinity)]
+        public static bool CompareGreaterThanEqualFloat(float left, float right)
+        {
+            return left >= right;
         }
 
         [TestCompiler(1, 5)]
