@@ -474,7 +474,32 @@ extern ""C""
 #endif
             else
             {
-                combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
+                if (targetPlatform == TargetPlatform.Windows)
+                {
+                    // This is what is expected by PlatformDependent\Win\Plugins.cpp
+                    switch (targetCpu)
+                    {
+                        case TargetCpu.X86_SSE2:
+                        case TargetCpu.X86_SSE4:
+                            combinations.Add(new BurstOutputCombination("Data/Plugins/x86", targetCpu));
+                            break;
+                        case TargetCpu.X64_SSE2:
+                        case TargetCpu.X64_SSE4:
+                        case TargetCpu.AVX:
+                        case TargetCpu.AVX2:
+                            combinations.Add(new BurstOutputCombination("Data/Plugins/x86_64", targetCpu));
+                            break;
+                        default:
+                            // Safeguard
+                            combinations.Add(new BurstOutputCombination("Data/Plugins", targetCpu));
+                            break;
+                    }
+                }
+                else
+                {
+                    // Safeguard
+                    combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
+                }
             }
 
             return combinations;

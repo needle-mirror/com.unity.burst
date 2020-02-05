@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2] - 2020-02-06
+
+
+### Fixed
+- Fix a potential StackOverflow when compiling a standalone player that can occur for nested jobs declared within a parent class that has generic parameters.
+- Fix an issue where the generated lib_burst_generated in Windows Standalone players could not be loaded if a native plugin was used from the sub folders `Plugins\x86_64` or `Plugins\x86`.
+
 ## [1.2.1] - 2020-01-23
 
 
