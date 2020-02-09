@@ -1,7 +1,11 @@
 # Changelog
 
-## [1.3.0-preview.1] - 2020-02-04
+## [1.3.0-preview.2] - 2020-02-10
 
+### Fixed
+- Fix the error `Burst failed to compile the function pointer Int32 DoGetCSRTrampoline()` that could happen when loading a project using Burst with Burst disabled
+
+## [1.3.0-preview.1] - 2020-02-04
 
 ### Added
 - Enabled lower precision variants for `pow`, `sin`, `cos`, `log`, `log2`, `log10`, `exp`, `exp2`, and `exp10` when `BurstPrecision.Low` is specified.

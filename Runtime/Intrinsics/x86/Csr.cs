@@ -187,8 +187,8 @@ namespace Unity.Burst.Intrinsics
         internal static void CompileManagedCsrAccessors()
         {
             // Force burst compilation at startup or job threads will blow up
-            ManagedGetCSRTrampoline = BurstCompiler.CompileDelegate<GetCSRDelegate>(DoGetCSRTrampoline);
-            ManagedSetCSRTrampoline = BurstCompiler.CompileDelegate<SetCSRDelegate>(DoSetCSRTrampoline);
+            ManagedGetCSRTrampoline = BurstCompiler.CompileFunctionPointer<GetCSRDelegate>(DoGetCSRTrampoline).Invoke;
+            ManagedSetCSRTrampoline = BurstCompiler.CompileFunctionPointer<SetCSRDelegate>(DoSetCSRTrampoline).Invoke;
         }
 
         internal static int getcsr_raw()
@@ -201,13 +201,13 @@ namespace Unity.Burst.Intrinsics
             ManagedSetCSRTrampoline(bits);
         }
 
-        [BurstCompile]
+        [BurstCompile(CompileSynchronously = true)]
         private static void DoSetCSRTrampoline(int bits)
         {
             BurstIntrinsicSetCSRFromManaged(bits);
         }
 
-        [BurstCompile]
+        [BurstCompile(CompileSynchronously = true)]
         private static int DoGetCSRTrampoline()
         {
             return BurstIntrinsicGetCSRFromManaged();

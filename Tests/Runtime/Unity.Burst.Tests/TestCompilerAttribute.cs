@@ -45,15 +45,15 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        protected override TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool ExpectCompilerException, DiagnosticId[] expectedDiagnosticIds)
+        protected override TestCompilerCommandBase GetTestCommand(TestCompilerAttributeBase attribute, Test test, TestMethod originalMethod)
         {
-            return new TestCompilerCommand(test, originalMethod, compileOnly, expectedException, ExpectCompilerException, expectedDiagnosticIds);
+            return new TestCompilerCommand(attribute, test, originalMethod);
         }
 
 
         public class TestCompilerCommand : TestCompilerCommandBase
         {
-            public TestCompilerCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test, originalMethod, compileOnly, expectedException, expectCompilerException, expectedDiagnosticIds)
+            public TestCompilerCommand(TestCompilerAttributeBase attribute, Test test, TestMethod originalMethod) : base(attribute, test, originalMethod)
             {
             }
 

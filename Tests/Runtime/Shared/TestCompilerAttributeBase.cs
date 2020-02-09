@@ -55,6 +55,8 @@ namespace Burst.Compiler.IL.Tests
         /// </summary>
         public bool ExpectCompilerException { get; set; }
 
+        public bool DisableGold { get; set; }
+
         public DiagnosticId ExpectedDiagnosticId
         {
             get => throw new InvalidOperationException();
@@ -182,14 +184,14 @@ namespace Burst.Compiler.IL.Tests
         TestCommand ICommandWrapper.Wrap(TestCommand command)
         {
             var testMethod = (TestMethod)command.Test;
-            return GetTestCommand(testMethod, testMethod, CompileOnly, ExpectedException, ExpectCompilerException, ExpectedDiagnosticIds);
+            return GetTestCommand(this, testMethod, testMethod);
         }
 
         protected abstract bool IsCommandLine();
 
         protected abstract bool IsMono();
 
-        protected abstract TestCompilerCommandBase GetTestCommand(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds);
+        protected abstract TestCompilerCommandBase GetTestCommand(TestCompilerAttributeBase attribute, Test test, TestMethod originalMethod);
     }
 
     internal abstract class TestCompilerCommandBase : TestCommand
@@ -200,14 +202,17 @@ namespace Burst.Compiler.IL.Tests
         protected readonly bool _expectCompilerException;
         protected readonly DiagnosticId[] _expectedDiagnosticIds;
 
-        public TestCompilerCommandBase(Test test, TestMethod originalMethod, bool compileOnly, Type expectedException, bool expectCompilerException, DiagnosticId[] expectedDiagnosticIds) : base(test)
+        protected TestCompilerCommandBase(TestCompilerAttributeBase attribute, Test test, TestMethod originalMethod) : base(test)
         {
             _originalMethod = originalMethod;
-            _compileOnly = compileOnly;
-            _expectedException = expectedException;
-            _expectCompilerException = expectCompilerException;
-            _expectedDiagnosticIds = expectedDiagnosticIds;
+            Attribute = attribute;
+            _compileOnly = Attribute.CompileOnly;
+            _expectedException = Attribute.ExpectedException;
+            _expectCompilerException = Attribute.ExpectCompilerException;
+            _expectedDiagnosticIds = Attribute.ExpectedDiagnosticIds;
         }
+
+        public TestCompilerAttributeBase Attribute { get; }
 
         public override TestResult Execute(ExecutionContext context)
         {
@@ -250,7 +255,6 @@ namespace Burst.Compiler.IL.Tests
         private unsafe TestResult ExecuteMethod(ExecutionContext context)
         {
             byte* returnBox = stackalloc byte[MaxReturnBoxSize];
-
             Setup();
             var methodInfo = _originalMethod.Method.MethodInfo;
 
