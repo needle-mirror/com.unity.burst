@@ -278,7 +278,8 @@ extern ""C""
                 {
                     GetOption(OptionAotOutputPath, outputFilePrefix),
                     GetOption(OptionMinTarget, combination.MinMaxTargetCpu.min),
-                    GetOption(OptionTarget, combination.MinMaxTargetCpu.max)
+                    GetOption(OptionTarget, combination.MinMaxTargetCpu.max),
+                    GetOption(OptionTempDirectory, Path.Combine(Environment.CurrentDirectory, "Temp", "Burst"))
                 };
 
                 if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.Switch)
@@ -500,6 +501,7 @@ extern ""C""
 #endif
             else
             {
+#if UNITY_2020_1_OR_NEWER
                 if (targetPlatform == TargetPlatform.Windows)
                 {
                     // This is what is expected by PlatformDependent\Win\Plugins.cpp
@@ -522,6 +524,7 @@ extern ""C""
                     }
                 }
                 else
+#endif
                 {
                     // Safeguard
                     combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));

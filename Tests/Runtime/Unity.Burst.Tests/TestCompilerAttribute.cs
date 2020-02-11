@@ -93,7 +93,7 @@ namespace Burst.Compiler.IL.Tests
                 // This is a no-op here; used to generate Arm asm files and compare them to gold files.
             }
 
-            protected override IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType)
+            protected override object CompileFunctionPointer(MethodInfo methodInfo, Type functionType)
             {
                 throw new NotImplementedException();
             }

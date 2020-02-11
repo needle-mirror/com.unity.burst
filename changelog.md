@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.3.0-preview.3] - 2020-02-12
+
+
+### Changed
+- Changed how the inliner chooses to inline functions to give the compiler much more say over inlining decisions based on heuristics.
+- Updated AOT requirements to be clearer about cross platform support
+
+### Added
+- 1.3.0-preview.1 added support for desktop cross compilation, but the changelog forgot to mention it.
+
+### Removed
+
+### Fixed
+- Documentation for the command line options to unity contained extra -
+- Burst now exclusively uses the `<project>/Temp/Burst` folder for any temporary files it requires during compilation.
+- Fix a regression that could break usage of native plugins.
+
+### Known Issues
+
 ## [1.3.0-preview.2] - 2020-02-10
 
 ### Fixed

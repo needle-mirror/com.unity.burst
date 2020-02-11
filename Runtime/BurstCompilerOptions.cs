@@ -53,6 +53,7 @@ namespace Unity.Burst
         internal const string OptionDebug = "debug";
         internal const string OptionDebugMode = "debugMode";
         internal const string OptionStaticLinkage = "generate-static-linkage-methods";
+        internal const string OptionTempDirectory = "temp-folder=";
 
         // -------------------------------------------------------
         // Options used by the Jit compiler
@@ -98,7 +99,7 @@ namespace Unity.Burst
         internal const string OptionVerbose = "verbose";
         internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
         internal const string OptionCompilerThreads = "threads=";
-        internal const string OptionChunkSize= "chunk-size=";
+        internal const string OptionChunkSize = "chunk-size=";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";

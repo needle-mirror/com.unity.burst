@@ -11,10 +11,16 @@ namespace Unity.Burst
     public interface IFunctionPointer
     {
         /// <summary>
+        /// Gets the underlying pointer.
+        /// </summary>
+        IntPtr Value { get; }
+
+        /// <summary>
         /// Converts a pointer to a function pointer.
         /// </summary>
         /// <param name="ptr">The native pointer.</param>
         /// <returns>An instance of this interface.</returns>
+        [Obsolete("This method will be removed in a future version of Burst")]
         IFunctionPointer FromIntPtr(IntPtr ptr);
     }
 
@@ -23,7 +29,7 @@ namespace Unity.Burst
     /// It needs to be compiled through <see cref="BurstCompiler.CompileFunctionPointer{T}"/>
     /// </summary>
     /// <typeparam name="T">Type of the delegate of this function pointer</typeparam>
-    public struct FunctionPointer<T> : IFunctionPointer
+    public readonly struct FunctionPointer<T> : IFunctionPointer
     {
         [NativeDisableUnsafePtrRestriction]
         private readonly IntPtr _ptr;
@@ -38,6 +44,11 @@ namespace Unity.Burst
         }
 
         /// <summary>
+        /// Gets the underlying pointer.
+        /// </summary>
+        public IntPtr Value => _ptr;
+
+        /// <summary>
         /// Gets the delegate associated to this function pointer in order to call the function pointer.
         /// This delegate can be called from a Burst Job or from regular C#.
         /// If calling from regular C#, it is recommended to cache the returned delegate of this property
@@ -46,19 +57,11 @@ namespace Unity.Burst
         public T Invoke => (T)(object)Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
 
         /// <summary>
-        /// Converts a pointer to a function pointer.
+        /// Whether the function pointer is valid.
         /// </summary>
-        /// <param name="ptr">The native pointer.</param>
-        /// <returns>A new instance of this struct.</returns>
-        IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr)
-        {
-            return new FunctionPointer<T>(ptr);
-        }
+        public bool IsCreated => _ptr != IntPtr.Zero;
 
-        /// <summary>
-        /// Whether the function pointer is valid (not null).
-        /// </summary>
-        public unsafe bool IsCreated => _ptr.ToPointer() != null;
+        IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr) => new FunctionPointer<T>(ptr);
     }
 }
 #endif

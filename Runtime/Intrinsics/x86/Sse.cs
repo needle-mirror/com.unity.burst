@@ -810,9 +810,9 @@ namespace Unity.Burst.Intrinsics
 
             // _MM_SHUFFLE macro
             /// <summary>
-            /// Return a shuffle immediate suitable for use with _mm_shuffle_ps and similar instructions.
+            /// Return a shuffle immediate suitable for use with shuffle_ps and similar instructions.
             /// </summary>
-            public static int SHUFFLE(int a, int b, int c, int d)
+            public static int SHUFFLE(int d, int c, int b, int a)
             {
                 return ((a & 3)) | ((b & 3) << 2) | ((c & 3) << 4) | ((d & 3) << 6);
             }

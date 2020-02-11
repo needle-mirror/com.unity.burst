@@ -108,8 +108,8 @@ On the right pane, the window displays options for viewing the assembly and inte
 
 You can pass the following options to the Unity Editor on the command line to control Burst:
 
-- `--burst-disable-compilation` — turns Burst off.
-- `--burst-force-sync-compilation` — Burst always compiles synchronously. See [`[BurstCompile]` options](#synchronous-compilation).
+- `-burst-disable-compilation` — turns Burst off.
+- `-burst-force-sync-compilation` — Burst always compiles synchronously. See [`[BurstCompile]` options](#synchronous-compilation).
 
 # Just-In-Time (JIT) vs Ahead-Of-Time (AOT) Compilation
 
@@ -1241,7 +1241,11 @@ You can set the Burst AOT settings as required for each of the supported platfor
 
 ## Burst AOT Requirements
 
+### Desktop platforms with cross compilation enabled (the default behaviour)
+
 Burst compilation for desktop platforms (macOS, Linux, Windows) no longer requires external toolchain support when building a standalone player (since Burst 1.3.0-preview.1). This should work out of the box, but can be disabled in [Burst AOT Settings](#burst-aot-settings) if needed.
+
+### Other platforms and desktops when cross compilation is disabled
 
 If compiling for a non desktop platform, or you have disabled cross compilation support, then burst compilation requires specific platform compilation tools (similar to IL2CPP), the below table can be used to determine the current level of support for AOT compilation.
 - If a host/target combination is not listed, it is at present not supported for burst compilation.

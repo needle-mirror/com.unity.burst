@@ -26,6 +26,15 @@ namespace Burst.Compiler.IL.Tests
     /// </summary>
     internal struct ReturnBox { }
 
+
+    /// <summary>
+    /// Interface used for initialize function pointers.
+    /// </summary>
+    internal interface IFunctionPointerProvider
+    {
+        object FromIntPtr(IntPtr ptr);
+    }
+
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     internal abstract class TestCompilerAttributeBase : TestCaseAttribute, ITestBuilder, IWrapTestMethod
     {
@@ -455,7 +464,7 @@ namespace Burst.Compiler.IL.Tests
                 var actualArgType = args[i].GetType();
                 var actualNativeArgType = nativeArgs[i].GetType();
 
-                if (typeof(IFunctionPointer).IsAssignableFrom(expectedArgType) || (expectedArgType.IsByRef && typeof(IFunctionPointer).IsAssignableFrom(expectedArgType.GetElementType())) && actualNativeArgType == typeof(string))
+                if (typeof(IFunctionPointerProvider).IsAssignableFrom(expectedArgType) || (expectedArgType.IsByRef && typeof(IFunctionPointerProvider).IsAssignableFrom(expectedArgType.GetElementType())) && actualNativeArgType == typeof(string))
                 {
                     var methodName = (string)args[i];
                     var candidates =
@@ -662,7 +671,7 @@ namespace Burst.Compiler.IL.Tests
 
         protected abstract void CompileDelegateForArm(MethodInfo methodInfo);
 
-        protected abstract IFunctionPointer CompileFunctionPointer(MethodInfo methodInfo, Type functionType);
+        protected abstract object CompileFunctionPointer(MethodInfo methodInfo, Type functionType);
 
         protected abstract void Setup();
 

@@ -94,11 +94,11 @@ namespace Burst.Compiler.IL.Tests
             return c;
         }
 
-        public struct CharbyValueFunc : IFunctionPointer
+        public struct CharbyValueFunc : IFunctionPointerProvider
         {
             public FunctionPointer<CharbyValueDelegate> FunctionPointer;
 
-            public IFunctionPointer FromIntPtr(IntPtr ptr)
+            public object FromIntPtr(IntPtr ptr)
             {
                 return new CharbyValueFunc() { FunctionPointer = new FunctionPointer<CharbyValueDelegate>(ptr) };
             }
