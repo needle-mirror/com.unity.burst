@@ -9,7 +9,7 @@ using System;
 [TestFixture]
 public class PlaymodeTest
 {
-    [UnityTest]
+//    [UnityTest]
     public IEnumerator CheckBurstJobEnabledDisabled()
     {
         BurstCompiler.Options.EnableBurstCompileSynchronously = true;

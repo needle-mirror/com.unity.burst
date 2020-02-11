@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3] - 2020-02-12
+
+### Fixed
+- Fix a regression that could break usage of native plugins.
+
+
 ## [1.2.2] - 2020-02-06
 
 

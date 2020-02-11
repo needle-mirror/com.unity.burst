@@ -474,6 +474,7 @@ extern ""C""
 #endif
             else
             {
+#if UNITY_2020_1_OR_NEWER
                 if (targetPlatform == TargetPlatform.Windows)
                 {
                     // This is what is expected by PlatformDependent\Win\Plugins.cpp
@@ -496,6 +497,7 @@ extern ""C""
                     }
                 }
                 else
+#endif
                 {
                     // Safeguard
                     combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));

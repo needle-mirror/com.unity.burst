@@ -14,8 +14,8 @@ public class EditModeTest
 {
     private const int MaxIterations = 500;
 
-    [UnityTest]
-    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+//    [UnityTest]
+//    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
     public IEnumerator CheckBurstJobEnabledDisabled() {
         BurstCompiler.Options.EnableBurstCompileSynchronously = true;
 #if UNITY_2019_3_OR_NEWER

@@ -188,16 +188,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(ushort),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate);
             Register(typeof(ushort),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate);
             Register(typeof(void),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithStaticFieldWriteDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithStaticFieldWriteDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.LinkedList).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.Union).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate);
-            Register(typeof(void),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate), CallBurst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate);
-            Register(typeof(void),  new Type[] {typeof(int).MakeByRefType(), typeof(float).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate);
-            Register(typeof(void),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate);
+            Register(typeof(void),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate), CallBurst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate);
             Register(typeof(void),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate), CallBurst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate);
 
 #if BURST_TESTS_ONLY
@@ -289,9 +280,6 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(uint),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate);
             Register(typeof(uint),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.CullChunksWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate), CallBurst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Case1061135.NewMoveJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate), CallBurst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate);
             Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate);
@@ -2161,106 +2149,13 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate(object delegateObj, object[] p)
+        private delegate void Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate(bool arg0);
+        private unsafe static object CallBurst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate(ref Burst.Compiler.IL.Tests.Aliasing.LinkedList arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.LinkedList)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0, ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[0];
-            var arg1 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[1];
-            d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate(ref Burst.Compiler.IL.Tests.Aliasing.Union arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.Union)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate(bool arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_NotSupported_TestMethodWithMarshalAsParameterDelegate)delegateObj;
+            var d = (Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate)delegateObj;
             object result = null;
             var arg0 = (bool)p[0];
             d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate(ref int arg0, ref float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            var arg1 = (float)p[1];
-            d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate(ref int arg0, ref int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            var arg1 = (int)p[1];
-            d(ref arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -3191,36 +3086,6 @@ namespace Burst.Compiler.IL.Tests
             var d = (Burst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.CullChunksWrapper)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob)p[0];
             d(ref arg0);
             return result;
         }
