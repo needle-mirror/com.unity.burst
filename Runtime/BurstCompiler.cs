@@ -95,6 +95,11 @@ namespace Unity.Burst
                 throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be a non-generic method");
             }
 
+            if (delegateMethod.Method.GetCustomAttribute<AOT.MonoPInvokeCallbackAttribute>() == null)
+            {
+                UnityEngine.Debug.Log($"The method `{delegateMethod.Method}` must have `MonoPInvokeCallback` attribute to be compatible with IL2CPP!");
+            }
+
             void* function;
 
 #if UNITY_EDITOR
@@ -258,6 +263,7 @@ namespace Unity.Burst
             private static readonly IsBurstEnabledDelegate IsBurstEnabledImpl = new IsBurstEnabledDelegate(IsBurstEnabled);
 
             [BurstCompile]
+            [AOT.MonoPInvokeCallback(typeof(IsBurstEnabledDelegate))]
             private static bool IsBurstEnabled()
             {
                 bool result = true;

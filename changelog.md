@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.3.0-preview.4] - 2020-03-02
+
+
+### Added
+- Debug information for types
+- Debug information for local variables
+- Debug information for function parameters
+- Support for `fixed` statements. These are useful when interacting with `fixed` buffers in structs, to get at the pointer data underneath.
+- A fast-math optimization for comparisons that benefits the [BurstBenchmarks](https://github.com/nxrighthere/BurstBenchmarks) that [nxrightthere](https://forum.unity.com/members/nxrighthere.568489/) has put together.
+- DOTS Runtime Jobs will now generate both `MarshalToBurst` and `MarshalFromBurst` functions when job structs in .Net builds are not blittable.
+- DOTS Runtime Job Marshalling generation is now controllable via the commandline switch `--generate-job-marshalling-methods`.
+
+### Removed
+
+### Changed
+- Made it clear that the Burst aliasing intrinsics are tied to optimizations being enabled for a compilation.
+- Restore unwind information for all builds
+- Print a info message if compiling a function pointer with missing MonoPInvokeCallback attribute (this can lead to runtime issues on IL2CPP with Burst disabled). The message will be converted to a warning in future releases
+
+### Fixed
+- Fixed an issue where DOTS Runtime generated job marshalling functiosn may throw a `FieldAccessException` when scheduling private and internal job structs.
+- Fix a bug that prevented entry point method names (and their declaring type names) from having a leading underscore
+- vector/array/pointer debug data now utilizes the correct size information
+- DOTS Runtime will now only generate job marshaling functions on Windows, as all other platforms rely on Mono which does not require job marshalling.
+- `ldobj` / `stobj` of large structs being copied to stack-allocated variables could cause compile-time explosions that appeared to the user like the compiler had hung. Worked around these by turning them into memcpy's underneath in LLVM.
+- Don't always use latest tool chain on certain platforms.
+- Fix a crash when compiling job or function pointer that was previously cached, then unloaded, then reloaded
+- Fixed compiler error in array element access when index type is not `Int32`
+- Fix `set1_xxx` style x86 intrinsics generated compile time errors
+
+### Known Issues
+- Native debugger feature is only available on windows host platform at the moment.
+
 ## [1.3.0-preview.3] - 2020-02-12
 
 
@@ -78,6 +111,8 @@
 - Fix basic loads and stores (using explicit calls) were not unaligned and sometimes non-temporal when they shouldn't be
 - Removed the  `<>c__DisplayClass_` infix that was inserted into every `Entities.ForEach` in the Burst inspector to clean up the user experience when searching for Entities.ForEach jobs.
 - Fix background compile errors accessing X86 `MXCSR` from job threads
+- Fix possible `ExecutionEngineException` when resolving external functions
+- Fix linker output not being propagated through to the Editor console
 
 ### Known Issues
 

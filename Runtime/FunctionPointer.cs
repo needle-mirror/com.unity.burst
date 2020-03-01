@@ -11,11 +11,6 @@ namespace Unity.Burst
     public interface IFunctionPointer
     {
         /// <summary>
-        /// Gets the underlying pointer.
-        /// </summary>
-        IntPtr Value { get; }
-
-        /// <summary>
         /// Converts a pointer to a function pointer.
         /// </summary>
         /// <param name="ptr">The native pointer.</param>

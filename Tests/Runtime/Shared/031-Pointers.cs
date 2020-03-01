@@ -399,7 +399,6 @@ namespace Burst.Compiler.IL.Tests
                     get
                     {
                         var value = new PointerConditional();
-                        // TODO: Free
                         value.t = (ConditionalTestStruct*)UnsafeUtility.Malloc(UnsafeUtility.SizeOf<ConditionalTestStruct>(), 4, Allocator.Persistent);
                         value.t->a = (void*)0x12345678;
                         value.t->b = null;

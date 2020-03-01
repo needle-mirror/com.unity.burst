@@ -85,7 +85,8 @@ namespace ExceptionsFromBurstJobs
             var jobData = new RaiseArgumentNullExceptionJob();
             jobData.dst = UnsafeUtility.Malloc(10, 4, Allocator.Temp);
             LogAssert.Expect(LogType.Exception, new Regex(
-                "System::NullArgumentException: source" + "[\\s]*" +
+                "System.ArgumentNullException: source" + "[\\s]*" +
+                "Thrown from job: ExceptionsFromBurstJobs.NativeTriggeredManagedExceptionsBurstJobs.RaiseArgumentNullExceptionJob" + "[\\s]*" +
                 "This Exception was thrown from a job compiled with Burst, which has limited exception support."
                 ));
             jobData.Run();

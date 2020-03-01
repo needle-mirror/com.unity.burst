@@ -3,6 +3,7 @@ using Unity.Burst;
 
 #if !UNITY_DOTSPLAYER
 #if !BURST_INTERNAL
+using AOT;
 using UnityEngine;
 #endif
 using System.Runtime.InteropServices;
@@ -202,12 +203,14 @@ namespace Unity.Burst.Intrinsics
         }
 
         [BurstCompile(CompileSynchronously = true)]
+        [MonoPInvokeCallback(typeof(SetCSRDelegate))]
         private static void DoSetCSRTrampoline(int bits)
         {
             BurstIntrinsicSetCSRFromManaged(bits);
         }
 
         [BurstCompile(CompileSynchronously = true)]
+        [MonoPInvokeCallback(typeof(GetCSRDelegate))]
         private static int DoGetCSRTrampoline()
         {
             return BurstIntrinsicGetCSRFromManaged();

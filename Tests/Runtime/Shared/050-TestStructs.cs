@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityBenchShared;
@@ -1300,6 +1301,162 @@ namespace Burst.Compiler.IL.Tests
         public struct StructWithNoDependency
         {
             public int Value;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4096)]
+        public unsafe struct Sized4096
+        {
+            public byte First;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new Sized4096();
+            }
+        }
+
+        [TestCompiler(typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static unsafe void TestSized4096(ref Sized4096 a, ref Sized4096 b)
+        {
+            a = b;
+        }
+
+        [TestCompiler(typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static unsafe void TestSized4096ManualCopy(ref Sized4096 a, ref Sized4096 b)
+        {
+            for (int i = 0; i < UnsafeUtility.SizeOf<Sized4096>(); i++)
+            {
+                fixed (byte* aBytes = &a.First, bBytes = &b.First)
+                {
+                    aBytes[i] = bBytes[i];
+                }
+            }
+        }
+
+        [TestCompiler(typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static unsafe void TestSized4096CopyToAlloca(ref Sized4096 a, ref Sized4096 b)
+        {
+            Sized4096 c = b;
+            (&c.First)[4] = 42;
+            a = c;
+        }
+
+        [TestCompiler(typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static unsafe void TestSized4096CopyToStackAlloc0(ref Sized4096 a, ref Sized4096 b)
+        {
+            Sized4096* c = stackalloc Sized4096[1];
+            (&c->First)[4] = 42;
+            a = *c;
+        }
+
+        [TestCompiler(typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static unsafe void TestSized4096CopyToStackAlloc1(ref Sized4096 a, ref Sized4096 b)
+        {
+            byte* bytes = stackalloc byte[4096];
+            Sized4096* c = (Sized4096*)bytes;
+            (&c->First)[4] = 42;
+            a = *c;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4096)]
+        public struct MultipleSized4096
+        {
+            public Sized4096 a;
+            public Sized4096 b;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new MultipleSized4096 { a = new Sized4096(), b = new Sized4096() };
+            }
+        }
+
+        [TestCompiler(typeof(MultipleSized4096.Provider), typeof(Sized4096.Provider))]
+        public static void TestMultipleSized4096(ref MultipleSized4096 a, ref Sized4096 b)
+        {
+            a.a = b;
+            a.a.First = 42;
+            b = a.b;
+        }
+
+        [TestCompiler(typeof(MultipleSized4096.Provider), typeof(Sized4096.Provider), typeof(Sized4096.Provider))]
+        public static void TestMultipleSized4096CopyToAlloca(ref MultipleSized4096 a, ref Sized4096 b, ref Sized4096 c)
+        {
+            MultipleSized4096 d = default;
+            d.a = b;
+            b = d.b;
+            c = a.a;
+            a = d;
+        }
+
+        public unsafe struct Fixed4096
+        {
+            public fixed byte First[4096];
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new Fixed4096();
+            }
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestFixed4096(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            a = b;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestFixed4096ManualCopy(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            for (int i = 0; i < UnsafeUtility.SizeOf<Fixed4096>(); i++)
+            {
+                a.First[i] = b.First[i];
+            }
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestFixed4096CopyToAlloca(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            Fixed4096 c = b;
+            c.First[4] = 42;
+            a = c;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestFixed4096CopyToStackAlloc0(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            Fixed4096* c = stackalloc Fixed4096[1];
+            c->First[4] = 42;
+            a = *c;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestFixed4096CopyToStackAlloc1(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            byte* bytes = stackalloc byte[4096];
+            Fixed4096* c = (Fixed4096*)bytes;
+            c->First[4] = 42;
+            a = *c;
+        }
+
+        public unsafe struct PointersInStruct
+        {
+            public byte* a;
+            public byte* b;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new PointersInStruct { a = null, b = null };
+            }
+        }
+
+        [TestCompiler(typeof(PointersInStruct.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestPointersInStruct(ref PointersInStruct a, ref Fixed4096 b)
+        {
+            fixed (byte* ptr = b.First)
+            {
+                a.a = ptr;
+            }
+
+            a.b = a.a;
         }
     }
 }

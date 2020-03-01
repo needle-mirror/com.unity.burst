@@ -1345,5 +1345,28 @@ namespace Burst.Compiler.IL.Tests
         {
             return checked((ulong) x);
         }
+
+        private static readonly int[] MyArray = { 0, 1, 2 };
+
+        [TestCompiler((byte)0)]
+        public static int LdelemByte(byte index) => MyArray[index];
+
+        [TestCompiler((ushort)0)]
+        public static int LdelemUInt16(ushort index) => MyArray[index];
+
+        [TestCompiler((uint)0)]
+        public static int LdelemUInt32(uint index) => MyArray[index];
+
+        [TestCompiler((ulong)0)]
+        public static int LdelemUInt64(ulong index) => MyArray[index];
+
+        [TestCompiler((short)0)]
+        public static int LdelemInt16(short index) => MyArray[index];
+
+        [TestCompiler(0)]
+        public static int LdelemInt32(int index) => MyArray[index];
+
+        [TestCompiler((long)0)]
+        public static int LdelemInt64(long index) => MyArray[index];
     }
 }

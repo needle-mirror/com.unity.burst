@@ -6,20 +6,29 @@ namespace Burst.Compiler.IL.Tests
 {
     internal class TestConstArrays
     {
-        [TestCompiler()]
+        [TestCompiler]
         public static int ReadFromIntArray()
         {
             return StructWithConstArray1.IntValues[1];
         }
 
-        [TestCompiler()]
+        [TestCompiler]
+        public static unsafe int ReadViaFixed()
+        {
+            fixed (int* ptr = StructWithConstArray1.IntValues)
+            {
+                return ptr[2];
+            }
+        }
+
+        [TestCompiler]
         public static int ReadFromColorArray()
         {
             var color = StructWithConstArrayWithStruct1.Colors[1];
             return ((color.R * 255) + color.G) * 255 + color.B;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int ReadFromColorArray2()
         {
             var color = StaticArrayStruct.Colors[1];
@@ -28,7 +37,7 @@ namespace Burst.Compiler.IL.Tests
 
         struct StructWithConstArray1
         {
-            public static readonly int[] IntValues = new int[4] {1, 2, 3, 4};
+            public static readonly int[] IntValues = new int[4] { 1, 2, 3, 4 };
         }
 
         struct StructWithConstArrayWithStruct1
@@ -48,21 +57,21 @@ namespace Burst.Compiler.IL.Tests
 
             public byte R, G, B, A;
         }
-        
+
         private struct StaticArrayStruct
         {
             public static readonly double[] Doubles = { 3, 6, 9, 42, 43 };
-            public static readonly byte[] Bytes = {1, 2, 3};
-            public static readonly ushort[] UShorts = {2, 6, 8, 2, 0};
-            public static readonly int[] Ints = {-6, 6, 50};
-            public static readonly int[] ZeroData = {0, 0, 0, 0};
-            public static readonly int[] ZeroLength = {};
-            public static readonly Color[] ZeroLengthStruct = {};
+            public static readonly byte[] Bytes = { 1, 2, 3 };
+            public static readonly ushort[] UShorts = { 2, 6, 8, 2, 0 };
+            public static readonly int[] Ints = { -6, 6, 50 };
+            public static readonly int[] ZeroData = { 0, 0, 0, 0 };
+            public static readonly int[] ZeroLength = { };
+            public static readonly Color[] ZeroLengthStruct = { };
             public static readonly Color[] Colors = { new Color(), new Color(1, 2, 3, 255) };
-            public static readonly int3[] Positions = {new int3(0, 0, 1), new int3(0, 1, 0), new int3(1, 0, 0)};
+            public static readonly int3[] Positions = { new int3(0, 0, 1), new int3(0, 1, 0), new int3(1, 0, 0) };
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestStaticReadonlyArrayLength()
         {
             return StaticArrayStruct.Doubles.Length + StaticArrayStruct.Bytes.Length +
@@ -126,7 +135,7 @@ namespace Burst.Compiler.IL.Tests
         {
             return StructR.Value.Length;
         }
-        
+
         private struct StructS
         {
             public static readonly int[] Value = new int[10];
@@ -155,7 +164,7 @@ namespace Burst.Compiler.IL.Tests
             return sum;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestStaticReadonlyArrayLdelem()
         {
             var doubles = StaticArrayStruct.Doubles[0];
@@ -178,14 +187,14 @@ namespace Burst.Compiler.IL.Tests
             bytes = (byte)(StaticArrayStruct.Colors[0].R + StaticArrayStruct.Colors[0].G
                                                          + StaticArrayStruct.Colors[0].B
                                                          + StaticArrayStruct.Colors[0].A);
-            
+
             for (int i = 1; i < StaticArrayStruct.Colors.Length; i++)
                 bytes += (byte)(StaticArrayStruct.Colors[i].R + StaticArrayStruct.Colors[i].G
                                                               + StaticArrayStruct.Colors[i].B
                                                               + StaticArrayStruct.Colors[i].A);
 
             for (int i = 1; i < StaticArrayStruct.Positions.Length; i++)
-                ints += math.dot(StaticArrayStruct.Positions[i-1], StaticArrayStruct.Positions[i]);
+                ints += math.dot(StaticArrayStruct.Positions[i - 1], StaticArrayStruct.Positions[i]);
 
             return (int)doubles + bytes + ushorts + ints;
         }
@@ -195,13 +204,13 @@ namespace Burst.Compiler.IL.Tests
             return x;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestStaticReadonlyArrayWithElementRef()
         {
             return TakesRef(ref StaticArrayStruct.Ints[1]);
         }
-        
-        [TestCompiler()]
+
+        [TestCompiler]
         public static int TestStaticReadonlyArrayWithElementVectorRef()
         {
             var x = TakesRef(ref StaticArrayStruct.Positions[1]);
@@ -222,13 +231,6 @@ namespace Burst.Compiler.IL.Tests
             }
 
             return sum;
-        }
-        
-        [TestCompiler(ExpectedException = typeof(System.IndexOutOfRangeException))]
-        [MonoOnly(".NET CLR does not support burst.abort correctly")]
-        public static int TestStaticReadonlyLdelemConstantIndexOutOfBounds()
-        {
-            return StaticArrayStruct.Ints[100];
         }
 
         public struct ContainerStruct
@@ -251,7 +253,7 @@ namespace Burst.Compiler.IL.Tests
             };
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestStaticReadonlyArrayOfStructOfStructs()
         {
             return ContainerStruct.CoolStructs[0].A.a + ContainerStruct.CoolStructs[0].A.b +
@@ -275,4 +277,3 @@ namespace Burst.Compiler.IL.Tests
         }
     }
 }
-

@@ -132,18 +132,6 @@ namespace Burst.Compiler.IL.Tests
             ExpectAliased(s.ptr2, s.ptr2);
         }
 
-        [TestCompiler(typeof(NoAliasField.Provider), ExpectCompilerException = true)]
-        public static unsafe void CheckNoAliasFieldWithItselfBadPtr1(ref NoAliasField s)
-        {
-            ExpectNotAliased(s.ptr1, s.ptr1);
-        }
-
-        [TestCompiler(typeof(NoAliasField.Provider), ExpectCompilerException = true)]
-        public static unsafe void CheckNoAliasFieldWithItselfBadPtr2(ref NoAliasField s)
-        {
-            ExpectNotAliased(s.ptr2, s.ptr2);
-        }
-
         [TestCompiler(typeof(NoAliasField.Provider))]
         public static unsafe void CheckNoAliasFieldWithAnotherPointer(ref NoAliasField s)
         {
@@ -175,18 +163,6 @@ namespace Burst.Compiler.IL.Tests
         public static unsafe void CheckNoAliasFieldSubFunctionAlias(ref NoAliasField s)
         {
             NoAliasInfoSubFunctionAlias(s.ptr1, s.ptr1);
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static unsafe void NoAliasInfoSubFunctionNoAlias(int* a, int* b)
-        {
-            ExpectNotAliased(a, b);
-        }
-
-        [TestCompiler(typeof(NoAliasField.Provider), ExpectCompilerException = true)]
-        public static unsafe void CheckNoAliasFieldSubFunctionNoAlias(ref NoAliasField s)
-        {
-            NoAliasInfoSubFunctionNoAlias(s.ptr1, s.ptr1);
         }
 
         [TestCompiler(typeof(NoAliasField.Provider))]

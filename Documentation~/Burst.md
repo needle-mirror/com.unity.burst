@@ -74,6 +74,7 @@ The Burst package adds a few menu entries to the Jobs menu for controlling Burst
 - **Enable Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
 - **Enable Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked.
 - **Synchronous Compilation**: When checked, Burst will compile synchronously - See [`[BurstCompile]` options](#synchronous-compilation). Default is unchecked.
+- **Native Debug Mode Compilation**: When checked, Burst will disable optimizations on all code compiled, in order to make it easier to debug via a native debugger - See [Native Debugging](#native-debugging). Default is unchecked.
 - **Show Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.
 - **Open Inspector...**: Opens the [Burst Inspector Window](#burst-inspector).
 
@@ -216,15 +217,16 @@ Accessing a static readonly managed array has with the following restrictions:
 Burst supports most of the expressions and statements:
 
 - Regular C# control flows:
-  - `if`/`else`/`switch`/`case`/`for`/`while`/`break`/`continue`
-- Extension methods
+  - `if`/`else`/`switch`/`case`/`for`/`while`/`break`/`continue`.
+- Extension methods.
 - Unsafe code, pointers manipulation...etc.
-- Instance methods of structs
-- By ref/out parameters
-- DllImport and internal calls
+- Instance methods of structs.
+- By ref/out parameters.
+- DllImport and internal calls.
 - Limited support for `throw` expressions, assuming simple throw patterns (e.g `throw new ArgumentException("Invalid argument")`). In that case, we will try to extract the static string exception message to include it in the generated code.
-- Some special IL opcodes like `cpblk`, `initblk`, `sizeof`
-- Loading from static readonly fields
+- Some special IL opcodes like `cpblk`, `initblk`, `sizeof`.
+- Loading from static readonly fields.
+- Support for `fixed` statements.
 
 Burst provides also alternatives for some C# constructions not directly accessible to HPC#:
 
@@ -297,9 +299,42 @@ The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users t
 
 # Debugging
 
+Burst now provides support for debugging using a native debugger (for instance Visual Studio Community). Managed debugging is currently not supported.
+
+## Managed debugging
+
 > NOTE: Burst does not provide currently a dedicated debugger for Burst compiled Jobs. 
 >
 > If you need to debug a job, you will need to disable the Burst compiler or comment the `[BurstCompile]` attribute from your job and attach a **regular .NET managed debugger**
+
+## Native debugging
+
+Burst compiled code can be debugged using a native debugger, by simply attaching the native debugger to the Unity process. However due to the optimisations employed by Burst, you will generally find it easier to debug by ensuring your code is compiled with Native debuggers in mind.
+
+You can do this either via the Jobs menu [Jobs Menu](#jobs-burst-menu) which will compile the code with native debugging enabled globally (this disables optimizations, so will impact performance of Burst code).
+
+Alternatively, you can use the `Debug=true` option in the `[BurstCompile]` attribute for your job e.g.
+
+```c#
+[BurstCompile(Debug=true)]
+public struct MyJob : IJob
+{
+    // ...
+}
+```
+
+Which will then only affect optimizations (and debuggability) on that job. Note standalone player builds will currently also pick up the `Debug` flag, so standalone builds can be debugged this way too.
+
+Burst also supports code-based breakpoints via the `System.Diagnostics.Debugger.Break()` which will generate a debug trap into the code. Note that if you do this you should ensure you have a debugger attached to intercept the break. At present the breakpoints will trigger whether a debugger is attached or not.
+
+Burst adds information to track local variables, function parameters and breakpoints. If your debugger supports conditional breakpoints, these are preferable to inserting breakpoints in code, since they will only fire when a debugger is attached.
+
+### Known issues with debugging
+
+- Lambda captures on `Entity.ForEach()` are not discovered for debugging data, so you won't be able to inspect variables originating from these.
+- Structs that utilize `LayoutKind=Explicit`, and have overlapping fields, are represented by a struct that will hide one of the overlaps. In the future they will be represented as a union of structs, to allow inspection of fields that overlap.
+- Local variables are currently treated as having the same scope as the function.
+- Function parameters are currently readonly from a debugging point of view. They are recorded to a stack argument during the prologue. Changing their value in the debugger may not have an affect.
 
 # Advanced usages
 
@@ -360,16 +395,19 @@ It is often required to work with dynamic functions that can process data based 
 First you need identify the static functions that will be compiled with Burst:
 - add a `[BurstCompile]` attribute to these functions
 - add a `[BurstCompile]` attribute to the containing type. This attribute is only here to help the Burst compiler to look for static methods with `[BurstCompile]` attribute
-- create the "interface" of these functions by declaring a delegate:
+- create the "interface" of these functions by declaring a delegate
+- add a `[MonoPInvokeCallbackAttribute]` attribute to the functions, as it is required to work properly with IL2CPP:
 
 ```c#
 // Instruct Burst to look for static methods with [BurstCompile] attribute
 [BurstCompile]
 class EnclosingType {
     [BurstCompile]
+    [MonoPInvokeCallback(typeof(Process2FloatsDelegate))]
     public static float MultiplyFloat(float a, float b) => a * b;
 
     [BurstCompile]
+    [MonoPInvokeCallback(typeof(Process2FloatsDelegate))]
     public static float AddFloat(float a, float b) => a + b;
 
     // A common interface for both MultiplyFloat and AddFloat methods
@@ -1018,6 +1056,8 @@ private struct CopyJob : IJob
     }
 }
 ```
+
+These checks will only be ran when optimizations are enabled - since proper aliasing deduction is intrinsically linked to the optimizers ability to see through functions via inlining.
 
 ## Compiler Options
 

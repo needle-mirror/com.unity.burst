@@ -80,6 +80,7 @@ namespace Unity.Burst
         ERR_FunctionPointerMethodMissingBurstCompileAttribute = 1057,
         ERR_FunctionPointerTypeMissingBurstCompileAttribute = 1058,
         ERR_FunctionPointerMethodAndTypeMissingBurstCompileAttribute = 1059,
+        INF_FunctionPointerMethodAndTypeMissingMonoPInvokeCallbackAttribute = 10590,
 
         // ILVisitor
         ERR_EntryPointFunctionCannotBeCalledInternally = 1060,
@@ -157,5 +158,8 @@ namespace Unity.Burst
         ERR_MethodNotSupported = 1302,
         ERR_VectorsLoadFieldIsAddress = 1303,
         ERR_ConstantExpressionRequired = 1304,
+
+        // UBAA
+        ERR_PointerArgumentsUnexpectedAliasing = 1310,
     }
 }

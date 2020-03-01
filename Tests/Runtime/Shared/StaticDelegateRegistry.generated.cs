@@ -12,406 +12,431 @@ namespace Burst.Compiler.IL.Tests
     {
         static StaticDelegateRegistry()
         {
-            Register(typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum),  new Type[] {typeof(int), typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum)}, typeof(Burst_Compiler_IL_Tests_Pointers_PointerCastEnumDelegate), CallBurst_Compiler_IL_Tests_Pointers_PointerCastEnumDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte),  new Type[] {typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Types_CheckEnumByteDelegate), CallBurst_Compiler_IL_Tests_Types_CheckEnumByteDelegate);
-            Register(typeof(System.IntPtr),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_TestStaticFields_StaticFieldWithIntPtrDelegate), CallBurst_Compiler_IL_Tests_TestStaticFields_StaticFieldWithIntPtrDelegate);
-            Register(typeof(System.IntPtr),  new Type[] {typeof(System.IntPtr), typeof(System.IntPtr), typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_TestAtomics_CompareExchangeIntPtrDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_CompareExchangeIntPtrDelegate);
-            Register(typeof(System.IntPtr),  new Type[] {typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_Pointers_PointerToPointerDelegate), CallBurst_Compiler_IL_Tests_Pointers_PointerToPointerDelegate);
-            Register(typeof(System.IntPtr),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_IntPtrConstructorDelegate), CallBurst_Compiler_IL_Tests_Pointers_IntPtrConstructorDelegate);
-            Register(typeof(System.UIntPtr),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Pointers_UIntPtrZeroDelegate), CallBurst_Compiler_IL_Tests_Pointers_UIntPtrZeroDelegate);
-            Register(typeof(System.UIntPtr),  new Type[] {typeof(System.UIntPtr)}, typeof(Burst_Compiler_IL_Tests_Pointers_UIntPtrAddDelegate), CallBurst_Compiler_IL_Tests_Pointers_UIntPtrAddDelegate);
-            Register(typeof(System.UIntPtr),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Pointers_UIntPtrConstructorDelegate), CallBurst_Compiler_IL_Tests_Pointers_UIntPtrConstructorDelegate);
-            Register(typeof(bool),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatConstantDelegate), CallBurst_Compiler_IL_Tests_Expressions_CompareEqualFloatConstantDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.PointerConditional).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Pointers_TestConditionalPointerDelegate), CallBurst_Compiler_IL_Tests_Pointers_TestConditionalPointerDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.StackAllocCheck).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Pointers_StackAllocAliasCheckDelegate), CallBurst_Compiler_IL_Tests_Pointers_StackAllocAliasCheckDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint), typeof(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint)}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestABITransformIntoExplicitLayoutTransformDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestABITransformIntoExplicitLayoutTransformDelegate);
-            Register(typeof(bool),  new Type[] {typeof(System.IntPtr), typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_Pointers_PointerCompareDelegate), CallBurst_Compiler_IL_Tests_Pointers_PointerCompareDelegate);
-            Register(typeof(bool),  new Type[] {typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_Pointers_RawPointerCompareDelegate), CallBurst_Compiler_IL_Tests_Pointers_RawPointerCompareDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyBool2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool2Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyBool3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool3Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyBool4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool4Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Float2EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyDelegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Float3EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Any32Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Any32Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Float4EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Float4EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatUnsafeDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatUnsafeDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Any4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Any4Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyInt2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt2Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyInt3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt3Delegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualsDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int4EqualsDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AnyInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt4Delegate);
-            Register(typeof(bool),  new Type[] {typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareEqualBoolDelegate), CallBurst_Compiler_IL_Tests_Expressions_CompareEqualBoolDelegate);
-            Register(typeof(bool),  new Type[] {typeof(bool), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BoolOrFunctionDelegate), CallBurst_Compiler_IL_Tests_Expressions_BoolOrFunctionDelegate);
-            Register(typeof(bool),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_Types_BoolArgAndReturnDelegate), CallBurst_Compiler_IL_Tests_Types_BoolArgAndReturnDelegate);
-            Register(typeof(bool),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanDoubleDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestIsNanDoubleDelegate);
-            Register(typeof(bool),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatDelegate), CallBurst_Compiler_IL_Tests_Expressions_CompareEqualFloatDelegate);
-            Register(typeof(bool),  new Type[] {typeof(float)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanFloatDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestIsNanFloatDelegate);
-            Register(typeof(bool),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareEqualInt32Delegate);
-            Register(typeof(bool),  new Type[] {typeof(int), typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt32UInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanInt32UInt32Delegate);
-            Register(typeof(bool),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32WithConstDelegate), CallBurst_Compiler_IL_Tests_Expressions_CompareEqualInt32WithConstDelegate);
-            Register(typeof(bool),  new Type[] {typeof(long), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate);
-            Register(typeof(bool),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate), CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate);
-            Register(typeof(byte),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU1Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1Delegate);
-            Register(typeof(byte),  new Type[] {typeof(long)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_SwitchOnLongDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_SwitchOnLongDelegate);
-            Register(typeof(byte),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate);
-            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AbsDouble2Delegate);
-            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AbsDouble3Delegate);
-            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.double4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Cos4dDelegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Cos4dDelegate);
-            Register(typeof(double),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsDoubles_Double4Int4Delegate), CallBurst_Compiler_IL_Tests_VectorsDoubles_Double4Int4Delegate);
-            Register(typeof(double),  new Type[] {typeof(double), typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate);
-            Register(typeof(double),  new Type[] {typeof(double).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAtomics_ExchangeDoubleDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_ExchangeDoubleDelegate);
-            Register(typeof(double),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsDoubleDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsDoubleDelegate);
-            Register(typeof(double),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestPowDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestPowDelegate);
-            Register(typeof(double),  new Type[] {typeof(float)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestCosDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestCosDelegate);
-            Register(typeof(double),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_VectorsDoubles_Double4IntDelegate), CallBurst_Compiler_IL_Tests_VectorsDoubles_Double4IntDelegate);
-            Register(typeof(double),  new Type[] {typeof(long).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAtomics_ReadDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_ReadDelegate);
-            Register(typeof(float),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Types_StructDelegate), CallBurst_Compiler_IL_Tests_Types_StructDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.Expressions.SByteEnum)}, typeof(Burst_Compiler_IL_Tests_Expressions_TestSByteEnumDelegate), CallBurst_Compiler_IL_Tests_Expressions_TestSByteEnumDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.Expressions.UnsignedEnum)}, typeof(Burst_Compiler_IL_Tests_Expressions_TestUnsignedEnumDelegate), CallBurst_Compiler_IL_Tests_Expressions_TestUnsignedEnumDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_SelectDelegate), CallBurst_Compiler_IL_Tests_VectorsMaths_SelectDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Select3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Select3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Select4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Select4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Lerp2_2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp2_2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat2_AddByArgsDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_AddByArgsDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Cos2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Cos2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Lerp3_3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp3_3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat3_AddByArgsDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat3_AddByArgsDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsIndexers_Float3_get_IndexerByRefDelegate), CallBurst_Compiler_IL_Tests_VectorsIndexers_Float3_get_IndexerByRefDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Lerp4_4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp4_4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat4_AddByArgsDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_AddByArgsDelegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate), CallBurst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatInt2Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatInt3Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat2_ImplicitInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_ImplicitInt4Delegate);
-            Register(typeof(float),  new Type[] {typeof(Unity.Mathematics.uint4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_AsFloatUInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatUInt4Delegate);
-            Register(typeof(float),  new Type[] {typeof(float), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_SmoothstepDelegate), CallBurst_Compiler_IL_Tests_VectorsMaths_SmoothstepDelegate);
-            Register(typeof(float),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate), CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate);
-            Register(typeof(float),  new Type[] {typeof(float).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAtomics_ExchangeFloatDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_ExchangeFloatDelegate);
-            Register(typeof(float),  new Type[] {typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate), CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate);
-            Register(typeof(float),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate);
-            Register(typeof(float),  new Type[] {typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ControlFlows_ForDynamicConditionDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_ForDynamicConditionDelegate);
-            Register(typeof(float),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate);
-            Register(typeof(float),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertUIntToFloatDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToFloatDelegate);
-            Register(typeof(int),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate), CallBurst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate), CallBurst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate), CallBurst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate), CallBurst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestEnums.MyEnum)}, typeof(Burst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate), CallBurst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestEnums.SmallEnum)}, typeof(Burst_Compiler_IL_Tests_TestEnums_test_enum_sizeof_small_enum_in_struct_accessDelegate), CallBurst_Compiler_IL_Tests_TestEnums_test_enum_sizeof_small_enum_in_struct_accessDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.ExplicitLayoutStructFixedBuffer).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestExplicitLayoutStructFixedBufferDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestExplicitLayoutStructFixedBufferDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SequentialStructWithPaddingAndVectorField).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestSequentialStructWithPaddingAndVectorFieldDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestSequentialStructWithPaddingAndVectorFieldDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithBlittableTypes).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.Types.MyEnum)}, typeof(Burst_Compiler_IL_Tests_Types_EnumByParamDelegate), CallBurst_Compiler_IL_Tests_Types_EnumByParamDelegate);
-            Register(typeof(int),  new Type[] {typeof(System.IntPtr)}, typeof(Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate), CallBurst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.bool4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate), CallBurst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityFloat2Delegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityFloat2Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualityWithFloatDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Float2EqualityWithFloatDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsHashCodes_Float2GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_VectorsHashCodes_Float2GetHashCodeDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat3_EqualityFloat3Delegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat3_EqualityFloat3Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualityWithFloatDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Float3EqualityWithFloatDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat4_EqualityFloat4Delegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_EqualityFloat4Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.float4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsHashCodes_Float4GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_VectorsHashCodes_Float4GetHashCodeDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_ClampInt2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt2Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualityDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityWithIntDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualityWithIntDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestVectorStoreToExplicitStructDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestVectorStoreToExplicitStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_ClampInt3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt3Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualityDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityWithIntDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualityWithIntDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsHashCodes_Int3GetHashCodeDelegate), CallBurst_Compiler_IL_Tests_VectorsHashCodes_Int3GetHashCodeDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.bool4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_CompressInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_CompressInt4Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_ClampInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt4Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpInt4_AddByArgsDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpInt4_AddByArgsDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualityWithIntDelegate), CallBurst_Compiler_IL_Tests_VectorsEquality_Int4EqualityWithIntDelegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.int4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpInt4_ImplicitInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsBinOpInt4_ImplicitInt4Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.uint2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt2Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt2Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.uint3).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt3Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt3Delegate);
-            Register(typeof(int),  new Type[] {typeof(Unity.Mathematics.uint4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt4Delegate), CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt4Delegate);
-            Register(typeof(int),  new Type[] {typeof(bool), typeof(bool), typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_VectorsConstructors_Bool44BoolsDelegate), CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool44BoolsDelegate);
-            Register(typeof(int),  new Type[] {typeof(bool), typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_VectorsConstructors_Bool33BoolsDelegate), CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool33BoolsDelegate);
-            Register(typeof(int),  new Type[] {typeof(bool), typeof(bool)}, typeof(Burst_Compiler_IL_Tests_VectorsConstructors_Bool22IntsDelegate), CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool22IntsDelegate);
-            Register(typeof(int),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_Expressions_BrtrueDelegate), CallBurst_Compiler_IL_Tests_Expressions_BrtrueDelegate);
-            Register(typeof(int),  new Type[] {typeof(byte)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertbyteToIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertbyteToIntDelegate);
-            Register(typeof(int),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestSignDoubleDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestSignDoubleDelegate);
-            Register(typeof(int),  new Type[] {typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityDelegate), CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityDelegate);
-            Register(typeof(int),  new Type[] {typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_test_expr_cast_float_to_intDelegate), CallBurst_Compiler_IL_Tests_Expressions_test_expr_cast_float_to_intDelegate);
-            Register(typeof(int),  new Type[] {typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_ControlFlows_IfDeepDelegate), CallBurst_Compiler_IL_Tests_ControlFlows_IfDeepDelegate);
-            Register(typeof(int),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate);
-            Register(typeof(int),  new Type[] {typeof(int).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate);
-            Register(typeof(int),  new Type[] {typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_InlineIL_CheckBrtruePointerDelegate), CallBurst_Compiler_IL_Tests_InlineIL_CheckBrtruePointerDelegate);
-            Register(typeof(int),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_AddOvfDelegate), CallBurst_Compiler_IL_Tests_Expressions_AddOvfDelegate);
-            Register(typeof(int),  new Type[] {typeof(int*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate), CallBurst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate);
-            Register(typeof(int),  new Type[] {typeof(long)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate);
-            Register(typeof(int),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate);
-            Register(typeof(int),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftRightUIntToInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftRightUIntToInt32Delegate);
-            Register(typeof(int),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI4UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI4UnDelegate);
-            Register(typeof(int),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_VectorsMaths_CountBitsULongDelegate), CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsULongDelegate);
-            Register(typeof(long),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Types_StructAccessDelegate), CallBurst_Compiler_IL_Tests_Types_StructAccessDelegate);
-            Register(typeof(long),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI8Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI8Delegate);
-            Register(typeof(long),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestBigMulIntDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestBigMulIntDelegate);
-            Register(typeof(long),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(long), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericDiv64Delegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericDiv64Delegate);
-            Register(typeof(long),  new Type[] {typeof(long).MakeByRefType(), typeof(long), typeof(long)}, typeof(Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_longDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_longDelegate);
-            Register(typeof(long),  new Type[] {typeof(long).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAtomics_test_atomic_increment_longDelegate), CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_increment_longDelegate);
-            Register(typeof(long),  new Type[] {typeof(long)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsLongDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToLongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertSbyteToLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertShortToLongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertUIntToLongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI8UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI8UnDelegate);
-            Register(typeof(sbyte),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvI1Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvI1Delegate);
-            Register(typeof(sbyte),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate);
-            Register(typeof(sbyte),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI1UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI1UnDelegate);
-            Register(typeof(short),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvI2Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvI2Delegate);
-            Register(typeof(short),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate), CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate);
-            Register(typeof(short),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfI2UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI2UnDelegate);
-            Register(typeof(uint),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate);
-            Register(typeof(uint),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate);
-            Register(typeof(uint),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate);
-            Register(typeof(uint),  new Type[] {typeof(uint), typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate), CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate);
-            Register(typeof(uint),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_SubOvfUnDelegate), CallBurst_Compiler_IL_Tests_Expressions_SubOvfUnDelegate);
-            Register(typeof(uint),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate);
-            Register(typeof(ulong),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate);
-            Register(typeof(ulong),  new Type[] {typeof(double)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate);
-            Register(typeof(ulong),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate);
-            Register(typeof(ulong),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate);
-            Register(typeof(ulong),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertUIntToULongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToULongDelegate);
-            Register(typeof(ulong),  new Type[] {typeof(ulong), typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighDelegate), CallBurst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighDelegate);
-            Register(typeof(ulong),  new Type[] {typeof(ulong*), typeof(ulong), typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighAndLowDelegate), CallBurst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighAndLowDelegate);
-            Register(typeof(ushort),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate);
-            Register(typeof(ushort),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate);
-            Register(typeof(void),  Array.Empty<Type>(), typeof(Unity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate), CallUnity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.LinkedList).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Aliasing.Union).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Mathematics.float2x2*)}, typeof(Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat2x2Delegate), CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat2x2Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Mathematics.float3x3*)}, typeof(Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat3x3Delegate), CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat3x3Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Mathematics.float4x4*)}, typeof(Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat4x4Delegate), CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat4x4Delegate);
-            Register(typeof(void),  new Type[] {typeof(bool)}, typeof(Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate), CallBurst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate);
-            Register(typeof(void),  new Type[] {typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_NotSupported_TestAreEqualDelegate), CallBurst_Compiler_IL_Tests_NotSupported_TestAreEqualDelegate);
-            Register(typeof(void),  new Type[] {typeof(int).MakeByRefType(), typeof(float).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate);
-            Register(typeof(void),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckInRefOutDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckInRefOutDelegate);
-            Register(typeof(void),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate), CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate);
-            Register(typeof(void),  new Type[] {typeof(int)}, typeof(Burst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate), CallBurst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate);
+            Register(typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum), new Type[] { typeof(int), typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum) }, typeof(R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate), Call_R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte), new Type[] { typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte).MakeByRefType() }, typeof(R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate), Call_R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate);
+            Register(typeof(System.IntPtr), Array.Empty<Type>(), typeof(R_IntPtr_P_Delegate), Call_R_IntPtr_P_Delegate);
+            Register(typeof(System.IntPtr), new Type[] { typeof(System.IntPtr) }, typeof(R_IntPtr_P_0_IntPtr_Delegate), Call_R_IntPtr_P_0_IntPtr_Delegate);
+            Register(typeof(System.IntPtr), new Type[] { typeof(System.IntPtr), typeof(System.IntPtr), typeof(System.IntPtr) }, typeof(R_IntPtr_P_0_IntPtr_1_IntPtr_2_IntPtr_Delegate), Call_R_IntPtr_P_0_IntPtr_1_IntPtr_2_IntPtr_Delegate);
+            Register(typeof(System.IntPtr), new Type[] { typeof(int) }, typeof(R_IntPtr_P_0_Int32_Delegate), Call_R_IntPtr_P_0_Int32_Delegate);
+            Register(typeof(System.UIntPtr), Array.Empty<Type>(), typeof(R_UIntPtr_P_Delegate), Call_R_UIntPtr_P_Delegate);
+            Register(typeof(System.UIntPtr), new Type[] { typeof(System.UIntPtr) }, typeof(R_UIntPtr_P_0_UIntPtr_Delegate), Call_R_UIntPtr_P_0_UIntPtr_Delegate);
+            Register(typeof(System.UIntPtr), new Type[] { typeof(uint) }, typeof(R_UIntPtr_P_0_UInt32_Delegate), Call_R_UIntPtr_P_0_UInt32_Delegate);
+            Register(typeof(bool), Array.Empty<Type>(), typeof(R_Boolean_P_Delegate), Call_R_Boolean_P_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.Pointers.PointerConditional).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_PointerConditional_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_PointerConditional_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.Pointers.StackAllocCheck).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_StackAllocCheck_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_StackAllocCheck_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint), typeof(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint) }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_1_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_1_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_Delegate);
+            Register(typeof(bool), new Type[] { typeof(System.IntPtr) }, typeof(R_Boolean_P_0_IntPtr_Delegate), Call_R_Boolean_P_0_IntPtr_Delegate);
+            Register(typeof(bool), new Type[] { typeof(System.IntPtr), typeof(System.IntPtr) }, typeof(R_Boolean_P_0_IntPtr_1_IntPtr_Delegate), Call_R_Boolean_P_0_IntPtr_1_IntPtr_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(Unity.Mathematics.bool3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(Unity.Mathematics.bool4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float) }, typeof(R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.uint2).MakeByRefType(), typeof(Unity.Mathematics.uint2).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.uint3).MakeByRefType(), typeof(Unity.Mathematics.uint3).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Unity.Mathematics.uint4).MakeByRefType(), typeof(Unity.Mathematics.uint4).MakeByRefType() }, typeof(R_Boolean_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate), Call_R_Boolean_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(bool) }, typeof(R_Boolean_P_0_Boolean_Delegate), Call_R_Boolean_P_0_Boolean_Delegate);
+            Register(typeof(bool), new Type[] { typeof(bool), typeof(bool) }, typeof(R_Boolean_P_0_Boolean_1_Boolean_Delegate), Call_R_Boolean_P_0_Boolean_1_Boolean_Delegate);
+            Register(typeof(bool), new Type[] { typeof(bool), typeof(int) }, typeof(R_Boolean_P_0_Boolean_1_Int32_Delegate), Call_R_Boolean_P_0_Boolean_1_Int32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(double) }, typeof(R_Boolean_P_0_Double_Delegate), Call_R_Boolean_P_0_Double_Delegate);
+            Register(typeof(bool), new Type[] { typeof(float) }, typeof(R_Boolean_P_0_Single_Delegate), Call_R_Boolean_P_0_Single_Delegate);
+            Register(typeof(bool), new Type[] { typeof(float), typeof(float) }, typeof(R_Boolean_P_0_Single_1_Single_Delegate), Call_R_Boolean_P_0_Single_1_Single_Delegate);
+            Register(typeof(bool), new Type[] { typeof(int) }, typeof(R_Boolean_P_0_Int32_Delegate), Call_R_Boolean_P_0_Int32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(int), typeof(int) }, typeof(R_Boolean_P_0_Int32_1_Int32_Delegate), Call_R_Boolean_P_0_Int32_1_Int32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(int), typeof(uint) }, typeof(R_Boolean_P_0_Int32_1_UInt32_Delegate), Call_R_Boolean_P_0_Int32_1_UInt32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(long), typeof(int) }, typeof(R_Boolean_P_0_Int64_1_Int32_Delegate), Call_R_Boolean_P_0_Int64_1_Int32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(uint), typeof(int) }, typeof(R_Boolean_P_0_UInt32_1_Int32_Delegate), Call_R_Boolean_P_0_UInt32_1_Int32_Delegate);
+            Register(typeof(byte), new Type[] { typeof(int) }, typeof(R_Byte_P_0_Int32_Delegate), Call_R_Byte_P_0_Int32_Delegate);
+            Register(typeof(byte), new Type[] { typeof(long) }, typeof(R_Byte_P_0_Int64_Delegate), Call_R_Byte_P_0_Int64_Delegate);
+            Register(typeof(byte), new Type[] { typeof(uint) }, typeof(R_Byte_P_0_UInt32_Delegate), Call_R_Byte_P_0_UInt32_Delegate);
+            Register(typeof(double), new Type[] { typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_Double_P_0_Unity_Mathematics_double2_Ref_Delegate), Call_R_Double_P_0_Unity_Mathematics_double2_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_Double_P_0_Unity_Mathematics_double3_Ref_Delegate), Call_R_Double_P_0_Unity_Mathematics_double3_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(Unity.Mathematics.double4).MakeByRefType() }, typeof(R_Double_P_0_Unity_Mathematics_double4_Ref_Delegate), Call_R_Double_P_0_Unity_Mathematics_double4_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Double_P_0_Unity_Mathematics_int4_Ref_Delegate), Call_R_Double_P_0_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(double) }, typeof(R_Double_P_0_Double_Delegate), Call_R_Double_P_0_Double_Delegate);
+            Register(typeof(double), new Type[] { typeof(double), typeof(double) }, typeof(R_Double_P_0_Double_1_Double_Delegate), Call_R_Double_P_0_Double_1_Double_Delegate);
+            Register(typeof(double), new Type[] { typeof(double).MakeByRefType() }, typeof(R_Double_P_0_Double_Ref_Delegate), Call_R_Double_P_0_Double_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(float) }, typeof(R_Double_P_0_Single_Delegate), Call_R_Double_P_0_Single_Delegate);
+            Register(typeof(double), new Type[] { typeof(float), typeof(float) }, typeof(R_Double_P_0_Single_1_Single_Delegate), Call_R_Double_P_0_Single_1_Single_Delegate);
+            Register(typeof(double), new Type[] { typeof(int) }, typeof(R_Double_P_0_Int32_Delegate), Call_R_Double_P_0_Int32_Delegate);
+            Register(typeof(double), new Type[] { typeof(long).MakeByRefType() }, typeof(R_Double_P_0_Int64_Ref_Delegate), Call_R_Double_P_0_Int64_Ref_Delegate);
+            Register(typeof(float), Array.Empty<Type>(), typeof(R_Single_P_Delegate), Call_R_Single_P_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.Expressions.SByteEnum) }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_SByteEnum_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_SByteEnum_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.Expressions.UnsignedEnum) }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_UnsignedEnum_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_UnsignedEnum_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float2_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float) }, typeof(R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Single_Delegate), Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float3_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float) }, typeof(R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Single_Delegate), Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float) }, typeof(R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Single_Delegate), Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_int2_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_int3_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_int4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Unity.Mathematics.uint4).MakeByRefType() }, typeof(R_Single_P_0_Unity_Mathematics_uint4_Ref_Delegate), Call_R_Single_P_0_Unity_Mathematics_uint4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(float) }, typeof(R_Single_P_0_Single_Delegate), Call_R_Single_P_0_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(float), typeof(float) }, typeof(R_Single_P_0_Single_1_Single_Delegate), Call_R_Single_P_0_Single_1_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(float), typeof(float), typeof(float) }, typeof(R_Single_P_0_Single_1_Single_2_Single_Delegate), Call_R_Single_P_0_Single_1_Single_2_Single_Delegate);
+            Register(typeof(float), new Type[] { typeof(float).MakeByRefType() }, typeof(R_Single_P_0_Single_Ref_Delegate), Call_R_Single_P_0_Single_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(int) }, typeof(R_Single_P_0_Int32_Delegate), Call_R_Single_P_0_Int32_Delegate);
+            Register(typeof(float), new Type[] { typeof(int), typeof(int) }, typeof(R_Single_P_0_Int32_1_Int32_Delegate), Call_R_Single_P_0_Int32_1_Int32_Delegate);
+            Register(typeof(float), new Type[] { typeof(int).MakeByRefType() }, typeof(R_Single_P_0_Int32_Ref_Delegate), Call_R_Single_P_0_Int32_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(uint) }, typeof(R_Single_P_0_UInt32_Delegate), Call_R_Single_P_0_UInt32_Delegate);
+            Register(typeof(int), Array.Empty<Type>(), typeof(R_Int32_P_Delegate), Call_R_Int32_P_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_ControlFlows_EnumSwitch_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ControlFlows_EnumSwitch_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_NotSupported_CharbyValueFunc_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NotSupported_CharbyValueFunc_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestEnums.MyEnum) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_MyEnum_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_MyEnum_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestEnums.SmallEnum) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_SmallEnum_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_SmallEnum_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.ExplicitLayoutStructFixedBuffer).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ExplicitLayoutStructFixedBuffer_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ExplicitLayoutStructFixedBuffer_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.SequentialStructWithPaddingAndVectorField).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SequentialStructWithPaddingAndVectorField_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SequentialStructWithPaddingAndVectorField_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithBlittableTypes).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithBlittableTypes_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithBlittableTypes_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.Types.MyEnum) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate);
+            Register(typeof(int), new Type[] { typeof(System.IntPtr) }, typeof(R_Int32_P_0_IntPtr_Delegate), Call_R_Int32_P_0_IntPtr_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(bool) }, typeof(R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Boolean_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(Unity.Mathematics.bool3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool3).MakeByRefType(), typeof(bool) }, typeof(R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Boolean_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(Unity.Mathematics.bool4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool4).MakeByRefType(), typeof(bool) }, typeof(R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Boolean_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(float) }, typeof(R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Single_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(float) }, typeof(R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Single_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(float) }, typeof(R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate), Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(Unity.Mathematics.int2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_2_Unity_Mathematics_int2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_2_Unity_Mathematics_int2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int2).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(Unity.Mathematics.int3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_2_Unity_Mathematics_int3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_2_Unity_Mathematics_int3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int3).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.bool4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(Unity.Mathematics.int4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_2_Unity_Mathematics_int4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_2_Unity_Mathematics_int4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.int4).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint2).MakeByRefType(), typeof(Unity.Mathematics.uint2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint2).MakeByRefType(), typeof(uint) }, typeof(R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_UInt32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_UInt32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint3).MakeByRefType(), typeof(Unity.Mathematics.uint3).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint3).MakeByRefType(), typeof(uint) }, typeof(R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_UInt32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_UInt32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint4).MakeByRefType(), typeof(Unity.Mathematics.uint4).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Unity.Mathematics.uint4).MakeByRefType(), typeof(uint) }, typeof(R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_UInt32_Delegate), Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_UInt32_Delegate);
+            Register(typeof(int), new Type[] { typeof(bool) }, typeof(R_Int32_P_0_Boolean_Delegate), Call_R_Int32_P_0_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(bool), typeof(bool) }, typeof(R_Int32_P_0_Boolean_1_Boolean_Delegate), Call_R_Int32_P_0_Boolean_1_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(bool), typeof(bool), typeof(bool) }, typeof(R_Int32_P_0_Boolean_1_Boolean_2_Boolean_Delegate), Call_R_Int32_P_0_Boolean_1_Boolean_2_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(bool), typeof(bool), typeof(bool), typeof(bool) }, typeof(R_Int32_P_0_Boolean_1_Boolean_2_Boolean_3_Boolean_Delegate), Call_R_Int32_P_0_Boolean_1_Boolean_2_Boolean_3_Boolean_Delegate);
+            Register(typeof(int), new Type[] { typeof(byte) }, typeof(R_Int32_P_0_Byte_Delegate), Call_R_Int32_P_0_Byte_Delegate);
+            Register(typeof(int), new Type[] { typeof(double) }, typeof(R_Int32_P_0_Double_Delegate), Call_R_Int32_P_0_Double_Delegate);
+            Register(typeof(int), new Type[] { typeof(float) }, typeof(R_Int32_P_0_Single_Delegate), Call_R_Int32_P_0_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(float), typeof(float) }, typeof(R_Int32_P_0_Single_1_Single_Delegate), Call_R_Int32_P_0_Single_1_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(int) }, typeof(R_Int32_P_0_Int32_Delegate), Call_R_Int32_P_0_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(int), typeof(int) }, typeof(R_Int32_P_0_Int32_1_Int32_Delegate), Call_R_Int32_P_0_Int32_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(int), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Int32_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Int32_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(int).MakeByRefType() }, typeof(R_Int32_P_0_Int32_Ref_Delegate), Call_R_Int32_P_0_Int32_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(int).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Int32_Ref_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Int32_Ref_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(int*), typeof(int) }, typeof(R_Int32_P_0_Int32_Ptr_1_Int32_Delegate), Call_R_Int32_P_0_Int32_Ptr_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(long) }, typeof(R_Int32_P_0_Int64_Delegate), Call_R_Int32_P_0_Int64_Delegate);
+            Register(typeof(int), new Type[] { typeof(short) }, typeof(R_Int32_P_0_Int16_Delegate), Call_R_Int32_P_0_Int16_Delegate);
+            Register(typeof(int), new Type[] { typeof(uint) }, typeof(R_Int32_P_0_UInt32_Delegate), Call_R_Int32_P_0_UInt32_Delegate);
+            Register(typeof(int), new Type[] { typeof(uint), typeof(int) }, typeof(R_Int32_P_0_UInt32_1_Int32_Delegate), Call_R_Int32_P_0_UInt32_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(ulong) }, typeof(R_Int32_P_0_UInt64_Delegate), Call_R_Int32_P_0_UInt64_Delegate);
+            Register(typeof(int), new Type[] { typeof(ushort) }, typeof(R_Int32_P_0_UInt16_Delegate), Call_R_Int32_P_0_UInt16_Delegate);
+            Register(typeof(long), Array.Empty<Type>(), typeof(R_Int64_P_Delegate), Call_R_Int64_P_Delegate);
+            Register(typeof(long), new Type[] { typeof(double) }, typeof(R_Int64_P_0_Double_Delegate), Call_R_Int64_P_0_Double_Delegate);
+            Register(typeof(long), new Type[] { typeof(int) }, typeof(R_Int64_P_0_Int32_Delegate), Call_R_Int64_P_0_Int32_Delegate);
+            Register(typeof(long), new Type[] { typeof(int), typeof(int) }, typeof(R_Int64_P_0_Int32_1_Int32_Delegate), Call_R_Int64_P_0_Int32_1_Int32_Delegate);
+            Register(typeof(long), new Type[] { typeof(long) }, typeof(R_Int64_P_0_Int64_Delegate), Call_R_Int64_P_0_Int64_Delegate);
+            Register(typeof(long), new Type[] { typeof(long), typeof(int) }, typeof(R_Int64_P_0_Int64_1_Int32_Delegate), Call_R_Int64_P_0_Int64_1_Int32_Delegate);
+            Register(typeof(long), new Type[] { typeof(long).MakeByRefType() }, typeof(R_Int64_P_0_Int64_Ref_Delegate), Call_R_Int64_P_0_Int64_Ref_Delegate);
+            Register(typeof(long), new Type[] { typeof(long).MakeByRefType(), typeof(long), typeof(long) }, typeof(R_Int64_P_0_Int64_Ref_1_Int64_2_Int64_Delegate), Call_R_Int64_P_0_Int64_Ref_1_Int64_2_Int64_Delegate);
+            Register(typeof(long), new Type[] { typeof(sbyte) }, typeof(R_Int64_P_0_SByte_Delegate), Call_R_Int64_P_0_SByte_Delegate);
+            Register(typeof(long), new Type[] { typeof(short) }, typeof(R_Int64_P_0_Int16_Delegate), Call_R_Int64_P_0_Int16_Delegate);
+            Register(typeof(long), new Type[] { typeof(uint) }, typeof(R_Int64_P_0_UInt32_Delegate), Call_R_Int64_P_0_UInt32_Delegate);
+            Register(typeof(long), new Type[] { typeof(ulong) }, typeof(R_Int64_P_0_UInt64_Delegate), Call_R_Int64_P_0_UInt64_Delegate);
+            Register(typeof(sbyte), new Type[] { typeof(int) }, typeof(R_SByte_P_0_Int32_Delegate), Call_R_SByte_P_0_Int32_Delegate);
+            Register(typeof(sbyte), new Type[] { typeof(sbyte) }, typeof(R_SByte_P_0_SByte_Delegate), Call_R_SByte_P_0_SByte_Delegate);
+            Register(typeof(sbyte), new Type[] { typeof(uint) }, typeof(R_SByte_P_0_UInt32_Delegate), Call_R_SByte_P_0_UInt32_Delegate);
+            Register(typeof(short), new Type[] { typeof(int) }, typeof(R_Int16_P_0_Int32_Delegate), Call_R_Int16_P_0_Int32_Delegate);
+            Register(typeof(short), new Type[] { typeof(short) }, typeof(R_Int16_P_0_Int16_Delegate), Call_R_Int16_P_0_Int16_Delegate);
+            Register(typeof(short), new Type[] { typeof(uint) }, typeof(R_Int16_P_0_UInt32_Delegate), Call_R_Int16_P_0_UInt32_Delegate);
+            Register(typeof(uint), Array.Empty<Type>(), typeof(R_UInt32_P_Delegate), Call_R_UInt32_P_Delegate);
+            Register(typeof(uint), new Type[] { typeof(int) }, typeof(R_UInt32_P_0_Int32_Delegate), Call_R_UInt32_P_0_Int32_Delegate);
+            Register(typeof(uint), new Type[] { typeof(sbyte) }, typeof(R_UInt32_P_0_SByte_Delegate), Call_R_UInt32_P_0_SByte_Delegate);
+            Register(typeof(uint), new Type[] { typeof(uint) }, typeof(R_UInt32_P_0_UInt32_Delegate), Call_R_UInt32_P_0_UInt32_Delegate);
+            Register(typeof(uint), new Type[] { typeof(uint), typeof(int) }, typeof(R_UInt32_P_0_UInt32_1_Int32_Delegate), Call_R_UInt32_P_0_UInt32_1_Int32_Delegate);
+            Register(typeof(uint), new Type[] { typeof(ulong) }, typeof(R_UInt32_P_0_UInt64_Delegate), Call_R_UInt32_P_0_UInt64_Delegate);
+            Register(typeof(ulong), Array.Empty<Type>(), typeof(R_UInt64_P_Delegate), Call_R_UInt64_P_Delegate);
+            Register(typeof(ulong), new Type[] { typeof(double) }, typeof(R_UInt64_P_0_Double_Delegate), Call_R_UInt64_P_0_Double_Delegate);
+            Register(typeof(ulong), new Type[] { typeof(int) }, typeof(R_UInt64_P_0_Int32_Delegate), Call_R_UInt64_P_0_Int32_Delegate);
+            Register(typeof(ulong), new Type[] { typeof(short) }, typeof(R_UInt64_P_0_Int16_Delegate), Call_R_UInt64_P_0_Int16_Delegate);
+            Register(typeof(ulong), new Type[] { typeof(uint) }, typeof(R_UInt64_P_0_UInt32_Delegate), Call_R_UInt64_P_0_UInt32_Delegate);
+            Register(typeof(ulong), new Type[] { typeof(ulong*), typeof(ulong), typeof(ulong) }, typeof(R_UInt64_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate), Call_R_UInt64_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate);
+            Register(typeof(ushort), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFixed.SomeStruct).MakeByRefType() }, typeof(R_UInt16_P_0_Burst_Compiler_IL_Tests_TestFixed_SomeStruct_Ref_Delegate), Call_R_UInt16_P_0_Burst_Compiler_IL_Tests_TestFixed_SomeStruct_Ref_Delegate);
+            Register(typeof(ushort), new Type[] { typeof(int) }, typeof(R_UInt16_P_0_Int32_Delegate), Call_R_UInt16_P_0_Int32_Delegate);
+            Register(typeof(ushort), new Type[] { typeof(uint) }, typeof(R_UInt16_P_0_UInt32_Delegate), Call_R_UInt16_P_0_UInt32_Delegate);
+            Register(typeof(void), Array.Empty<Type>(), typeof(R_System_Void_P_Delegate), Call_R_System_Void_P_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_ContainerOfManyNoAliasFields_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_ContainerOfManyNoAliasFields_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_DoesAliasWithSubStructPointersStruct_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_DoesAliasWithSubStructPointersStruct_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.LinkedList).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_LinkedList_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_LinkedList_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasField).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_1_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_1_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasWithContentsStruct_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasWithContentsStruct_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Aliasing.Union).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_Union_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_Union_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.Fixed4096).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Fixed4096).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Sized4096).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Sized4096).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Sized4096).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_2_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_2_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.PointersInStruct).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Fixed4096).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_PointersInStruct_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_PointersInStruct_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.Sized4096).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestStructs.Sized4096).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2x2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float2x2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2x2_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3x3*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float3x3_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3x3_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4x4*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4x4_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4x4_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(bool) }, typeof(R_System_Void_P_0_Boolean_Delegate), Call_R_System_Void_P_0_Boolean_Delegate);
+            Register(typeof(void), new Type[] { typeof(int) }, typeof(R_System_Void_P_0_Int32_Delegate), Call_R_System_Void_P_0_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Int32_1_Int32_Delegate), Call_R_System_Void_P_0_Int32_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int).MakeByRefType(), typeof(float).MakeByRefType() }, typeof(R_System_Void_P_0_Int32_Ref_1_Single_Ref_Delegate), Call_R_System_Void_P_0_Int32_Ref_1_Single_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }, typeof(R_System_Void_P_0_Int32_Ref_1_Int32_Ref_Delegate), Call_R_System_Void_P_0_Int32_Ref_1_Int32_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(int).MakeByRefType(), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }, typeof(R_System_Void_P_0_Int32_Ref_1_Int32_Ref_2_Int32_Ref_Delegate), Call_R_System_Void_P_0_Int32_Ref_1_Int32_Ref_2_Int32_Ref_Delegate);
 
 #if BURST_TESTS_ONLY
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct), typeof(int)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryBigExplicitLayoutStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryBigExplicitLayoutStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigSSEStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.BigSSEStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryBigSSEStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryBigSSEStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigStruct),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnBigStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnBigStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.EmptyStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.EmptyStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_TestEmptyStructDelegate), CallBurst_Compiler_IL_Tests_ABI_TestEmptyStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryExplicitButAlignedDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryExplicitButAlignedDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.HandleStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.HandleStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryHandleStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryHandleStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.IIF),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.IIF)}, typeof(Burst_Compiler_IL_Tests_ABI_TestIIFDelegate), CallBurst_Compiler_IL_Tests_ABI_TestIIFDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.IntInStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.IntInStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryTypedIntInStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryTypedIntInStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.KindaBig),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.KindaBig)}, typeof(Burst_Compiler_IL_Tests_ABI_TestKindaBigDelegate), CallBurst_Compiler_IL_Tests_ABI_TestKindaBigDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.LongInStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.LongInStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryTypedLongInStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryTypedLongInStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryNestedHandleStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryNestedHandleStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryOverlappingFieldsStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryOverlappingFieldsStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig), typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig)}, typeof(Burst_Compiler_IL_Tests_ABI_EntrySizeSizePaddedBigDelegate), CallBurst_Compiler_IL_Tests_ABI_EntrySizeSizePaddedBigDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall), typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall)}, typeof(Burst_Compiler_IL_Tests_ABI_EntrySizePaddedSmallDelegate), CallBurst_Compiler_IL_Tests_ABI_EntrySizePaddedSmallDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntrySmallSseUpStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntrySmallSseUpStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnSmallStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryTypedHandleStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryTypedHandleStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate);
-            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStructWithPadding),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Assume_CheckNativeArrayLengthIsNotNegativeDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckNativeArrayLengthIsNotNegativeDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.DefaultFunc).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDefaultDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDefaultDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NullFunc).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNullDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNullDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate);
-            Register(typeof(bool),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.PointerInStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_PointerStoreDelegate), CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_PointerStoreDelegate);
-            Register(typeof(bool),  new Type[] {typeof(UnityBenchShared.SphereCullingAOSJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingAOSDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingAOSDelegate);
-            Register(typeof(bool),  new Type[] {typeof(UnityBenchShared.SphereCullingChunkFixedSOAJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkFixedSOADelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkFixedSOADelegate);
-            Register(typeof(bool),  new Type[] {typeof(UnityBenchShared.SphereCullingChunkSOAJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkSOADelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkSOADelegate);
-            Register(typeof(bool),  new Type[] {typeof(UnityBenchShared.SphereCullingFloat4AOSJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingFloat4AOSDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingFloat4AOSDelegate);
-            Register(typeof(bool),  new Type[] {typeof(UnityBenchShared.SphereCullingSOAJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingSOADelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingSOADelegate);
-            Register(typeof(bool),  new Type[] {typeof(byte)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeByteDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeByteDelegate);
-            Register(typeof(bool),  new Type[] {typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ByRef_RefIsNonNullDelegate), CallBurst_Compiler_IL_Tests_ByRef_RefIsNonNullDelegate);
-            Register(typeof(bool),  new Type[] {typeof(long)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeLongDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeLongDelegate);
-            Register(typeof(bool),  new Type[] {typeof(sbyte)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeSByteDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeSByteDelegate);
-            Register(typeof(bool),  new Type[] {typeof(short)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeShortDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeShortDelegate);
-            Register(typeof(bool),  new Type[] {typeof(uint)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUIntDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeUIntDelegate);
-            Register(typeof(bool),  new Type[] {typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeULongDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeULongDelegate);
-            Register(typeof(bool),  new Type[] {typeof(ushort)}, typeof(Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUShortDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeUShortDelegate);
-            Register(typeof(char),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate);
-            Register(typeof(double),  Array.Empty<Type>(), typeof(Burst_Compiler_IL_Tests_TestStaticFields_TestImplicitConstructorDelegate), CallBurst_Compiler_IL_Tests_TestStaticFields_TestImplicitConstructorDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFloatDelegate), CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFloatDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3aDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3aDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3aDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3aDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.Climate).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_native_array_with_accessor_path_from_ldfdDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_native_array_with_accessor_path_from_ldfdDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayCustomItem).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestNativeArraySortCustomItemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestNativeArraySortCustomItemDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestGetUnsafeReadOnlyPtrDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestGetUnsafeReadOnlyPtrDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_unsafe_ptr_cast_float4_to_floatDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_unsafe_ptr_cast_float4_to_floatDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.BigStructNativeArrayJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestNoAliasOnNativeArraysWithBigStructsDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestNoAliasOnNativeArraysWithBigStructsDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate);
-            Register(typeof(float),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate);
-            Register(typeof(float),  new Type[] {typeof(UnityBenchShared.SumNumbersTest).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate), CallBurst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate);
-            Register(typeof(float),  new Type[] {typeof(UnityEngine.Boids.BoidsJob).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate), CallBurst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.BigStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryPointWithSmallStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryPointWithSmallStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.CalliBinding.IntArray).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingReadFromPtrDelegate), CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingReadFromPtrDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.CalliBinding.SmallStructArray).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingValAndPtrDelegate), CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingValAndPtrDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFunctionDelegate), CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFunctionDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetLengthDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetLengthDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetLengthDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetLengthDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayBool).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestArrayBoolAccessReadDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestArrayBoolAccessReadDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayIntCopy).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_int_copy_arrayDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_int_copy_arrayDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.JobData).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestReadWriteDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestReadWriteDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceIntCopy).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_int_copy_sliceDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_int_copy_sliceDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestCullingJob.CullingJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestCullingJob_test_culling_job_simpleDelegate), CallBurst_Compiler_IL_Tests_TestCullingJob_test_culling_job_simpleDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPBigStructFunc), typeof(Burst.Compiler.IL.Tests.ABI.BigStruct)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerWithBigStructDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerWithBigStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPInIntFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoNumbersByInDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoNumbersByInDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNotNullDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNotNullDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias1Delegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias1Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias0Delegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias0Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.TestJob).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.ParentStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStructWithMarshalAs).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStructCharWithMarshalAsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharWithMarshalAsDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.NativeArrayInt).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate), CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_stream_si256Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_stream_si256Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_castsi128_si256Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_castsi128_si256Delegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestTakeAddressDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestTakeAddressDelegate);
-            Register(typeof(int),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.NativeArrayBundle).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_CodeGenAnomaly1Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_CodeGenAnomaly1Delegate);
-            Register(typeof(int),  new Type[] {typeof(byte), typeof(float)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate);
-            Register(typeof(int),  new Type[] {typeof(char).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate);
-            Register(typeof(int),  new Type[] {typeof(char)}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate);
-            Register(typeof(int),  new Type[] {typeof(double), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_comieq_sdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_comieq_sdDelegate);
-            Register(typeof(int),  new Type[] {typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct)}, typeof(Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate), CallBurst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate);
-            Register(typeof(int),  new Type[] {typeof(int).MakeByRefType(), typeof(int).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate), CallBurst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate);
-            Register(typeof(int),  new Type[] {typeof(uint), typeof(uint)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u32Delegate);
-            Register(typeof(long),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestLoDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestLoDelegate);
-            Register(typeof(long),  new Type[] {typeof(byte)}, typeof(Burst_Compiler_IL_Tests_Expressions_ConvertbyteToLongDelegate), CallBurst_Compiler_IL_Tests_Expressions_ConvertbyteToLongDelegate);
-            Register(typeof(long),  new Type[] {typeof(int), typeof(long)}, typeof(Burst_Compiler_IL_Tests_InlineIL_CheckConvIAddLhsDelegate), CallBurst_Compiler_IL_Tests_InlineIL_CheckConvIAddLhsDelegate);
-            Register(typeof(uint),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate);
-            Register(typeof(uint),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ABI.CullChunksWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate), CallBurst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.NoAliasOnJobProducerTypeThisPointerJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckNoAliasOnJobProducerTypeThisPointerJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNoAliasOnJobProducerTypeThisPointerJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesAliasWithJobStructJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesAliasWithJobStructJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesAliasWithJobStructJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesNotAliasWithJobStructJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesNotAliasWithJobStructJobDelegate), CallBurst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesNotAliasWithJobStructJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingAllVoidDelegate), CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingAllVoidDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.Case1061135.NewMoveJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate), CallBurst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_Assume_CheckLoopDelegate), CallBurst_Compiler_IL_Tests_Assume_CheckLoopDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate), CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate), CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.CopyJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.Float1Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.Float4Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceJob).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate), CallBurst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate), CallBurst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStruct).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharWithMarshalAsDelegate), CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharWithMarshalAsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct*)}, typeof(Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxSomeStructDelegate), CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxSomeStructDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_storeu2_m128Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_storeu2_m128Delegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestUnalignedStoreDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestUnalignedStoreDelegate);
-            Register(typeof(void),  new Type[] {typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult*), typeof(float), typeof(float), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestTranspose4Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestTranspose4Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_maskload_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_maskload_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i64gather_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i64gather_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i64gather_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i64gather_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_maskload_epi32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_maskload_epi32Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_shuffle_epi32_bug2Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_shuffle_epi32_bug2Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(double), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_dp_pd_3Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_dp_pd_3Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(double), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_round_pd_0Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_round_pd_0Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(float), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestMkInsertPsDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestMkInsertPsDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(float)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtps_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtps_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(float)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_insert_ps_0Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_insert_ps_0Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestrm_batch1Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestrm_batch1Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm_batch1Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm_batch1Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_cmp_sd_00Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_cmp_sd_00Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi32_ssDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi32_ssDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_AccessM128ArrayDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_AccessM128ArrayDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(long), typeof(ulong), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi64_ssDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi64_ssDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(long)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_epi64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_epi64Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(uint), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_ssDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_ssDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(uint), typeof(uint), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(uint)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu32Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*), typeof(ushort)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu16Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu16Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v128*)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm0Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm0Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_maskload_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_maskload_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i32gather_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i32gather_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i32gather_epi32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i32gather_epi32Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType(), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_maskload_epi32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_maskload_epi32Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_stream_load_si256Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_stream_load_si256Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_sdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_sdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(float)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_ssDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_ssDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_blendv_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_blendv_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insertf128_ps_00Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insertf128_ps_00Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(long)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insert_epi64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insert_epi64Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_set_m128Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_set_m128Delegate);
-            Register(typeof(void),  new Type[] {typeof(Unity.Burst.Intrinsics.v256*)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_store_psDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_store_psDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.DivisionByScalar).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.IntToFloatPenalty).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.PartialWrite).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.PartialWriteWorkaround).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_write_workaroundDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_partial_write_workaroundDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.RedundantStore).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_storeDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_redundant_storeDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.RedundantStoreWorkaround).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_store_workaroundDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_redundant_store_workaroundDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.SquareRoot).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_square_rootDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_square_rootDelegate);
-            Register(typeof(void),  new Type[] {typeof(UnityBenchShared.SquareRootRecip).MakeByRefType()}, typeof(Burst_Compiler_IL_Tests_TestPerfNotes_test_square_root_recipDelegate), CallBurst_Compiler_IL_Tests_TestPerfNotes_test_square_root_recipDelegate);
-            Register(typeof(void),  new Type[] {typeof(double*), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_pdDelegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_pdDelegate);
-            Register(typeof(void),  new Type[] {typeof(double*)}, typeof(Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxDoubleDelegate), CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxDoubleDelegate);
-            Register(typeof(void),  new Type[] {typeof(float*), typeof(float*), typeof(float*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariablePtrDelegate), CallBurst_Compiler_IL_Tests_TestAlias_TestDivisionByVariablePtrDelegate);
-            Register(typeof(void),  new Type[] {typeof(float*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_cvtss_f32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_cvtss_f32Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvttsd_si32Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvttsd_si32Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestri_batch1Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestri_batch1Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*), typeof(int), typeof(int), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistri_batch0Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistri_batch0Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*), typeof(int), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_testz_si128Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_testz_si128Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_SseDispatch1Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_SseDispatch1Delegate);
-            Register(typeof(void),  new Type[] {typeof(int*)}, typeof(Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxIntDelegate), CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxIntDelegate);
-            Register(typeof(void),  new Type[] {typeof(long*), typeof(double)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsd_si64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsd_si64Delegate);
-            Register(typeof(void),  new Type[] {typeof(long*), typeof(int)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi128_si64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi128_si64Delegate);
-            Register(typeof(void),  new Type[] {typeof(long*), typeof(long)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_si64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_si64Delegate);
-            Register(typeof(void),  new Type[] {typeof(long*), typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_popcnt_u64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_popcnt_u64Delegate);
-            Register(typeof(void),  new Type[] {typeof(long*)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_extract_epi64_0Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_extract_epi64_0Delegate);
-            Register(typeof(void),  new Type[] {typeof(ulong*), typeof(ulong), typeof(ulong)}, typeof(Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u64Delegate), CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u64Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct), typeof(int) }, typeof(R_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_1_Int32_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_1_Int32_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigSSEStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.BigSSEStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.BigStruct), Array.Empty<Type>(), typeof(R_Burst_Compiler_IL_Tests_ABI_BigStruct_P_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_BigStruct_P_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.EmptyStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.EmptyStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_EmptyStruct_P_0_Burst_Compiler_IL_Tests_ABI_EmptyStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_EmptyStruct_P_0_Burst_Compiler_IL_Tests_ABI_EmptyStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned) }, typeof(R_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_P_0_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_P_0_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.HandleStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.HandleStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_HandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_HandleStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_HandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_HandleStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.IIF), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.IIF) }, typeof(R_Burst_Compiler_IL_Tests_ABI_IIF_P_0_Burst_Compiler_IL_Tests_ABI_IIF_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_IIF_P_0_Burst_Compiler_IL_Tests_ABI_IIF_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.IntInStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.IntInStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_IntInStruct_P_0_Burst_Compiler_IL_Tests_ABI_IntInStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_IntInStruct_P_0_Burst_Compiler_IL_Tests_ABI_IntInStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.KindaBig), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.KindaBig) }, typeof(R_Burst_Compiler_IL_Tests_ABI_KindaBig_P_0_Burst_Compiler_IL_Tests_ABI_KindaBig_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_KindaBig_P_0_Burst_Compiler_IL_Tests_ABI_KindaBig_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.LongInStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.LongInStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_LongInStruct_P_0_Burst_Compiler_IL_Tests_ABI_LongInStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_LongInStruct_P_0_Burst_Compiler_IL_Tests_ABI_LongInStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_P_0_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_P_0_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig), typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedBig) }, typeof(R_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_1_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_1_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall), typeof(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall) }, typeof(R_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_1_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_1_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_P_0_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_P_0_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct), Array.Empty<Type>(), typeof(R_Burst_Compiler_IL_Tests_ABI_SmallStruct_P_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_SmallStruct_P_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct), Array.Empty<Type>(), typeof(R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct) }, typeof(R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_0_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_0_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStructWithPadding), Array.Empty<Type>(), typeof(R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStructWithPadding_P_Delegate), Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStructWithPadding_P_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.DefaultFunc).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_DefaultFunc_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_DefaultFunc_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NullFunc).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NullFunc_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NullFunc_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType() }, typeof(R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate), Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(UnityBenchShared.SphereCullingAOSJob).MakeByRefType() }, typeof(R_Boolean_P_0_UnityBenchShared_SphereCullingAOSJob_Ref_Delegate), Call_R_Boolean_P_0_UnityBenchShared_SphereCullingAOSJob_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(UnityBenchShared.SphereCullingChunkFixedSOAJob).MakeByRefType() }, typeof(R_Boolean_P_0_UnityBenchShared_SphereCullingChunkFixedSOAJob_Ref_Delegate), Call_R_Boolean_P_0_UnityBenchShared_SphereCullingChunkFixedSOAJob_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(UnityBenchShared.SphereCullingChunkSOAJob).MakeByRefType() }, typeof(R_Boolean_P_0_UnityBenchShared_SphereCullingChunkSOAJob_Ref_Delegate), Call_R_Boolean_P_0_UnityBenchShared_SphereCullingChunkSOAJob_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(UnityBenchShared.SphereCullingFloat4AOSJob).MakeByRefType() }, typeof(R_Boolean_P_0_UnityBenchShared_SphereCullingFloat4AOSJob_Ref_Delegate), Call_R_Boolean_P_0_UnityBenchShared_SphereCullingFloat4AOSJob_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(UnityBenchShared.SphereCullingSOAJob).MakeByRefType() }, typeof(R_Boolean_P_0_UnityBenchShared_SphereCullingSOAJob_Ref_Delegate), Call_R_Boolean_P_0_UnityBenchShared_SphereCullingSOAJob_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(byte) }, typeof(R_Boolean_P_0_Byte_Delegate), Call_R_Boolean_P_0_Byte_Delegate);
+            Register(typeof(bool), new Type[] { typeof(int).MakeByRefType() }, typeof(R_Boolean_P_0_Int32_Ref_Delegate), Call_R_Boolean_P_0_Int32_Ref_Delegate);
+            Register(typeof(bool), new Type[] { typeof(long) }, typeof(R_Boolean_P_0_Int64_Delegate), Call_R_Boolean_P_0_Int64_Delegate);
+            Register(typeof(bool), new Type[] { typeof(sbyte) }, typeof(R_Boolean_P_0_SByte_Delegate), Call_R_Boolean_P_0_SByte_Delegate);
+            Register(typeof(bool), new Type[] { typeof(short) }, typeof(R_Boolean_P_0_Int16_Delegate), Call_R_Boolean_P_0_Int16_Delegate);
+            Register(typeof(bool), new Type[] { typeof(uint) }, typeof(R_Boolean_P_0_UInt32_Delegate), Call_R_Boolean_P_0_UInt32_Delegate);
+            Register(typeof(bool), new Type[] { typeof(ulong) }, typeof(R_Boolean_P_0_UInt64_Delegate), Call_R_Boolean_P_0_UInt64_Delegate);
+            Register(typeof(bool), new Type[] { typeof(ushort) }, typeof(R_Boolean_P_0_UInt16_Delegate), Call_R_Boolean_P_0_UInt16_Delegate);
+            Register(typeof(char), Array.Empty<Type>(), typeof(R_Char_P_Delegate), Call_R_Char_P_Delegate);
+            Register(typeof(double), Array.Empty<Type>(), typeof(R_Double_P_Delegate), Call_R_Double_P_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.Climate).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_Climate_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_Climate_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayCustomItem).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayCustomItem_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayCustomItem_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat4).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat4_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_JobData_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_JobData_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat4_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat4_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.BigStructNativeArrayJob).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_BigStructNativeArrayJob_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_BigStructNativeArrayJob_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat3Job_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat3Job_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat4Job_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat4Job_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(UnityBenchShared.SumNumbersTest).MakeByRefType() }, typeof(R_Single_P_0_UnityBenchShared_SumNumbersTest_Ref_Delegate), Call_R_Single_P_0_UnityBenchShared_SumNumbersTest_Ref_Delegate);
+            Register(typeof(float), new Type[] { typeof(UnityEngine.Boids.BoidsJob).MakeByRefType(), typeof(int) }, typeof(R_Single_P_0_UnityEngine_Boids_BoidsJob_Ref_1_Int32_Delegate), Call_R_Single_P_0_UnityEngine_Boids_BoidsJob_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.BigStruct) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.CalliBinding.IntArray).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_IntArray_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_IntArray_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.CalliBinding.SmallStructArray).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_SmallStructArray_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_SmallStructArray_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.Expressions.MyArrayIndex) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_Expressions_MyArrayIndex_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Expressions_MyArrayIndex_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayBool).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayBool_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayBool_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayIntCopy).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayIntCopy_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayIntCopy_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.JobData).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_JobData_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_JobData_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceIntCopy).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceIntCopy_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceIntCopy_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestCullingJob.CullingJob).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestCullingJob_CullingJob_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestCullingJob_CullingJob_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPBigStructFunc), typeof(Burst.Compiler.IL.Tests.ABI.BigStruct) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPBigStructFunc_1_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPBigStructFunc_1_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPInIntFunc).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPInIntFunc_Ref_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPInIntFunc_Ref_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_3_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_3_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_ReturnRefReadOnlyFunc_Ref_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_ReturnRefReadOnlyFunc_Ref_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructsInFunc_Ref_1_Int32_2_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructsInFunc_Ref_1_Int32_2_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestGenerics.TestJob).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestGenerics_TestJob_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestGenerics_TestJob_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.ParentStruct).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ParentStruct_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ParentStruct_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStruct).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.SomeStructWithMarshalAs).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStructWithMarshalAs_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStructWithMarshalAs_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StaticCharStruct_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StaticCharStruct_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestUnsafeUtility.NativeArrayInt).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestUnsafeUtility_NativeArrayInt_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestUnsafeUtility_NativeArrayInt_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_1_Int32_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_1_Int32_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.NativeArrayBundle).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_NativeArrayBundle_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_NativeArrayBundle_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(byte), typeof(float) }, typeof(R_Int32_P_0_Byte_1_Single_Delegate), Call_R_Int32_P_0_Byte_1_Single_Delegate);
+            Register(typeof(int), new Type[] { typeof(char) }, typeof(R_Int32_P_0_Char_Delegate), Call_R_Int32_P_0_Char_Delegate);
+            Register(typeof(int), new Type[] { typeof(char).MakeByRefType() }, typeof(R_Int32_P_0_Char_Ref_Delegate), Call_R_Int32_P_0_Char_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(double), typeof(double) }, typeof(R_Int32_P_0_Double_1_Double_Delegate), Call_R_Int32_P_0_Double_1_Double_Delegate);
+            Register(typeof(int), new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(Burst.Compiler.IL.Tests.ABI.SmallStruct) }, typeof(R_Int32_P_0_Int32_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate), Call_R_Int32_P_0_Int32_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate);
+            Register(typeof(int), new Type[] { typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }, typeof(R_Int32_P_0_Int32_Ref_1_Int32_Ref_Delegate), Call_R_Int32_P_0_Int32_Ref_1_Int32_Ref_Delegate);
+            Register(typeof(int), new Type[] { typeof(uint), typeof(uint) }, typeof(R_Int32_P_0_UInt32_1_UInt32_Delegate), Call_R_Int32_P_0_UInt32_1_UInt32_Delegate);
+            Register(typeof(long), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper).MakeByRefType() }, typeof(R_Int64_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate), Call_R_Int64_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate);
+            Register(typeof(long), new Type[] { typeof(byte) }, typeof(R_Int64_P_0_Byte_Delegate), Call_R_Int64_P_0_Byte_Delegate);
+            Register(typeof(long), new Type[] { typeof(int), typeof(long) }, typeof(R_Int64_P_0_Int32_1_Int64_Delegate), Call_R_Int64_P_0_Int32_1_Int64_Delegate);
+            Register(typeof(uint), new Type[] { typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType() }, typeof(R_UInt32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate), Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate);
+            Register(typeof(uint), new Type[] { typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType() }, typeof(R_UInt32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate), Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.ABI.CullChunksWrapper).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_ABI_CullChunksWrapper_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_ABI_CullChunksWrapper_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayPointerIsNotReloadedJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayPointerIsNotReloadedJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeSliceJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeSliceJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.NoAliasOnJobProducerTypeThisPointerJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NoAliasOnJobProducerTypeThisPointerJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NoAliasOnJobProducerTypeThisPointerJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesAliasWithJobStructJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesAliasWithJobStructJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesAliasWithJobStructJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesNotAliasWithJobStructJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesNotAliasWithJobStructJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesNotAliasWithJobStructJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Case1061135.NewMoveJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Case1061135_NewMoveJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Case1061135_NewMoveJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_1_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_1_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_HashMapJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_HashMapJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_HashMapAndQueueJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_HashMapAndQueueJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructBVHTest_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructBVHTest_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructInitJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructInitJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.SafetyChecks.NativeArrayInt).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_SafetyChecks_NativeArrayInt_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_SafetyChecks_NativeArrayInt_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.CopyJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyWithExplicitNoAlias_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyWithExplicitNoAlias_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_DivisionByVariable_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_DivisionByVariable_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.Float1Job).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float1Job_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float1Job_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.Float4Job).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float4Job_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float4Job_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceByteJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceByteJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.InPlaceJob).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceJob_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceJob_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_SimpleSOA1Job_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_SimpleSOA1Job_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructWithAction_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructWithAction_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics2_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_1_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_2_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_1_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_2_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStruct).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStruct_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStruct_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct*) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair*), typeof(int) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult*), typeof(float), typeof(float), typeof(float), typeof(float) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(double) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(double), typeof(double) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Double_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(double), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(float), typeof(float), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(float), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(int), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(long) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(long), typeof(ulong), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_2_UInt64_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_2_UInt64_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(uint) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(uint), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(uint), typeof(uint), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_UInt32_4_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_UInt32_4_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(ushort) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt16_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt16_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(double) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Double_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_3_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_3_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(int), typeof(long) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int64_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int64_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.DivisionByScalar).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.IntToFloatPenalty).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.PartialWrite).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.PartialWriteWorkaround).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_PartialWriteWorkaround_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_PartialWriteWorkaround_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.RedundantStore).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_RedundantStore_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_RedundantStore_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.RedundantStoreWorkaround).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_RedundantStoreWorkaround_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_RedundantStoreWorkaround_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.SquareRoot).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_SquareRoot_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_SquareRoot_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(UnityBenchShared.SquareRootRecip).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_SquareRootRecip_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_SquareRootRecip_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(double*) }, typeof(R_System_Void_P_0_Double_Ptr_Delegate), Call_R_System_Void_P_0_Double_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(double*), typeof(double) }, typeof(R_System_Void_P_0_Double_Ptr_1_Double_Delegate), Call_R_System_Void_P_0_Double_Ptr_1_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(float*), typeof(float*), typeof(float*), typeof(int) }, typeof(R_System_Void_P_0_Single_Ptr_1_Single_Ptr_2_Single_Ptr_3_Int32_Delegate), Call_R_System_Void_P_0_Single_Ptr_1_Single_Ptr_2_Single_Ptr_3_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(float*), typeof(int) }, typeof(R_System_Void_P_0_Single_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Single_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*) }, typeof(R_System_Void_P_0_Int32_Ptr_Delegate), Call_R_System_Void_P_0_Int32_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*), typeof(double) }, typeof(R_System_Void_P_0_Int32_Ptr_1_Double_Delegate), Call_R_System_Void_P_0_Int32_Ptr_1_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*), typeof(int) }, typeof(R_System_Void_P_0_Int32_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Int32_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_Delegate), Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*), typeof(int), typeof(int), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate), Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(int*), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int) }, typeof(R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate), Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(long*) }, typeof(R_System_Void_P_0_Int64_Ptr_Delegate), Call_R_System_Void_P_0_Int64_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(long*), typeof(double) }, typeof(R_System_Void_P_0_Int64_Ptr_1_Double_Delegate), Call_R_System_Void_P_0_Int64_Ptr_1_Double_Delegate);
+            Register(typeof(void), new Type[] { typeof(long*), typeof(int) }, typeof(R_System_Void_P_0_Int64_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Int64_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(long*), typeof(long) }, typeof(R_System_Void_P_0_Int64_Ptr_1_Int64_Delegate), Call_R_System_Void_P_0_Int64_Ptr_1_Int64_Delegate);
+            Register(typeof(void), new Type[] { typeof(long*), typeof(ulong) }, typeof(R_System_Void_P_0_Int64_Ptr_1_UInt64_Delegate), Call_R_System_Void_P_0_Int64_Ptr_1_UInt64_Delegate);
+            Register(typeof(void), new Type[] { typeof(ulong*), typeof(ulong), typeof(ulong) }, typeof(R_System_Void_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate), Call_R_System_Void_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate);
 
 #endif
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.Pointers.MyCastEnum Burst_Compiler_IL_Tests_Pointers_PointerCastEnumDelegate(int arg0, Burst.Compiler.IL.Tests.Pointers.MyCastEnum arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_PointerCastEnumDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.Pointers.MyCastEnum R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate(int arg0, Burst.Compiler.IL.Tests.Pointers.MyCastEnum arg1);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_PointerCastEnumDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.Pointers.MyCastEnum)p[1];
@@ -419,29 +444,39 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.Types.MyEnumByte Burst_Compiler_IL_Tests_Types_CheckEnumByteDelegate(ref Burst.Compiler.IL.Tests.Types.MyEnumByte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_CheckEnumByteDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.Types.MyEnumByte R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate(ref Burst.Compiler.IL.Tests.Types.MyEnumByte arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_CheckEnumByteDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Types.MyEnumByte)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.IntPtr Burst_Compiler_IL_Tests_TestStaticFields_StaticFieldWithIntPtrDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStaticFields_StaticFieldWithIntPtrDelegate(object delegateObj, object[] p)
+        private delegate System.IntPtr R_IntPtr_P_Delegate();
+        private unsafe static object Call_R_IntPtr_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStaticFields_StaticFieldWithIntPtrDelegate)delegateObj;
+            var d = (R_IntPtr_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.IntPtr Burst_Compiler_IL_Tests_TestAtomics_CompareExchangeIntPtrDelegate(System.IntPtr arg0, System.IntPtr arg1, System.IntPtr arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_CompareExchangeIntPtrDelegate(object delegateObj, object[] p)
+        private delegate System.IntPtr R_IntPtr_P_0_IntPtr_Delegate(System.IntPtr arg0);
+        private unsafe static object Call_R_IntPtr_P_0_IntPtr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_CompareExchangeIntPtrDelegate)delegateObj;
+            var d = (R_IntPtr_P_0_IntPtr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (System.IntPtr)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate System.IntPtr R_IntPtr_P_0_IntPtr_1_IntPtr_2_IntPtr_Delegate(System.IntPtr arg0, System.IntPtr arg1, System.IntPtr arg2);
+        private unsafe static object Call_R_IntPtr_P_0_IntPtr_1_IntPtr_2_IntPtr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_IntPtr_P_0_IntPtr_1_IntPtr_2_IntPtr_Delegate)delegateObj;
             object result = null;
             var arg0 = (System.IntPtr)p[0];
             var arg1 = (System.IntPtr)p[1];
@@ -450,88 +485,78 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.IntPtr Burst_Compiler_IL_Tests_Pointers_PointerToPointerDelegate(System.IntPtr arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_PointerToPointerDelegate(object delegateObj, object[] p)
+        private delegate System.IntPtr R_IntPtr_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_IntPtr_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_PointerToPointerDelegate)delegateObj;
-            object result = null;
-            var arg0 = (System.IntPtr)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.IntPtr Burst_Compiler_IL_Tests_Pointers_IntPtrConstructorDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_IntPtrConstructorDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Pointers_IntPtrConstructorDelegate)delegateObj;
+            var d = (R_IntPtr_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.UIntPtr Burst_Compiler_IL_Tests_Pointers_UIntPtrZeroDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_UIntPtrZeroDelegate(object delegateObj, object[] p)
+        private delegate System.UIntPtr R_UIntPtr_P_Delegate();
+        private unsafe static object Call_R_UIntPtr_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_UIntPtrZeroDelegate)delegateObj;
+            var d = (R_UIntPtr_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.UIntPtr Burst_Compiler_IL_Tests_Pointers_UIntPtrAddDelegate(System.UIntPtr arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_UIntPtrAddDelegate(object delegateObj, object[] p)
+        private delegate System.UIntPtr R_UIntPtr_P_0_UIntPtr_Delegate(System.UIntPtr arg0);
+        private unsafe static object Call_R_UIntPtr_P_0_UIntPtr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_UIntPtrAddDelegate)delegateObj;
+            var d = (R_UIntPtr_P_0_UIntPtr_Delegate)delegateObj;
             object result = null;
             var arg0 = (System.UIntPtr)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate System.UIntPtr Burst_Compiler_IL_Tests_Pointers_UIntPtrConstructorDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_UIntPtrConstructorDelegate(object delegateObj, object[] p)
+        private delegate System.UIntPtr R_UIntPtr_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_UIntPtr_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_UIntPtrConstructorDelegate)delegateObj;
+            var d = (R_UIntPtr_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatConstantDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareEqualFloatConstantDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_Delegate();
+        private unsafe static object Call_R_Boolean_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatConstantDelegate)delegateObj;
+            var d = (R_Boolean_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Pointers_TestConditionalPointerDelegate(ref Burst.Compiler.IL.Tests.Pointers.PointerConditional arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_TestConditionalPointerDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_PointerConditional_Ref_Delegate(ref Burst.Compiler.IL.Tests.Pointers.PointerConditional arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_PointerConditional_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_TestConditionalPointerDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_PointerConditional_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Pointers.PointerConditional)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Pointers_StackAllocAliasCheckDelegate(ref Burst.Compiler.IL.Tests.Pointers.StackAllocCheck arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_StackAllocAliasCheckDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_StackAllocCheck_Ref_Delegate(ref Burst.Compiler.IL.Tests.Pointers.StackAllocCheck arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_StackAllocCheck_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_StackAllocAliasCheckDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_Pointers_StackAllocCheck_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Pointers.StackAllocCheck)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestStructs_TestABITransformIntoExplicitLayoutTransformDelegate(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint arg0, Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestABITransformIntoExplicitLayoutTransformDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_1_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_Delegate(Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint arg0, Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint arg1);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_1_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestABITransformIntoExplicitLayoutTransformDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_1_Burst_Compiler_IL_Tests_TestStructs_NetworkEndPoint_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.TestStructs.NetworkEndPoint)p[1];
@@ -539,10 +564,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Pointers_PointerCompareDelegate(System.IntPtr arg0, System.IntPtr arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_PointerCompareDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_IntPtr_Delegate(System.IntPtr arg0);
+        private unsafe static object Call_R_Boolean_P_0_IntPtr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_PointerCompareDelegate)delegateObj;
+            var d = (R_Boolean_P_0_IntPtr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (System.IntPtr)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_IntPtr_1_IntPtr_Delegate(System.IntPtr arg0, System.IntPtr arg1);
+        private unsafe static object Call_R_Boolean_P_0_IntPtr_1_IntPtr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_IntPtr_1_IntPtr_Delegate)delegateObj;
             object result = null;
             var arg0 = (System.IntPtr)p[0];
             var arg1 = (System.IntPtr)p[1];
@@ -550,50 +585,83 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Pointers_RawPointerCompareDelegate(System.IntPtr arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_RawPointerCompareDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool2_Ref_Delegate(ref Unity.Mathematics.bool2 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_RawPointerCompareDelegate)delegateObj;
-            object result = null;
-            var arg0 = (System.IntPtr)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyBool2Delegate(ref Unity.Mathematics.bool2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool2Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyBool2Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyBool3Delegate(ref Unity.Mathematics.bool3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool3Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate(ref Unity.Mathematics.bool2 arg0, ref Unity.Mathematics.bool2 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyBool3Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool2)p[0];
+            var arg1 = (Unity.Mathematics.bool2)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool3_Ref_Delegate(ref Unity.Mathematics.bool3 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyBool4Delegate(ref Unity.Mathematics.bool4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyBool4Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate(ref Unity.Mathematics.bool3 arg0, ref Unity.Mathematics.bool3 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyBool4Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool3)p[0];
+            var arg1 = (Unity.Mathematics.bool3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool4_Ref_Delegate(ref Unity.Mathematics.bool4 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualsDelegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Float2EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(ref Unity.Mathematics.bool4 arg0, ref Unity.Mathematics.bool4 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool4)p[0];
+            var arg1 = (Unity.Mathematics.bool4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float2)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -601,20 +669,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyDelegate(ref Unity.Mathematics.float2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float2)p[0];
+            var arg0 = (Unity.Mathematics.float3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualsDelegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Float3EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -622,20 +690,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_Any32Delegate(ref Unity.Mathematics.float3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Any32Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Any32Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float3)p[0];
+            var arg0 = (Unity.Mathematics.float4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Float4EqualsDelegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Float4EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Float4EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -643,10 +711,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatUnsafeDelegate(ref Unity.Mathematics.float4 arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatUnsafeDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate(ref Unity.Mathematics.float4 arg0, float arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatUnsafeDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (float)p[1];
@@ -654,20 +722,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_Any4Delegate(ref Unity.Mathematics.float4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Any4Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Any4Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float4)p[0];
+            var arg0 = (Unity.Mathematics.int2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualsDelegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int2)p[0];
             var arg1 = (Unity.Mathematics.int2)p[1];
@@ -675,20 +743,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyInt2Delegate(ref Unity.Mathematics.int2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt2Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyInt2Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.int2)p[0];
+            var arg0 = (Unity.Mathematics.int3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualsDelegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int3)p[0];
             var arg1 = (Unity.Mathematics.int3)p[1];
@@ -696,20 +764,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyInt3Delegate(ref Unity.Mathematics.int3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt3Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyInt3Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.int3)p[0];
+            var arg0 = (Unity.Mathematics.int4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualsDelegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int4EqualsDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualsDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             var arg1 = (Unity.Mathematics.int4)p[1];
@@ -717,20 +785,53 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_VectorsMaths_AnyInt4Delegate(ref Unity.Mathematics.int4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AnyInt4Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate(ref Unity.Mathematics.uint2 arg0, ref Unity.Mathematics.uint2 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AnyInt4Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.int4)p[0];
-            result = d(ref arg0);
+            var arg0 = (Unity.Mathematics.uint2)p[0];
+            var arg1 = (Unity.Mathematics.uint2)p[1];
+            result = d(ref arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareEqualBoolDelegate(bool arg0, bool arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareEqualBoolDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate(ref Unity.Mathematics.uint3 arg0, ref Unity.Mathematics.uint3 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareEqualBoolDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint3)p[0];
+            var arg1 = (Unity.Mathematics.uint3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate(ref Unity.Mathematics.uint4 arg0, ref Unity.Mathematics.uint4 arg1);
+        private unsafe static object Call_R_Boolean_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint4)p[0];
+            var arg1 = (Unity.Mathematics.uint4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Boolean_Delegate(bool arg0);
+        private unsafe static object Call_R_Boolean_P_0_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (bool)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Boolean_1_Boolean_Delegate(bool arg0, bool arg1);
+        private unsafe static object Call_R_Boolean_P_0_Boolean_1_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Boolean_1_Boolean_Delegate)delegateObj;
             object result = null;
             var arg0 = (bool)p[0];
             var arg1 = (bool)p[1];
@@ -738,10 +839,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_BoolOrFunctionDelegate(bool arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BoolOrFunctionDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Boolean_1_Int32_Delegate(bool arg0, int arg1);
+        private unsafe static object Call_R_Boolean_P_0_Boolean_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BoolOrFunctionDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Boolean_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (bool)p[0];
             var arg1 = (int)p[1];
@@ -749,30 +850,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Types_BoolArgAndReturnDelegate(bool arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_BoolArgAndReturnDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Double_Delegate(double arg0);
+        private unsafe static object Call_R_Boolean_P_0_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_BoolArgAndReturnDelegate)delegateObj;
-            object result = null;
-            var arg0 = (bool)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanDoubleDelegate(double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestIsNanDoubleDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanDoubleDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatDelegate(float arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareEqualFloatDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Single_Delegate(float arg0);
+        private unsafe static object Call_R_Boolean_P_0_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareEqualFloatDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (float)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate bool R_Boolean_P_0_Single_1_Single_Delegate(float arg0, float arg1);
+        private unsafe static object Call_R_Boolean_P_0_Single_1_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Boolean_P_0_Single_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             var arg1 = (float)p[1];
@@ -780,20 +881,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanFloatDelegate(float arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestIsNanFloatDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Boolean_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestIsNanFloatDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Int32_Delegate)delegateObj;
             object result = null;
-            var arg0 = (float)p[0];
+            var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32Delegate(int arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareEqualInt32Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int32_1_Int32_Delegate(int arg0, int arg1);
+        private unsafe static object Call_R_Boolean_P_0_Int32_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Int32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -801,10 +902,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt32UInt32Delegate(int arg0, uint arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanInt32UInt32Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int32_1_UInt32_Delegate(int arg0, uint arg1);
+        private unsafe static object Call_R_Boolean_P_0_Int32_1_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt32UInt32Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Int32_1_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (uint)p[1];
@@ -812,20 +913,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32WithConstDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareEqualInt32WithConstDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int64_1_Int32_Delegate(long arg0, int arg1);
+        private unsafe static object Call_R_Boolean_P_0_Int64_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareEqualInt32WithConstDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate(long arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareLessThanInt64Int32Delegate)delegateObj;
+            var d = (R_Boolean_P_0_Int64_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             var arg1 = (int)p[1];
@@ -833,10 +924,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate(uint arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UInt32_1_Int32_Delegate(uint arg0, int arg1);
+        private unsafe static object Call_R_Boolean_P_0_UInt32_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_CompareLessThanUInt32Int32Delegate)delegateObj;
+            var d = (R_Boolean_P_0_UInt32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             var arg1 = (int)p[1];
@@ -844,80 +935,90 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate byte Burst_Compiler_IL_Tests_Expressions_ConvOvfU1Delegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1Delegate(object delegateObj, object[] p)
+        private delegate byte R_Byte_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Byte_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU1Delegate)delegateObj;
+            var d = (R_Byte_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate byte Burst_Compiler_IL_Tests_ControlFlows_SwitchOnLongDelegate(long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ControlFlows_SwitchOnLongDelegate(object delegateObj, object[] p)
+        private delegate byte R_Byte_P_0_Int64_Delegate(long arg0);
+        private unsafe static object Call_R_Byte_P_0_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ControlFlows_SwitchOnLongDelegate)delegateObj;
+            var d = (R_Byte_P_0_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate byte Burst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate(object delegateObj, object[] p)
+        private delegate byte R_Byte_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Byte_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU1UnDelegate)delegateObj;
+            var d = (R_Byte_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble2Delegate(ref Unity.Mathematics.double2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AbsDouble2Delegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Unity_Mathematics_double2_Ref_Delegate(ref Unity.Mathematics.double2 arg0);
+        private unsafe static object Call_R_Double_P_0_Unity_Mathematics_double2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble2Delegate)delegateObj;
+            var d = (R_Double_P_0_Unity_Mathematics_double2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.double2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble3Delegate(ref Unity.Mathematics.double3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AbsDouble3Delegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Unity_Mathematics_double3_Ref_Delegate(ref Unity.Mathematics.double3 arg0);
+        private unsafe static object Call_R_Double_P_0_Unity_Mathematics_double3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AbsDouble3Delegate)delegateObj;
+            var d = (R_Double_P_0_Unity_Mathematics_double3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.double3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_VectorsMaths_Cos4dDelegate(ref Unity.Mathematics.double4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Cos4dDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Unity_Mathematics_double4_Ref_Delegate(ref Unity.Mathematics.double4 arg0);
+        private unsafe static object Call_R_Double_P_0_Unity_Mathematics_double4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Cos4dDelegate)delegateObj;
+            var d = (R_Double_P_0_Unity_Mathematics_double4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.double4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_VectorsDoubles_Double4Int4Delegate(ref Unity.Mathematics.int4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsDoubles_Double4Int4Delegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0);
+        private unsafe static object Call_R_Double_P_0_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsDoubles_Double4Int4Delegate)delegateObj;
+            var d = (R_Double_P_0_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate(double arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Double_Delegate(double arg0);
+        private unsafe static object Call_R_Double_P_0_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestMaxDoubleDelegate)delegateObj;
+            var d = (R_Double_P_0_Double_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (double)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate double R_Double_P_0_Double_1_Double_Delegate(double arg0, double arg1);
+        private unsafe static object Call_R_Double_P_0_Double_1_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Double_P_0_Double_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             var arg1 = (double)p[1];
@@ -925,30 +1026,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestAtomics_ExchangeDoubleDelegate(ref double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_ExchangeDoubleDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Double_Ref_Delegate(ref double arg0);
+        private unsafe static object Call_R_Double_P_0_Double_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_ExchangeDoubleDelegate)delegateObj;
+            var d = (R_Double_P_0_Double_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestSystemMath_TestAbsDoubleDelegate(double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsDoubleDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Single_Delegate(float arg0);
+        private unsafe static object Call_R_Double_P_0_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestAbsDoubleDelegate)delegateObj;
+            var d = (R_Double_P_0_Single_Delegate)delegateObj;
             object result = null;
-            var arg0 = (double)p[0];
+            var arg0 = (float)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestSystemMath_TestPowDelegate(float arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestPowDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Single_1_Single_Delegate(float arg0, float arg1);
+        private unsafe static object Call_R_Double_P_0_Single_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestPowDelegate)delegateObj;
+            var d = (R_Double_P_0_Single_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             var arg1 = (float)p[1];
@@ -956,69 +1057,59 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestSystemMath_TestCosDelegate(float arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestCosDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Double_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestCosDelegate)delegateObj;
-            object result = null;
-            var arg0 = (float)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_VectorsDoubles_Double4IntDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsDoubles_Double4IntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsDoubles_Double4IntDelegate)delegateObj;
+            var d = (R_Double_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestAtomics_ReadDelegate(ref long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_ReadDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_0_Int64_Ref_Delegate(ref long arg0);
+        private unsafe static object Call_R_Double_P_0_Int64_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_ReadDelegate)delegateObj;
+            var d = (R_Double_P_0_Int64_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Types_StructDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_StructDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_Delegate();
+        private unsafe static object Call_R_Single_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_StructDelegate)delegateObj;
+            var d = (R_Single_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_TestSByteEnumDelegate(Burst.Compiler.IL.Tests.Expressions.SByteEnum arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_TestSByteEnumDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_SByteEnum_Delegate(Burst.Compiler.IL.Tests.Expressions.SByteEnum arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_SByteEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_TestSByteEnumDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_SByteEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Expressions.SByteEnum)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_TestUnsignedEnumDelegate(Burst.Compiler.IL.Tests.Expressions.UnsignedEnum arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_TestUnsignedEnumDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_UnsignedEnum_Delegate(Burst.Compiler.IL.Tests.Expressions.UnsignedEnum arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_UnsignedEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_TestUnsignedEnumDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_Expressions_UnsignedEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Expressions.UnsignedEnum)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_SelectDelegate(ref Unity.Mathematics.bool2 arg0, ref Unity.Mathematics.float2 arg1, ref Unity.Mathematics.float2 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_SelectDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.bool2 arg0, ref Unity.Mathematics.float2 arg1, ref Unity.Mathematics.float2 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_SelectDelegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -1027,10 +1118,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Select3Delegate(ref Unity.Mathematics.bool3 arg0, ref Unity.Mathematics.float3 arg1, ref Unity.Mathematics.float3 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Select3Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.bool3 arg0, ref Unity.Mathematics.float3 arg1, ref Unity.Mathematics.float3 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Select3Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -1039,10 +1130,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Select4Delegate(ref Unity.Mathematics.bool4 arg0, ref Unity.Mathematics.float4 arg1, ref Unity.Mathematics.float4 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Select4Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.bool4 arg0, ref Unity.Mathematics.float4 arg1, ref Unity.Mathematics.float4 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Select4Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -1051,10 +1142,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Lerp2_2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, ref Unity.Mathematics.float2 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp2_2Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Lerp2_2Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float2)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float2)p[0];
+            var arg1 = (Unity.Mathematics.float2)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, ref Unity.Mathematics.float2 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -1063,10 +1175,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep2Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Single_Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1, float arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep2Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_2_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -1075,31 +1187,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsBinOpFloat2_AddByArgsDelegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_AddByArgsDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat2_AddByArgsDelegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float2)p[0];
-            var arg1 = (Unity.Mathematics.float2)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Cos2Delegate(ref Unity.Mathematics.float2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Cos2Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Cos2Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.float2)p[0];
+            var arg0 = (Unity.Mathematics.float3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Lerp3_3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, ref Unity.Mathematics.float3 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp3_3Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Lerp3_3Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float3)p[0];
+            var arg1 = (Unity.Mathematics.float3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, ref Unity.Mathematics.float3 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -1108,10 +1220,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep3Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Single_Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1, float arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep3Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_2_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -1120,31 +1232,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsBinOpFloat3_AddByArgsDelegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat3_AddByArgsDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat3_AddByArgsDelegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float3)p[0];
-            var arg1 = (Unity.Mathematics.float3)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsIndexers_Float3_get_IndexerByRefDelegate(ref Unity.Mathematics.float3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsIndexers_Float3_get_IndexerByRefDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsIndexers_Float3_get_IndexerByRefDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.float3)p[0];
+            var arg0 = (Unity.Mathematics.float4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Lerp4_4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, ref Unity.Mathematics.float4 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Lerp4_4Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Lerp4_4Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float4)p[0];
+            var arg1 = (Unity.Mathematics.float4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, ref Unity.Mathematics.float4 arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -1153,10 +1265,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_Smoothstep4Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Single_Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1, float arg2);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_Smoothstep4Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_2_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -1165,71 +1277,71 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsBinOpFloat4_AddByArgsDelegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_AddByArgsDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat4_AddByArgsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.float4)p[0];
-            var arg1 = (Unity.Mathematics.float4)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate(ref Unity.Mathematics.float4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Deterministic_CosFloat4Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.float4)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt2Delegate(ref Unity.Mathematics.int2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatInt2Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt2Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt3Delegate(ref Unity.Mathematics.int3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatInt3Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AsFloatInt3Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsBinOpFloat2_ImplicitInt4Delegate(ref Unity.Mathematics.int4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_ImplicitInt4Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat2_ImplicitInt4Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_AsFloatUInt4Delegate(ref Unity.Mathematics.uint4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_AsFloatUInt4Delegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Unity_Mathematics_uint4_Ref_Delegate(ref Unity.Mathematics.uint4 arg0);
+        private unsafe static object Call_R_Single_P_0_Unity_Mathematics_uint4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_AsFloatUInt4Delegate)delegateObj;
+            var d = (R_Single_P_0_Unity_Mathematics_uint4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.uint4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_VectorsMaths_SmoothstepDelegate(float arg0, float arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_SmoothstepDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Single_Delegate(float arg0);
+        private unsafe static object Call_R_Single_P_0_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_SmoothstepDelegate)delegateObj;
+            var d = (R_Single_P_0_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (float)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Single_1_Single_Delegate(float arg0, float arg1);
+        private unsafe static object Call_R_Single_P_0_Single_1_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Single_1_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (float)p[0];
+            var arg1 = (float)p[1];
+            result = d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float R_Single_P_0_Single_1_Single_2_Single_Delegate(float arg0, float arg1, float arg2);
+        private unsafe static object Call_R_Single_P_0_Single_1_Single_2_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Single_P_0_Single_1_Single_2_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             var arg1 = (float)p[1];
@@ -1238,41 +1350,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate(float arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Single_Ref_Delegate(ref float arg0);
+        private unsafe static object Call_R_Single_P_0_Single_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_test_expr_add_two_argumentsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (float)p[0];
-            var arg1 = (float)p[1];
-            result = d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestAtomics_ExchangeFloatDelegate(ref float arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_ExchangeFloatDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_ExchangeFloatDelegate)delegateObj;
+            var d = (R_Single_P_0_Single_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate(float arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Single_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_test_expr_add_multiplesDelegate)delegateObj;
+            var d = (R_Single_P_0_Int32_Delegate)delegateObj;
             object result = null;
-            var arg0 = (float)p[0];
+            var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate(int arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Int32_1_Int32_Delegate(int arg0, int arg1);
+        private unsafe static object Call_R_Single_P_0_Int32_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ControlFlows_ForWhileNestedCallDelegate)delegateObj;
+            var d = (R_Single_P_0_Int32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -1280,59 +1381,49 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_ControlFlows_ForDynamicConditionDelegate(ref int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ControlFlows_ForDynamicConditionDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Int32_Ref_Delegate(ref int arg0);
+        private unsafe static object Call_R_Single_P_0_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ControlFlows_ForDynamicConditionDelegate)delegateObj;
+            var d = (R_Single_P_0_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Single_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToFloatDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_Expressions_ConvertUIntToFloatDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToFloatDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertUIntToFloatDelegate)delegateObj;
+            var d = (R_Single_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_Delegate();
+        private unsafe static object Call_R_Int32_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_SizeOfBoolStructDelegate)delegateObj;
+            var d = (R_Int32_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate(Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_ControlFlows_EnumSwitch_Delegate(Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ControlFlows_EnumSwitch_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ControlFlows_SwitchEnumDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_ControlFlows_EnumSwitch_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ControlFlows.EnumSwitch)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate(ref Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_NotSupported_CharbyValueFunc_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NotSupported_CharbyValueFunc_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NotSupported_TestCharbyValueDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_NotSupported_CharbyValueFunc_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NotSupported.CharbyValueFunc)p[0];
             var arg1 = (int)p[1];
@@ -1340,10 +1431,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate(ref Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_Delegate(ref Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_FixedFieldViaPointerDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_Pointers_MyStructWithFixed_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed)p[0];
             var arg1 = (int)p[1];
@@ -1351,140 +1452,206 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate(ref Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_MyEnum_Delegate(Burst.Compiler.IL.Tests.TestEnums.MyEnum arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_MyEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_FixedInt32AndRefInt32Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Pointers.MyStructWithFixed)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate(Burst.Compiler.IL.Tests.TestEnums.MyEnum arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestEnums_test_enum_compareDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_MyEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestEnums.MyEnum)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestEnums_test_enum_sizeof_small_enum_in_struct_accessDelegate(Burst.Compiler.IL.Tests.TestEnums.SmallEnum arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestEnums_test_enum_sizeof_small_enum_in_struct_accessDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_SmallEnum_Delegate(Burst.Compiler.IL.Tests.TestEnums.SmallEnum arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_SmallEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestEnums_test_enum_sizeof_small_enum_in_struct_accessDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestEnums_SmallEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestEnums.SmallEnum)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestExplicitLayoutStructFixedBufferDelegate(ref Burst.Compiler.IL.Tests.TestStructs.ExplicitLayoutStructFixedBuffer arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestExplicitLayoutStructFixedBufferDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ExplicitLayoutStructFixedBuffer_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.ExplicitLayoutStructFixedBuffer arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ExplicitLayoutStructFixedBuffer_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestExplicitLayoutStructFixedBufferDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ExplicitLayoutStructFixedBuffer_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.ExplicitLayoutStructFixedBuffer)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestSequentialStructWithPaddingAndVectorFieldDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SequentialStructWithPaddingAndVectorField arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestSequentialStructWithPaddingAndVectorFieldDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SequentialStructWithPaddingAndVectorField_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.SequentialStructWithPaddingAndVectorField arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SequentialStructWithPaddingAndVectorField_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestSequentialStructWithPaddingAndVectorFieldDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SequentialStructWithPaddingAndVectorField_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SequentialStructWithPaddingAndVectorField)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesDelegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithBlittableTypes arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithBlittableTypes_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithBlittableTypes arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithBlittableTypes_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithBlittableTypes_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.StructWithBlittableTypes)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructWithNonBlittableTypesDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructWithBlittableTypesWithMarshalAsDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Types_EnumByParamDelegate(Burst.Compiler.IL.Tests.Types.MyEnum arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_EnumByParamDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate(Burst.Compiler.IL.Tests.Types.MyEnum arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_EnumByParamDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Types.MyEnum)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate(System.IntPtr arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_IntPtr_Delegate(System.IntPtr arg0);
+        private unsafe static object Call_R_Int32_P_0_IntPtr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestEnums_TestEnumSwitchCaseDelegate)delegateObj;
+            var d = (R_Int32_P_0_IntPtr_Delegate)delegateObj;
             object result = null;
             var arg0 = (System.IntPtr)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate(ref Unity.Mathematics.bool2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate(ref Unity.Mathematics.bool2 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBools_Bool2NotDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate(ref Unity.Mathematics.bool3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate(ref Unity.Mathematics.bool2 arg0, ref Unity.Mathematics.bool2 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBools_Bool3NotDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool2)p[0];
+            var arg1 = (Unity.Mathematics.bool2)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Boolean_Delegate(ref Unity.Mathematics.bool2 arg0, bool arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool2)p[0];
+            var arg1 = (bool)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool3_Ref_Delegate(ref Unity.Mathematics.bool3 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_bool3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate(ref Unity.Mathematics.bool4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate(ref Unity.Mathematics.bool3 arg0, ref Unity.Mathematics.bool3 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBools_Bool4NotDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Unity_Mathematics_bool3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool3)p[0];
+            var arg1 = (Unity.Mathematics.bool3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Boolean_Delegate(ref Unity.Mathematics.bool3 arg0, bool arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_bool3_Ref_1_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool3)p[0];
+            var arg1 = (bool)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool4_Ref_Delegate(ref Unity.Mathematics.bool4 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_bool4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.bool4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityFloat2Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityFloat2Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(ref Unity.Mathematics.bool4 arg0, ref Unity.Mathematics.bool4 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityFloat2Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool4)p[0];
+            var arg1 = (Unity.Mathematics.bool4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Boolean_Delegate(ref Unity.Mathematics.bool4 arg0, bool arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_bool4_Ref_1_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.bool4)p[0];
+            var arg1 = (bool)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float2)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(ref Unity.Mathematics.float2 arg0, ref Unity.Mathematics.float2 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (Unity.Mathematics.float2)p[1];
@@ -1492,10 +1659,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualityWithFloatDelegate(ref Unity.Mathematics.float2 arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Float2EqualityWithFloatDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Single_Delegate(ref Unity.Mathematics.float2 arg0, float arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Float2EqualityWithFloatDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float2_Ref_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2)p[0];
             var arg1 = (float)p[1];
@@ -1503,20 +1670,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsHashCodes_Float2GetHashCodeDelegate(ref Unity.Mathematics.float2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsHashCodes_Float2GetHashCodeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsHashCodes_Float2GetHashCodeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float2)p[0];
+            var arg0 = (Unity.Mathematics.float3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpFloat3_EqualityFloat3Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat3_EqualityFloat3Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(ref Unity.Mathematics.float3 arg0, ref Unity.Mathematics.float3 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat3_EqualityFloat3Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (Unity.Mathematics.float3)p[1];
@@ -1524,10 +1691,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualityWithFloatDelegate(ref Unity.Mathematics.float3 arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Float3EqualityWithFloatDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Single_Delegate(ref Unity.Mathematics.float3 arg0, float arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Float3EqualityWithFloatDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float3_Ref_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3)p[0];
             var arg1 = (float)p[1];
@@ -1535,20 +1702,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(ref Unity.Mathematics.float3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestRegressionIssue133Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float3)p[0];
+            var arg0 = (Unity.Mathematics.float4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpFloat4_EqualityFloat4Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_EqualityFloat4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(ref Unity.Mathematics.float4 arg0, ref Unity.Mathematics.float4 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat4_EqualityFloat4Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (Unity.Mathematics.float4)p[1];
@@ -1556,10 +1723,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatDelegate(ref Unity.Mathematics.float4 arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate(ref Unity.Mathematics.float4 arg0, float arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat4_GreaterThanFloat4FloatDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_float4_Ref_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4)p[0];
             var arg1 = (float)p[1];
@@ -1567,20 +1734,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsHashCodes_Float4GetHashCodeDelegate(ref Unity.Mathematics.float4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsHashCodes_Float4GetHashCodeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsHashCodes_Float4GetHashCodeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.float4)p[0];
+            var arg0 = (Unity.Mathematics.int2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_ClampInt2Delegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1, ref Unity.Mathematics.int2 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt2Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_ClampInt2Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.int2)p[0];
+            var arg1 = (Unity.Mathematics.int2)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_2_Unity_Mathematics_int2_Ref_Delegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1, ref Unity.Mathematics.int2 arg2);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_2_Unity_Mathematics_int2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Unity_Mathematics_int2_Ref_2_Unity_Mathematics_int2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int2)p[0];
             var arg1 = (Unity.Mathematics.int2)p[1];
@@ -1589,21 +1767,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityDelegate(ref Unity.Mathematics.int2 arg0, ref Unity.Mathematics.int2 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualityDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Int32_Delegate(ref Unity.Mathematics.int2 arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.int2)p[0];
-            var arg1 = (Unity.Mathematics.int2)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityWithIntDelegate(ref Unity.Mathematics.int2 arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int2EqualityWithIntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int2EqualityWithIntDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int2_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int2)p[0];
             var arg1 = (int)p[1];
@@ -1611,20 +1778,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestVectorStoreToExplicitStructDelegate(ref Unity.Mathematics.int2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestVectorStoreToExplicitStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestVectorStoreToExplicitStructDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.int2)p[0];
+            var arg0 = (Unity.Mathematics.int3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_ClampInt3Delegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1, ref Unity.Mathematics.int3 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt3Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_ClampInt3Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.int3)p[0];
+            var arg1 = (Unity.Mathematics.int3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_2_Unity_Mathematics_int3_Ref_Delegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1, ref Unity.Mathematics.int3 arg2);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_2_Unity_Mathematics_int3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Unity_Mathematics_int3_Ref_2_Unity_Mathematics_int3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int3)p[0];
             var arg1 = (Unity.Mathematics.int3)p[1];
@@ -1633,21 +1811,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityDelegate(ref Unity.Mathematics.int3 arg0, ref Unity.Mathematics.int3 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualityDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Int32_Delegate(ref Unity.Mathematics.int3 arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.int3)p[0];
-            var arg1 = (Unity.Mathematics.int3)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityWithIntDelegate(ref Unity.Mathematics.int3 arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int3EqualityWithIntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int3EqualityWithIntDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int3_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int3)p[0];
             var arg1 = (int)p[1];
@@ -1655,20 +1822,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsHashCodes_Int3GetHashCodeDelegate(ref Unity.Mathematics.int3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsHashCodes_Int3GetHashCodeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsHashCodes_Int3GetHashCodeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Mathematics.int3)p[0];
+            var arg0 = (Unity.Mathematics.int4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_CompressInt4Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.bool4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_CompressInt4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.bool4 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_CompressInt4Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_bool4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             var arg1 = (Unity.Mathematics.bool4)p[1];
@@ -1676,10 +1843,21 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_ClampInt4Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1, ref Unity.Mathematics.int4 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_ClampInt4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_ClampInt4Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.int4)p[0];
+            var arg1 = (Unity.Mathematics.int4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_2_Unity_Mathematics_int4_Ref_Delegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1, ref Unity.Mathematics.int4 arg2);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_2_Unity_Mathematics_int4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Unity_Mathematics_int4_Ref_2_Unity_Mathematics_int4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             var arg1 = (Unity.Mathematics.int4)p[1];
@@ -1688,21 +1866,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpInt4_AddByArgsDelegate(ref Unity.Mathematics.int4 arg0, ref Unity.Mathematics.int4 arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpInt4_AddByArgsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Int32_Delegate(ref Unity.Mathematics.int4 arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpInt4_AddByArgsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.int4)p[0];
-            var arg1 = (Unity.Mathematics.int4)p[1];
-            result = d(ref arg0, ref arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualityWithIntDelegate(ref Unity.Mathematics.int4 arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsEquality_Int4EqualityWithIntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsEquality_Int4EqualityWithIntDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_int4_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.int4)p[0];
             var arg1 = (int)p[1];
@@ -1710,50 +1877,139 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpInt4_ImplicitInt4Delegate(ref Unity.Mathematics.int4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpInt4_ImplicitInt4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint2_Ref_Delegate(ref Unity.Mathematics.uint2 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpInt4_ImplicitInt4Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Mathematics.int4)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt2Delegate(ref Unity.Mathematics.uint2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt2Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt2Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_uint2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.uint2)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt3Delegate(ref Unity.Mathematics.uint3 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt3Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate(ref Unity.Mathematics.uint2 arg0, ref Unity.Mathematics.uint2 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt3Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_Unity_Mathematics_uint2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint2)p[0];
+            var arg1 = (Unity.Mathematics.uint2)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_UInt32_Delegate(ref Unity.Mathematics.uint2 arg0, uint arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_UInt32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_uint2_Ref_1_UInt32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint2)p[0];
+            var arg1 = (uint)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint3_Ref_Delegate(ref Unity.Mathematics.uint3 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_uint3_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.uint3)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt4Delegate(ref Unity.Mathematics.uint4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate(ref Unity.Mathematics.uint3 arg0, ref Unity.Mathematics.uint3 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_CountBitsUInt4Delegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_Unity_Mathematics_uint3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint3)p[0];
+            var arg1 = (Unity.Mathematics.uint3)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_UInt32_Delegate(ref Unity.Mathematics.uint3 arg0, uint arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_UInt32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_uint3_Ref_1_UInt32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint3)p[0];
+            var arg1 = (uint)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint4_Ref_Delegate(ref Unity.Mathematics.uint4 arg0);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_uint4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.uint4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsConstructors_Bool44BoolsDelegate(bool arg0, bool arg1, bool arg2, bool arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool44BoolsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate(ref Unity.Mathematics.uint4 arg0, ref Unity.Mathematics.uint4 arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsConstructors_Bool44BoolsDelegate)delegateObj;
+            var d = (R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_Unity_Mathematics_uint4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint4)p[0];
+            var arg1 = (Unity.Mathematics.uint4)p[1];
+            result = d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_UInt32_Delegate(ref Unity.Mathematics.uint4 arg0, uint arg1);
+        private unsafe static object Call_R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_UInt32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Unity_Mathematics_uint4_Ref_1_UInt32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint4)p[0];
+            var arg1 = (uint)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Boolean_Delegate(bool arg0);
+        private unsafe static object Call_R_Int32_P_0_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (bool)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Boolean_1_Boolean_Delegate(bool arg0, bool arg1);
+        private unsafe static object Call_R_Int32_P_0_Boolean_1_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Boolean_1_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (bool)p[0];
+            var arg1 = (bool)p[1];
+            result = d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Boolean_1_Boolean_2_Boolean_Delegate(bool arg0, bool arg1, bool arg2);
+        private unsafe static object Call_R_Int32_P_0_Boolean_1_Boolean_2_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Boolean_1_Boolean_2_Boolean_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (bool)p[0];
+            var arg1 = (bool)p[1];
+            var arg2 = (bool)p[2];
+            result = d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Boolean_1_Boolean_2_Boolean_3_Boolean_Delegate(bool arg0, bool arg1, bool arg2, bool arg3);
+        private unsafe static object Call_R_Int32_P_0_Boolean_1_Boolean_2_Boolean_3_Boolean_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Boolean_1_Boolean_2_Boolean_3_Boolean_Delegate)delegateObj;
             object result = null;
             var arg0 = (bool)p[0];
             var arg1 = (bool)p[1];
@@ -1763,63 +2019,40 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsConstructors_Bool33BoolsDelegate(bool arg0, bool arg1, bool arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool33BoolsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Byte_Delegate(byte arg0);
+        private unsafe static object Call_R_Int32_P_0_Byte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsConstructors_Bool33BoolsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (bool)p[0];
-            var arg1 = (bool)p[1];
-            var arg2 = (bool)p[2];
-            result = d(arg0, arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsConstructors_Bool22IntsDelegate(bool arg0, bool arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsConstructors_Bool22IntsDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsConstructors_Bool22IntsDelegate)delegateObj;
-            object result = null;
-            var arg0 = (bool)p[0];
-            var arg1 = (bool)p[1];
-            result = d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_BrtrueDelegate(bool arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BrtrueDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BrtrueDelegate)delegateObj;
-            object result = null;
-            var arg0 = (bool)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_ConvertbyteToIntDelegate(byte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertbyteToIntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertbyteToIntDelegate)delegateObj;
+            var d = (R_Int32_P_0_Byte_Delegate)delegateObj;
             object result = null;
             var arg0 = (byte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestSystemMath_TestSignDoubleDelegate(double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestSignDoubleDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Double_Delegate(double arg0);
+        private unsafe static object Call_R_Int32_P_0_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestSignDoubleDelegate)delegateObj;
+            var d = (R_Int32_P_0_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityDelegate(float arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Single_Delegate(float arg0);
+        private unsafe static object Call_R_Int32_P_0_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_VectorsBinOpFloat2_EqualityDelegate)delegateObj;
+            var d = (R_Int32_P_0_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (float)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Single_1_Single_Delegate(float arg0, float arg1);
+        private unsafe static object Call_R_Int32_P_0_Single_1_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Single_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (float)p[0];
             var arg1 = (float)p[1];
@@ -1827,20 +2060,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_test_expr_cast_float_to_intDelegate(float arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_test_expr_cast_float_to_intDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Int32_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_test_expr_cast_float_to_intDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_Delegate)delegateObj;
             object result = null;
-            var arg0 = (float)p[0];
+            var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ControlFlows_IfDeepDelegate(int arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ControlFlows_IfDeepDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_1_Int32_Delegate(int arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Int32_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ControlFlows_IfDeepDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_1_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int)p[0];
+            var arg1 = (int)p[1];
+            result = d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Int32_1_Int32_2_Int32_Delegate(int arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Int32_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Int32_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -1849,21 +2093,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate(int arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_Ref_Delegate(ref int arg0);
+        private unsafe static object Call_R_Int32_P_0_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BinaryNumericAddDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
-            var arg1 = (int)p[1];
-            result = d(arg0, arg1);
+            result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate(ref int arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_Ref_1_Int32_2_Int32_Delegate(ref int arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Int32_Ref_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_intDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_Ref_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -1872,30 +2115,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_InlineIL_CheckBrtruePointerDelegate(ref int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_InlineIL_CheckBrtruePointerDelegate(object delegateObj, object[] p)
+        private unsafe delegate int R_Int32_P_0_Int32_Ptr_1_Int32_Delegate(int* arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Int32_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_InlineIL_CheckBrtruePointerDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_AddOvfDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_AddOvfDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_AddOvfDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate int Burst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate(int* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Pointers_UnsafeCompareDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_Ptr_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -1903,30 +2126,40 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate(long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int64_Delegate(long arg0);
+        private unsafe static object Call_R_Int32_P_0_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI4Delegate)delegateObj;
+            var d = (R_Int32_P_0_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate(short arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int16_Delegate(short arg0);
+        private unsafe static object Call_R_Int32_P_0_Int16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertShortToIntDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int16_Delegate)delegateObj;
             object result = null;
             var arg0 = (short)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftRightUIntToInt32Delegate(uint arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftRightUIntToInt32Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Int32_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftRightUIntToInt32Delegate)delegateObj;
+            var d = (R_Int32_P_0_UInt32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (uint)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_UInt32_1_Int32_Delegate(uint arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_UInt32_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_UInt32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             var arg1 = (int)p[1];
@@ -1934,49 +2167,59 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_ConvOvfI4UnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI4UnDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_UInt64_Delegate(ulong arg0);
+        private unsafe static object Call_R_Int32_P_0_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI4UnDelegate)delegateObj;
-            object result = null;
-            var arg0 = (uint)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_VectorsMaths_CountBitsULongDelegate(ulong arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_VectorsMaths_CountBitsULongDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_VectorsMaths_CountBitsULongDelegate)delegateObj;
+            var d = (R_Int32_P_0_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Types_StructAccessDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Types_StructAccessDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_UInt16_Delegate(ushort arg0);
+        private unsafe static object Call_R_Int32_P_0_UInt16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Types_StructAccessDelegate)delegateObj;
+            var d = (R_Int32_P_0_UInt16_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (ushort)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate long R_Int64_P_Delegate();
+        private unsafe static object Call_R_Int64_P_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int64_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvOvfI8Delegate(double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI8Delegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Double_Delegate(double arg0);
+        private unsafe static object Call_R_Int64_P_0_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI8Delegate)delegateObj;
+            var d = (R_Int64_P_0_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_TestSystemMath_TestBigMulIntDelegate(int arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestBigMulIntDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Int64_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestBigMulIntDelegate)delegateObj;
+            var d = (R_Int64_P_0_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate long R_Int64_P_0_Int32_1_Int32_Delegate(int arg0, int arg1);
+        private unsafe static object Call_R_Int64_P_0_Int32_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int64_P_0_Int32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -1984,20 +2227,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int64_Delegate(long arg0);
+        private unsafe static object Call_R_Int64_P_0_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongDelegate)delegateObj;
+            var d = (R_Int64_P_0_Int64_Delegate)delegateObj;
             object result = null;
-            var arg0 = (int)p[0];
+            var arg0 = (long)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_BinaryNumericDiv64Delegate(long arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericDiv64Delegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int64_1_Int32_Delegate(long arg0, int arg1);
+        private unsafe static object Call_R_Int64_P_0_Int64_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BinaryNumericDiv64Delegate)delegateObj;
+            var d = (R_Int64_P_0_Int64_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             var arg1 = (int)p[1];
@@ -2005,10 +2248,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_longDelegate(ref long arg0, long arg1, long arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_longDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int64_Ref_Delegate(ref long arg0);
+        private unsafe static object Call_R_Int64_P_0_Int64_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_test_atomic_compare_and_exchange_longDelegate)delegateObj;
+            var d = (R_Int64_P_0_Int64_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (long)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate long R_Int64_P_0_Int64_Ref_1_Int64_2_Int64_Delegate(ref long arg0, long arg1, long arg2);
+        private unsafe static object Call_R_Int64_P_0_Int64_Ref_1_Int64_2_Int64_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int64_P_0_Int64_Ref_1_Int64_2_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             var arg1 = (long)p[1];
@@ -2017,159 +2270,149 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_TestAtomics_test_atomic_increment_longDelegate(ref long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAtomics_test_atomic_increment_longDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_SByte_Delegate(sbyte arg0);
+        private unsafe static object Call_R_Int64_P_0_SByte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAtomics_test_atomic_increment_longDelegate)delegateObj;
-            object result = null;
-            var arg0 = (long)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_TestSystemMath_TestAbsLongDelegate(long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsLongDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestAbsLongDelegate)delegateObj;
-            object result = null;
-            var arg0 = (long)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToLongDelegate(sbyte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertSbyteToLongDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToLongDelegate)delegateObj;
+            var d = (R_Int64_P_0_SByte_Delegate)delegateObj;
             object result = null;
             var arg0 = (sbyte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvertShortToLongDelegate(short arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToLongDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int16_Delegate(short arg0);
+        private unsafe static object Call_R_Int64_P_0_Int16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertShortToLongDelegate)delegateObj;
+            var d = (R_Int64_P_0_Int16_Delegate)delegateObj;
             object result = null;
             var arg0 = (short)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvertUIntToLongDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToLongDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Int64_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertUIntToLongDelegate)delegateObj;
+            var d = (R_Int64_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvOvfI8UnDelegate(ulong arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI8UnDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_UInt64_Delegate(ulong arg0);
+        private unsafe static object Call_R_Int64_P_0_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI8UnDelegate)delegateObj;
+            var d = (R_Int64_P_0_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate sbyte Burst_Compiler_IL_Tests_Expressions_ConvI1Delegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvI1Delegate(object delegateObj, object[] p)
+        private delegate sbyte R_SByte_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_SByte_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvI1Delegate)delegateObj;
+            var d = (R_SByte_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate sbyte Burst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate(sbyte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate(object delegateObj, object[] p)
+        private delegate sbyte R_SByte_P_0_SByte_Delegate(sbyte arg0);
+        private unsafe static object Call_R_SByte_P_0_SByte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestAbsSByteDelegate)delegateObj;
+            var d = (R_SByte_P_0_SByte_Delegate)delegateObj;
             object result = null;
             var arg0 = (sbyte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate sbyte Burst_Compiler_IL_Tests_Expressions_ConvOvfI1UnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI1UnDelegate(object delegateObj, object[] p)
+        private delegate sbyte R_SByte_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_SByte_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI1UnDelegate)delegateObj;
+            var d = (R_SByte_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate short Burst_Compiler_IL_Tests_Expressions_ConvI2Delegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvI2Delegate(object delegateObj, object[] p)
+        private delegate short R_Int16_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_Int16_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvI2Delegate)delegateObj;
+            var d = (R_Int16_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate short Burst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate(short arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate(object delegateObj, object[] p)
+        private delegate short R_Int16_P_0_Int16_Delegate(short arg0);
+        private unsafe static object Call_R_Int16_P_0_Int16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSystemMath_TestAbsShortDelegate)delegateObj;
+            var d = (R_Int16_P_0_Int16_Delegate)delegateObj;
             object result = null;
             var arg0 = (short)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate short Burst_Compiler_IL_Tests_Expressions_ConvOvfI2UnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfI2UnDelegate(object delegateObj, object[] p)
+        private delegate short R_Int16_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Int16_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfI2UnDelegate)delegateObj;
+            var d = (R_Int16_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_Delegate();
+        private unsafe static object Call_R_UInt32_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertUShortToUIntConstMaxDelegate)delegateObj;
+            var d = (R_UInt32_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_UInt32_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU4Delegate)delegateObj;
+            var d = (R_UInt32_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate(sbyte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_SByte_Delegate(sbyte arg0);
+        private unsafe static object Call_R_UInt32_P_0_SByte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertSbyteToUIntDelegate)delegateObj;
+            var d = (R_UInt32_P_0_SByte_Delegate)delegateObj;
             object result = null;
             var arg0 = (sbyte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate(uint arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_UInt32_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_BinaryNumericShiftLeftUInt32Delegate)delegateObj;
+            var d = (R_UInt32_P_0_UInt32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (uint)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate uint R_UInt32_P_0_UInt32_1_Int32_Delegate(uint arg0, int arg1);
+        private unsafe static object Call_R_UInt32_P_0_UInt32_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_UInt32_P_0_UInt32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             var arg1 = (int)p[1];
@@ -2177,90 +2420,69 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_SubOvfUnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_SubOvfUnDelegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_UInt64_Delegate(ulong arg0);
+        private unsafe static object Call_R_UInt32_P_0_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_SubOvfUnDelegate)delegateObj;
-            object result = null;
-            var arg0 = (uint)p[0];
-            result = d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate(ulong arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU4UnDelegate)delegateObj;
+            var d = (R_UInt32_P_0_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate(object delegateObj, object[] p)
+        private delegate ulong R_UInt64_P_Delegate();
+        private unsafe static object Call_R_UInt64_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToLongConstDelegate)delegateObj;
+            var d = (R_UInt64_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate(double arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate(object delegateObj, object[] p)
+        private delegate ulong R_UInt64_P_0_Double_Delegate(double arg0);
+        private unsafe static object Call_R_UInt64_P_0_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU8Delegate)delegateObj;
+            var d = (R_UInt64_P_0_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate(object delegateObj, object[] p)
+        private delegate ulong R_UInt64_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_UInt64_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertIntToULongDelegate)delegateObj;
+            var d = (R_UInt64_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate(short arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate(object delegateObj, object[] p)
+        private delegate ulong R_UInt64_P_0_Int16_Delegate(short arg0);
+        private unsafe static object Call_R_UInt64_P_0_Int16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertShortToULongDelegate)delegateObj;
+            var d = (R_UInt64_P_0_Int16_Delegate)delegateObj;
             object result = null;
             var arg0 = (short)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_Expressions_ConvertUIntToULongDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertUIntToULongDelegate(object delegateObj, object[] p)
+        private delegate ulong R_UInt64_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_UInt64_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertUIntToULongDelegate)delegateObj;
+            var d = (R_UInt64_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighDelegate(ulong arg0, ulong arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighDelegate(object delegateObj, object[] p)
+        private unsafe delegate ulong R_UInt64_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate(ulong* arg0, ulong arg1, ulong arg2);
+        private unsafe static object Call_R_UInt64_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighDelegate)delegateObj;
-            object result = null;
-            var arg0 = (ulong)p[0];
-            var arg1 = (ulong)p[1];
-            result = d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate ulong Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighAndLowDelegate(ulong* arg0, ulong arg1, ulong arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighAndLowDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_IntrinsicsCommon_CheckMulHighAndLowDelegate)delegateObj;
+            var d = (R_UInt64_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong*)(IntPtr)p[0];
             var arg1 = (ulong)p[1];
@@ -2269,69 +2491,89 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ushort Burst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate(object delegateObj, object[] p)
+        private delegate ushort R_UInt16_P_0_Burst_Compiler_IL_Tests_TestFixed_SomeStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestFixed.SomeStruct arg0);
+        private unsafe static object Call_R_UInt16_P_0_Burst_Compiler_IL_Tests_TestFixed_SomeStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU2Delegate)delegateObj;
+            var d = (R_UInt16_P_0_Burst_Compiler_IL_Tests_TestFixed_SomeStruct_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestFixed.SomeStruct)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate ushort R_UInt16_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_UInt16_P_0_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_UInt16_P_0_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ushort Burst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate(object delegateObj, object[] p)
+        private delegate ushort R_UInt16_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_UInt16_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvOvfU2UnDelegate)delegateObj;
+            var d = (R_UInt16_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Unity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate();
-        private unsafe static object CallUnity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_Delegate();
+        private unsafe static object Call_R_System_Void_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Unity_Mathematics_Tests_TestBitmanipulation_bitmask_bool4Delegate)delegateObj;
+            var d = (R_System_Void_P_Delegate)delegateObj;
             object result = null;
             d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_ContainerOfManyNoAliasFields_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_ContainerOfManyNoAliasFields_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasOfSubStructsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_ContainerOfManyNoAliasFields_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.ContainerOfManyNoAliasFields)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_DoesAliasWithSubStructPointersStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_DoesAliasWithSubStructPointersStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasAndSubStructsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_DoesAliasWithSubStructPointersStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.DoesAliasWithSubStructPointersStruct)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate(ref Burst.Compiler.IL.Tests.Aliasing.LinkedList arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_LinkedList_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.LinkedList arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_LinkedList_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructPointerOfSameTypeInStructDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_LinkedList_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.LinkedList)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0, ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldAcrossTwoSameTypedStructsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_1_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0, ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_1_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_1_Burst_Compiler_IL_Tests_Aliasing_NoAliasField_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[1];
@@ -2339,80 +2581,136 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasField arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasWithContentsStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasWithContentsStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasFieldWithItselfDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasField)p[0];
-            d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate(ref Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckStructWithNoAliasDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_NoAliasWithContentsStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.NoAliasWithContentsStruct)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate(ref Burst.Compiler.IL.Tests.Aliasing.Union arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_Union_Ref_Delegate(ref Burst.Compiler.IL.Tests.Aliasing.Union arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_Union_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsInUnionDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Aliasing_Union_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Aliasing.Union)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat2x2Delegate(Unity.Mathematics.float2x2* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat2x2Delegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.Fixed4096 arg0, ref Burst.Compiler.IL.Tests.TestStructs.Fixed4096 arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat2x2Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.Fixed4096)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.TestStructs.Fixed4096)p[1];
+            d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096 arg0, ref Burst.Compiler.IL.Tests.TestStructs.Sized4096 arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.TestStructs.Sized4096)p[1];
+            d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_2_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096 arg0, ref Burst.Compiler.IL.Tests.TestStructs.Sized4096 arg1, ref Burst.Compiler.IL.Tests.TestStructs.Sized4096 arg2);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_2_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_MultipleSized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_2_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.MultipleSized4096)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.TestStructs.Sized4096)p[1];
+            var arg2 = (Burst.Compiler.IL.Tests.TestStructs.Sized4096)p[2];
+            d(ref arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_PointersInStruct_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.PointersInStruct arg0, ref Burst.Compiler.IL.Tests.TestStructs.Fixed4096 arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_PointersInStruct_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_PointersInStruct_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Fixed4096_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.PointersInStruct)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.TestStructs.Fixed4096)p[1];
+            d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.Sized4096 arg0, ref Burst.Compiler.IL.Tests.TestStructs.Sized4096 arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_1_Burst_Compiler_IL_Tests_TestStructs_Sized4096_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestStructs.Sized4096)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.TestStructs.Sized4096)p[1];
+            d(ref arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float2x2_Ptr_Delegate(Unity.Mathematics.float2x2* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float2x2_Ptr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_float2x2_Ptr_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float2x2*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat3x3Delegate(Unity.Mathematics.float3x3* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat3x3Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float3x3_Ptr_Delegate(Unity.Mathematics.float3x3* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float3x3_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat3x3Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Mathematics_float3x3_Ptr_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float3x3*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat4x4Delegate(Unity.Mathematics.float4x4* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Matrices_TestIdentityFloat4x4Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float4x4_Ptr_Delegate(Unity.Mathematics.float4x4* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float4x4_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Matrices_TestIdentityFloat4x4Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Mathematics_float4x4_Ptr_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Mathematics.float4x4*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate(bool arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Boolean_Delegate(bool arg0);
+        private unsafe static object Call_R_System_Void_P_0_Boolean_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestDiscard_ArgumentWithControlFlowDiscardDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Boolean_Delegate)delegateObj;
             object result = null;
             var arg0 = (bool)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NotSupported_TestAreEqualDelegate(int arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NotSupported_TestAreEqualDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Int32_Delegate(int arg0);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NotSupported_TestAreEqualDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int)p[0];
+            d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Int32_1_Int32_Delegate(int arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int32_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Int32_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -2420,10 +2718,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate(ref int arg0, ref float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Int32_Ref_1_Single_Ref_Delegate(ref int arg0, ref float arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ref_1_Single_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsAcrossTypesDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Ref_1_Single_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (float)p[1];
@@ -2431,22 +2729,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckInRefOutDelegate(ref int arg0, ref int arg1, ref int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckInRefOutDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Int32_Ref_1_Int32_Ref_Delegate(ref int arg0, ref int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ref_1_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckInRefOutDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            d(ref arg0, ref arg1, ref arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate(ref int arg0, ref int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_Aliasing_CheckNoAliasRefsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Ref_1_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -2454,22 +2740,24 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate(int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Int32_Ref_1_Int32_Ref_2_Int32_Ref_Delegate(ref int arg0, ref int arg1, ref int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ref_1_Int32_Ref_2_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Pointers_TestCellVisibleInternalDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Ref_1_Int32_Ref_2_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
-            d(arg0);
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            d(ref arg0, ref arg1, ref arg2);
             return result;
         }
 
 #if BURST_TESTS_ONLY
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct Burst_Compiler_IL_Tests_ABI_EntryBigExplicitLayoutStructDelegate(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryBigExplicitLayoutStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct R_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_1_Int32_Delegate(Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct arg0, int arg1);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryBigExplicitLayoutStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigExplicitLayoutStruct_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.BigExplicitLayoutStruct)p[0];
             var arg1 = (int)p[1];
@@ -2477,119 +2765,119 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.BigSSEStruct Burst_Compiler_IL_Tests_ABI_EntryBigSSEStructDelegate(Burst.Compiler.IL.Tests.ABI.BigSSEStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryBigSSEStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.BigSSEStruct R_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_Delegate(Burst.Compiler.IL.Tests.ABI.BigSSEStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryBigSSEStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_P_0_Burst_Compiler_IL_Tests_ABI_BigSSEStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.BigSSEStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.BigStruct Burst_Compiler_IL_Tests_ABI_EntryPointReturnBigStructDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnBigStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.BigStruct R_Burst_Compiler_IL_Tests_ABI_BigStruct_P_Delegate();
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_BigStruct_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointReturnBigStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_BigStruct_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.EmptyStruct Burst_Compiler_IL_Tests_ABI_TestEmptyStructDelegate(Burst.Compiler.IL.Tests.ABI.EmptyStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_TestEmptyStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.EmptyStruct R_Burst_Compiler_IL_Tests_ABI_EmptyStruct_P_0_Burst_Compiler_IL_Tests_ABI_EmptyStruct_Delegate(Burst.Compiler.IL.Tests.ABI.EmptyStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_EmptyStruct_P_0_Burst_Compiler_IL_Tests_ABI_EmptyStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_TestEmptyStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_EmptyStruct_P_0_Burst_Compiler_IL_Tests_ABI_EmptyStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.EmptyStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.ExplicitButAligned Burst_Compiler_IL_Tests_ABI_EntryExplicitButAlignedDelegate(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryExplicitButAlignedDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.ExplicitButAligned R_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_P_0_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_Delegate(Burst.Compiler.IL.Tests.ABI.ExplicitButAligned arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_P_0_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryExplicitButAlignedDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_P_0_Burst_Compiler_IL_Tests_ABI_ExplicitButAligned_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.ExplicitButAligned)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.HandleStruct Burst_Compiler_IL_Tests_ABI_EntryHandleStructDelegate(Burst.Compiler.IL.Tests.ABI.HandleStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryHandleStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.HandleStruct R_Burst_Compiler_IL_Tests_ABI_HandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_HandleStruct_Delegate(Burst.Compiler.IL.Tests.ABI.HandleStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_HandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_HandleStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryHandleStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_HandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_HandleStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.HandleStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.IIF Burst_Compiler_IL_Tests_ABI_TestIIFDelegate(Burst.Compiler.IL.Tests.ABI.IIF arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_TestIIFDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.IIF R_Burst_Compiler_IL_Tests_ABI_IIF_P_0_Burst_Compiler_IL_Tests_ABI_IIF_Delegate(Burst.Compiler.IL.Tests.ABI.IIF arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_IIF_P_0_Burst_Compiler_IL_Tests_ABI_IIF_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_TestIIFDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_IIF_P_0_Burst_Compiler_IL_Tests_ABI_IIF_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.IIF)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.IntInStruct Burst_Compiler_IL_Tests_ABI_EntryTypedIntInStructDelegate(Burst.Compiler.IL.Tests.ABI.IntInStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryTypedIntInStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.IntInStruct R_Burst_Compiler_IL_Tests_ABI_IntInStruct_P_0_Burst_Compiler_IL_Tests_ABI_IntInStruct_Delegate(Burst.Compiler.IL.Tests.ABI.IntInStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_IntInStruct_P_0_Burst_Compiler_IL_Tests_ABI_IntInStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryTypedIntInStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_IntInStruct_P_0_Burst_Compiler_IL_Tests_ABI_IntInStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.IntInStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.KindaBig Burst_Compiler_IL_Tests_ABI_TestKindaBigDelegate(Burst.Compiler.IL.Tests.ABI.KindaBig arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_TestKindaBigDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.KindaBig R_Burst_Compiler_IL_Tests_ABI_KindaBig_P_0_Burst_Compiler_IL_Tests_ABI_KindaBig_Delegate(Burst.Compiler.IL.Tests.ABI.KindaBig arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_KindaBig_P_0_Burst_Compiler_IL_Tests_ABI_KindaBig_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_TestKindaBigDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_KindaBig_P_0_Burst_Compiler_IL_Tests_ABI_KindaBig_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.KindaBig)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.LongInStruct Burst_Compiler_IL_Tests_ABI_EntryTypedLongInStructDelegate(Burst.Compiler.IL.Tests.ABI.LongInStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryTypedLongInStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.LongInStruct R_Burst_Compiler_IL_Tests_ABI_LongInStruct_P_0_Burst_Compiler_IL_Tests_ABI_LongInStruct_Delegate(Burst.Compiler.IL.Tests.ABI.LongInStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_LongInStruct_P_0_Burst_Compiler_IL_Tests_ABI_LongInStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryTypedLongInStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_LongInStruct_P_0_Burst_Compiler_IL_Tests_ABI_LongInStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.LongInStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.NestedHandleStruct Burst_Compiler_IL_Tests_ABI_EntryNestedHandleStructDelegate(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryNestedHandleStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.NestedHandleStruct R_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_Delegate(Burst.Compiler.IL.Tests.ABI.NestedHandleStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryNestedHandleStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_NestedHandleStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.NestedHandleStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct Burst_Compiler_IL_Tests_ABI_EntryOverlappingFieldsStructDelegate(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryOverlappingFieldsStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct R_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_P_0_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_Delegate(Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_P_0_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryOverlappingFieldsStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_P_0_Burst_Compiler_IL_Tests_ABI_OverlappingFieldsStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.OverlappingFieldsStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.SizePaddedBig Burst_Compiler_IL_Tests_ABI_EntrySizeSizePaddedBigDelegate(Burst.Compiler.IL.Tests.ABI.SizePaddedBig arg0, Burst.Compiler.IL.Tests.ABI.SizePaddedBig arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntrySizeSizePaddedBigDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.SizePaddedBig R_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_1_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_Delegate(Burst.Compiler.IL.Tests.ABI.SizePaddedBig arg0, Burst.Compiler.IL.Tests.ABI.SizePaddedBig arg1);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_1_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntrySizeSizePaddedBigDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_1_Burst_Compiler_IL_Tests_ABI_SizePaddedBig_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.SizePaddedBig)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.ABI.SizePaddedBig)p[1];
@@ -2597,10 +2885,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.SizePaddedSmall Burst_Compiler_IL_Tests_ABI_EntrySizePaddedSmallDelegate(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall arg0, Burst.Compiler.IL.Tests.ABI.SizePaddedSmall arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntrySizePaddedSmallDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.SizePaddedSmall R_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_1_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_Delegate(Burst.Compiler.IL.Tests.ABI.SizePaddedSmall arg0, Burst.Compiler.IL.Tests.ABI.SizePaddedSmall arg1);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_1_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntrySizePaddedSmallDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_P_0_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_1_Burst_Compiler_IL_Tests_ABI_SizePaddedSmall_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.SizePaddedSmall)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.ABI.SizePaddedSmall)p[1];
@@ -2608,405 +2896,395 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct Burst_Compiler_IL_Tests_ABI_EntrySmallSseUpStructDelegate(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntrySmallSseUpStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct R_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_P_0_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_Delegate(Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_P_0_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntrySmallSseUpStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_P_0_Burst_Compiler_IL_Tests_ABI_SmallSseUpStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.SmallSseUpStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.SmallStruct Burst_Compiler_IL_Tests_ABI_EntryPointReturnSmallStructDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnSmallStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.SmallStruct R_Burst_Compiler_IL_Tests_ABI_SmallStruct_P_Delegate();
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_SmallStruct_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointReturnSmallStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_SmallStruct_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.TypedHandleStruct Burst_Compiler_IL_Tests_ABI_EntryTypedHandleStructDelegate(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryTypedHandleStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.TypedHandleStruct R_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_Delegate(Burst.Compiler.IL.Tests.ABI.TypedHandleStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryTypedHandleStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_P_0_Burst_Compiler_IL_Tests_ABI_TypedHandleStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.TypedHandleStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_Delegate();
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct Burst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_0_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_Delegate(Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct arg0);
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_0_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointWithUnalignedSmallStructDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_P_0_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.UnalignedSmallStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStructWithPadding Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate(object delegateObj, object[] p)
+        private delegate Burst.Compiler.IL.Tests.ABI.UnalignedSmallStructWithPadding R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStructWithPadding_P_Delegate();
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStructWithPadding_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointReturnUnalignedSmallStructWithPaddingDelegate)delegateObj;
+            var d = (R_Burst_Compiler_IL_Tests_ABI_UnalignedSmallStructWithPadding_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckNativeArrayLengthIsNotNegativeDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckNativeArrayLengthIsNotNegativeDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckNativeArrayLengthIsNotNegativeDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDefaultDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.DefaultFunc arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDefaultDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_DefaultFunc_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.DefaultFunc arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_DefaultFunc_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDefaultDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_DefaultFunc_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.DefaultFunc)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNullDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NullFunc arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNullDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NullFunc_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NullFunc arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NullFunc_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNullDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NullFunc_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.NullFunc)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
+        private unsafe static object Call_R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharEqualDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SomeStruct)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_PointerStoreDelegate(ref Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.PointerInStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_PointerStoreDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UnityBenchShared_SphereCullingAOSJob_Ref_Delegate(ref UnityBenchShared.SphereCullingAOSJob arg0);
+        private unsafe static object Call_R_Boolean_P_0_UnityBenchShared_SphereCullingAOSJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_PointerStoreDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.PointerInStruct)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingAOSDelegate(ref UnityBenchShared.SphereCullingAOSJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingAOSDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingAOSDelegate)delegateObj;
+            var d = (R_Boolean_P_0_UnityBenchShared_SphereCullingAOSJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SphereCullingAOSJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkFixedSOADelegate(ref UnityBenchShared.SphereCullingChunkFixedSOAJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkFixedSOADelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UnityBenchShared_SphereCullingChunkFixedSOAJob_Ref_Delegate(ref UnityBenchShared.SphereCullingChunkFixedSOAJob arg0);
+        private unsafe static object Call_R_Boolean_P_0_UnityBenchShared_SphereCullingChunkFixedSOAJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkFixedSOADelegate)delegateObj;
+            var d = (R_Boolean_P_0_UnityBenchShared_SphereCullingChunkFixedSOAJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SphereCullingChunkFixedSOAJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkSOADelegate(ref UnityBenchShared.SphereCullingChunkSOAJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkSOADelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UnityBenchShared_SphereCullingChunkSOAJob_Ref_Delegate(ref UnityBenchShared.SphereCullingChunkSOAJob arg0);
+        private unsafe static object Call_R_Boolean_P_0_UnityBenchShared_SphereCullingChunkSOAJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingChunkSOADelegate)delegateObj;
+            var d = (R_Boolean_P_0_UnityBenchShared_SphereCullingChunkSOAJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SphereCullingChunkSOAJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingFloat4AOSDelegate(ref UnityBenchShared.SphereCullingFloat4AOSJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingFloat4AOSDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UnityBenchShared_SphereCullingFloat4AOSJob_Ref_Delegate(ref UnityBenchShared.SphereCullingFloat4AOSJob arg0);
+        private unsafe static object Call_R_Boolean_P_0_UnityBenchShared_SphereCullingFloat4AOSJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingFloat4AOSDelegate)delegateObj;
+            var d = (R_Boolean_P_0_UnityBenchShared_SphereCullingFloat4AOSJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SphereCullingFloat4AOSJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingSOADelegate(ref UnityBenchShared.SphereCullingSOAJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSphereCullingSOADelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UnityBenchShared_SphereCullingSOAJob_Ref_Delegate(ref UnityBenchShared.SphereCullingSOAJob arg0);
+        private unsafe static object Call_R_Boolean_P_0_UnityBenchShared_SphereCullingSOAJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSphereCullingSOADelegate)delegateObj;
+            var d = (R_Boolean_P_0_UnityBenchShared_SphereCullingSOAJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SphereCullingSOAJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeByteDelegate(byte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeByteDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Byte_Delegate(byte arg0);
+        private unsafe static object Call_R_Boolean_P_0_Byte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeByteDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Byte_Delegate)delegateObj;
             object result = null;
             var arg0 = (byte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_ByRef_RefIsNonNullDelegate(ref int arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ByRef_RefIsNonNullDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int32_Ref_Delegate(ref int arg0);
+        private unsafe static object Call_R_Boolean_P_0_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ByRef_RefIsNonNullDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeLongDelegate(long arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeLongDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int64_Delegate(long arg0);
+        private unsafe static object Call_R_Boolean_P_0_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeLongDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeSByteDelegate(sbyte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeSByteDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_SByte_Delegate(sbyte arg0);
+        private unsafe static object Call_R_Boolean_P_0_SByte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeSByteDelegate)delegateObj;
+            var d = (R_Boolean_P_0_SByte_Delegate)delegateObj;
             object result = null;
             var arg0 = (sbyte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeShortDelegate(short arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeShortDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_Int16_Delegate(short arg0);
+        private unsafe static object Call_R_Boolean_P_0_Int16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeShortDelegate)delegateObj;
+            var d = (R_Boolean_P_0_Int16_Delegate)delegateObj;
             object result = null;
             var arg0 = (short)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUIntDelegate(uint arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeUIntDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UInt32_Delegate(uint arg0);
+        private unsafe static object Call_R_Boolean_P_0_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUIntDelegate)delegateObj;
+            var d = (R_Boolean_P_0_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeULongDelegate(ulong arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeULongDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UInt64_Delegate(ulong arg0);
+        private unsafe static object Call_R_Boolean_P_0_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeULongDelegate)delegateObj;
+            var d = (R_Boolean_P_0_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUShortDelegate(ushort arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckAssumeRangeUShortDelegate(object delegateObj, object[] p)
+        private delegate bool R_Boolean_P_0_UInt16_Delegate(ushort arg0);
+        private unsafe static object Call_R_Boolean_P_0_UInt16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckAssumeRangeUShortDelegate)delegateObj;
+            var d = (R_Boolean_P_0_UInt16_Delegate)delegateObj;
             object result = null;
             var arg0 = (ushort)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate char Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate(object delegateObj, object[] p)
+        private delegate char R_Char_P_Delegate();
+        private unsafe static object Call_R_Char_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharReturnDelegate)delegateObj;
+            var d = (R_Char_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate double Burst_Compiler_IL_Tests_TestStaticFields_TestImplicitConstructorDelegate();
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStaticFields_TestImplicitConstructorDelegate(object delegateObj, object[] p)
+        private delegate double R_Double_P_Delegate();
+        private unsafe static object Call_R_Double_P_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStaticFields_TestImplicitConstructorDelegate)delegateObj;
+            var d = (R_Double_P_Delegate)delegateObj;
             object result = null;
             result = d();
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFloatDelegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFloatDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFloatDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3aDelegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3aDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3aDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ChunkedTestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3aDelegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3aDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3aDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.FullSOATestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_native_array_with_accessor_path_from_ldfdDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.Climate arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_native_array_with_accessor_path_from_ldfdDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_Climate_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.Climate arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_Climate_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_native_array_with_accessor_path_from_ldfdDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_Climate_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.Climate)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestNativeArraySortCustomItemDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayCustomItem arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestNativeArraySortCustomItemDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayCustomItem_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayCustomItem arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayCustomItem_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestNativeArraySortCustomItemDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayCustomItem_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayCustomItem)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestGetUnsafeReadOnlyPtrDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestGetUnsafeReadOnlyPtrDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestGetUnsafeReadOnlyPtrDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_unsafe_ptr_cast_float4_to_floatDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_unsafe_ptr_cast_float4_to_floatDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat4_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat4 arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_unsafe_ptr_cast_float4_to_floatDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_JobData_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_JobData_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_QueueOverflowDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeQueues_JobData_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeQueues.JobData)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_TestGetUnsafeReadOnlyPtrDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat4_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4 arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat4_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_unsafe_ptr_cast_float4_to_floatDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceFloat4_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceFloat4)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestAlias_TestNoAliasOnNativeArraysWithBigStructsDelegate(ref Burst.Compiler.IL.Tests.TestAlias.BigStructNativeArrayJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestNoAliasOnNativeArraysWithBigStructsDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_BigStructNativeArrayJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.BigStructNativeArrayJob arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_BigStructNativeArrayJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestNoAliasOnNativeArraysWithBigStructsDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_BigStructNativeArrayJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.BigStructNativeArrayJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat3Job_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat3Job_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat3JobDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat3Job_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat3Job)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat4Job_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job arg0);
+        private unsafe static object Call_R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat4Job_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceFloat4JobDelegate)delegateObj;
+            var d = (R_Single_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceFloat4Job_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceFloat4Job)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate(ref UnityBenchShared.SumNumbersTest arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_UnityBenchShared_SumNumbersTest_Ref_Delegate(ref UnityBenchShared.SumNumbersTest arg0);
+        private unsafe static object Call_R_Single_P_0_UnityBenchShared_SumNumbersTest_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestSumNumbers_SumNunbersDelegate)delegateObj;
+            var d = (R_Single_P_0_UnityBenchShared_SumNumbersTest_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SumNumbersTest)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate float Burst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate(ref UnityEngine.Boids.BoidsJob arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate(object delegateObj, object[] p)
+        private delegate float R_Single_P_0_UnityEngine_Boids_BoidsJob_Ref_1_Int32_Delegate(ref UnityEngine.Boids.BoidsJob arg0, int arg1);
+        private unsafe static object Call_R_Single_P_0_UnityEngine_Boids_BoidsJob_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestBoids_test_boids_jobDelegate)delegateObj;
+            var d = (R_Single_P_0_UnityEngine_Boids_BoidsJob_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityEngine.Boids.BoidsJob)p[0];
             var arg1 = (int)p[1];
@@ -3014,30 +3292,40 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate(Burst.Compiler.IL.Tests.ABI.BigStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate(Burst.Compiler.IL.Tests.ABI.BigStruct arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointWithBigStructDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.BigStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ABI_EntryPointWithSmallStructDelegate(Burst.Compiler.IL.Tests.ABI.SmallStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryPointWithSmallStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate(Burst.Compiler.IL.Tests.ABI.SmallStruct arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryPointWithSmallStructDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.SmallStruct)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingReadFromPtrDelegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0, ref Burst.Compiler.IL.Tests.CalliBinding.IntArray arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingReadFromPtrDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingReadFromPtrDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_IntArray_Ref_Delegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0, ref Burst.Compiler.IL.Tests.CalliBinding.IntArray arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_IntArray_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_IntArray_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.CalliBinding.IntArray)p[1];
@@ -3045,10 +3333,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingValAndPtrDelegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0, ref Burst.Compiler.IL.Tests.CalliBinding.SmallStructArray arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingValAndPtrDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_SmallStructArray_Ref_Delegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0, ref Burst.Compiler.IL.Tests.CalliBinding.SmallStructArray arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_SmallStructArray_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingValAndPtrDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_1_Burst_Compiler_IL_Tests_CalliBinding_SmallStructArray_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.CalliBinding.SmallStructArray)p[1];
@@ -3056,90 +3344,90 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFunctionDelegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFunctionDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingFunctionDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetLengthDelegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetLengthDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetLengthDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ChunkedTestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetLengthDelegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetLengthDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_Expressions_MyArrayIndex_Delegate(Burst.Compiler.IL.Tests.Expressions.MyArrayIndex arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Expressions_MyArrayIndex_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetLengthDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_Expressions_MyArrayIndex_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.Expressions.MyArrayIndex)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.FullSOATestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestArrayBoolAccessReadDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayBool arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestArrayBoolAccessReadDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayBool_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayBool arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayBool_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_TestArrayBoolAccessReadDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayBool_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayBool)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_int_copy_arrayDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayIntCopy arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_int_copy_arrayDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayIntCopy_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayIntCopy arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayIntCopy_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_test_expr_native_array_int_copy_arrayDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayIntCopy_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayIntCopy)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestReadWriteDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.JobData arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestReadWriteDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_JobData_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.JobData arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_JobData_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestReadWriteDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_JobData_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.JobData)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_int_copy_sliceDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceIntCopy arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_int_copy_sliceDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceIntCopy_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceIntCopy arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceIntCopy_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_test_expr_native_slice_int_copy_sliceDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeSlices_NativeSliceIntCopy_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeSlices.NativeSliceIntCopy)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestCullingJob_test_culling_job_simpleDelegate(ref Burst.Compiler.IL.Tests.TestCullingJob.CullingJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestCullingJob_test_culling_job_simpleDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestCullingJob_CullingJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestCullingJob.CullingJob arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestCullingJob_CullingJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestCullingJob_test_culling_job_simpleDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestCullingJob_CullingJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestCullingJob.CullingJob)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerWithBigStructDelegate(Burst.Compiler.IL.Tests.TestFunctionPointers.FPBigStructFunc arg0, Burst.Compiler.IL.Tests.ABI.BigStruct arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerWithBigStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPBigStructFunc_1_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate(Burst.Compiler.IL.Tests.TestFunctionPointers.FPBigStructFunc arg0, Burst.Compiler.IL.Tests.ABI.BigStruct arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPBigStructFunc_1_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerWithBigStructDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPBigStructFunc_1_Burst_Compiler_IL_Tests_ABI_BigStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPBigStructFunc)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.ABI.BigStruct)p[1];
@@ -3147,10 +3435,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoNumbersByInDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPInIntFunc arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoNumbersByInDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPInIntFunc_Ref_1_Int32_2_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPInIntFunc arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPInIntFunc_Ref_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoNumbersByInDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPInIntFunc_Ref_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPInIntFunc)p[0];
             var arg1 = (int)p[1];
@@ -3159,10 +3447,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg1, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg2, int arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_3_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg1, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg2, int arg3);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_3_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerDynamicInvokeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_3_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc)p[1];
@@ -3172,10 +3460,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerInvokeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc)p[1];
@@ -3184,10 +3472,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNotNullDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNotNullDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestFunctionPointerNotNullDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_FPIntFunc_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.FPIntFunc)p[0];
             var arg1 = (int)p[1];
@@ -3195,10 +3483,21 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias1Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias1Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias1Delegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc)p[0];
+            var arg1 = (int)p[1];
+            result = d(ref arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_2_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_NoAliasFunc_Ref_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc)p[0];
             var arg1 = (int)p[1];
@@ -3207,21 +3506,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias0Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias0Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_ReturnRefReadOnlyFunc_Ref_1_Int32_2_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_ReturnRefReadOnlyFunc_Ref_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestNoAlias0Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.NoAliasFunc)p[0];
-            var arg1 = (int)p[1];
-            result = d(ref arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestReturnRefReadOnlyDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_ReturnRefReadOnlyFunc_Ref_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.ReturnRefReadOnlyFunc)p[0];
             var arg1 = (int)p[1];
@@ -3230,10 +3518,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructsInFunc_Ref_1_Int32_2_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc arg0, int arg1, int arg2);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructsInFunc_Ref_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_TestAddTwoStructsByInDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructsInFunc_Ref_1_Int32_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.StructsInFunc)p[0];
             var arg1 = (int)p[1];
@@ -3242,10 +3530,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate(ref Burst.Compiler.IL.Tests.TestGenerics.TestJob arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestGenerics_TestJob_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.TestGenerics.TestJob arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestGenerics_TestJob_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestGenerics_ExecuteAudioBugDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestGenerics_TestJob_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestGenerics.TestJob)p[0];
             var arg1 = (int)p[1];
@@ -3253,60 +3541,70 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.ParentStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ParentStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.ParentStruct arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ParentStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestNestedStructCharDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_ParentStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.ParentStruct)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStruct arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructCharDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SomeStruct)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStructCharWithMarshalAsDelegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStructWithMarshalAs arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStructCharWithMarshalAsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStructWithMarshalAs_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.SomeStructWithMarshalAs arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStructWithMarshalAs_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStructCharWithMarshalAsDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_SomeStructWithMarshalAs_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.SomeStructWithMarshalAs)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate(ref Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StaticCharStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StaticCharStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestStaticReadonlyCharInStructLhsDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StaticCharStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.StaticCharStruct)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate(ref Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.NativeArrayInt arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_TestUnsafeUtility_NativeArrayInt_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestUnsafeUtility.NativeArrayInt arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestUnsafeUtility_NativeArrayInt_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestUnsafeUtilityEx_TestMemSet0Delegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_TestUnsafeUtility_NativeArrayInt_Ref_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.TestUnsafeUtilityEx.NativeArrayInt)p[0];
+            var arg0 = (Burst.Compiler.IL.Tests.TestUnsafeUtility.NativeArrayInt)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_stream_si256Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_stream_si256Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_stream_si256Delegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg0, int arg1);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[0];
             var arg1 = (int)p[1];
@@ -3314,40 +3612,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_castsi128_si256Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_castsi128_si256Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_castsi128_si256Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestTakeAddressDelegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestTakeAddressDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestTakeAddressDelegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_CodeGenAnomaly1Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.NativeArrayBundle arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_CodeGenAnomaly1Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_NativeArrayBundle_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.NativeArrayBundle arg0);
+        private unsafe static object Call_R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_NativeArrayBundle_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_CodeGenAnomaly1Delegate)delegateObj;
+            var d = (R_Int32_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_NativeArrayBundle_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.NativeArrayBundle)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate(byte arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Byte_1_Single_Delegate(byte arg0, float arg1);
+        private unsafe static object Call_R_Int32_P_0_Byte_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertByteToFloatToByteDelegate)delegateObj;
+            var d = (R_Int32_P_0_Byte_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (byte)p[0];
             var arg1 = (float)p[1];
@@ -3355,30 +3643,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate(ref char arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Char_Delegate(char arg0);
+        private unsafe static object Call_R_Int32_P_0_Char_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharByRefDelegate)delegateObj;
-            object result = null;
-            var arg0 = (char)p[0];
-            result = d(ref arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate(char arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestCharByValDelegate)delegateObj;
+            var d = (R_Int32_P_0_Char_Delegate)delegateObj;
             object result = null;
             var arg0 = (char)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_comieq_sdDelegate(double arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_comieq_sdDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Char_Ref_Delegate(ref char arg0);
+        private unsafe static object Call_R_Int32_P_0_Char_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_comieq_sdDelegate)delegateObj;
+            var d = (R_Int32_P_0_Char_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (char)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int R_Int32_P_0_Double_1_Double_Delegate(double arg0, double arg1);
+        private unsafe static object Call_R_Int32_P_0_Double_1_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_Double_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double)p[0];
             var arg1 = (double)p[1];
@@ -3386,10 +3674,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, Burst.Compiler.IL.Tests.ABI.SmallStruct arg6);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, Burst.Compiler.IL.Tests.ABI.SmallStruct arg6);
+        private unsafe static object Call_R_Int32_P_0_Int32_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_EntryNoRegistersForStructDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Burst_Compiler_IL_Tests_ABI_SmallStruct_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -3402,10 +3690,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate(ref int arg0, ref int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_Int32_Ref_1_Int32_Ref_Delegate(ref int arg0, ref int arg1);
+        private unsafe static object Call_R_Int32_P_0_Int32_Ref_1_Int32_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ByRef_ByRefChangeDelegate)delegateObj;
+            var d = (R_Int32_P_0_Int32_Ref_1_Int32_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (int)p[1];
@@ -3413,10 +3701,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u32Delegate(uint arg0, uint arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u32Delegate(object delegateObj, object[] p)
+        private delegate int R_Int32_P_0_UInt32_1_UInt32_Delegate(uint arg0, uint arg1);
+        private unsafe static object Call_R_Int32_P_0_UInt32_1_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u32Delegate)delegateObj;
+            var d = (R_Int32_P_0_UInt32_1_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (uint)p[0];
             var arg1 = (uint)p[1];
@@ -3424,30 +3712,30 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestLoDelegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestLoDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper arg0);
+        private unsafe static object Call_R_Int64_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_TestLoDelegate)delegateObj;
+            var d = (R_Int64_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_m256_wrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.m256_wrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_Expressions_ConvertbyteToLongDelegate(byte arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Expressions_ConvertbyteToLongDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Byte_Delegate(byte arg0);
+        private unsafe static object Call_R_Int64_P_0_Byte_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Expressions_ConvertbyteToLongDelegate)delegateObj;
+            var d = (R_Int64_P_0_Byte_Delegate)delegateObj;
             object result = null;
             var arg0 = (byte)p[0];
             result = d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate long Burst_Compiler_IL_Tests_InlineIL_CheckConvIAddLhsDelegate(int arg0, long arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_InlineIL_CheckConvIAddLhsDelegate(object delegateObj, object[] p)
+        private delegate long R_Int64_P_0_Int32_1_Int64_Delegate(int arg0, long arg1);
+        private unsafe static object Call_R_Int64_P_0_Int32_1_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_InlineIL_CheckConvIAddLhsDelegate)delegateObj;
+            var d = (R_Int64_P_0_Int32_1_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (int)p[0];
             var arg1 = (long)p[1];
@@ -3455,140 +3743,140 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
+        private unsafe static object Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestGetElem_3cDelegate)delegateObj;
+            var d = (R_UInt32_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ChunkedTestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate(object delegateObj, object[] p)
+        private delegate uint R_UInt32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
+        private unsafe static object Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestGetElem_3cDelegate)delegateObj;
+            var d = (R_UInt32_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.FullSOATestDataWrapper)p[0];
             result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate(ref Burst.Compiler.IL.Tests.ABI.CullChunksWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_ABI_CullChunksWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.ABI.CullChunksWrapper arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_ABI_CullChunksWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_ABI_TestABIRegressionDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_ABI_CullChunksWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ABI.CullChunksWrapper)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayPointerIsNotReloadedJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayPointerIsNotReloadedJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeArrayPointerIsNotReloadedJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeArrayPointerIsNotReloadedJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeArrayPointerIsNotReloadedJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeSliceJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeSliceJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNativeSliceJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NativeSliceJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NativeSliceJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckNoAliasOnJobProducerTypeThisPointerJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NoAliasOnJobProducerTypeThisPointerJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckNoAliasOnJobProducerTypeThisPointerJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NoAliasOnJobProducerTypeThisPointerJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.NoAliasOnJobProducerTypeThisPointerJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NoAliasOnJobProducerTypeThisPointerJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckNoAliasOnJobProducerTypeThisPointerJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_NoAliasOnJobProducerTypeThisPointerJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.NoAliasOnJobProducerTypeThisPointerJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesAliasWithJobStructJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesAliasWithJobStructJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesAliasWithJobStructJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesAliasWithJobStructJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesAliasWithJobStructJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesAliasWithJobStructJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesAliasWithJobStructJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesAliasWithJobStructJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesAliasWithJobStructJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesNotAliasWithJobStructJobDelegate(ref Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesNotAliasWithJobStructJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesNotAliasWithJobStructJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesNotAliasWithJobStructJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesNotAliasWithJobStructJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesNotAliasWithJobStructJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_AliasingJobs_CheckPointerDoesNotAliasWithJobStructJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_AliasingJobs_PointerDoesNotAliasWithJobStructJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.AliasingJobs.PointerDoesNotAliasWithJobStructJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingAllVoidDelegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_CalliBinding_UseCalliBindingAllVoidDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(ref Burst.Compiler.IL.Tests.CalliBinding.BindingContainer arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_CalliBinding_UseCalliBindingAllVoidDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.CalliBinding.BindingContainer)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate(ref Burst.Compiler.IL.Tests.Case1061135.NewMoveJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_Case1061135_NewMoveJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.Case1061135.NewMoveJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Case1061135_NewMoveJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Case1061135_TestNewMoveDiscardDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_Case1061135_NewMoveJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Case1061135.NewMoveJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.ChunkedTestDataWrapper arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysChunked_TestSetElemDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.ChunkedTestDataWrapper)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(ref Burst.Compiler.IL.Tests.FullSOATestDataWrapper arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeArraysFullSOA_TestSetElemDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.FullSOATestDataWrapper)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_Assume_CheckLoopDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg1, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_Assume_CheckLoopDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_1_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg0, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg1, ref Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat arg2);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_1_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_Assume_CheckLoopDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_1_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_2_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayFloat_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayFloat)p[1];
@@ -3597,160 +3885,170 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_HashMapJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_HashMapJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_TestIssueWithHashMapDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeHashMaps_HashMapJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeHashMaps.HashMapJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_HashMapAndQueueJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_HashMapAndQueueJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_TestIssueHashMapAndQueueDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeMultiHashMaps_HashMapAndQueueJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.NativeContainers.NativeMultiHashMaps.HashMapAndQueueJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate(ref Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructBVHTest_Ref_Delegate(ref Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructBVHTest_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestBVHDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructBVHTest_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructBVHTest)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate(ref Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructInitJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructInitJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_RegressionsInBurstV1_TestStructInitDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_RegressionsInBurstV1_StructInitJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.RegressionsInBurstV1.StructInitJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.CopyJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_SafetyChecks_NativeArrayInt_Ref_Delegate(ref Burst.Compiler.IL.Tests.SafetyChecks.NativeArrayInt arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_SafetyChecks_NativeArrayInt_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestCopyJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_SafetyChecks_NativeArrayInt_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.SafetyChecks.NativeArrayInt)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.CopyJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyJob_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.CopyJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate(ref Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyWithExplicitNoAlias_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyWithExplicitNoAlias_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestCopyWithExplicitNoAliasDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_CopyWithExplicitNoAlias_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.CopyWithExplicitNoAlias)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate(ref Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_DivisionByVariable_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_DivisionByVariable_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariableDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_DivisionByVariable_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.DivisionByVariable)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.Float1Job arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float1Job_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.Float1Job arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float1Job_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestFloat1JobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float1Job_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.Float1Job)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.Float4Job arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float4Job_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.Float4Job arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float4Job_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestFloat4JobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_Float4Job_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.Float4Job)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceByteJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceByteJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceByteJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceByteJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceByteJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceJob arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceJob_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.InPlaceJob arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceJob_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestInPlaceJobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_InPlaceJob_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.InPlaceJob)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate(ref Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_SimpleSOA1Job_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_SimpleSOA1Job_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestSimpleSOA1JobDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestAlias_SimpleSOA1Job_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestAlias.SimpleSOA1Job)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructWithAction_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructWithAction_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestFunctionPointers_RunActionDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestFunctionPointers_StructWithAction_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestFunctionPointers.StructWithAction)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenericsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2 arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics2_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2 arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics2_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestGenerics_TestStructWithGenerics2Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenerics2_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenerics2)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg0, ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg1, ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_1_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_2_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg0, ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg1, ref Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 arg2);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_1_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_2_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestGenerics_TestSymbolLengthDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_1_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_2_Burst_Compiler_IL_Tests_TestGenerics_StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.TestGenerics.StructWithGenericsAndALongName00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)p[1];
@@ -3759,40 +4057,40 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate(ref Burst.Compiler.IL.Tests.TestStructs.AnsiStruct arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStruct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.AnsiStruct arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStruct_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStruct_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.AnsiStruct)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharWithMarshalAsDelegate(ref Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharWithMarshalAsDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestStructs_TestAnsiStructCharWithMarshalAsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxSomeStructDelegate(Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxSomeStructDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate(Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxSomeStructDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_storeu2_m128Delegate(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_storeu2_m128Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_storeu2_m128Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -3800,10 +4098,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestUnalignedStoreDelegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestUnalignedStoreDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestUnalignedStoreDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues)p[0];
             var arg1 = (int)p[1];
@@ -3811,10 +4109,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestTranspose4Delegate(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult* arg0, float arg1, float arg2, float arg3, float arg4);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestTranspose4Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult* arg0, float arg1, float arg2, float arg3, float arg4);
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestTranspose4Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult*)(IntPtr)p[0];
             var arg1 = (float)p[1];
@@ -3825,10 +4123,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_maskload_pdDelegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_maskload_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate(Unity.Burst.Intrinsics.v128* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_maskload_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[1];
@@ -3837,10 +4145,22 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i64gather_psDelegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2, int arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i64gather_psDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i64gather_psDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, ref arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2, int arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
@@ -3850,22 +4170,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i64gather_psDelegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i64gather_psDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i64gather_psDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, ref arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_maskload_epi32Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_maskload_epi32Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_maskload_epi32Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues)p[1];
@@ -3874,10 +4182,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_shuffle_epi32_bug2Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_shuffle_epi32_bug2Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_shuffle_epi32_bug2Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues)p[1];
@@ -3886,10 +4194,21 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_dp_pd_3Delegate(Unity.Burst.Intrinsics.v128* arg0, double arg1, double arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_dp_pd_3Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_Delegate(Unity.Burst.Intrinsics.v128* arg0, double arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_dp_pd_3Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg1 = (double)p[1];
+            d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Double_Delegate(Unity.Burst.Intrinsics.v128* arg0, double arg1, double arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -3898,10 +4217,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_pdDelegate(Unity.Burst.Intrinsics.v128* arg0, double arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, double arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Double_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -3910,21 +4229,33 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_round_pd_0Delegate(Unity.Burst.Intrinsics.v128* arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_round_pd_0Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_Delegate(Unity.Burst.Intrinsics.v128* arg0, float arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_round_pd_0Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (double)p[1];
+            var arg1 = (float)p[1];
             d(arg0, arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestMkInsertPsDelegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, float arg2, float arg3, float arg4);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestMkInsertPsDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_Delegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, float arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TestMkInsertPsDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg1 = (float)p[1];
+            var arg2 = (float)p[2];
+            d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, float arg2, float arg3, float arg4);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (float)p[1];
@@ -3935,22 +4266,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtps_pdDelegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, float arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtps_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtps_pdDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (float)p[1];
-            var arg2 = (float)p[2];
-            d(arg0, arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_psDelegate(Unity.Burst.Intrinsics.v128* arg0, float arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_psDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_blendv_psDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Single_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (float)p[1];
@@ -3959,21 +4278,47 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_insert_ps_0Delegate(Unity.Burst.Intrinsics.v128* arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_insert_ps_0Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_insert_ps_0Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (float)p[1];
+            var arg1 = (int)p[1];
             d(arg0, arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestrm_batch1Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestrm_batch1Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestrm_batch1Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2, int arg3, int arg4);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            var arg3 = (int)p[3];
+            var arg4 = (int)p[4];
+            d(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -3986,36 +4331,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm_batch1Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2, int arg3, int arg4);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm_batch1Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, uint arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm_batch1Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            var arg3 = (int)p[3];
-            var arg4 = (int)p[4];
-            d(arg0, arg1, arg2, arg3, arg4);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_cmp_sd_00Delegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_cmp_sd_00Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_avx_cmp_sd_00Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi32_ssDelegate(Unity.Burst.Intrinsics.v128* arg0, int arg1, uint arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi32_ssDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi32_ssDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4025,21 +4344,21 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_AccessM128ArrayDelegate(Unity.Burst.Intrinsics.v128* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_AccessM128ArrayDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_Delegate(Unity.Burst.Intrinsics.v128* arg0, long arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_AccessM128ArrayDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
+            var arg1 = (long)p[1];
             d(arg0, arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi64_ssDelegate(Unity.Burst.Intrinsics.v128* arg0, long arg1, ulong arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi64_ssDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_2_UInt64_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(Unity.Burst.Intrinsics.v128* arg0, long arg1, ulong arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_2_UInt64_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi64_ssDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Int64_2_UInt64_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (long)p[1];
@@ -4049,21 +4368,21 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_epi64Delegate(Unity.Burst.Intrinsics.v128* arg0, long arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_epi64Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_Delegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_epi64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (long)p[1];
+            var arg1 = (uint)p[1];
             d(arg0, arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_ssDelegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1, uint arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_ssDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1, uint arg2, Unity.Burst.Intrinsics.X86.MXCSRBits arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_ssDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (uint)p[1];
@@ -4073,10 +4392,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_psDelegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1, uint arg2, uint arg3, Unity.Burst.Intrinsics.X86.MXCSRBits arg4);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_psDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_UInt32_4_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1, uint arg2, uint arg3, Unity.Burst.Intrinsics.X86.MXCSRBits arg4);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_UInt32_4_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_add_psDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt32_2_UInt32_3_UInt32_4_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (uint)p[1];
@@ -4087,21 +4406,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu32Delegate(Unity.Burst.Intrinsics.v128* arg0, uint arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu32Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt16_Delegate(Unity.Burst.Intrinsics.v128* arg0, ushort arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt16_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu32Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
-            var arg1 = (uint)p[1];
-            d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu16Delegate(Unity.Burst.Intrinsics.v128* arg0, ushort arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu16Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_max_epu16Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_UInt16_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
             var arg1 = (ushort)p[1];
@@ -4109,20 +4417,31 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm0Delegate(Unity.Burst.Intrinsics.v128* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm0Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_Delegate(Unity.Burst.Intrinsics.v256* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistrm0Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_Delegate)delegateObj;
             object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v128*)(IntPtr)p[0];
+            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_maskload_pdDelegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_maskload_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_maskload_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[1];
@@ -4131,21 +4450,22 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_psDelegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_psDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_psDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[1];
-            d(arg0, ref arg1);
+            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, ref arg1, arg2);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i32gather_pdDelegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2, int arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i32gather_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2, int arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_mask_i32gather_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_3_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
@@ -4155,34 +4475,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i32gather_epi32Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i32gather_epi32Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_i32gather_epi32Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, ref arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_maskload_epi32Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_maskload_epi32Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_maskload_epi32Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, ref arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_stream_load_si256Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_stream_load_si256Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_Test_mm256_stream_load_si256Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues)p[1];
@@ -4190,10 +4486,22 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_sdDelegate(Unity.Burst.Intrinsics.v256* arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_sdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_sdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_2_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, ref arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Double_Delegate(Unity.Burst.Intrinsics.v256* arg0, double arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -4201,10 +4509,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_ssDelegate(Unity.Burst.Intrinsics.v256* arg0, float arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_ssDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Single_Delegate(Unity.Burst.Intrinsics.v256* arg0, float arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Single_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_broadcast_ssDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Single_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (float)p[1];
@@ -4212,10 +4520,33 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_blendv_pdDelegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, int arg2, int arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_blendv_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_blendv_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_3_Int32_Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, int arg2, int arg3);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_3_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int32_3_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4225,22 +4556,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insertf128_ps_00Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insertf128_ps_00Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int64_Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, long arg2);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insertf128_ps_00Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insert_epi64Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1, long arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insert_epi64Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_insert_epi64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_Int32_2_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4249,111 +4568,100 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_set_m128Delegate(Unity.Burst.Intrinsics.v256* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_set_m128Delegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate(ref UnityBenchShared.DivisionByScalar arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_set_m128Delegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_store_psDelegate(Unity.Burst.Intrinsics.v256* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_store_psDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_store_psDelegate)delegateObj;
-            object result = null;
-            var arg0 = (Unity.Burst.Intrinsics.v256*)(IntPtr)p[0];
-            d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate(ref UnityBenchShared.DivisionByScalar arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_division_by_scalarDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.DivisionByScalar)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate(ref UnityBenchShared.IntToFloatPenalty arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate(ref UnityBenchShared.IntToFloatPenalty arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_int_to_float_penaltyDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.IntToFloatPenalty)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate(ref UnityBenchShared.PartialWrite arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate(ref UnityBenchShared.PartialWrite arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_writeDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.PartialWrite)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_write_workaroundDelegate(ref UnityBenchShared.PartialWriteWorkaround arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_partial_write_workaroundDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_PartialWriteWorkaround_Ref_Delegate(ref UnityBenchShared.PartialWriteWorkaround arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_PartialWriteWorkaround_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_partial_write_workaroundDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_PartialWriteWorkaround_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.PartialWriteWorkaround)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_storeDelegate(ref UnityBenchShared.RedundantStore arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_redundant_storeDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_RedundantStore_Ref_Delegate(ref UnityBenchShared.RedundantStore arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_RedundantStore_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_storeDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_RedundantStore_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.RedundantStore)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_store_workaroundDelegate(ref UnityBenchShared.RedundantStoreWorkaround arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_redundant_store_workaroundDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_RedundantStoreWorkaround_Ref_Delegate(ref UnityBenchShared.RedundantStoreWorkaround arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_RedundantStoreWorkaround_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_redundant_store_workaroundDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_RedundantStoreWorkaround_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.RedundantStoreWorkaround)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_square_rootDelegate(ref UnityBenchShared.SquareRoot arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_square_rootDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_SquareRoot_Ref_Delegate(ref UnityBenchShared.SquareRoot arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_SquareRoot_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_square_rootDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_SquareRoot_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SquareRoot)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void Burst_Compiler_IL_Tests_TestPerfNotes_test_square_root_recipDelegate(ref UnityBenchShared.SquareRootRecip arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestPerfNotes_test_square_root_recipDelegate(object delegateObj, object[] p)
+        private delegate void R_System_Void_P_0_UnityBenchShared_SquareRootRecip_Ref_Delegate(ref UnityBenchShared.SquareRootRecip arg0);
+        private unsafe static object Call_R_System_Void_P_0_UnityBenchShared_SquareRootRecip_Ref_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestPerfNotes_test_square_root_recipDelegate)delegateObj;
+            var d = (R_System_Void_P_0_UnityBenchShared_SquareRootRecip_Ref_Delegate)delegateObj;
             object result = null;
             var arg0 = (UnityBenchShared.SquareRootRecip)p[0];
             d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_pdDelegate(double* arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_pdDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Double_Ptr_Delegate(double* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Double_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_pdDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Double_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (double*)(IntPtr)p[0];
+            d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Double_Ptr_1_Double_Delegate(double* arg0, double arg1);
+        private unsafe static object Call_R_System_Void_P_0_Double_Ptr_1_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Double_Ptr_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (double*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -4361,20 +4669,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxDoubleDelegate(double* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxDoubleDelegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Single_Ptr_1_Single_Ptr_2_Single_Ptr_3_Int32_Delegate(float* arg0, float* arg1, float* arg2, int arg3);
+        private unsafe static object Call_R_System_Void_P_0_Single_Ptr_1_Single_Ptr_2_Single_Ptr_3_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxDoubleDelegate)delegateObj;
-            object result = null;
-            var arg0 = (double*)(IntPtr)p[0];
-            d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariablePtrDelegate(float* arg0, float* arg1, float* arg2, int arg3);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestAlias_TestDivisionByVariablePtrDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestAlias_TestDivisionByVariablePtrDelegate)delegateObj;
+            var d = (R_System_Void_P_0_Single_Ptr_1_Single_Ptr_2_Single_Ptr_3_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (float*)(IntPtr)p[0];
             var arg1 = (float*)(IntPtr)p[1];
@@ -4384,10 +4682,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_cvtss_f32Delegate(float* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_cvtss_f32Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Single_Ptr_1_Int32_Delegate(float* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Single_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_Test_mm256_cvtss_f32Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Single_Ptr_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (float*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4395,10 +4693,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvttsd_si32Delegate(int* arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvttsd_si32Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_Delegate(int* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvttsd_si32Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int*)(IntPtr)p[0];
+            d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_1_Double_Delegate(int* arg0, double arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_1_Double_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Int32_Ptr_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (int*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -4406,10 +4714,47 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestri_batch1Delegate(int* arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestri_batch1Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_1_Int32_Delegate(int* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpestri_batch1Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int32_Ptr_1_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_Delegate(int* arg0, int arg1, int arg2);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate(int* arg0, int arg1, int arg2, int arg3, int arg4);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (int*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (int)p[2];
+            var arg3 = (int)p[3];
+            var arg4 = (int)p[4];
+            d(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate(int* arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6);
+        private unsafe static object Call_R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Int32_Ptr_1_Int32_2_Int32_3_Int32_4_Int32_5_Int32_6_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (int*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4422,57 +4767,20 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistri_batch0Delegate(int* arg0, int arg1, int arg2, int arg3, int arg4);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistri_batch0Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int64_Ptr_Delegate(long* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Int64_Ptr_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cmpistri_batch0Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int64_Ptr_Delegate)delegateObj;
             object result = null;
-            var arg0 = (int*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            var arg3 = (int)p[3];
-            var arg4 = (int)p[4];
-            d(arg0, arg1, arg2, arg3, arg4);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_testz_si128Delegate(int* arg0, int arg1, int arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_testz_si128Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_testz_si128Delegate)delegateObj;
-            object result = null;
-            var arg0 = (int*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            var arg2 = (int)p[2];
-            d(arg0, arg1, arg2);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_SseDispatch1Delegate(int* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_SseDispatch1Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_SseDispatch1Delegate)delegateObj;
-            object result = null;
-            var arg0 = (int*)(IntPtr)p[0];
-            var arg1 = (int)p[1];
-            d(arg0, arg1);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxIntDelegate(int* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxIntDelegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_TestTestInfrastructure_ReturnBoxIntDelegate)delegateObj;
-            object result = null;
-            var arg0 = (int*)(IntPtr)p[0];
+            var arg0 = (long*)(IntPtr)p[0];
             d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsd_si64Delegate(long* arg0, double arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsd_si64Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int64_Ptr_1_Double_Delegate(long* arg0, double arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int64_Ptr_1_Double_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsd_si64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int64_Ptr_1_Double_Delegate)delegateObj;
             object result = null;
             var arg0 = (long*)(IntPtr)p[0];
             var arg1 = (double)p[1];
@@ -4480,10 +4788,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi128_si64Delegate(long* arg0, int arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi128_si64Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int64_Ptr_1_Int32_Delegate(long* arg0, int arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int64_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_cvtsi128_si64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int64_Ptr_1_Int32_Delegate)delegateObj;
             object result = null;
             var arg0 = (long*)(IntPtr)p[0];
             var arg1 = (int)p[1];
@@ -4491,10 +4799,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_si64Delegate(long* arg0, long arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_si64Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int64_Ptr_1_Int64_Delegate(long* arg0, long arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int64_Ptr_1_Int64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_stream_si64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int64_Ptr_1_Int64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long*)(IntPtr)p[0];
             var arg1 = (long)p[1];
@@ -4502,10 +4810,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_popcnt_u64Delegate(long* arg0, ulong arg1);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_popcnt_u64Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_Int64_Ptr_1_UInt64_Delegate(long* arg0, ulong arg1);
+        private unsafe static object Call_R_System_Void_P_0_Int64_Ptr_1_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_popcnt_u64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_Int64_Ptr_1_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (long*)(IntPtr)p[0];
             var arg1 = (ulong)p[1];
@@ -4513,20 +4821,10 @@ namespace Burst.Compiler.IL.Tests
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_extract_epi64_0Delegate(long* arg0);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_extract_epi64_0Delegate(object delegateObj, object[] p)
+        private unsafe delegate void R_System_Void_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate(ulong* arg0, ulong arg1, ulong arg2);
+        private unsafe static object Call_R_System_Void_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate(object delegateObj, object[] p)
         {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_extract_epi64_0Delegate)delegateObj;
-            object result = null;
-            var arg0 = (long*)(IntPtr)p[0];
-            d(arg0);
-            return result;
-        }
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate void Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u64Delegate(ulong* arg0, ulong arg1, ulong arg2);
-        private unsafe static object CallBurst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u64Delegate(object delegateObj, object[] p)
-        {
-            var d = (Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_Test_crc32_u64Delegate)delegateObj;
+            var d = (R_System_Void_P_0_UInt64_Ptr_1_UInt64_2_UInt64_Delegate)delegateObj;
             object result = null;
             var arg0 = (ulong*)(IntPtr)p[0];
             var arg1 = (ulong)p[1];

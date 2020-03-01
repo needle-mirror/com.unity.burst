@@ -53,7 +53,9 @@ namespace Unity.Burst
         internal const string OptionDebug = "debug";
         internal const string OptionDebugMode = "debugMode";
         internal const string OptionStaticLinkage = "generate-static-linkage-methods";
+        internal const string OptionJobMarshalling = "generate-job-marshalling-methods";
         internal const string OptionTempDirectory = "temp-folder=";
+        internal const string OptionEnableDirectExternalLinking = "enable-direct-external-linking";
 
         // -------------------------------------------------------
         // Options used by the Jit compiler

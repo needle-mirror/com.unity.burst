@@ -308,6 +308,13 @@ namespace Burst.Compiler.IL.Tests
             if (compiledFunction == null)
                 return context.CurrentResult;
 
+            // Check for expected compiler warnings (we'll check for compiler errors below,
+            // but this is for tests that we expect to pass but still log a warning).
+            if (!CheckExpectedDiagnostics(context, "Compiling code"))
+            {
+                return context.CurrentResult;
+            }
+
             if (_compileOnly) // If the test only wants to compile the code, bail now.
             {
                 return context.CurrentResult;
@@ -578,12 +585,8 @@ namespace Burst.Compiler.IL.Tests
 
             if (caughtType != null && expectedException(caughtType))
             {
-                var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
-                var expectedDiagnosticIds = _expectedDiagnosticIds.OrderBy(x => x);
-                string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds) => string.Join(",", diagnosticIds);
-                if (!loggedDiagnosticIds.SequenceEqual(expectedDiagnosticIds))
+                if (!CheckExpectedDiagnostics(context, contextName))
                 {
-                    context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic(s) to be logged with IDs {GetDiagnosticIds(_expectedDiagnosticIds)} but instead the following diagnostic(s) were logged: {GetDiagnosticIds(loggedDiagnosticIds)}");
                     return TryExpectedExceptionResult.ThrewUnexpectedException;
                 }
                 else
@@ -602,6 +605,19 @@ namespace Burst.Compiler.IL.Tests
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expected {expectedExceptionName} but no exception was thrown");
                 return TryExpectedExceptionResult.ThrewUnexpectedException;
             }
+        }
+
+        private bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
+        {
+            var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
+            var expectedDiagnosticIds = _expectedDiagnosticIds.OrderBy(x => x);
+            string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds) => string.Join(",", diagnosticIds);
+            if (!loggedDiagnosticIds.SequenceEqual(expectedDiagnosticIds))
+            {
+                context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic(s) to be logged with IDs {GetDiagnosticIds(_expectedDiagnosticIds)} but instead the following diagnostic(s) were logged: {GetDiagnosticIds(loggedDiagnosticIds)}");
+                return false;
+            }
+            return true;
         }
 
         protected virtual IEnumerable<DiagnosticId> GetLoggedDiagnosticIds() => Array.Empty<DiagnosticId>();
