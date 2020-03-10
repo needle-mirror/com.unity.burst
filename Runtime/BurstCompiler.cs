@@ -1,9 +1,11 @@
 // For some reasons Unity.Burst.LowLevel is not part of UnityEngine in 2018.2 but only in UnityEditor
 // In 2018.3 It should be fine
+
 #if !UNITY_DOTSPLAYER && !NET_DOTS && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
 using System.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -95,10 +97,12 @@ namespace Unity.Burst
                 throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be a non-generic method");
             }
 
-            if (delegateMethod.Method.GetCustomAttribute<AOT.MonoPInvokeCallbackAttribute>() == null)
+#if ENABLE_IL2CPP
+            if (delegateMethod.Method.GetCustomAttributes().All(s => s.GetType().Name != "MonoPInvokeCallbackAttribute"))
             {
                 UnityEngine.Debug.Log($"The method `{delegateMethod.Method}` must have `MonoPInvokeCallback` attribute to be compatible with IL2CPP!");
             }
+#endif
 
             void* function;
 

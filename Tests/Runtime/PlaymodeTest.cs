@@ -25,7 +25,7 @@ public class PlaymodeTest
 
         yield return null;
 
-        using (var jobTester = new BurstJobTester())
+        using (var jobTester = new BurstJobTester2())
         {
             var result = jobTester.Calculate();
             Assert.AreNotEqual(0.0f, result);
@@ -38,7 +38,7 @@ public class PlaymodeTest
 
         yield return null;
 
-        using (var jobTester = new BurstJobTester())
+        using (var jobTester = new BurstJobTester2())
         {
             var result = jobTester.Calculate();
             Assert.AreEqual(0.0f, result);

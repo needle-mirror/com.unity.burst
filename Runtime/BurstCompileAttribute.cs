@@ -3,8 +3,6 @@ using System.Runtime.CompilerServices;
 
 // Make internals visible to Unity.Burst.Editor for BurstGlobalCompilerOptions
 [assembly: InternalsVisibleTo("Unity.Burst.Editor")]
-// Make internals visible to burst tests
-[assembly: InternalsVisibleTo("btests")]
 // Make internals visible to Unity burst tests
 [assembly: InternalsVisibleTo("Unity.Burst.Tests.UnitTests")]
 [assembly: InternalsVisibleTo("Unity.Burst.Editor.Tests")]

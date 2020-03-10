@@ -142,5 +142,11 @@ namespace Burst.Compiler.IL.Tests
         {
             return BurstDiscarded();
         }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdtokenTypeNotSupported)]
+        public static bool TestTypeof()
+        {
+            return typeof(int).IsPrimitive;
+        }
     }
 }

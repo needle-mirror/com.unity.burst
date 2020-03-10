@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0-preview.5] - 2020-03-11
+
+
+### Fixed
+- `MemCpy` and `MemSet` performance regression in Burst 1.3.0.preview.4 (as was spotted by [@tertle](https://forum.unity.com/members/33474/)) has been fixed.
+- Fix a crash when loading assembly with PublicKeyToken starting with a digit
+- Better handling of MonoPInvokeCallbackAttribute: no check for the namespace, don't print message on Mono builds
+
+### Changed
+- Improved error message for typeof usage
+
 ## [1.3.0-preview.4] - 2020-03-02
 
 

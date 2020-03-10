@@ -233,35 +233,5 @@ namespace Unity.Burst.Intrinsics
             ULong0 = a;
         }
     }
-
-    /// <summary>
-    /// Represents two 64-bit SIMD values (Arm only)
-    /// </summary>
-    public struct v64x2
-    {
-        public v64 v0;
-        public v64 v1;
-    }
-
-    /// <summary>
-    /// Represents three 128-bit SIMD values (Arm only)
-    /// </summary>
-    public struct v64x3
-    {
-        public v64 v0;
-        public v64 v1;
-        public v64 v2;
-    }
-
-    /// <summary>
-    /// Represents four 128-bit SIMD values (Arm only)
-    /// </summary>
-    public struct v64x4
-    {
-        public v64 v0;
-        public v64 v1;
-        public v64 v2;
-        public v64 v3;
-    }
 }
 #endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS

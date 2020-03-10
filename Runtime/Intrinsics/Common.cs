@@ -5,7 +5,7 @@ namespace Unity.Burst.Intrinsics
     /// </summary>
     public static class Common
     {
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC
+#if UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC
         /// <summary>
         /// Hint that the current thread should pause.
         ///

@@ -7,7 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-#if !BURST_INTERNAL
+#if !BURST_COMPILER_SHARED
 using Unity.Jobs.LowLevel.Unsafe;
 #endif
 
@@ -20,7 +20,11 @@ namespace Unity.Burst
     /// <summary>
     /// Options available at Editor time and partially at runtime to control the behavior of the compilation and to enable/disable burst jobs.
     /// </summary>
+#if BURST_COMPILER_SHARED
+    internal sealed partial class BurstCompilerOptionsInternal
+#else
     public sealed partial class BurstCompilerOptions
+#endif
     {
         private const string DisableCompilationArg = "--burst-disable-compilation";
 
@@ -102,6 +106,8 @@ namespace Unity.Burst
         internal const string OptionValidateExternalToolChain = "validate-external-tool-chain";
         internal const string OptionCompilerThreads = "threads=";
         internal const string OptionChunkSize = "chunk-size=";
+        internal const string OptionPrintLogOnMissingPInvokeCallbackAttribute = "print-monopinvokecallbackmissing-message";
+        internal const string OptionOutputMode = "output-mode=";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";
@@ -114,7 +120,7 @@ namespace Unity.Burst
 
         // All the following content is exposed to the public interface
 
-#if !BURST_INTERNAL
+#if !BURST_COMPILER_SHARED
         // These fields are only setup at startup
         private static readonly bool ForceDisableBurstCompilation;
         private static readonly bool ForceBurstCompilationSynchronously;
@@ -492,7 +498,7 @@ namespace Unity.Burst
             }
         }
 #endif
-#endif // !BURST_INTERNAL
+#endif // !BURST_COMPILER_SHARED
     }
 
 #if UNITY_EDITOR
@@ -535,7 +541,7 @@ namespace Unity.Burst
     /// Flags used by <see cref="NativeCompiler.CompileMethod"/> to dump intermediate compiler results.
     /// </summary>
     [Flags]
-#if BURST_INTERNAL
+#if BURST_COMPILER_SHARED
     public enum NativeDumpFlags
 #else
     internal enum NativeDumpFlags

@@ -301,7 +301,16 @@ namespace Burst.Compiler.IL.Tests
                 Console.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
             }
 
-            var compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
+            Delegate compiledFunction;
+            try
+            {
+                compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
+            }
+            catch (Exception ex) when (_expectedException != null && ex.GetType() == _expectedException)
+            {
+                context.CurrentResult.SetResult(ResultState.Success);
+                return context.CurrentResult;
+            }
 
             Assert.IsTrue(returnBoxType == null || Marshal.SizeOf(returnBoxType) <= MaxReturnBoxSize);
 
@@ -370,6 +379,8 @@ namespace Burst.Compiler.IL.Tests
                 ProcessNativeResult(_originalMethod, resultNative);
 
                 context.CurrentResult.SetResult(ResultState.Success);
+
+                PostAssert(context);
             }
 
             // Check that the method is actually in the registry
@@ -385,6 +396,10 @@ namespace Burst.Compiler.IL.Tests
             CompleteTest(context);
 
             return context.CurrentResult;
+        }
+
+        protected virtual void PostAssert(ExecutionContext context)
+        {
         }
 
         protected virtual void ProcessNativeResult(TestMethod method, object result)

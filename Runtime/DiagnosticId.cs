@@ -3,7 +3,7 @@ namespace Unity.Burst
     /// <summary>
     /// Specifies the possible diagnostic IDs.
     /// </summary>
-#if BURST_INTERNAL
+#if BURST_COMPILER_SHARED
     public
 #else
     internal

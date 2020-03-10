@@ -1,11 +1,16 @@
 using System;
+using System.Runtime.InteropServices;
+using System.Text;
+#if !BURST_COMPILER_SHARED
+using Unity.Burst.LowLevel;
+#endif
 
 namespace Unity.Burst
 {
     /// <summary>
     /// Provides helper intrinsics that can be used at runtime.
     /// </summary>
-#if BURST_INTERNAL
+#if BURST_COMPILER_SHARED
     internal static class BurstRuntimeInternal
 #else
     public static class BurstRuntime
@@ -110,5 +115,73 @@ namespace Unity.Burst
         {
             public static readonly long Value = HashStringWithFNV1A64(typeof(T).AssemblyQualifiedName);
         }
+
+
+#if !BURST_COMPILER_SHARED
+
+#if UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+        internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
+        {
+            BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
+        }
+#elif UNITY_2019_3_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+        // Because we can't back-port the new API BurstCompilerService.Log introduced in 2020.1
+        // we are still trying to allow to log on earlier version of Unity by going back to managed
+        // code when we are using Debug.Log. It is not great in terms of performance but it should not
+        // be a matter when debugging.
+
+        internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
+        {
+            LogHelper.Instance.Data.Invoke(message, logType, fileName, lineNumber);
+        }
+
+        private unsafe delegate void NativeLogDelegate(byte* message, int logType, byte* filename, int lineNumber);
+
+        private static readonly unsafe NativeLogDelegate ManagedNativeLog = ManagedNativeLogImpl;
+
+        [AOT.MonoPInvokeCallback(typeof(NativeLogDelegate))]
+        private static unsafe void ManagedNativeLogImpl(byte* message, int logType, byte* filename, int lineNumber)
+        {
+            if (message == null) return;
+            int byteCount = 0;
+            while (message[byteCount] != 0) byteCount++;
+
+            var managedText = Encoding.UTF8.GetString(message, byteCount);
+            switch (logType)
+            {
+                case 1:
+                    UnityEngine.Debug.LogWarning(managedText);
+                    break;
+                case 2:
+                    UnityEngine.Debug.LogError(managedText);
+                    break;
+                default:
+                    UnityEngine.Debug.Log(managedText);
+                    break;
+            }
+        }
+
+        private class LogHelper
+        {
+            public static readonly SharedStatic<FunctionPointer<NativeLogDelegate>> Instance = SharedStatic<FunctionPointer<NativeLogDelegate>>.GetOrCreate<LogHelper>();
+        }
+
+        static BurstRuntime()
+        {
+            LogHelper.Instance.Data = new FunctionPointer<NativeLogDelegate>(Marshal.GetFunctionPointerForDelegate(ManagedNativeLog));
+        }
+
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        internal static void Initialize()
+        {
+        }
+#else
+        internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
+        {
+        }
+#endif // !UNITY_2020_1_OR_NEWER
+
+#endif // !BURST_COMPILER_SHARED
+
     }
 }

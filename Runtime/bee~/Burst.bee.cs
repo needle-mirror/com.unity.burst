@@ -7,12 +7,25 @@ using NiceIO;
 using Unity.BuildSystem.NativeProgramSupport;
 using Unity.BuildTools;
 
+/*
+ * This file exists as an interface to programs that want to invoke bcl.exe from a bee buildprogram.
+ * The idea is that when bcl.exe command line options change, this file should change, and then programs using
+ * burst will pick up the changes for free, without depending on specific command line options of bcl.exe.
+ *
+ * How well that works, is another question. 
+ */
 public abstract class BurstCompiler
 {
     public static NPath BurstExecutable { get; set; }
     public abstract string TargetPlatform { get; set; }
     public abstract string TargetArchitecture { get; set; }
-    public virtual string MinTargetArch => TargetArchitecture;
+    private string _minTargetArch;
+    public virtual string MinTargetArch
+    {
+        get => _minTargetArch ?? TargetArchitecture;
+        set => _minTargetArch = value;
+    }
+
     public abstract string ObjectFormat { get; set; }
     public abstract string ObjectFileExtension { get; set; }
     public abstract bool UseOwnToolchain { get; set; }
@@ -199,13 +212,12 @@ public class BurstCompilerForEmscripten : BurstCompiler
     public override string FloatPrecision { get; set; } = "High";
     public override bool SafetyChecks { get; set; } = true;
     public override bool DisableVectors { get; set; } = true;
-    public override bool Link => false;
-    public override string ObjectFileExtension { get; set; } = ".ll";
+    public override bool Link { get; set; } = false;
+    public override string ObjectFileExtension { get; set; } = ".bc";
     public override bool UseOwnToolchain { get; set; } = false;
     public override bool EnableStaticLinkage { get; set; } = true;
     public override bool EnableJobMarshalling { get; set; } = false;
     public override bool EnableDirectExternalLinking { get; set; } = true;
-    public override string BurstBackend { get; set; } = "burst-llvm-6";
 }
 
 public class BurstCompilerForWindows : BurstCompiler
@@ -223,6 +235,8 @@ public class BurstCompilerForWindows : BurstCompiler
     public override bool Link { get; set; } = false; //true;
     public override string ObjectFileExtension { get; set; } = ".obj";
     public override bool UseOwnToolchain { get; set; } = true;
+    public override bool EnableDirectExternalLinking { get; set; } = false;
+    //public override string BurstBackend { get; set; } = "burst-llvm-custom";
     public override bool EnableJobMarshalling { get; set; } = true;
 }
 

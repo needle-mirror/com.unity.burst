@@ -9,13 +9,13 @@ using UnityEngine;
 /// Shared class used for Unit tests and <see cref="MyBurstBehavior"/>
 /// </summary>
 [BurstCompile] // attribute added just to check that static methods are getting compiled
-public class BurstJobTester : IDisposable
+public class BurstJobTester2 : IDisposable
 {
     private NativeArray<float> _array;
     private NativeArray<float> _arrayAsyncJobDefault;
     private NativeArray<float> _arrayAsyncJobFast;
 
-    public BurstJobTester()
+    public BurstJobTester2()
     {
         _array = new NativeArray<float>(10, Allocator.Persistent);
         _arrayAsyncJobDefault = new NativeArray<float>(10, Allocator.Persistent);

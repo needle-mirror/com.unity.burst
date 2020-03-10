@@ -5,6 +5,7 @@ using NUnit.Framework;
 #if BURST_INTERNAL
 using System.Text;
 using Unity.Burst.Intrinsics;
+using Unity.Mathematics;
 #endif
 
 namespace Burst.Compiler.IL.Tests.Helpers
@@ -40,8 +41,7 @@ namespace Burst.Compiler.IL.Tests.Helpers
             {
                 var expectedF = (float)expected;
                 var resultF = (float)result;
-                int ulp;
-                Assert.True(NearEqualFloat(expectedF, resultF, maxUlp, out ulp), $"Expected: {expectedF} != Result: {resultF}, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF, resultF, maxUlp, out var ulp), $"Expected: {expectedF} != Result: {resultF}, ULPs: {ulp}");
                 return;
             }
 
@@ -49,12 +49,41 @@ namespace Burst.Compiler.IL.Tests.Helpers
             {
                 var expectedF = (double)expected;
                 var resultF = (double)result;
-                long ulp;
-                Assert.True(NearEqualDouble(expectedF, resultF, maxUlp, out ulp), $"Expected: {expectedF} != Result: {resultF}, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF, resultF, maxUlp, out var ulp), $"Expected: {expectedF} != Result: {resultF}, ULPs: {ulp}");
                 return;
             }
 
 #if BURST_INTERNAL
+            if (expected is float2 && result is float2)
+            {
+                var expectedF = (float2)expected;
+                var resultF = (float2)result;
+                Assert.True(NearEqualFloat(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                return;
+            }
+
+            if (expected is float3 && result is float3)
+            {
+                var expectedF = (float3)expected;
+                var resultF = (float3)result;
+                Assert.True(NearEqualFloat(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.z, resultF.z, maxUlp, out ulp), $"Expected: {expectedF}.z != Result: {resultF}.z, ULPs: {ulp}");
+                return;
+            }
+
+            if (expected is float4 && result is float4)
+            {
+                var expectedF = (float4)expected;
+                var resultF = (float4)result;
+                Assert.True(NearEqualFloat(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.z, resultF.z, maxUlp, out ulp), $"Expected: {expectedF}.z != Result: {resultF}.z, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.w, resultF.w, maxUlp, out ulp), $"Expected: {expectedF}.w != Result: {resultF}.w, ULPs: {ulp}");
+                return;
+            }
+
             if (expected is v64 && result is v64)
             {
                 if (!AreVectorsEqual((v64)expected, (v64)result))

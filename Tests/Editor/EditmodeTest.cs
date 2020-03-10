@@ -33,7 +33,7 @@ public class EditModeTest
 
         yield return null;
 
-        using (var jobTester = new BurstJobTester())
+        using (var jobTester = new BurstJobTester2())
         {
             var result = jobTester.Calculate();
             Assert.AreNotEqual(0.0f, result);
@@ -46,7 +46,7 @@ public class EditModeTest
 
         yield return null;
 
-        using (var jobTester = new BurstJobTester())
+        using (var jobTester = new BurstJobTester2())
         {
             var result = jobTester.Calculate();
             Assert.AreEqual(0.0f, result);
@@ -63,7 +63,7 @@ public class EditModeTest
 
         yield return null;
 
-        var job = new BurstJobTester.MyJobCreatingAndDisposingNativeArray()
+        var job = new BurstJobTester2.MyJobCreatingAndDisposingNativeArray()
         {
             Length = 128,
             Result = new NativeArray<int>(16, Allocator.TempJob)
@@ -113,7 +113,7 @@ public class EditModeTest
         while (result == 0.0f && iteration < MaxIterations)
         {
             array[0] = 0.0f;
-            var job = new BurstJobTester.MyJobAsync { Result = array };
+            var job = new BurstJobTester2.MyJobAsync { Result = array };
             job.Schedule().Complete();
             result = job.Result[0];
             iteration++;
