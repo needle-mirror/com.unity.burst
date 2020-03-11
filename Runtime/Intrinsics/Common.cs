@@ -1,3 +1,5 @@
+using System;
+
 namespace Unity.Burst.Intrinsics
 {
     /// <summary>
@@ -23,7 +25,31 @@ namespace Unity.Burst.Intrinsics
         /// it only provides a hint to the CPU that the current thread can
         /// afford to pause its execution temporarily.
         /// </summary>
-        public static void Pause() {}
+        public static void Pause() { }
+#endif
+
+#if UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC
+        public enum ReadWrite : int
+        {
+            Read = 0,
+            Write = 1,
+        }
+
+        public enum Locality : int
+        {
+            NoTemporalLocality = 0,
+            LowTemporalLocality = 1,
+            ModerateTemporalLocality = 2,
+            HighTemporalLocality = 3,
+        }
+
+        /// <summary>
+        /// Prefetch a pointer.
+        /// </summary>
+        /// <param name="v">The pointer to prefetch.</param>
+        /// <param name="rw">Whether the pointer will be used for reading or writing.</param>
+        /// <param name="locality">The cache locality of the pointer.</param>
+        public static unsafe void Prefetch(void* v, ReadWrite rw, Locality locality = Locality.HighTemporalLocality) { }
 #endif
 
         /// <summary>

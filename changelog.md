@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.0-preview.6] - 2020-03-12
+
+
+### Added
+- Experimental support for `Prefetch`, allowing users to request from the memory subsystem pointer addresses they intend to hit next. This functionality is guarded by the `UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC` preprocessor define.
+
+### Fixed
+- Fix SSE `maxps` intrinsic would emit `maxss`
+
 ## [1.3.0-preview.5] - 2020-03-11
 
 

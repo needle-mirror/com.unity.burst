@@ -84,6 +84,36 @@ namespace Burst.Compiler.IL.Tests.Helpers
                 return;
             }
 
+            if (expected is double2 && result is double2)
+            {
+                var expectedF = (double2)expected;
+                var resultF = (double2)result;
+                Assert.True(NearEqualDouble(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                return;
+            }
+
+            if (expected is double3 && result is double3)
+            {
+                var expectedF = (double3)expected;
+                var resultF = (double3)result;
+                Assert.True(NearEqualDouble(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.z, resultF.z, maxUlp, out ulp), $"Expected: {expectedF}.z != Result: {resultF}.z, ULPs: {ulp}");
+                return;
+            }
+
+            if (expected is double4 && result is double4)
+            {
+                var expectedF = (double4)expected;
+                var resultF = (double4)result;
+                Assert.True(NearEqualDouble(expectedF.x, resultF.x, maxUlp, out var ulp), $"Expected: {expectedF}.x != Result: {resultF}.x, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.y, resultF.y, maxUlp, out ulp), $"Expected: {expectedF}.y != Result: {resultF}.y, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.z, resultF.z, maxUlp, out ulp), $"Expected: {expectedF}.z != Result: {resultF}.z, ULPs: {ulp}");
+                Assert.True(NearEqualDouble(expectedF.w, resultF.w, maxUlp, out ulp), $"Expected: {expectedF}.w != Result: {resultF}.w, ULPs: {ulp}");
+                return;
+            }
+
             if (expected is v64 && result is v64)
             {
                 if (!AreVectorsEqual((v64)expected, (v64)result))
@@ -134,10 +164,10 @@ namespace Burst.Compiler.IL.Tests.Helpers
             var b = new StringBuilder();
             b.AppendLine("128-bit vectors differ!");
             b.AppendLine("Expected:");
-            FormatVector(b, (void*) &expected, 16);
+            FormatVector(b, (void*)&expected, 16);
             b.AppendLine();
             b.AppendLine("But was :");
-            FormatVector(b, (void*) &result, 16);
+            FormatVector(b, (void*)&result, 16);
             b.AppendLine();
             return b.ToString();
         }
@@ -147,10 +177,10 @@ namespace Burst.Compiler.IL.Tests.Helpers
             var b = new StringBuilder();
             b.AppendLine("256-bit vectors differ!");
             b.AppendLine("Expected:");
-            FormatVector(b, (void*) &expected, 32);
+            FormatVector(b, (void*)&expected, 32);
             b.AppendLine();
             b.AppendLine("But was :");
-            FormatVector(b, (void*) &result, 32);
+            FormatVector(b, (void*)&result, 32);
             b.AppendLine();
             return b.ToString();
         }
@@ -280,7 +310,7 @@ namespace Burst.Compiler.IL.Tests.Helpers
             if (ulp <= LongMinValue) return long.MaxValue;
             if (ulp > LongMaxValue) return long.MaxValue;
 
-            return Math.Abs((long) ulp);
+            return Math.Abs((long)ulp);
         }
 
         /// <summary>
