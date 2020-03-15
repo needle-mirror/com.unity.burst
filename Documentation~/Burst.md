@@ -388,7 +388,7 @@ When `CompileSynchronously = true` is set, no asynchronous compilation can occur
 - If you are profiling a Burst job and thus want to be certain that the code that is being tested is from the Burst compiler. In this scenario you should perform a warmup to throw away any timing measurements from the first call to the job as that would include the compilation cost and skew the result.
 - If you suspect that there are some crucial differences between managed and Burst compiled code. This is really only as a debugging aid, as the Burst compiler strives to match any and all behaviour that managed code could produce.
 
-## Function pointers
+## Function Pointers
 
 It is often required to work with dynamic functions that can process data based on other data states. In that case, a user would expect to use C# delegates but in Burst, because these delegates are managed objects, we need to provide a HPC# compatible alternative. In that case you can use `FunctionPointer<T>`.
 
@@ -449,6 +449,111 @@ Note that you can also use these function pointers from regular C# as well, but 
 > - Using Burst-compiled function pointers from C# could be slower than their pure C# version counterparts if the function is too small compared to the cost of P/Invoke interop.
 > - A function pointer compiled with Burst cannot be called directly from another function pointer. This limitation will be lifted in a future release. You can workaround this limitation by creating a wrapper function with the `[BurstCompile]` attribute and to use the shared function from there.
 > - Function pointers don't support generic delegates.
+
+### Performance Considerations
+
+If you are ever considering using Burst's function pointers, you should _always_ first consider whether a job would better. Jobs are the most optimal way to run code produced by the Burst compiler for a few reasons:
+
+- The superior aliasing calculations that Burst can provide with a job because of the rules imposed by the job safety system allow for much more optimizations by default.
+- You cannot pass most of the `[NativeContainer]` structs like `NativeArray` directly to function pointers, only via Job structs. The native container structs contain managed objects for safety checks that the Burst compiler can work around when compiling jobs, but not for function pointers.
+- Function pointers hamper the compiler's ability to optimize across functions.
+
+Let's look at an example of how _not_ to use function pointers in Burst:
+
+```c#
+[BurstCompile]
+public class MyFunctionPointers
+{
+    public unsafe delegate void MyFunctionPointerDelegate(float* input, float* output);
+
+    [BurstCompile]
+    public static unsafe void MyFunctionPointer(float* input, float* output)
+    {
+        *output = math.sqrt(*input);
+    }
+}
+
+[BurstCompile]
+struct MyJob : IJobParallelFor
+{
+     public FunctionPointer<MyFunctionPointers.MyFunctionPointerDelegate> FunctionPointer;
+
+    [ReadOnly] public NativeArray<float> Input;
+    [WriteOnly] public NativeArray<float> Output;
+
+    public unsafe void Execute(int index)
+    {
+        var inputPtr = (float*)Input.GetUnsafeReadOnlyPtr();
+        var outputPtr = (float*)Output.GetUnsafePtr();
+        FunctionPointer.Invoke(inputPtr + index, outputPtr + index);
+    }
+}
+```
+
+In this example we've got a function pointer that is computing `math.sqrt` from an input pointer, and storing it to an output pointer. The `MyJob` job is then feeding this function pointer sourced from two `NativeArray`s. There are a few major performance problems with this example:
+
+- The function pointer is being fed a single scalar element, thus the compiler cannot vectorize. This means you are losing 4-8x performance straight away from a lack of vectorization.
+- The `MyJob` knows that the `Input` and `Output` native arrays cannot alias, but this information is not communicated to the function pointer.
+- There is a non-zero cost to constantly branching to a function pointer somewhere else in memory. Modern processors do a decent job at eliding this cost, but it is still non-zero.
+
+If you feel like you **must** use function pointers, then you should **always** process batches of data in the function pointer. Let's modify the example above to do just that:
+
+```c#
+[BurstCompile]
+public class MyFunctionPointers
+{
+    public unsafe delegate void MyFunctionPointerDelegate(int count, float* input, float* output);
+
+    [BurstCompile]
+    public static unsafe void MyFunctionPointer(int count, float* input, float* output)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            output[i] = math.sqrt(input[i]);
+        }
+    }
+}
+
+[BurstCompile]
+struct MyJob : IJobParallelForBatch
+{
+     public FunctionPointer<MyFunctionPointers.MyFunctionPointerDelegate> FunctionPointer;
+
+    [ReadOnly] public NativeArray<float> Input;
+    [WriteOnly] public NativeArray<float> Output;
+
+    public unsafe void Execute(int index, int count)
+    {
+        var inputPtr = (float*)Input.GetUnsafeReadOnlyPtr() + index;
+        var outputPtr = (float*)Output.GetUnsafePtr() + index;
+        FunctionPointer.Invoke(count, inputPtr, outputPtr);
+    }
+}
+```
+
+In our modified `MyFunctionPointer` you can see that it takes a `count` of elements to process, and loops over the `input` and `output` pointers to do many calculations. The `MyJob` becomes an `IJobParallelForBatch`, and the `count` is passed directly into the function pointer. This is better for performance:
+
+- You now get vectorization in the `MyFunctionPointer` call.
+- Because you are processing `count` items per function pointer, any cost of calling the function pointer is reduced by `count` times (EG. if you run a batch of 128, the function pointer cost is 1/128th per `index` of what it was previously).
+- Doing the batching above realized a 1.53x performance gain over not batching, so it's a big win.
+
+The best thing you can do though is just to use a job - this gives the compiler the most visibility over what you want it to do, and the most opportunities to optimize:
+
+```c#
+[BurstCompile]
+struct MyJob : IJobParallelFor
+{
+    [ReadOnly] public NativeArray<float> Input;
+    [WriteOnly] public NativeArray<float> Output;
+
+    public unsafe void Execute(int index)
+    {
+        Output[i] = math.sqrt(Input[i]);
+    }
+}
+```
+
+The above will run 1.26x faster than the batched function pointer example, and 1.93x faster than the non-batched function pointer examples above. The compiler has perfect aliasing knowledge and can make the broadest modifications to the above. Note: this code is also _significantly_ simpler than either of the function pointer cases, and shows that often the simplest solution provides the performance-by-default that Burst so strives for.
 
 ## Shared Static
 

@@ -412,6 +412,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(Unity.Mathematics.double2).MakeByRefType(), typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_2_Unity_Mathematics_double2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_2_Unity_Mathematics_double2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2x2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*), typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*), typeof(Unity.Mathematics.double3).MakeByRefType(), typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_2_Unity_Mathematics_double3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_2_Unity_Mathematics_double3_Ref_Delegate);
@@ -4664,6 +4665,16 @@ namespace Burst.Compiler.IL.Tests
             var arg1 = (Unity.Mathematics.double2)p[1];
             var arg2 = (Unity.Mathematics.double2)p[2];
             d(arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate(Unity.Mathematics.double2x2* arg0);
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.double2x2*)(IntPtr)p[0];
+            d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

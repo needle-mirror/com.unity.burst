@@ -355,6 +355,9 @@ namespace Burst.Compiler.IL.Tests
             int* ptr3 = ptr2 + 4;
             byte* ptr4 = (byte*)ptr3 + 1;
 
+            // Obviously it still aliases with itself even it we bitcast.
+            ExpectAliased((char*)ptr1 + 4, ptr1 + 1);
+
             // We know that both allocations can't point to the same memory as
             // they are derived from Malloc!).
             ExpectNotAliased(ptr1, ptr2);

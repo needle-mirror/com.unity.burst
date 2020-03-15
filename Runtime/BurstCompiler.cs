@@ -98,7 +98,8 @@ namespace Unity.Burst
             }
 
 #if ENABLE_IL2CPP
-            if (delegateMethod.Method.GetCustomAttributes().All(s => s.GetType().Name != "MonoPInvokeCallbackAttribute"))
+            if (isFunctionPointer &&
+                delegateMethod.Method.GetCustomAttributes().All(s => s.GetType().Name != "MonoPInvokeCallbackAttribute"))
             {
                 UnityEngine.Debug.Log($"The method `{delegateMethod.Method}` must have `MonoPInvokeCallback` attribute to be compatible with IL2CPP!");
             }

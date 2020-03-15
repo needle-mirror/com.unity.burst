@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.3.0-preview.7] - 2020-03-16
+
+
+### Added
+- Added additional diagnostic for tracking Visual Studio location failures.
+- Added an override to bypass link.exe discovery under certain conditions.
+- Added a ldloc -> stloc optimization which improves compile times.
+- More documentation on function pointers, specifically some performance considerations to be aware of when using them.
+
+### Removed
+
+### Changed
+- Updated tools used for determining Visual Studio locations.
+
+### Fixed
+- Embedded Portable PDB handling improved.
+- Fixed a case where our load/store optimizer would inadvertently combine a load/store into a cpblk where there were intermediate memory operations that should have been considered.
+- Fixed a bug where the no-alias analysis would, through chains of complicated pointer math, deduce that a no-alias return (like from `UnsafeUtility.Malloc`) would not alias with itself.
+- No longer log missing MonoPInvokeCallbackAttribute when running tests
+
+### Known Issues
+
 ## [1.3.0-preview.6] - 2020-03-12
 
 
