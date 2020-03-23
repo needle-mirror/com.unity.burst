@@ -161,5 +161,10 @@ namespace Unity.Burst
 
         // UBAA
         ERR_PointerArgumentsUnexpectedAliasing = 1310,
+
+        // Loop intrinsics
+        ERR_LoopIntrinsicMustBeCalledInsideLoop = 1320,
+        ERR_LoopUnexpectedAutoVectorization = 1321,
+        WRN_LoopIntrinsicCalledButLoopOptimizedAway = 1322,
     }
 }

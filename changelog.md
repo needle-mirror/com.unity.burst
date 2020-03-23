@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.3.0-preview.8] - 2020-03-24
+
+
+### Added
+- Double math builtins in `Unity.Mathematics` now use double vector implementations from SLEEF.
+- Fixed a bug with `lzcnt`, `tzcnt`, and `countbits` which when called with `long` types could produce invalid codegen.
+- New F16C X86 intrinsics. These are gated on AVX2 support, as our AVX2 detection requires the AVX2, FMA, and F16C features.
+- Add user documentation about generic jobs and restrictions.
+- Add new experimental compiler intrinsics `Loop.ExpectVectorized()` and `Loop.ExpectNotVectorized()` that let users express assumptions about loop vectorization, and have those assumptions validated at compile-time.Enabled with `UNITY_BURST_EXPERIMENTAL_LOOP_INTRINSICS`.
+
+### Changed
+- Changed how `Unity.Mathematics` functions behave during loop vectorization and constant folding to substantially improve code generation.
+- Our SSE4.2 support was implicitly dependent on the POPCNT extended instruction set, but this was not reflected in our CPU identification code. This is now fixed so that SSE4.2 is gated on SSE4.2 and POPCNT support.
+- The popcnt intrinsics now live in their own static class `Unity.Burst.Intrinsics.Popcnt` to match the new F16C intrinsics.
+- Deferred when we load the SLEEF builtins to where they are actually used, decreasing compile time with Burst by 4.29% on average.
+
+### Fixed
+- Fix an issue where a generic job instance (e.g `MyGenericJob<int>`) when used through a generic argument of a method or type would not be detected by the Burst compiler when building a standalone player.
+- [DlIimport("__Internal")] for iOS now handled correctly. Fixes crashes when using native plugins on iOS.
+
+### Removed
+
+### Known Issues
+
 ## [1.3.0-preview.7] - 2020-03-16
 
 

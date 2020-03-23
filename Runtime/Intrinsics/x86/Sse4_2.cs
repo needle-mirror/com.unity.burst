@@ -630,42 +630,6 @@ namespace Unity.Burst.Intrinsics
             }
 
             /*
-             * Calculate a number of bits set to 1
-             */
-
-            /// <summary>
-            /// Count the number of bits set to 1 in unsigned 32-bit integer a, and return that count in dst.
-            /// </summary>
-            [DebuggerStepThrough]
-            public static int popcnt_u32(uint v)
-            {
-                int result = 0;
-                uint mask = 0x80000000u;
-                while (mask != 0)
-                {
-                    result += ((v & mask) != 0) ? 1 : 0;
-                    mask >>= 1;
-                }
-                return result;
-            }
-
-            /// <summary>
-            /// Count the number of bits set to 1 in unsigned 64-bit integer a, and return that count in dst.
-            /// </summary>
-            [DebuggerStepThrough]
-            public static int popcnt_u64(ulong v)
-            {
-                int result = 0;
-                ulong mask = 0x8000000000000000u;
-                while (mask != 0)
-                {
-                    result += ((v & mask) != 0) ? 1 : 0;
-                    mask >>= 1;
-                }
-                return result;
-            }
-
-            /*
              * Accumulate CRC32 (polynomial 0x11EDC6F41) value
              */
 

@@ -11,7 +11,7 @@ namespace Unity.Burst.Intrinsics
         public static class Avx2
         {
             /// <summary>
-            /// Evaluates to true at compile time if AVX intrinsics are supported.
+            /// Evaluates to true at compile time if AVX2 intrinsics are supported.
             /// </summary>
             public static bool IsAvx2Supported { get { return false; } }
 

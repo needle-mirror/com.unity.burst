@@ -185,6 +185,8 @@ Burst supports any pointer types to any Burst supported types
 Burst supports generic types used with structs. 
 Specifically, it supports full instantiation of generic calls for generic types with interface constraints (e.g when a struct with a generic parameter requiring to implement an interface)
 
+> Note that there are restrictions when using [Generic Jobs](#generic-jobs).
+
 ### Array types
 
 Managed arrays are not supported by Burst. You should use instead a native container, `NativeArray<T>` for instance.
@@ -1164,6 +1166,139 @@ private struct CopyJob : IJob
 
 These checks will only be ran when optimizations are enabled - since proper aliasing deduction is intrinsically linked to the optimizers ability to see through functions via inlining.
 
+## Loop Vectorization
+
+Loop vectorization is one of the ways that Burst improves performance. Let's say you have code like this:
+
+``` c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+private static unsafe void Bar([NoAlias] int* a, [NoAlias] int* b, int count)
+{
+    for (var i = 0; i < count; i++)
+    {
+        a[i] += b[i];
+    }
+}
+
+public static unsafe void Foo(int count)
+{
+    var a = stackalloc int[count];
+    var b = stackalloc int[count];
+
+    Bar(a, b, count);
+}
+```
+
+The compiler is able to convert that scalar loop in `Bar` into a vectorized loop. Instead of looping over a single value at a time,
+the compiler generates code that loops over multiple values at the same time, producing faster code essentially for free. Here is the 
+`x64` assembly generated for `AVX2` for the loop in `Bar` above:
+
+```
+.LBB1_4:
+    vmovdqu    ymm0, ymmword ptr [rdx + 4*rax]
+    vmovdqu    ymm1, ymmword ptr [rdx + 4*rax + 32]
+    vmovdqu    ymm2, ymmword ptr [rdx + 4*rax + 64]
+    vmovdqu    ymm3, ymmword ptr [rdx + 4*rax + 96]
+    vpaddd     ymm0, ymm0, ymmword ptr [rcx + 4*rax]
+    vpaddd     ymm1, ymm1, ymmword ptr [rcx + 4*rax + 32]
+    vpaddd     ymm2, ymm2, ymmword ptr [rcx + 4*rax + 64]
+    vpaddd     ymm3, ymm3, ymmword ptr [rcx + 4*rax + 96]
+    vmovdqu    ymmword ptr [rcx + 4*rax], ymm0
+    vmovdqu    ymmword ptr [rcx + 4*rax + 32], ymm1
+    vmovdqu    ymmword ptr [rcx + 4*rax + 64], ymm2
+    vmovdqu    ymmword ptr [rcx + 4*rax + 96], ymm3
+    add        rax, 32
+    cmp        r8, rax
+    jne        .LBB1_4
+```
+
+As can be seen, the loop has been unrolled and vectorized so that it is has 4 `vpaddd` instructions, each calculating 8 integer additions,
+for a total of **32 integer additions per loop iteration**.
+
+This is great! However, loop vectorization is notoriously brittle. As an example, let's introduce a seemingly innocuous branch like this:
+
+``` c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+private static unsafe void Bar([NoAlias] int* a, [NoAlias] int* b, int count)
+{
+    for (var i = 0; i < count; i++)
+    {
+        if (a[i] > b[i])
+        {
+            break;
+        }
+
+        a[i] += b[i];
+    }
+}
+```
+
+Now the assembly changes to this:
+
+```
+.LBB1_3:
+    mov        r9d, dword ptr [rcx + 4*r10]
+    mov        eax, dword ptr [rdx + 4*r10]
+    cmp        r9d, eax
+    jg        .LBB1_4
+    add        eax, r9d
+    mov        dword ptr [rcx + 4*r10], eax
+    inc        r10
+    cmp        r8, r10
+    jne        .LBB1_3
+```
+
+This loop is completely scalar and only has 1 integer addition per loop iteration. This is not good! In this simple case,
+an experienced developer would probably spot that adding the branch will break auto-vectorization. But in more complex real-life code
+it can be difficult to spot.
+
+To help with this problem, Burst includes **experimental at present** intrinsics (`Loop.ExpectVectorized()` and `Loop.ExpectNotVectorized()`) to express loop vectorization
+assumptions, and have them validated at compile-time. For example, we can change the original `Bar` implementation to:
+
+``` c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+private static unsafe void Bar([NoAlias] int* a, [NoAlias] int* b, int count)
+{
+    for (var i = 0; i < count; i++)
+    {
+        Unity.Burst.CompilerServices.Loop.ExpectVectorized();
+
+        a[i] += b[i];
+    }
+}
+```
+
+Burst will now validate, at compile-time, that the loop has indeed been vectorized. If the loop is not vectorized, Burst will
+emit a compiler error. For example, if we do this:
+
+``` c#
+[MethodImpl(MethodImplOptions.NoInlining)]
+private static unsafe void Bar([NoAlias] int* a, [NoAlias] int* b, int count)
+{
+    for (var i = 0; i < count; i++)
+    {
+        Unity.Burst.CompilerServices.Loop.ExpectVectorized();
+
+        if (a[i] > b[i])
+        {
+            break;
+        }
+
+        a[i] += b[i];
+    }
+}
+```
+
+then Burst will emit the following error at compile-time:
+
+```
+LoopIntrinsics.cs(6,9): Burst error BC1321: The loop is not vectorized where it was expected that it is vectorized.
+```
+
+As these intrinsics are **experimental**, they need to be enabled with the `UNITY_BURST_EXPERIMENTAL_LOOP_INTRINSICS` preprocessor define.
+
+> Note that these loop intrinsics should not be used inside `if` statements. Burst does not currently prevent this from happening, but in a future release this will be a compile-time error.
+
 ## Compiler Options
 
 When compiling a job, you can change the behavior of the compiler:
@@ -1347,6 +1482,102 @@ The `Unity.Mathematics` provides vector types (`float4`, `float3`...) that are d
 Also, many functions from the `math` type are also mapped directly to hardware SIMD instructions.
 
 > Note that currently, for an optimal usage of this library, it is recommended to use SIMD 4 wide types (`float4`, `int4`, `bool4`...)
+
+## Generic Jobs
+
+As described in [AOT vs JIT](#just-in-time-jit-vs-ahead-of-time-aot-compilation), there are currently two modes Burst will compile a Job:
+
+- When in the Editor, it will compile the Job when it is scheduled (sometimes called JIT mode).
+- When building a Standalone Player, it will compile the Job as part of the build player (AOT mode).
+
+If the Job is a concrete type (not using generics), the Job will be compiled correctly in both modes.
+
+In case of a generic Job, it can behave more unexpectedly.
+
+While Burst supports generics, it has limited support for using generic Jobs or Function pointers. You could notice that a job scheduled at Editor time is running at full speed with Burst but not when used in a Standalone player. It is usually a problem related to generic Jobs.
+
+A generic Job can be defined like this:
+
+```c#
+// Direct Generic Job
+[BurstCompile]
+struct MyGenericJob<TData> : IJob where TData : struct { 
+    public void Execute() { ... }
+}
+```
+
+or can be nested:
+
+```c#
+// Nested Generic Job
+public class MyGenericSystem<TData> where TData : struct {
+    [BurstCompile]
+    struct MyGenericJob  : IJob { 
+        public void Execute() { ... }
+    }
+
+    public void Run()
+    {
+        var myJob = new MyGenericJob(); // implicitly MyGenericSystem<TData>.MyGenericJob
+        myJob.Schedule();    
+    }
+}
+```
+
+When the previous Jobs are being used like:
+
+```c#
+// Direct Generic Job
+var myJob = new MyGenericJob<int>();
+myJob.Schedule();
+
+// Nested Generic Job
+var myJobSystem = new MyGenericSystem<float>();
+myJobSystem.Run();
+```
+
+In both cases in a standalone-player build, the Burst compiler will be able to detect that it has to compile `MyGenericJob<int>` and `MyGenericJob<float>` because the generic jobs (or the type surrounding it for the nested job) are used with fully resolved generic arguments (`int` and `float`).
+
+But if these jobs are used indirectly through a generic parameter, the Burst compiler won't be able to detect the Jobs to compile at standalone-player build time:
+
+```c#
+public static void GenericJobSchedule<TData>() where TData: struct {
+    // Generic argument: Generic Parameter TData
+    // This Job won't be detected by the Burst Compiler at standalone-player build time.
+    var job = new MyGenericJob<TData>();
+    job.Schedule();
+}
+
+// The implicit MyGenericJob<int> will run at Editor time in full Burst speed
+// but won't be detected at standalone-player build time.
+GenericJobSchedule<int>();
+```
+
+Same restriction applies when declaring the Job in the context of generic parameter coming from a type:
+
+```c#
+// Generic Parameter TData
+public class SuperJobSystem<TData>
+{
+    // Generic argument: Generic Parameter TData
+    // This Job won't be detected by the Burst Compiler at standalone-player build time.
+    public MyGenericJob<TData> MyJob;
+}
+```
+
+> In summary, if you are using generic jobs, they need to be used directly with fully-resolved generic arguments (e.g `int`, `MyOtherStruct`) but can't be used with a generic parameter indirection (e.g `MyGenericJob<TContext>`).
+
+Regarding function pointers, they are more restricted as you can't use a generic delegate through a function pointer with Burst:
+
+```c#
+public delegate void MyGenericDelegate<T>(ref TData data) where TData: struct;
+
+var myGenericDelegate = new MyGenericDelegate<int>(MyIntDelegateImpl);
+// Will fail to compile this function pointer.
+var myGenericFunctionPointer = BurstCompiler.CompileFunctionPointer<MyGenericDelegate<int>>(myGenericDelegate);
+```
+
+This limitation is due to a limitation of the .NET runtime to interop with such delegates.
 
 # Standalone Player support
 

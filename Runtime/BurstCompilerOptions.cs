@@ -62,6 +62,11 @@ namespace Unity.Burst
         internal const string OptionEnableDirectExternalLinking = "enable-direct-external-linking";
 
         // -------------------------------------------------------
+        // Options used by the Jit and Bcl compilers
+        // -------------------------------------------------------
+        internal const string OptionCacheDirectory = "cache-directory=";
+
+        // -------------------------------------------------------
         // Options used by the Jit compiler
         // -------------------------------------------------------
 
@@ -72,7 +77,6 @@ namespace Unity.Burst
 
         // TODO: Remove this option and use proper dump flags or revisit how we log timings
         internal const string OptionJitLogTimings = "log-timings";
-        internal const string OptionJitCacheDirectory = "cache-directory";
 
         internal const string OptionJitIsForFunctionPointer = "is-for-function-pointer";
 
@@ -108,6 +112,7 @@ namespace Unity.Burst
         internal const string OptionChunkSize = "chunk-size=";
         internal const string OptionPrintLogOnMissingPInvokeCallbackAttribute = "print-monopinvokecallbackmissing-message";
         internal const string OptionOutputMode = "output-mode=";
+        internal const string OptionAlwaysCreateOutput = "always-create-output=";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";

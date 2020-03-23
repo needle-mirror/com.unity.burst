@@ -88,7 +88,6 @@ namespace Burst.Compiler.IL.Tests
 
 #if BURST_TESTS_ONLY
         [BurstCompile]
-        [AOT.MonoPInvokeCallback]
 #endif
         public static char CharbyValue(char c)
         {

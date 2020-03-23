@@ -28,14 +28,21 @@ namespace Unity.Burst.Editor
             // Find all ways to execute job types (via producer attributes)
             var typesVisited = new HashSet<string>();
             var typesToVisit = new HashSet<string>();
+            var allTypesAssembliesCollected = new HashSet<Type>();
             foreach (var assembly in assemblyList)
             {
                 var types = new List<Type>();
                 try
                 {
-                    types.AddRange(assembly.GetTypes());
+                    var typesFromAssembly = assembly.GetTypes();
+                    types.AddRange(typesFromAssembly);
+                    foreach(var typeInAssembly in typesFromAssembly)
+                    {
+                        allTypesAssembliesCollected.Add(typeInAssembly);
+                    }
+
                     // Collect all generic type instances (excluding indirect instances)
-                    CollectGenericTypeInstances(assembly, types);
+                    CollectGenericTypeInstances(assembly, types, allTypesAssembliesCollected);
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +69,7 @@ namespace Unity.Burst.Editor
                                 var parentGenericTypeArguments = t.GetGenericArguments();
                                 // Only create nested types that are closed generic types (full generic instance types)
                                 // It happens if for example the parent class is `class MClass<T> { class MyNestedGeneric<T1> {} }`
-                                // In that case, MyNestedGeneric<T1> is closed in the context of MClass<int>, so we don't process them
+                                // In that case, MyNestedGeneric<T1> is opened in the context of MClass<int>, so we don't process them
                                 if (nestedType.GetGenericArguments().Length == parentGenericTypeArguments.Length)
                                 {
                                     try
@@ -292,26 +299,30 @@ namespace Unity.Burst.Editor
         /// <param name="types"></param>
         /// <returns>The list of generic type instances</returns>
         /// <remarks>
-        /// Note that this method fetchs only direct type instanecs but
+        /// Note that this method fetchs only direct type instances but
         /// cannot fetch transitive generic type instances.
         /// </remarks>
-        private static void CollectGenericTypeInstances(System.Reflection.Assembly assembly, List<Type> types)
+        private static void CollectGenericTypeInstances(System.Reflection.Assembly assembly, List<Type> types, HashSet<Type> visited)
         {
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // WARNING: THIS CODE HAS TO BE MAINTAINED IN SYNC WITH BclApp.cs
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
             // From: https://gist.github.com/xoofx/710aaf86e0e8c81649d1261b1ef9590e
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            // Token base id for TypeSpec
-            const int mdTypeSpec = 0x1B000000;
-            const int mdTypeSpecCount = 1 << 24;
+            const int mdMaxCount = 1 << 24;
             foreach (var module in assembly.Modules)
             {
-                for (int i = 1; i < mdTypeSpecCount; i++)
+                for (int i = 1; i < mdMaxCount; i++)
                 {
                     try
                     {
+                        // Token base id for TypeSpec
+                        const int mdTypeSpec = 0x1B000000;
                         var type = module.ResolveType(mdTypeSpec | i);
                         if (type.IsConstructedGenericType && !type.ContainsGenericParameters)
                         {
-                            types.Add(type);
+                            CollectGenericTypeInstances(type, types, visited);
                         }
                     }
                     catch (ArgumentOutOfRangeException)
@@ -322,6 +333,74 @@ namespace Unity.Burst.Editor
                     {
                         // Can happen on ResolveType on certain generic types, so we continue
                     }
+                }
+
+                for (int i = 1; i < mdMaxCount; i++)
+                {
+                    try
+                    {
+                        // Token base id for MethodSpec
+                        const int mdMethodSpec = 0x2B000000;
+                        var method = module.ResolveMethod(mdMethodSpec | i);
+                        var genericArgs = method.GetGenericArguments();
+                        foreach (var genArgType in genericArgs)
+                        {
+                            if (genArgType.IsConstructedGenericType && !genArgType.ContainsGenericParameters)
+                            {
+                                CollectGenericTypeInstances(genArgType, types, visited);
+                            }
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        break;
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Can happen on ResolveType on certain generic types, so we continue
+                    }
+                }
+
+
+                for (int i = 1; i < mdMaxCount; i++)
+                {
+                    try
+                    {
+                        // Token base id for Field
+                        const int mdField = 0x04000000;
+                        var field = module.ResolveField(mdField | i);
+                        CollectGenericTypeInstances(field.FieldType, types, visited);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        break;
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Can happen on ResolveType on certain generic types, so we continue
+                    }
+                }
+            }
+        }
+
+        private static void CollectGenericTypeInstances(Type type, List<Type> types, HashSet<Type> visited)
+        {
+            if (type.IsPrimitive) return;
+            if (!visited.Add(type)) return;
+
+            // Add only concrete types
+            if (type.IsConstructedGenericType && !type.ContainsGenericParameters)
+            {
+                types.Add(type);
+            }
+
+            // Collect recursively generic type arguments
+            var genericTypeArguments = type.GenericTypeArguments;
+            foreach (var genericTypeArgument in genericTypeArguments)
+            {
+                if (!genericTypeArgument.IsPrimitive)
+                {
+                    CollectGenericTypeInstances(genericTypeArgument, types, visited);
                 }
             }
         }

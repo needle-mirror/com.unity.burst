@@ -6,6 +6,13 @@ using Unity.Burst;
 #if BURST_TESTS_ONLY
 using Burst.Compiler.IL.DebugInfo;
 using Burst.Compiler.IL.Jit;
+
+namespace Unity.Collections.LowLevel.Unsafe
+{
+    internal class DisposeSentinel
+    {
+    }
+}
 #endif
 
 namespace Burst.Compiler.IL.Tests

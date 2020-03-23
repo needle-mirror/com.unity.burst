@@ -81,6 +81,11 @@ namespace Burst.Compiler.IL.Tests
         /// </summary>
         public object OverrideResultOnMono { get; set; }
 
+        /// <summary>
+        /// Use this property to set the result of the managed method and skip running it completely (for example when there is no reference managed implementation)
+        /// </summary>
+        public object OverrideManagedResult { get; set; }
+
         public bool? IsDeterministic { get; set; }
 
         protected virtual bool SupportException => true;
@@ -122,6 +127,10 @@ namespace Burst.Compiler.IL.Tests
                     if (OverrideResultOnMono != null && IsMono())
                     {
                         caseParameters.Properties.Set(nameof(OverrideResultOnMono), OverrideResultOnMono);
+                    }
+                    if (OverrideManagedResult != null)
+                    {
+                        caseParameters.Properties.Set(nameof(OverrideManagedResult), OverrideManagedResult);
                     }
                 }
 
@@ -355,11 +364,23 @@ namespace Burst.Compiler.IL.Tests
                     resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
                 }
 
-                var resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
+                object resultClr;
 
-                if (returnBoxType != null)
+                // This option skips running the managed version completely
+                var overrideManagedResult = _originalMethod.Properties.Get("OverrideManagedResult");
+                if (overrideManagedResult != null)
                 {
-                    resultClr = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                    Console.WriteLine($"Using OverrideManagedResult: `{overrideManagedResult}` to compare to burst `{resultNative}`, managed version not run");
+                    resultClr = overrideManagedResult;
+                }
+                else
+                {
+                    resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
+
+                    if (returnBoxType != null)
+                    {
+                        resultClr = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                    }
                 }
 
                 var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");

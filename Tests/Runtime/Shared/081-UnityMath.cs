@@ -182,5 +182,23 @@ namespace Burst.Compiler.IL.Tests
 
             return cmp.x && cmp.y && cmp.z;
         }
+
+        [TestCompiler(42L)]
+        public static long TestLongCountbits(long value)
+        {
+            return math.countbits(value) - 1;
+        }
+
+        [TestCompiler(42L)]
+        public static long TestLongLzcnt(long value)
+        {
+            return math.lzcnt(value) - 1;
+        }
+
+        [TestCompiler(42L)]
+        public static long TestLongTzcnt(long value)
+        {
+            return math.tzcnt(value) - 1;
+        }
     }
 }
