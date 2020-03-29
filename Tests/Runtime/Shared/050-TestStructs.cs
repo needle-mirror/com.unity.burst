@@ -1458,5 +1458,52 @@ namespace Burst.Compiler.IL.Tests
 
             a.b = a.a;
         }
+
+        private static unsafe T GenericGetT<T>(T* t) where T : unmanaged
+        {
+            return *t;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestGetStructThroughGeneric(ref Fixed4096 a, ref Fixed4096 b)
+        {
+           var elem = GenericGetT<Fixed4096>((Fixed4096*)UnsafeUtility.AddressOf(ref a));
+           b = elem;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestGetStructThroughReadArrayElement(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            var elem = UnsafeUtility.ReadArrayElement<Fixed4096>(UnsafeUtility.AddressOf(ref a), 0);
+            b = elem;
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
+        public static unsafe void TestSetStructThroughWriteArrayElement(ref Fixed4096 a, ref Fixed4096 b)
+        {
+            var elem = a;
+            UnsafeUtility.WriteArrayElement(UnsafeUtility.AddressOf(ref b), 0, elem);
+        }
+
+        private struct Fixed1021
+        {
+            public unsafe fixed byte Data[1021];
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider))]
+        public static unsafe void TestGetSetStructThroughReadWriteArrayElement(ref Fixed4096 a)
+        {
+            var ptr1 = UnsafeUtility.AddressOf(ref a);
+            var ptr2 = (byte*)ptr1 + 1;
+            UnsafeUtility.WriteArrayElement(ptr1, 0, UnsafeUtility.ReadArrayElement<Fixed1021>(ptr2, 0));
+        }
+
+        [TestCompiler(typeof(Fixed4096.Provider))]
+        public static unsafe void TestGetSetStructThroughReadWriteArrayElementNoAlias(ref Fixed4096 a)
+        {
+            var ptr1 = UnsafeUtility.AddressOf(ref a);
+            var ptr2 = (byte*)ptr1 + UnsafeUtility.SizeOf<Fixed1021>();
+            UnsafeUtility.WriteArrayElement(ptr1, 0, UnsafeUtility.ReadArrayElement<Fixed1021>(ptr2, 0));
+        }
     }
 }

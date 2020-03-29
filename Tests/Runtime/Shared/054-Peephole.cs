@@ -142,5 +142,53 @@ namespace Burst.Compiler.IL.Tests
         {
             return math.all(math.sqrt(a) >= math.sqrt(b)) ? 42 : 13;
         }
+
+        [TestCompiler(0)]
+        public static float FloatExp2FromInt(int a)
+        {
+            return math.exp2(a);
+        }
+
+        [TestCompiler(0)]
+        public static double DoubleExp2FromInt(int a)
+        {
+            return math.exp2((double)a);
+        }
+
+        [TestCompiler((ushort)0)]
+        public static float FloatExp2FromUShort(ushort a)
+        {
+            return math.exp2(a);
+        }
+
+        [TestCompiler((ushort)0)]
+        public static double DoubleExp2FromUShort(ushort a)
+        {
+            return math.exp2((double)a);
+        }
+
+        [TestCompiler(0)]
+        public static float FloatPowFromInt(int a)
+        {
+            return math.pow(2.0f, a);
+        }
+
+        [TestCompiler(0)]
+        public static double DoublePowFromInt(int a)
+        {
+            return math.pow(2.0, a);
+        }
+
+        [TestCompiler(0u)]
+        public static float FloatPowFromUInt(uint a)
+        {
+            return math.pow(2.0f, a);
+        }
+
+        [TestCompiler(0u)]
+        public static double DoublePowFromUInt(uint a)
+        {
+            return math.pow(2.0, a);
+        }
     }
 }

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0-preview.9] - 2020-03-30
+
+
+### Changed
+- Improved the compile time performance when doing `UnsafeUtility.ReadArrayElement` or `UnsafeUtility.WriteArrayElement` with large structs.
+- Made some compile-time improvements when indirect arguments (those whose types are too big that they have to be passed by reference) that reduced our compile time by 3.61% on average.
+
+### Fixed
+- Fixed a bug where storing a `default` to a pointer that was generic would cause an LLVM verifier error.
+- Fixed an obscure bug in how struct layouts that had dependencies on each other were resolved.
+- Fixed a bug as found by [@iamarugin](https://forum.unity.com/members/iamarugin.737579/) where LLVM would introduce ldexp/ldexpf during optimizations that LLD would not be able to resolve.
+- Fixed a bug where the compiler would not promote sub-integer types to integers when doing scalar-by-vector math (like multiplies).
+
 ## [1.3.0-preview.8] - 2020-03-24
 
 

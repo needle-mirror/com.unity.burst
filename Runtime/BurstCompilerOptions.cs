@@ -113,6 +113,7 @@ namespace Unity.Burst
         internal const string OptionPrintLogOnMissingPInvokeCallbackAttribute = "print-monopinvokecallbackmissing-message";
         internal const string OptionOutputMode = "output-mode=";
         internal const string OptionAlwaysCreateOutput = "always-create-output=";
+        internal const string OptionAotPdbSearchPaths = "pdb-search-paths=";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";

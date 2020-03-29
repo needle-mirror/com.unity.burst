@@ -200,5 +200,137 @@ namespace Burst.Compiler.IL.Tests
         {
             return math.tzcnt(value) - 1;
         }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestUshortAddInt2(int2* o, ushort i)
+        {
+            *o = i + new int2(0, 0);
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestInt2AddUshort(int2* o, ushort i)
+        {
+            *o = new int2(0, 0) + i;
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestUshortSubInt2(int2* o, ushort i)
+        {
+            *o = i - new int2(0, 0);
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestInt2SubUshort(int2* o, ushort i)
+        {
+            *o = new int2(0, 0) - i;
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestUshortMulInt2(int2* o, ushort i)
+        {
+            *o = i * new int2(0, 0);
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestInt2MulUshort(int2* o, ushort i)
+        {
+            *o = new int2(0, 0) * i;
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestUshortDivInt2(int2* o, ushort i)
+        {
+            *o = i / new int2(1, 1);
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestInt2DivUshort(int2* o, ushort i)
+        {
+            *o = new int2(0, 0) / i;
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestUshortModInt2(int2* o, ushort i)
+        {
+            *o = i % new int2(1, 1);
+        }
+
+        [TestCompiler(typeof(ReturnBox), (ushort)42)]
+        public static unsafe void TestInt2ModUshort(int2* o, ushort i)
+        {
+            *o = new int2(0, 0) % i;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortEqInt2(ushort i)
+        {
+            return math.all(i == new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2EqUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) == i) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortNeInt2(ushort i)
+        {
+            return math.all(i != new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2NeUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) != i) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortGeInt2(ushort i)
+        {
+            return math.all(i >= new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2GeUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) >= i) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortGtInt2(ushort i)
+        {
+            return math.all(i > new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2GtUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) > i) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortLtInt2(ushort i)
+        {
+            return math.all(i < new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2LtUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) < i) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestUshortLeInt2(ushort i)
+        {
+            return math.all(i <= new int2(0, 0)) ? 1 : 0;
+        }
+
+        [TestCompiler((ushort)42)]
+        public static unsafe int TestInt2LeUshort(ushort i)
+        {
+            return math.all(new int2(0, 0) <= i) ? 1 : 0;
+        }
     }
 }
