@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Unity.Burst.LowLevel;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -20,6 +20,16 @@ namespace Unity.Burst.Editor
         IRPassAnalysis = 4
     }
 
+    internal enum AssemblyKind
+    {
+        RawNoDebugInformation,
+        RawWithDebugInformation,
+        EnhancedMinimalDebugInformation,
+        EnhancedFullDebugInformation,
+        ColouredMinimalDebugInformation,
+        ColouredFullDebugInformation,
+    }
+
     internal class BurstInspectorGUI : EditorWindow
     {
         private const string FontSizeIndexPref = "BurstInspectorFontSizeIndex";
@@ -33,6 +43,16 @@ namespace Unity.Burst.Editor
             "LLVM IR Optimisation Diagnostics"
         };
 
+        private static readonly string[] AssemblyOptions =
+        {
+            "Plain (No debug information)",
+            "Plain (With debug information)",
+            "Enhanced (Minimal debug information)",
+            "Enhanced (Full debug information)",
+            "Coloured (Minimal debug information)",
+            "Coloured (Full debug information)"
+        };
+
         private static readonly string[] DisasmOptions =
         {
             "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.Asm),
@@ -43,7 +63,6 @@ namespace Unity.Burst.Editor
         };
 
         private static readonly SplitterState TreeViewSplitterState = new SplitterState(new float[] { 30, 70 }, new int[] { 128, 128 }, null);
-
 
         private static readonly string[] TargetCpuNames = Enum.GetNames(typeof(TargetCpu));
 
@@ -72,6 +91,9 @@ namespace Unity.Burst.Editor
 
         [SerializeField] private bool _safetyChecks;
         [SerializeField] private bool _enhancedDisassembly = true;
+        [SerializeField] private int _assemblyKind = -1;
+
+        private int _assemblyKindPrior = -1;
         private Vector2 _scrollPos;
         private SearchField _searchField;
 
@@ -89,17 +111,72 @@ namespace Unity.Burst.Editor
         [NonSerialized]
         private BurstMethodTreeView _treeView;
 
+        [NonSerialized]
+        private bool _initialized;
+
+        [NonSerialized]
+        private bool _requiresRepaint;
+
         private int FontSize => FontSizes[_fontSizeIndex];
 
         public BurstInspectorGUI()
         {
             _burstDisassembler = new BurstDisassembler();
+            _assemblyKindPrior = _assemblyKind;
         }
 
         public void OnEnable()
         {
             if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState());
             _safetyChecks = BurstCompiler.Options.EnableBurstSafetyChecks;
+
+            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, onlyAssembliesThatPossiblyContainJobs: true);
+
+            Task.Run(
+                () =>
+                {
+                    // Do this stuff asynchronously.
+                    var result = BurstReflection.FindExecuteMethods(assemblyList);
+                    _targets = result.CompileTargets;
+                    _targets.Sort((left, right) => string.Compare(left.GetDisplayName(), right.GetDisplayName(), StringComparison.Ordinal));
+                    return result;
+                })
+                .ContinueWith(t =>
+                {
+                    // Do this stuff on the main (UI) thread.
+                    if (t.Status == TaskStatus.RanToCompletion)
+                    {
+                        foreach (var logMessage in t.Result.LogMessages)
+                        {
+                            switch (logMessage.LogType)
+                            {
+                                case BurstReflection.LogType.Warning:
+                                    Debug.LogWarning(logMessage.Message);
+                                    break;
+                                case BurstReflection.LogType.Exception:
+                                    Debug.LogException(logMessage.Exception);
+                                    break;
+                                default:
+                                    throw new InvalidOperationException();
+                            }
+                        }
+
+                        _treeView.Targets = _targets;
+                        _treeView.Reload();
+
+                        if (_selectedItem != null)
+                        {
+                            _treeView.TrySelectByDisplayName(_selectedItem);
+                        }
+
+                        _requiresRepaint = true;
+                        _initialized = true;
+                    }
+                    else if (t.Exception != null)
+                    {
+                        Debug.LogError($"Could not load Inspector: {t.Exception}");
+                    }
+                });
         }
 
         private void CleanupFont()
@@ -116,6 +193,17 @@ namespace Unity.Burst.Editor
             CleanupFont();
         }
 
+        public void Update()
+        {
+            // Need to do this because if we call Repaint from anywhere else,
+            // it doesn't do anything if this window is not currently focused.
+            if (_requiresRepaint)
+            {
+                Repaint();
+                _requiresRepaint = false;
+            }
+        }
+
         private void FlowToNewLine(ref float remainingWidth, float resetWidth, GUIStyle style, GUIContent content)
         {
             float spaceRemainingBeforeNewLine = EditorStyles.toggle.CalcSize(new GUIContent("WWWW")).x;
@@ -127,6 +215,21 @@ namespace Unity.Burst.Editor
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
             }
+        }
+
+        private bool IsRaw(AssemblyKind kind)
+        {
+            return kind == AssemblyKind.RawNoDebugInformation || kind == AssemblyKind.RawWithDebugInformation;
+        }
+
+        private bool IsEnhanced(AssemblyKind kind)
+        {
+            return !IsRaw(kind);
+        }
+
+        private bool IsColoured(AssemblyKind kind)
+        {
+            return kind == AssemblyKind.ColouredMinimalDebugInformation || kind == AssemblyKind.ColouredFullDebugInformation;
         }
 
         private void RenderButtonBars(float width, BurstCompileTarget target, out bool doCopy, out int fontIndex)
@@ -142,8 +245,8 @@ namespace Unity.Burst.Editor
 
             GUILayout.BeginHorizontal();
 
-            _enhancedDisassembly = GUILayout.Toggle(_enhancedDisassembly, contentDisasm, EditorStyles.toggle);
-            FlowToNewLine(ref remainingWidth, width, EditorStyles.toggle, contentDisasm);
+            _assemblyKind = EditorGUILayout.Popup(_assemblyKind, AssemblyOptions, EditorStyles.popup);
+            FlowToNewLine(ref remainingWidth, width, EditorStyles.popup, contentDisasm);
 
             _safetyChecks = GUILayout.Toggle(_safetyChecks, contentSafety, EditorStyles.toggle);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.toggle, contentSafety);
@@ -164,34 +267,27 @@ namespace Unity.Burst.Editor
 
             GUILayout.EndHorizontal();
 
-            _disasmKind = (DisassemblyKind) GUILayout.Toolbar((int) _disasmKind, DisassemblyKindNames, GUILayout.Width(width));
+            _disasmKind = (DisassemblyKind) GUILayout.Toolbar((int) _disasmKind, DisassemblyKindNames, GUILayout.ExpandWidth(true), GUILayout.MinWidth(5*10));
         }
 
         public void OnGUI()
         {
+            if (!_initialized)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.BeginVertical();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("Loading...");
+                GUILayout.FlexibleSpace();
+                GUILayout.EndVertical();
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                return;
+            }
+
             // Make sure that editor options are synchronized
             BurstEditorOptions.EnsureSynchronized();
-
-            if (_targets == null)
-            {
-                _targets = BurstReflection.FindExecuteMethods(AssembliesType.Editor);
-                foreach (var target in _targets)
-                {
-                    // Enable burst compilation by default (override globals for the inspector)
-                    // This is not working as expected. This changes indirectly the global options while it shouldn't
-                    // Unable to explain how it can happen
-                    // so for now, if global enable burst compilation is disabled, then inspector is too
-                    //target.Options.EnableBurstCompilation = true;
-                }
-
-                // Order targets per name
-                _targets.Sort((left, right) => string.Compare(left.GetDisplayName(), right.GetDisplayName(), StringComparison.Ordinal));
-
-                _treeView.Targets = _targets;
-                _treeView.Reload();
-
-                if (_selectedItem != null) _treeView.TrySelectByDisplayName(_selectedItem);
-            }
 
             if (_fontSizesText == null)
             {
@@ -258,6 +354,18 @@ namespace Unity.Burst.Editor
 
                 // Stash selected item name to handle domain reloads more gracefully
                 _selectedItem = target.GetDisplayName();
+
+                if (_assemblyKind == -1)
+                {
+                    if (_enhancedDisassembly)
+                    {
+                        _assemblyKind = (int)AssemblyKind.ColouredMinimalDebugInformation;
+                    }
+                    else
+                    {
+                        _assemblyKind = (int)AssemblyKind.RawNoDebugInformation;
+                    }
+                }
                 
                 // Refresh if any options are changed
                 bool doCopy;
@@ -266,7 +374,7 @@ namespace Unity.Burst.Editor
                 RenderButtonBars((position.width*2)/3 - 14, target, out doCopy, out fontSize);
 
                 // We are currently formatting only Asm output
-                var isTextFormatted = _enhancedDisassembly && _disasmKind == DisassemblyKind.Asm;
+                var isTextFormatted = IsEnhanced((AssemblyKind)_assemblyKind) && _disasmKind == DisassemblyKind.Asm;
 
                 // Depending if we are formatted or not, we don't render the same text
                 var textToRender = isTextFormatted ? target.FormattedDisassembly : target.RawDisassembly;
@@ -282,7 +390,13 @@ namespace Unity.Burst.Editor
                 bool targetChanged = _previousTargetIndex != targetIndex;
 
                 _previousTargetIndex = targetIndex;
-                
+
+                if (_assemblyKindPrior != _assemblyKind)
+                {
+                    targetRefresh = true;
+                    _assemblyKindPrior = _assemblyKind;     // Needs to be refreshed, as we need to change disassembly options
+                }
+
                 if (targetRefresh)
                 {
                     // TODO: refactor this code with a proper AppendOption to avoid these "\n"
@@ -301,7 +415,21 @@ namespace Unity.Burst.Editor
 
                         options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionTarget, TargetCpuNames[(int)_targetCpu]));
 
-                        options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDebug));
+                        switch ((AssemblyKind)_assemblyKind)
+                        {
+                            case AssemblyKind.EnhancedMinimalDebugInformation:
+                            case AssemblyKind.ColouredMinimalDebugInformation:
+                                options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDebug, "2"));
+                                break;
+                            case AssemblyKind.ColouredFullDebugInformation:
+                            case AssemblyKind.EnhancedFullDebugInformation:
+                            case AssemblyKind.RawWithDebugInformation:
+                                options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDebug, "1"));
+                                break;
+                            default:
+                            case AssemblyKind.RawNoDebugInformation:
+                                break;
+                        }
 
                         var baseOptions = options.ToString().Trim('\n', ' ');
 
@@ -309,7 +437,7 @@ namespace Unity.Burst.Editor
 
                         if (isTextFormatted)
                         {
-                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, FetchAsmKind(_targetCpu), target.IsDarkMode);
+                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, FetchAsmKind(_targetCpu), target.IsDarkMode, IsColoured((AssemblyKind)_assemblyKind));
                             textToRender = target.FormattedDisassembly;
                         }
                         else
@@ -331,8 +459,8 @@ namespace Unity.Burst.Editor
 
                 if (doCopy)
                 {
-                    // When copying to the clipboard, we copy the non-formatted version
-                    EditorGUIUtility.systemCopyBuffer = target.RawDisassembly ?? string.Empty;
+                    // When copying to the clipboard, we copy the version the user sees
+                    EditorGUIUtility.systemCopyBuffer = textToRender ?? string.Empty;
                 }
 
                 if (fontSize != _fontSizeIndex)

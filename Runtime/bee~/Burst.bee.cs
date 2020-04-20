@@ -3,28 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using Bee.Core;
 using Bee.DotNet;
+using JetBrains.Annotations;
 using NiceIO;
 using Unity.BuildSystem.NativeProgramSupport;
 using Unity.BuildTools;
+
+/*
+
+// Activate this part once we have found a workaround for compiling against a custom Unity.Burst.Unsafe
+// compatible with Tiny. See issue #1490
+[UsedImplicitly]
+class CustomizerForUnityBurst : AsmDefCSharpProgramCustomizer
+{
+    public override string CustomizerFor => "Unity.Burst";
+
+    // not exactly right, but good enough for now
+    public override void CustomizeSelf(AsmDefCSharpProgram program)
+    {
+        var path = program.AsmDefDescription.Path.Parent.Parent.Combine("Unity.Burst.Unsafe.dll");
+        program.References.Add(new DotNetAssembly(path, Framework.NetStandard20));
+    }
+}
+*/
 
 /*
  * This file exists as an interface to programs that want to invoke bcl.exe from a bee buildprogram.
  * The idea is that when bcl.exe command line options change, this file should change, and then programs using
  * burst will pick up the changes for free, without depending on specific command line options of bcl.exe.
  *
- * How well that works, is another question. 
+ * How well that works, is another question.
  */
 public abstract class BurstCompiler
 {
     public static NPath BurstExecutable { get; set; }
     public abstract string TargetPlatform { get; set; }
+
+    // TODO: This should become a list of target architectures to add.
     public abstract string TargetArchitecture { get; set; }
-    private string _minTargetArch;
-    public virtual string MinTargetArch
-    {
-        get => _minTargetArch ?? TargetArchitecture;
-        set => _minTargetArch = value;
-    }
 
     public abstract string ObjectFormat { get; set; }
     public abstract string ObjectFileExtension { get; set; }
@@ -58,7 +73,6 @@ public abstract class BurstCompiler
         {
             $"--platform={compiler.TargetPlatform}",
             $"--target={compiler.TargetArchitecture}",
-            $"--mintarget={compiler.MinTargetArch}",
             $"--format={compiler.ObjectFormat}",
             compiler.SafetyChecks ? "--safety-checks" : "",
             $"--dump=\"None\"",
@@ -74,7 +88,7 @@ public abstract class BurstCompiler
             $"--pinvoke-name={pinvokeName}",
             $"--backend={compiler.BurstBackend}",
             $"--execute-method-name={compiler.ExecuteMethodName}",
-            "--debug",
+            "--debug=Full",
             compiler.EnableDirectExternalLinking ? "--enable-direct-external-linking" : "",
             compiler.DisableOpt ? "--disable-opt" : "",
             $"--threads={compiler.Threads}",

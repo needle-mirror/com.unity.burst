@@ -533,7 +533,7 @@ namespace Burst.Compiler.IL.Tests
             return a;
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionEndfinallyNotSupported })]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionLeaveNotSupported })]
         public static int ForEachDispose()
         {
             var array = new NativeArray<int>();
@@ -827,5 +827,16 @@ namespace Burst.Compiler.IL.Tests
             return c + d + e + f;
         }
 
+        [TestCompiler((byte)0)]
+        [TestCompiler((byte) 1)]
+        public static int TestByteAndIntFlow(byte value)
+        {
+            var position = value == 0 ? -1 : value;
+            if (position < 0)
+            {
+                position = 17;
+            }
+            return position;
+        }
     }
 }

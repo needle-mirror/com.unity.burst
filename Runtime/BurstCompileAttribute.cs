@@ -91,9 +91,8 @@ namespace Unity.Burst
 
         /// <summary>
         /// Gets or sets whether to compile the code in a way that allows it to be debugged.
-        /// If this is set to <c>true</c>, the current implementation skips compilation of this method
-        /// so that the original .NET method can be debugged.
-        /// In the current implementation, this property is only used in the Editor and ignored for standalone players.
+        /// If this is set to <c>true</c>, the current implementation disables optimisations on this method
+        /// allowing it to be debugged using a Native debugger.
         /// </summary>
         /// <value>
         /// The default is <c>false</c>.

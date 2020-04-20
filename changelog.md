@@ -1,6 +1,51 @@
 # Changelog
 
-## [1.3.0-preview.9] - 2020-03-30
+## [1.3.0-preview.10] - 2020-04-21
+
+
+### Fixed
+- Fix negation of integer types smaller than 32 bits
+- Fixed a bug where optimizer generated calls to `ldexp` would be incorrectly deduced when deterministic floating-point was enabled.
+- Swapped private linkage for internal linkage on functions, this fixes duplicate symbol issues on some targets.
+- variable scopes should now encompass the whole scope.
+- variables in parent scopes should now be present in locals windows.
+- Native plugin location for windows has changed in 2019.3.9f1. If you are on an older version of 2019.3 you will need to upgrade for burst to work in windows standalone players.
+- Added an error if `Assert.AreEqual` or `Assert.AreNotEqual` were called with different typed arguments.
+- Fixed a bug where doing an explicit cast to a `Unity.Mathematics` vector type where the source was a scalar would fail to compile.
+- Fix issue when converting large unsigned integer values to double or float.
+- Fix an invalid value returned from a conditional where one type is an int32 and the other type would be a byte extended to an int32.
+- Button layout of disassembly toolbar tweaked.
+- Copy to clipboard now copies exactly what is shown in the inspector window (including enhancements and colours if shown)
+- AVX2 now generates the correct AVX2 256-bit wide SLEEF functions instead of the FMA-optimized 128-bit variants.
+
+### Added
+- Anonymous types are now named in debug information
+- XCode/LLDB debugging of burst compiled code is now possible on macOS.
+- Added some extra documentation about how to enable `AVX`/`AVX2` in AOT builds, and how we gate some functionality on multiple instruction sets to reduce the combinations exposed underneath.
+- Optimized external functions (like `UnsafeUtility.Malloc`) such that if they are called multiple times the function-pointer address is cached.
+- Add support for string interpolation (e.g `$"This is a string with an {arg1} and {arg2}"`)
+- Add support for Debug.Log(object) (e.g `Debug.Log("Hello Log!");`)
+- Add support for string assignment to Unity.Collections.FixedString (e.g `"FixedString128 test = "Hello FixedString!"`)
+- If burst detects a package update, it now prompts a restart of Unity (via dialog). The restart was always required, but could be missed/forgotten.
+- Better error message for unsupported static readonly arrays.
+- Link to native debugging video to Presentations section of docs.
+- Fixes a bug where `in` parameters of interfaces could sometimes confuse the Burst inspector.
+
+### Removed
+
+### Changed
+- iOS builds for latest xcode versions will now use LLVM version 9.
+- Burst AOT Settings now lets you specify the exact targets you want to compile for - so you could create a player with SSE2, AVX, and AVX2 (EG. _without_ SSE4 support if you choose to).
+- Improve speed of opening Burst Inspector by up to 2x
+- Provided a better error message when structs with static readonly fields were a mix of managed/unmanaged which Burst doesn't support.
+- Tidied up the known issues section in the docs a little.
+- Enhanced disassembly option has been expanded to allow better control of what is shown, and allow a reduction in the amount of debug metadata shown.
+- Load Burst Inspector asynchronously to avoid locking-up Editor
+- Documented restrictions on argument and return types for DllImport, internal calls, and function pointers
+
+### Known Issues
+
+## [1.3.0-preview.9] - 2020-04-01
 
 
 ### Changed
@@ -12,6 +57,14 @@
 - Fixed an obscure bug in how struct layouts that had dependencies on each other were resolved.
 - Fixed a bug as found by [@iamarugin](https://forum.unity.com/members/iamarugin.737579/) where LLVM would introduce ldexp/ldexpf during optimizations that LLD would not be able to resolve.
 - Fixed a bug where the compiler would not promote sub-integer types to integers when doing scalar-by-vector math (like multiplies).
+
+### Added
+- Variable scopes are now constructed for debug information.
+- A new setting to Burst AOT Settings that allows debug symbols to be generated even in a non development standalone build.
+
+### Removed
+
+### Known Issues
 
 ## [1.3.0-preview.8] - 2020-03-24
 

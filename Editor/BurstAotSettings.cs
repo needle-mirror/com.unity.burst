@@ -17,12 +17,28 @@ namespace Unity.Burst.Editor
         SSE4 = (int)TargetCpu.X86_SSE4,
     }
 
+    [Flags]
+    internal enum BitsetX86Targets
+    {
+        SSE2 = 1 << AvailX86Targets.SSE2,
+        SSE4 = 1 << AvailX86Targets.SSE4,
+    }
+
     internal enum AvailX64Targets
     {
         SSE2 = (int)TargetCpu.X64_SSE2,
         SSE4 = (int)TargetCpu.X64_SSE4,
         AVX = (int)TargetCpu.AVX,
         AVX2 = (int)TargetCpu.AVX2,
+    }
+
+    [Flags]
+    internal enum BitsetX64Targets
+    {
+        SSE2 = 1 << AvailX64Targets.SSE2,
+        SSE4 = 1 << AvailX64Targets.SSE4,
+        AVX = 1 << AvailX64Targets.AVX,
+        AVX2 = 1 << AvailX64Targets.AVX2,
     }
 
     class BurstPlatformLegacySettings : ScriptableObject
@@ -42,7 +58,6 @@ namespace Unity.Burst.Editor
         }
     }
 
-
     // To add a setting,
     //  Add a
     //          [SerializeField] internal type settingname;
@@ -54,7 +69,6 @@ namespace Unity.Burst.Editor
     //
     //  Add a
     //          internal static bool settingname_Display(BuildTarget selectedTarget) {}
-
     class BurstPlatformAotSettings : ScriptableObject
     {
         [SerializeField]
@@ -66,6 +80,8 @@ namespace Unity.Burst.Editor
         [SerializeField]
         internal bool EnableSafetyChecks;
         [SerializeField]
+        internal bool EnableDebugInAllBuilds;
+        [SerializeField]
         internal bool UsePlatformSDKLinker;
         [SerializeField]
         internal AvailX86Targets CpuMinTargetX32;
@@ -75,6 +91,13 @@ namespace Unity.Burst.Editor
         internal AvailX64Targets CpuMinTargetX64;
         [SerializeField]
         internal AvailX64Targets CpuMaxTargetX64;
+        [SerializeField]
+        internal BitsetX86Targets CpuTargetsX32;
+        [SerializeField]
+        internal BitsetX64Targets CpuTargetsX64;
+
+        internal static readonly string EnableDebugInAllBuilds_DisplayName = "Force Debug Information";
+        internal static readonly string EnableDebugInAllBuilds_ToolTip = "Generates debug information for the Burst-compiled code, irrespective of if Development Mode is ticked. This can be used to generate symbols for release builds for platforms that need it.";
 
         internal static readonly string EnableOptimisations_DisplayName = "Enable Optimisations";
         internal static readonly string EnableOptimisations_ToolTip = "Enables all optimisations for the currently selected platform.";
@@ -92,30 +115,16 @@ namespace Unity.Burst.Editor
             return IsStandalone(selectedTarget);
         }
 
-        internal static readonly string CpuMinTargetX32_DisplayName = "Min Target 32Bit CPU Architecture";
-        internal static readonly string CpuMinTargetX32_ToolTip = "Use this to specify the minimum target architecture to support for the currently selected platform.";
-        internal static bool CpuMinTargetX32_Display(BuildTarget selectedTarget)
+        internal static readonly string CpuTargetsX32_DisplayName = "Target 32Bit CPU Architectures";
+        internal static readonly string CpuTargetsX32_ToolTip = "Use this to specify the set of target architectures to support for the currently selected platform.";
+        internal static bool CpuTargetsX32_Display(BuildTarget selectedTarget)
         {
             return IsStandalone(selectedTarget) && Has32BitSupport(selectedTarget);
         }
 
-        internal static readonly string CpuMinTargetX64_DisplayName = "Min Target 64Bit CPU Architecture";
-        internal static readonly string CpuMinTargetX64_ToolTip = "Use this to specify the minimum target architecture to support for the currently selected platform.";
-        internal static bool CpuMinTargetX64_Display(BuildTarget selectedTarget)
-        {
-            return IsStandalone(selectedTarget);
-        }
-
-        internal static readonly string CpuMaxTargetX32_DisplayName = "Max Target 32Bit CPU Architecture";
-        internal static readonly string CpuMaxTargetX32_ToolTip = "Use this to specify the maximum target architecture to support for the currently selected platform.";
-        internal static bool CpuMaxTargetX32_Display(BuildTarget selectedTarget)
-        {
-            return IsStandalone(selectedTarget) && Has32BitSupport(selectedTarget);
-        }
-
-        internal static readonly string CpuMaxTargetX64_DisplayName = "Max Target 64Bit CPU Architecture";
-        internal static readonly string CpuMaxTargetX64_ToolTip = "Use this to specify the maximum target architecture to support for the currently selected platform.";
-        internal static bool CpuMaxTargetX64_Display(BuildTarget selectedTarget)
+        internal static readonly string CpuTargetsX64_DisplayName = "Target 64Bit CPU Architectures";
+        internal static readonly string CpuTargetsX64_ToolTip = "Use this to specify the target architectures to support for the currently selected platform.";
+        internal static bool CpuTargetsX64_Display(BuildTarget selectedTarget)
         {
             return IsStandalone(selectedTarget);
         }
@@ -139,24 +148,28 @@ namespace Unity.Burst.Editor
 
         BurstPlatformAotSettings(BuildTarget target)
         {
-            InitialiseDefaults(target);
+            InitialiseDefaults();
         }
-        internal void InitialiseDefaults(BuildTarget target)
+
+        internal void InitialiseDefaults()
         {
-            Version = 2;
+            Version = 3;
             EnableSafetyChecks = false;
             EnableBurstCompilation = true;
             EnableOptimisations = true;
-            UsePlatformSDKLinker = false;   // Only applicable for LLD targets (Windows/Mac/Linux)
-            CpuMinTargetX32 = AvailX86Targets.SSE2;
-            CpuMaxTargetX32 = AvailX86Targets.SSE4;
-            CpuMinTargetX64 = AvailX64Targets.SSE2;
-            CpuMaxTargetX64 = AvailX64Targets.SSE4;
+            EnableDebugInAllBuilds = false;
+            UsePlatformSDKLinker = false; // Only applicable for desktop targets (Windows/Mac/Linux)
+            CpuMinTargetX32 = 0;
+            CpuMaxTargetX32 = 0;
+            CpuMinTargetX64 = 0;
+            CpuMaxTargetX64 = 0;
+            CpuTargetsX32 = BitsetX86Targets.SSE2 | BitsetX86Targets.SSE4;
+            CpuTargetsX64 = BitsetX64Targets.SSE2 | BitsetX64Targets.AVX2;
         }
 
         internal static string GetPath(BuildTarget target)
         {
-            return "ProjectSettings/BurstAotSettings_"+target.ToString()+".json";
+            return "ProjectSettings/BurstAotSettings_" + target.ToString() + ".json";
         }
 
         internal static BuildTarget ResolveTarget(BuildTarget target)
@@ -167,7 +180,7 @@ namespace Unity.Burst.Editor
                 return BuildTarget.StandaloneWindows;
 
 #if UNITY_2019_2_OR_NEWER
-            //32 bit linux support was deprecated
+            // 32 bit linux support was deprecated
             if (target == BuildTarget.StandaloneLinux64)
                 return BuildTarget.StandaloneLinux64;
 #else
@@ -181,8 +194,8 @@ namespace Unity.Burst.Editor
         internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget target)
         {
             target = ResolveTarget(target);
-            BurstPlatformAotSettings settings = ScriptableObject.CreateInstance<BurstPlatformAotSettings>();
-            settings.InitialiseDefaults(target);
+            var settings = CreateInstance<BurstPlatformAotSettings>();
+            settings.InitialiseDefaults();
             string path = GetPath(target);
 
             if (File.Exists(path))
@@ -202,20 +215,70 @@ namespace Unity.Burst.Editor
 
         internal static BurstPlatformAotSettings SerialiseIn(BuildTarget target, string json)
         {
-            // Deal with pre version 2 format
-            BurstPlatformLegacySettings legacy = (BurstPlatformLegacySettings)ScriptableObject.CreateInstance<BurstPlatformLegacySettings>();
-            EditorJsonUtility.FromJsonOverwrite(json, legacy);
-
-            BurstPlatformAotSettings versioned = (BurstPlatformAotSettings)ScriptableObject.CreateInstance<BurstPlatformAotSettings>();
+            var versioned = (BurstPlatformAotSettings)ScriptableObject.CreateInstance<BurstPlatformAotSettings>();
             EditorJsonUtility.FromJsonOverwrite(json, versioned);
 
             if (versioned.Version == 0)
             {
-                // legacy file, upgrade it
-                versioned.InitialiseDefaults(target);
+                // Deal with pre versioned format
+                var legacy = (BurstPlatformLegacySettings)ScriptableObject.CreateInstance<BurstPlatformLegacySettings>();
+                EditorJsonUtility.FromJsonOverwrite(json, legacy);
+
+                // Legacy file, upgrade it
+                versioned.InitialiseDefaults();
                 versioned.EnableOptimisations = !legacy.DisableOptimisations;
                 versioned.EnableBurstCompilation = !legacy.DisableBurstCompilation;
                 versioned.EnableSafetyChecks = !legacy.DisableSafetyChecks;
+            }
+
+            if (versioned.Version < 3)
+            {
+                // Upgrade the version first
+                versioned.Version = 3;
+
+                // Upgrade from min..max targets to bitset
+                versioned.CpuTargetsX32 |= (BitsetX86Targets)(1 << (int)versioned.CpuMinTargetX32);
+                versioned.CpuTargetsX32 |= (BitsetX86Targets)(1 << (int)versioned.CpuMaxTargetX32);
+
+                versioned.CpuTargetsX64 |= (BitsetX64Targets)(1 << (int)versioned.CpuMinTargetX64);
+                versioned.CpuTargetsX64 |= (BitsetX64Targets)(1 << (int)versioned.CpuMaxTargetX64);
+
+                // Extra checks to add targets in the min..max range for 64-bit targets.
+                switch (versioned.CpuMinTargetX64)
+                {
+                    default:
+                        break;
+                    case AvailX64Targets.SSE2:
+                        switch (versioned.CpuMaxTargetX64)
+                        {
+                            default:
+                                break;
+                            case AvailX64Targets.AVX2:
+                                versioned.CpuTargetsX64 |= (BitsetX64Targets)(1 << (int)AvailX64Targets.AVX);
+                                goto case AvailX64Targets.AVX;
+                            case AvailX64Targets.AVX:
+                                versioned.CpuTargetsX64 |= (BitsetX64Targets)(1 << (int)AvailX64Targets.SSE4);
+                                break;
+                        }
+                        break;
+                    case AvailX64Targets.SSE4:
+                        switch (versioned.CpuMaxTargetX64)
+                        {
+                            default:
+                                break;
+                            case AvailX64Targets.AVX2:
+                                versioned.CpuTargetsX64 |= (BitsetX64Targets)(1 << (int)AvailX64Targets.AVX);
+                                break;
+                        }
+                        break;
+
+                }
+
+                // Wipe the old min/max targets
+                versioned.CpuMinTargetX32 = 0;
+                versioned.CpuMaxTargetX32 = 0;
+                versioned.CpuMinTargetX64 = 0;
+                versioned.CpuMaxTargetX64 = 0;
             }
 
             // Otherwise should be a modern file with a valid version (we can use that to upgrade when the time comes)
@@ -312,20 +375,62 @@ namespace Unity.Burst.Editor
             }
         }
 
-        internal MinMaxTargetCpu GetDesktopCpu32Bit()
+        private static TargetCpu GetCpu(int v)
         {
-            MinMaxTargetCpu cpu;
-            cpu.min = (TargetCpu)((int)CpuMinTargetX32);
-            cpu.max = (TargetCpu)((int)CpuMaxTargetX32);
-            return cpu;
+            // https://graphics.stanford.edu/~seander/bithacks.html#IntegerLog
+            var r = ((v > 0xFFFF) ? 1 : 0) << 4; v >>= r;
+            var shift = ((v > 0xFF) ? 1 : 0) << 3; v >>= shift; r |= shift;
+            shift = ((v > 0xF) ? 1 : 0) << 2; v >>= shift; r |= shift;
+            shift = ((v > 0x3) ? 1 : 0) << 1; v >>= shift; r |= shift;
+            r |= (v >> 1);
+            return (TargetCpu)r;
         }
 
-        internal MinMaxTargetCpu GetDesktopCpu64Bit()
+        private static IEnumerable<Enum> GetFlags(Enum input)
         {
-            MinMaxTargetCpu cpu;
-            cpu.min = (TargetCpu)((int)CpuMinTargetX64);
-            cpu.max = (TargetCpu)((int)CpuMaxTargetX64);
-            return cpu;
+            foreach (Enum value in Enum.GetValues(input.GetType()))
+            {
+                if (input.HasFlag(value))
+                {
+                    yield return value;
+                }
+            }
+        }
+
+        internal TargetCpus GetDesktopCpu32Bit()
+        {
+            var cpus = new TargetCpus();
+
+            foreach (var target in GetFlags(CpuTargetsX32))
+            {
+                cpus.Cpus.Add(GetCpu((int)(BitsetX86Targets)target));
+            }
+
+            // If no targets were specified just default to the oldest CPU supported.
+            if (cpus.Cpus.Count == 0)
+            {
+                cpus.Cpus.Add(TargetCpu.X86_SSE2);
+            }
+
+            return cpus;
+        }
+
+        internal TargetCpus GetDesktopCpu64Bit()
+        {
+            var cpus = new TargetCpus();
+
+            foreach (var target in GetFlags(CpuTargetsX64))
+            {
+                cpus.Cpus.Add(GetCpu((int)(BitsetX64Targets)target));
+            }
+
+            // If no targets were specified just default to the oldest CPU supported.
+            if (cpus.Cpus.Count == 0)
+            {
+                cpus.Cpus.Add(TargetCpu.X64_SSE2);
+            }
+
+            return cpus;
         }
     }
 
@@ -385,12 +490,13 @@ namespace Unity.Burst.Editor
                 }
             }
 
-            private void InitialiseSettingsForPlatform(int platform,FieldInfo[] platformFields)
+            private void InitialiseSettingsForPlatform(int platform, FieldInfo[] platformFields)
             {
                 if (validPlatforms[platform].targetGroup == BuildTargetGroup.Standalone)
                     m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(EditorUserBuildSettings.selectedStandaloneTarget);
                 else
                     m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(validPlatforms[platform].defaultTarget);
+
                 m_PlatformProperties[platform] = new SerializedProperty[platformFields.Length];
                 m_PlatformToolTips[platform] = new GUIContent[platformFields.Length];
                 m_PlatformVisibility[platform] = new DisplayItem[platformFields.Length];
@@ -497,6 +603,7 @@ namespace Unity.Burst.Editor
         internal bool EnableOptimisations;
         internal bool EnableSafetyChecks;
         internal bool EnableBurstCompilation;
+        internal bool EnableDebugInAllBuilds;
         internal bool UsePlatformSDKLinker;
 
         internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget target)
@@ -504,27 +611,32 @@ namespace Unity.Burst.Editor
             BurstPlatformAotSettings settings = new BurstPlatformAotSettings();
 
             settings.EnableOptimisations = true;
-            settings.EnableSafetyChecks=BurstEditorOptions.EnableBurstSafetyChecks;
-            settings.EnableBurstCompilation=BurstEditorOptions.EnableBurstCompilation;
+            settings.EnableSafetyChecks = BurstEditorOptions.EnableBurstSafetyChecks;
+            settings.EnableBurstCompilation = BurstEditorOptions.EnableBurstCompilation;
             settings.UsePlatformSDKLinker = false;
+            settings.EnableDebugInAllBuilds = false;
 
             return settings;
         }
 
-        internal MinMaxTargetCpu GetDesktopCpu32Bit()
+        internal TargetCpus GetDesktopCpu32Bit()
         {
-            MinMaxTargetCpu cpu;
-            cpu.min = TargetCpu.X86_SSE2;
-            cpu.max = TargetCpu.X86_SSE4;
-            return cpu;
+            var cpus = new TargetCpus();
+
+            cpus.Cpus.Add(TargetCpu.X86_SSE2);
+            cpus.Cpus.Add(TargetCpu.X86_SSE4);
+
+            return cpus;
         }
 
-        internal MinMaxTargetCpu GetDesktopCpu64Bit()
+        internal TargetCpus GetDesktopCpu64Bit()
         {
-            MinMaxTargetCpu cpu;
-            cpu.min = TargetCpu.X64_SSE2;
-            cpu.max = TargetCpu.X64_SSE4;
-            return cpu;
+            var cpus = new TargetCpus();
+
+            cpus.Cpus.Add(TargetCpu.X64_SSE2);
+            cpus.Cpus.Add(TargetCpu.X64_SSE4);
+
+            return cpus;
         }
     }
 }

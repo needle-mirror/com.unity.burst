@@ -166,5 +166,30 @@ namespace Unity.Burst
         ERR_LoopIntrinsicMustBeCalledInsideLoop = 1320,
         ERR_LoopUnexpectedAutoVectorization = 1321,
         WRN_LoopIntrinsicCalledButLoopOptimizedAway = 1322,
+
+        // AssertProcessor
+        ERR_AssertArgTypesDiffer = 1330,
+
+        // StringUsageTransform
+        ERR_StringInternalCompilerFixedStringTooManyUsers = 1340,
+        ERR_StringInvalidFormatMissingClosingBrace = 1341,
+        ERR_StringInvalidIntegerForArgumentIndex = 1342,
+        ERR_StringInvalidFormatForArgument = 1343,
+        ERR_StringArgumentIndexOutOfRange = 1344,
+        ERR_StringInvalidArgumentType = 1345,
+        ERR_DebugLogNotSupported = 1346,
+        ERR_StringInvalidNonLiteralFormat = 1347,
+        ERR_StringInvalidStringFormatMethod = 1348,
+        ERR_StringInvalidArgument = 1349,
+
+        ERR_StringArrayInvalidArrayCreation = 1350,
+        ERR_StringArrayInvalidArraySize = 1351,
+        ERR_StringArrayInvalidControlFlow = 1352,
+        ERR_StringArrayInvalidArrayIndex = 1353,
+        ERR_StringArrayInvalidArrayIndexOutOfRange = 1354,
+
+        // Static constructor
+        ERR_ManagedStaticConstructor = 1360,
+        ERR_StaticConstantArrayInStaticConstructor = 1361,
     }
 }

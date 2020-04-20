@@ -44,7 +44,6 @@ namespace Unity.Burst
         internal const string OptionDisableSafetyChecks = "disable-safety-checks";
         internal const string OptionDisableOpt = "disable-opt";
         internal const string OptionFastMath = "fastmath";
-        internal const string OptionMinTarget = "mintarget=";
         internal const string OptionTarget = "target=";
         internal const string OptionIROpt = "ir-opt";
         internal const string OptionCpuOpt = "cpu-opt=";
@@ -54,7 +53,7 @@ namespace Unity.Burst
         internal const string OptionFormat = "format=";
         internal const string OptionDebugTrap = "debugtrap";
         internal const string OptionDisableVectors = "disable-vectors";
-        internal const string OptionDebug = "debug";
+        internal const string OptionDebug = "debug=";
         internal const string OptionDebugMode = "debugMode";
         internal const string OptionStaticLinkage = "generate-static-linkage-methods";
         internal const string OptionJobMarshalling = "generate-job-marshalling-methods";
@@ -123,6 +122,7 @@ namespace Unity.Burst
         internal const string CompilerCommandReset = "$reset";
         internal const string CompilerCommandDomainReload = "$domain_reload";
         internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";
+        internal const string CompilerCommandVersionNotification = "$version";
 
         // All the following content is exposed to the public interface
 

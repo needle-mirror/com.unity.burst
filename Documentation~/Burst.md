@@ -103,8 +103,6 @@ On the right pane, the window displays options for viewing the assembly and inte
    * The **Enhanced Disassembly** option colorizes the **Assembly** View and inserts the source C# statements, correlating the assembly code with the source file, line and statement.
    * The **Safety Checks** option generates code that includes container access safety checks (e.g check if a job is writing to a native container that is readonly).
 
-> NOTE: While the inspector can disassemble for `AVX`, `AVX2`, `AVX512` CPU architectures, these architectures are currently not supported by Burst at runtime. They will fallback to `SSE4`
-
 ## Command-line Options
 
 You can pass the following options to the Unity Editor on the command line to control Burst:
@@ -196,9 +194,9 @@ Burst supports reading from readonly managed arrays loaded only from static read
 ```c#
 [BurstCompile]
 public struct MyJob : IJob {
-    private static readonly int[] _preComputeTable = new int[] {1,2,3,4};
+    private static readonly int[] _preComputeTable = new int[] { 1, 2, 3, 4 };
 
-    public int Index {get; set;}
+    public int Index { get; set; }
 
     public void Execute()
     {
@@ -210,9 +208,13 @@ public struct MyJob : IJob {
 
 Accessing a static readonly managed array has with the following restrictions:
 
-- It is not allowed to pass this static managed array around (e.g method argument), you have to use it directly
-- Elements of a readonly static managed arrays should not be modified by a C# code external to jobs, as the Burst compiler is making a readonly copy of the data at compilation time
-- Array of structs are also supported at the condition that the struct constructor doesn't have any control flow (e.g `if`/`else`) or is throwing an exception
+- You are not allowed to pass this static managed array around (e.g method argument), you have to use it directly.
+- Elements of readonly static managed arrays should not be modified by a C# code external to jobs, as the Burst compiler makes a readonly copy of the data at compilation time.
+- Array of structs are also supported on the condition that the struct constructor doesn't have any control flow (e.g `if`/`else`) and/or does not throw an exception.
+- You cannot assign to static readonly array fields more than once in a static constructor.
+- You cannot use explicitly laid out structs in static readonly array types.
+
+Burst will produce the error `BC1361` for any of these static constructors that we cannot support.
 
 ## Language Support
 
@@ -224,11 +226,12 @@ Burst supports most of the expressions and statements:
 - Unsafe code, pointers manipulation...etc.
 - Instance methods of structs.
 - By ref/out parameters.
-- DllImport and internal calls.
+- [`DllImport` and internal calls](#dllimport-and-internal-calls).
 - Limited support for `throw` expressions, assuming simple throw patterns (e.g `throw new ArgumentException("Invalid argument")`). In that case, we will try to extract the static string exception message to include it in the generated code.
 - Some special IL opcodes like `cpblk`, `initblk`, `sizeof`.
 - Loading from static readonly fields.
 - Support for `fixed` statements.
+- [Partial support for strings and `Debug.Log`](#partial-support-for-strings-and-debuglog).
 
 Burst provides also alternatives for some C# constructions not directly accessible to HPC#:
 
@@ -242,6 +245,101 @@ Burst does not support:
 - `foreach` as it is requiring `try`/`finally` (This should be supported in a future version)
 - Storing to static fields except via [Shared Static](#shared-static)
 - Any methods related to managed objects (e.g string methods...etc.)
+
+### Partial support for strings and `Debug.Log`
+
+Burst provides partial support for using strings in the following two main scenarios:
+
+- `Debug.Log` (see below)
+- Assignment of a string to various FixedString structs provided by `Unity.Collections` (e.g `FixedString128`)
+
+A string can be either:
+-  A string literal (e.g `"This is a string literal"`).
+-  An interpolated string (using `$"This is an integer {value}` or using `string.Format`) where the string to format is also a string literal
+
+For example, the following constructions are supported:
+
+- Logging with a string literal:
+
+```c#
+Debug.Log("This a string literal");
+```
+
+- Logging using string interpolation:
+
+```c#
+int value = 256;
+Debug.Log($"This is an integer value {value}"); 
+```
+
+Which is equivalent to using `string.Format` directly:
+
+```c#
+int value = 256;
+Debug.Log(string.Format("This is an integer value {0}", value));
+```
+
+While it is possible to pass a managed `string` literal or an interpolated string directly to `Debug.Log`, it is not possible to pass a string to a user method or to use them as fields in a struct. In order to pass or store strings around, you need to use one of the `FixedString` structs provided by the `Unity.Collections` package:
+
+```c#
+int value = 256;
+FixedString128 text = $"This is an integer value {value} used with FixedString128";
+MyCustomLog(text);
+
+// ...
+
+// String can be passed as an argument to a method using a FixedString, 
+// but not using directly a  managed `string`:
+public static void MyCustomLog(in FixedString128 log)
+{
+    Debug.Log(text);
+}
+```
+
+Burst has limited support for string format arguments and specifiers:
+
+```c#
+int value = 256;
+
+// Padding left: "This value `  256`
+Debug.Log($"This value `{value,5}`");
+
+// Padding right: "This value `256  `
+Debug.Log($"This value `{value,-5}`");
+
+// Hexadecimal uppercase: "This value `00FF`
+Debug.Log($"This value `{value:X4}`");
+
+// Hexadecimal lowercase: "This value `00ff`
+Debug.Log($"This value `{value:x4}`");
+
+// Decimal with leading-zero: "This value `0256`
+Debug.Log($"This value `{value:D4}`");
+```
+
+What is supported currently:
+
+- The following `Debug.Log` methods:
+  - `Debug.Log(object)`
+  - `Debug.LogWarning(object)`
+  - `Debug.LogError(object)`
+- String interpolation is working with the following caveats:
+  - The string to format must be a literal.
+  - Only the following `string.Format` methods are supported:
+    - `string.Format(string, object)`, `string.Format(string, object, object)`, `string.Format(string, object, object, object)` and more if the .NET API provides specializations with object arguments.
+    - `string.Format(string, object[])`: which can happen for a string interpolation that would contain more than 3 arguments (e.g `$"{arg1} {arg2} {arg3} {arg4} {arg5}..."`). In that case, we expect the object[] array to be of a constant size and no arguments should involve control flows (e.g `$"This is a {(cond ? arg1 : arg2)}"`)
+  - Only value types.
+  - Primitive types only arguments: `char`, `boolean`, `byte`, `sbyte`, `ushort`, `short`, `uint`, `int`, `ulong`, `long`, `float`, `double`.
+  - All vector types e.g `int2`, `float3` are supported, except `half` vector types.
+    ```c#
+    var value = new float3(1.0f, 2.0f, 3.0f);
+    // Logs "This value float3(1f, 2f, 3f)"
+    Debug.Log($"This value `{value}`");
+    ```
+  - Does not support `ToString()` of structs. It will display the full name of the struct instead.
+- The supported string format specifiers are only `G`, `g`, `D`, `d` and `X`, `x`, with padding and specifier. For more details:
+  - See the [.NET documentation - string interpolation](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated).
+  - See the [.NET documentation - Standard numeric format strings](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings).
 
 ### Intrinsics
 
@@ -281,7 +379,7 @@ And lets assume that the pointer to the struct `Foo` has an alignment of 8 - the
 
 ### Unity.Burst.Intrinsics
 
-Burst provides low level close-to-the-metal intrinsics via th `Unity.Burst.Intrinsics` namespace.
+Burst provides low level close-to-the-metal intrinsics via the `Unity.Burst.Intrinsics` namespace.
 
 #### Common
 
@@ -298,6 +396,124 @@ The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTA
 ##### umul128
 
 The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users to access 128-bit unsigned multiplication. These multiplies have become increasingly prevalent in hashing functions. It maps 1:1 with hardware instructions on x86 and ARM targets.
+
+#### Processor specific SIMD extensions
+
+Burst exposes all Intel SIMD intrinsics from SSE and up to and including AVX2,
+by means of the `Unity.Burst.Intrinsics.X86` family of nested classes. These
+are intended to be statically imported as they are plain functions:
+
+```c#
+using static Unity.Burst.Intrinsics.X86;
+using static Unity.Burst.Intrinsics.X86.Sse;
+using static Unity.Burst.Intrinsics.X86.Sse2;
+using static Unity.Burst.Intrinsics.X86.Sse3;
+using static Unity.Burst.Intrinsics.X86.Ssse3;
+using static Unity.Burst.Intrinsics.X86.Sse4_1;
+using static Unity.Burst.Intrinsics.X86.Sse4_2;
+using static Unity.Burst.Intrinsics.X86.Avx;
+using static Unity.Burst.Intrinsics.X86.Avx2;
+```
+
+Each feature level above provides a compile-time check to test if the feature
+level is present at compile-time:
+
+```c#
+if (IsAvx2Supported)
+{
+    // Code path for AVX2 instructions
+}
+else if (IsSse42Supported)
+{
+    // Code path for SSE4.2 instructions
+}
+else
+{
+    // Fallback path for everything else
+}
+```
+
+Later feature levels implicitly include the previous ones, so tests must be
+organized from most recent to least recent. Burst will emit compile-time errors
+if there are uses of intrinsics that are not part of the current compilation
+target which are also not bracketed with a feature level test, helping you to
+narrow in on what needs to be put inside a feature test.
+
+Note that when running in .NET, Mono or IL2CPP without Burst enabled, all the `IsXXXSupported` properties will return `false`.
+However, if you skip the test you can still run a reference version of all
+intrinsics in Mono, which can be helpful if you need to use the managed
+debugger. Please note however that the reference implementations are very slow
+and only intended for managed debugging.
+
+Intrinsic usage is relatively straightforward and is based on the types `v128`
+and `v256`, which represent a 128-bit or 256-bit vector respectively. For example,
+given a `NativeArray<float>` and a `Lut` lookup table of v128 shuffle masks,
+a code fragment like this performs lane left packing, demonstrating the use
+of vector load/store reinterpretation and direct intrinsic calls:
+
+```c#
+v128 a = Input.ReinterpretLoad<v128>(i);
+v128 mask = cmplt_ps(a, Limit);
+int m = movemask_ps(a);
+v128 packed = shuffle_epi8(a, Lut[m]);
+Output.ReinterpretStore(outputIndex, packed);
+outputIndex += popcnt_u32((uint)m);
+```
+
+In general the API mirrors the [C/C++ Intel instrinsics API](https://software.intel.com/sites/landingpage/IntrinsicsGuide/), with a few mostly
+mechanical differences:
+
+* All 128-bit vector types (`__m128`, `__m128i` and `__m128d`) have been collapsed into `v128`
+* All 256-bit vector types (`__m256`, `__m256i` and `__m256d`) have been collapsed into `v256`
+* All `_mm` prefixes on instructions and macros have been dropped, as C# has namespaces
+* All bitfield constants (for e.g. rounding mode selection) have been replaced with C# bitflag enum values
+
+### `DllImport` and internal calls
+
+Burst supports calling native functions via `[DllImport]`:
+
+```c#
+[DllImport("MyNativeLibrary")]
+public static extern int Foo(int arg);
+```
+
+as well as "internal" calls implemented inside Unity:
+
+```c#
+// In UnityEngine.Mathf
+[MethodImpl(MethodImplOptions.InternalCall)]
+public static extern int ClosestPowerOfTwo(int value);
+```
+
+For all `DllImport` and internal calls, only types in the following list can be used as
+parameter or return types:
+
+* Primitive and intrinsic types
+  * `byte`
+  * `ushort`
+  * `uint`
+  * `ulong`
+  * `sbyte`
+  * `short`
+  * `int`
+  * `long`
+  * `float`
+  * `double`
+  * `System.IntPtr`
+  * `System.UIntPtr`
+  * `Unity.Burst.Intrinsics.v64`
+  * `Unity.Burst.Intrinsics.v128`
+  * `Unity.Burst.Intrinsics.v256`
+* Pointers and references
+  * `sometype*` - Pointer to any of the other types in this list
+  * `ref sometype` - Reference to any of the other types in this list
+* "Handle" structs
+  * `unsafe struct MyStruct { void* Ptr; }` - Struct containing a single pointer field
+  * `unsafe struct MyStruct { int Value; }` - Struct containing a single integer field
+
+> Note that passing structs by value is not supported; you need to pass them through a pointer or reference.
+The only exception is that "handle" structs are supported - these are structs that contain a 
+single field, of pointer or integer type.
 
 # Debugging
 
@@ -335,7 +551,6 @@ Burst adds information to track local variables, function parameters and breakpo
 
 - Lambda captures on `Entity.ForEach()` are not discovered for debugging data, so you won't be able to inspect variables originating from these.
 - Structs that utilize `LayoutKind=Explicit`, and have overlapping fields, are represented by a struct that will hide one of the overlaps. In the future they will be represented as a union of structs, to allow inspection of fields that overlap.
-- Local variables are currently treated as having the same scope as the function.
 - Function parameters are currently readonly from a debugging point of view. They are recorded to a stack argument during the prologue. Changing their value in the debugger may not have an affect.
 
 # Advanced usages
@@ -451,6 +666,7 @@ Note that you can also use these function pointers from regular C# as well, but 
 > - Using Burst-compiled function pointers from C# could be slower than their pure C# version counterparts if the function is too small compared to the cost of P/Invoke interop.
 > - A function pointer compiled with Burst cannot be called directly from another function pointer. This limitation will be lifted in a future release. You can workaround this limitation by creating a wrapper function with the `[BurstCompile]` attribute and to use the shared function from there.
 > - Function pointers don't support generic delegates.
+> - Argument and return types are subject to the same restrictions as described for [`DllImport` and internal calls](#dllimport-and-internal-calls).
 
 ### Performance Considerations
 
@@ -1603,13 +1819,12 @@ When a project uses AOT compilation, you can control Burst behavior using the **
 - **Enable Burst Compilation**: Turns Burst entirely on/off for the currently selected platform.
 - **Enable Optimizations**: Turns Burst optimizations on/off.
 - **Enable Safety Checks**: Turns Burst safety checks on/off.
+- **Force Debug Information**: Forces Burst to generate debug information (even in release standalone player builds). Care should be taken not to accidentally ship a build containing symbols.
 - **Use Platform SDK Linker**: Disables cross compilation support (Only applicable to Windows/macOS/Linux standalone players) (see [Burst AOT Requirements](#burst-aot-requirements)).
-- **Min Target 32Bit CPU Architecture**: Allows you to specify the minimum cpu architecture supported for 32 bit builds (shown when supported).
-- **Max Target 32Bit CPU Architecture**: Allows you to specify the maximum cpu architecture supported for 32 bit builds (shown when supported).
-- **Min Target 64Bit CPU Architecture**: Allows you to specify the minimum CPU architecture supported for 64-bit builds (shown when supported).
-- **Max Target 64Bit CPU Architecture**: Allows you to specify the maximum CPU architecture supported for 64-bit builds (shown when supported).
+- **Target 32Bit CPU Architectures**: Allows you to specify the CPU architectures supported for 32 bit builds (shown when supported). The default is SSE2 and SSE4 selected.
+- **Target 64Bit CPU Architectures**: Allows you to specify the CPU architectures supported for 64-bit builds (shown when supported). The default is SSE2 and AVX2 selected.
 
-CPU Architecture is currently only supported for Windows, macOS, and Linux. Burst will generate a standalone player that supports CPU features between the minimum and maximum, inclusive. A special dispatch is generated into the module, so that the code generated will detect the CPU features and select the appropriate architecture level at runtime.
+CPU Architecture is currently only supported for Windows, macOS, and Linux. Burst will generate a standalone player that supports the CPU architectures you have selected. A special dispatch is generated into the module, so that the code generated will detect the CPU being used and select the appropriate CPU architecture at runtime.
 
 You can set the Burst AOT settings as required for each of the supported platforms. The options are saved per platform as part of the project settings.
 
@@ -1714,15 +1929,22 @@ If compiling for a non desktop platform, or you have disabled cross compilation 
 - Burst by default now supports cross compilation between desktop platforms (macOS/Linux/Windows)
 - The UWP build will always compile all four targets (x86, x64, ARMv7 and ARMv8).
 
+## Burst Targets
+
+When Burst compiles for multiple targets during an AOT build, it has to do seperate compilations underneath to support this. For example, if you were compiling for `X64_SSE2` and `X64_SSE4` the compiler will have to do two separate compilations underneath to generate code for each of the targets you choose.
+
+To keep the combinations of targets to a minimum, we make certain Burst targets require multiple processor instruction sets underneath:
+
+- `SSE4.2` is gated on having `SSE4.2` and `POPCNT` instruction sets.
+- `AVX2` is gated on having `AVX2`, `FMA`, and `F16C` instruction sets.
+
 # Known issues
 
-- The maximum target CPU is currently hardcoded per platform (e.g `X64_SSE4` for Windows 64 bits), see the table above.
+- The maximum target CPU is currently hardcoded per platform. For standalone builds that target desktop platforms (Windows/Linux/macOS) you can choose the supported targets via [Burst AOT Settings](#burst-aot-settings). For other platforms see the table above.
 - Building iOS player from Windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
 - Building Android player from Linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
-- Mathematical functions for `double2`, `double3`, `double4` are currently not optimized and using the slower scalar version
-- `DllImport` is not available on 32bit platforms and on ARM platforms
-- For all `DllImport` and internal calls, only primitive types (including pointers) are supported. Passing a struct by value is not supported, you need to pass it through a pointer/reference.
-- If you update to a newer version of Burst via the Package Manager in your project which has loaded already Burst, you need to close the editor, remove your library folder and restart the editor
+- `DllImport` is not available on 32bit platforms and on ARM platforms, (with the exception of DllImport("__Internal") on statically linked platforms (iOS)).
+- If you change the burst package version (via update for example), you need to close and restart the editor. A warning is now displayed to this effect.
 - Function pointers are not working in playmode tests before 2019.3. The feature will be backported.
 - Struct with explicit layout can generate non optimal native code
 - `BurstCompiler.SetExecutionMode` does not affect the runtime yet for deterministic mode
@@ -1739,3 +1961,4 @@ Conference presentations given by the Burst team:
 * [Behind the burst compiler, converting .NET IL to highly optimized native code - DotNext 2018](https://www.youtube.com/watch?v=LKpyaVrby04)
 * [Deep Dive into the Burst Compiler - Unite LA 2018](https://www.youtube.com/watch?v=QkM6zEGFhDY)
 * [C# to Machine Code - GDC 2018](https://www.youtube.com/watch?v=NF6kcNS6U80)
+* [Using the native debugger for Burst Compiled Code](https://www.youtube.com/watch?v=nou6AIHKJz0)

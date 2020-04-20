@@ -78,15 +78,15 @@ namespace Unity.Burst.Editor
             Wasm
         }
 
-        public string Process(string input, AsmKind asmKind, bool useDarkSkin = true)
+        public string Process(string input, AsmKind asmKind, bool useDarkSkin = true, bool useSyntaxColouring = true)
         {
             UseSkin(useDarkSkin);
 #if BURST_INTERNAL
-            return ProcessImpl(input, asmKind);
+            return ProcessImpl(input, asmKind, useSyntaxColouring);
 #else
             try
             {
-                return ProcessImpl(input, asmKind);
+                return ProcessImpl(input, asmKind, useSyntaxColouring);
             }
             catch (Exception ex)
             {
@@ -136,7 +136,7 @@ namespace Unity.Burst.Editor
             output.Append(' ', InstructionAlignment - instructionLength);
         }
 
-        private string ProcessImpl(string input, AsmKind asmKind)
+        private string ProcessImpl(string input, AsmKind asmKind, bool colourize = true)
         {
             _fileList.Clear();
             _fileName.Clear();
@@ -249,7 +249,7 @@ namespace Unity.Burst.Editor
                         }
 
                         // Skip until end of line
-                        for (;i < _tokens.Count; i++)
+                        for (; i < _tokens.Count; i++)
                         {
                             var tokenToSkip = _tokens[i];
                             if (tokenToSkip.Kind == AsmTokenKind.NewLine)
@@ -265,83 +265,98 @@ namespace Unity.Burst.Editor
                         // If the line number is 0, then we can update the file tracking, but still not output a line
                         else if (lineno == 0)
                         {
-                            output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("</color>\n");
+                            if (colourize) output.Append("<color=").Append(ColorLineDirective).Append(">");
+                            output.Append("=== ").Append(System.IO.Path.GetFileName(_fileName[fileno]));
+                            if (colourize) output.Append("</color>");
+                            output.Append("\n");
                         }
                         // We have a source line and number -- can we load file and extract this line?
                         else
                         {
                             if (_fileList.ContainsKey(fileno) && _fileList[fileno] != null && lineno - 1 < _fileList[fileno].Length)
                             {
-                                output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")").Append(_fileList[fileno][lineno-1]).Append("</color>\n");
+                                if (colourize) output.Append("<color=").Append(ColorLineDirective).Append(">");
+                                output.Append("=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")").Append(_fileList[fileno][lineno - 1]);
+                                if (colourize) output.Append("</color>");
+                                output.Append("\n");
                             }
                             else
                             {
-                                output.Append("<color=").Append(ColorLineDirective).Append($">=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")").Append("</color>\n");
+                                if (colourize) output.Append("<color=").Append(ColorLineDirective).Append($">");
+                                output.Append("=== ").Append(System.IO.Path.GetFileName(_fileName[fileno])).Append("(").Append(lineno).Append(", ").Append(colno + 1).Append(")");
+                                if (colourize) output.Append("</color>");
+                                output.Append("\n");
                             }
                         }
                         continue;
                     }
                 }
 
-                switch (token.Kind)
+                if (colourize)
                 {
-                    case AsmTokenKind.Directive:
-                        output.Append("<color=").Append(ColorDirective).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.Identifier:
-                        output.Append("<color=").Append(ColorIdentifier).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.Qualifier:
-                        output.Append("<color=").Append(ColorQualifier).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.Instruction:
-                        output.Append("<color=").Append(ColorInstruction).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        AlignInstruction(output, slice.Length, asmKind);
-                        break;
-                    case AsmTokenKind.InstructionSIMD:
-                        output.Append("<color=").Append(ColorInstructionSIMD).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        AlignInstruction(output, slice.Length, asmKind);
-                        break;
-                    case AsmTokenKind.Register:
-                        output.Append("<color=").Append(ColorRegister).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.Number:
-                        output.Append("<color=").Append(ColorNumber).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.String:
-                        output.Append("<color=").Append(ColorString).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
-                    case AsmTokenKind.Comment:
-                        output.Append("<color=").Append(ColorComment).Append(">");
-                        output.Append(input, slice.Position, slice.Length);
-                        output.Append("</color>");
-                        break;
+                    switch (token.Kind)
+                    {
+                        case AsmTokenKind.Directive:
+                            output.Append("<color=").Append(ColorDirective).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.Identifier:
+                            output.Append("<color=").Append(ColorIdentifier).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.Qualifier:
+                            output.Append("<color=").Append(ColorQualifier).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.Instruction:
+                            output.Append("<color=").Append(ColorInstruction).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            AlignInstruction(output, slice.Length, asmKind);
+                            break;
+                        case AsmTokenKind.InstructionSIMD:
+                            output.Append("<color=").Append(ColorInstructionSIMD).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            AlignInstruction(output, slice.Length, asmKind);
+                            break;
+                        case AsmTokenKind.Register:
+                            output.Append("<color=").Append(ColorRegister).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.Number:
+                            output.Append("<color=").Append(ColorNumber).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.String:
+                            output.Append("<color=").Append(ColorString).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
+                        case AsmTokenKind.Comment:
+                            output.Append("<color=").Append(ColorComment).Append(">");
+                            output.Append(input, slice.Position, slice.Length);
+                            output.Append("</color>");
+                            break;
 
-                    default:
-                        output.Append(input, slice.Position, slice.Length);
-                        break;
+                        default:
+                            output.Append(input, slice.Position, slice.Length);
+                            break;
+                    }
+                }
+                else
+                {
+                    output.Append(input, slice.Position, slice.Length);
                 }
             }
 
             return output.ToString();
         }
-
 
         private static void SkipSpaces(List<AsmToken> tokens, ref int i)
         {

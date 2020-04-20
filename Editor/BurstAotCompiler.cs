@@ -1,17 +1,14 @@
 #if ENABLE_BURST_AOT
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Unity.Burst.LowLevel;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Callbacks;
 using UnityEditor.Compilation;
 using UnityEditor.Scripting;
 using UnityEditor.Scripting.ScriptCompilation;
@@ -21,23 +18,83 @@ using UnityEngine;
 using CompilerMessageType = UnityEditor.Scripting.Compilers.CompilerMessageType;
 using Debug = UnityEngine.Debug;
 
+#if UNITY_EDITOR_OSX
+using System.ComponentModel;
+using Unity.Burst.LowLevel;
+using UnityEditor.Callbacks;
+#endif
+
 namespace Unity.Burst.Editor
 {
     using static BurstCompilerOptions;
 
-    internal struct MinMaxTargetCpu
+    internal class TargetCpus
     {
-        public TargetCpu min;
-        public TargetCpu max;
+        public List<TargetCpu> Cpus;
 
-        public MinMaxTargetCpu(TargetCpu single)
+        public TargetCpus()
         {
-            min = single;
-            max = single;
+            Cpus = new List<TargetCpu>();
         }
+
+        public TargetCpus(TargetCpu single)
+        {
+            Cpus = new List<TargetCpu>(1)
+            {
+                single
+            };
+        }
+
+        public bool IsX86()
+        {
+            foreach (var cpu in Cpus)
+            {
+                switch (cpu)
+                {
+                    case TargetCpu.X86_SSE2:
+                    case TargetCpu.X86_SSE4:
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public override string ToString()
         {
-            return $"({nameof(min)}: {min}, {nameof(max)}: {max})";
+            var result = "";
+
+            var first = true;
+
+            foreach (var cpu in Cpus)
+            {
+                if (first)
+                {
+                    result += $"{cpu}";
+                    first = false;
+                }
+                else
+                {
+                    result += $", {cpu}";
+                }
+            }
+
+            return result;
+        }
+
+        public TargetCpus Clone()
+        {
+            var copy = new TargetCpus
+            {
+                Cpus = new List<TargetCpu>(Cpus.Count)
+            };
+
+            foreach (var cpu in Cpus)
+            {
+                copy.Cpus.Add(cpu);
+            }
+
+            return copy;
         }
     }
 
@@ -94,7 +151,6 @@ extern ""C""
         private const string BurstAotCompilerExecutable = "bcl.exe";
         private const string TempStaging = @"Temp/StagingArea/";
         private const string TempStagingManaged = TempStaging + @"Data/Managed/";
-        private const string TempStagingPlugins = @"Data/Plugins/";
         private const string LibraryPlayerScriptAssemblies = "Library/PlayerScriptAssemblies";
 
         int IOrderedCallback.callbackOrder => 0;
@@ -133,9 +189,8 @@ extern ""C""
             commonOptions.Add(GetOption(OptionAotKeyFolder, keyFolder));
             commonOptions.Add(GetOption(OptionAotDecodeFolder, Path.Combine(Environment.CurrentDirectory, "Library", "Burst")));
 
-            // Extract the TargetPlatform and Cpu from the current build settings
-            MinMaxTargetCpu targetCpu;
-            var targetPlatform = GetTargetPlatformAndDefaultCpu(buildTarget, out targetCpu);
+            // Extract the TargetPlatform and Cpus from the current build settings
+            var targetPlatform = GetTargetPlatformAndDefaultCpu(buildTarget, out var targetCpus);
             commonOptions.Add(GetOption(OptionPlatform, targetPlatform));
 
             // --------------------------------------------------------------------------------------------------------
@@ -243,7 +298,7 @@ extern ""C""
             //
             // Typically, on some platforms like iOS we can be asked to compile a ARM32 and ARM64 CPU version
             // --------------------------------------------------------------------------------------------------------
-            var combinations = CollectCombinations(targetPlatform, targetCpu, report);
+            var combinations = CollectCombinations(targetPlatform, targetCpus, report);
 
             // --------------------------------------------------------------------------------------------------------
             // 4) Compile each combination
@@ -278,10 +333,13 @@ extern ""C""
                 var options = new List<string>(commonOptions)
                 {
                     GetOption(OptionAotOutputPath, outputFilePrefix),
-                    GetOption(OptionMinTarget, combination.MinMaxTargetCpu.min),
-                    GetOption(OptionTarget, combination.MinMaxTargetCpu.max),
                     GetOption(OptionTempDirectory, Path.Combine(Environment.CurrentDirectory, "Temp", "Burst"))
                 };
+
+                foreach (var cpu in combination.TargetCpus.Cpus)
+                {
+                    options.Add(GetOption(OptionTarget, cpu));
+                }
 
                 if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.Switch)
                 {
@@ -343,9 +401,14 @@ extern ""C""
                 try
                 {
                     string extraGlobalOptions = "";
-                    if ((report.summary.options & BuildOptions.Development) != 0)
+                    bool isDevelopmentBuild = (report.summary.options & BuildOptions.Development) != 0;
+                    if (isDevelopmentBuild || aotSettingsForTarget.EnableDebugInAllBuilds)
                     {
-                        extraGlobalOptions += GetOption(OptionDebug) + " ";
+                        if (!isDevelopmentBuild)
+                        {
+                            Debug.LogWarning("Symbols are being generated for burst compiled code, please ensure you intended this - see Burst AOT settings.");
+                        }
+                        extraGlobalOptions += GetOption(OptionDebug,"Full") + " ";
                     }
 
                     if (aotSettingsForTarget.UsePlatformSDKLinker)
@@ -373,10 +436,10 @@ extern ""C""
         /// Collect CPU combinations for the specified TargetPlatform and TargetCPU
         /// </summary>
         /// <param name="targetPlatform">The target platform (e.g Windows)</param>
-        /// <param name="targetCpu">The target CPU (e.g X64_SSE4)</param>
+        /// <param name="targetCpus">The target CPUs (e.g X64_SSE4)</param>
         /// <param name="report">Error reporting</param>
         /// <returns>The list of CPU combinations</returns>
-        private static List<BurstOutputCombination> CollectCombinations(TargetPlatform targetPlatform, MinMaxTargetCpu targetCpu, BuildReport report)
+        private static List<BurstOutputCombination> CollectCombinations(TargetPlatform targetPlatform, TargetCpus targetCpus, BuildReport report)
         {
             var combinations = new List<BurstOutputCombination>();
 
@@ -386,9 +449,9 @@ extern ""C""
                 // Declared in GetStagingAreaPluginsFolder
                 // PlatformDependent\OSXPlayer\Extensions\Managed\OSXDesktopStandalonePostProcessor.cs
 #if UNITY_2019_3_OR_NEWER
-                combinations.Add(new BurstOutputCombination(Path.Combine(Path.GetFileName(report.summary.outputPath), "Contents", "Plugins"), targetCpu));
+                combinations.Add(new BurstOutputCombination(Path.Combine(Path.GetFileName(report.summary.outputPath), "Contents", "Plugins"), targetCpus));
 #else
-                combinations.Add(new BurstOutputCombination("UnityPlayer.app/Contents/Plugins", targetCpu));
+                combinations.Add(new BurstOutputCombination("UnityPlayer.app/Contents/Plugins", targetCpus));
 #endif
             }
             else if (targetPlatform == TargetPlatform.iOS)
@@ -403,13 +466,13 @@ extern ""C""
                     if (targetArchitecture == IOSArchitecture.ARMv7 || targetArchitecture == IOSArchitecture.Universal)
                     {
                         // PlatformDependent\iPhonePlayer\Extensions\Common\BuildPostProcessor.cs
-                        combinations.Add(new BurstOutputCombination("StaticLibraries", new MinMaxTargetCpu(TargetCpu.ARMV7A_NEON32), DefaultLibraryName + "32"));
+                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(TargetCpu.ARMV7A_NEON32), DefaultLibraryName + "32"));
                     }
 
                     if (targetArchitecture == IOSArchitecture.ARM64 || targetArchitecture == IOSArchitecture.Universal)
                     {
                         // PlatformDependent\iPhonePlayer\Extensions\Common\BuildPostProcessor.cs
-                        combinations.Add(new BurstOutputCombination("StaticLibraries", new MinMaxTargetCpu(TargetCpu.ARMV8A_AARCH64), DefaultLibraryName + "64"));
+                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(TargetCpu.ARMV8A_AARCH64), DefaultLibraryName + "64"));
                     }
                 }
             }
@@ -461,27 +524,27 @@ extern ""C""
                 var androidTargetArch = UnityEditor.PlayerSettings.Android.targetArchitectures;
                 if ((androidTargetArch & AndroidArchitecture.ARMv7) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/armeabi-v7a", new MinMaxTargetCpu(TargetCpu.ARMV7A_NEON32)));
+                    combinations.Add(new BurstOutputCombination("libs/armeabi-v7a", new TargetCpus(TargetCpu.ARMV7A_NEON32)));
                 }
 
                 if ((androidTargetArch & AndroidArchitecture.ARM64) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/arm64-v8a", new MinMaxTargetCpu(TargetCpu.ARMV8A_AARCH64)));
+                    combinations.Add(new BurstOutputCombination("libs/arm64-v8a", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
                 }
 #if !UNITY_2019_2_OR_NEWER
                 if ((androidTargetArch & AndroidArchitecture.X86) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/x86", new MinMaxTargetCpu(TargetCpu.X86_SSE2)));
+                    combinations.Add(new BurstOutputCombination("libs/x86", new TargetCpus(TargetCpu.X86_SSE2)));
                 }
 #endif
             }
             else if (targetPlatform == TargetPlatform.UWP)
             {
                 // TODO: Make it configurable for x86 (sse2, sse4)
-                combinations.Add(new BurstOutputCombination("Plugins/x64", new MinMaxTargetCpu(TargetCpu.X64_SSE4)));
-                combinations.Add(new BurstOutputCombination("Plugins/x86", new MinMaxTargetCpu(TargetCpu.X86_SSE2)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM", new MinMaxTargetCpu(TargetCpu.THUMB2_NEON32)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM64", new MinMaxTargetCpu(TargetCpu.ARMV8A_AARCH64)));
+                combinations.Add(new BurstOutputCombination("Plugins/x64", new TargetCpus(TargetCpu.X64_SSE4)));
+                combinations.Add(new BurstOutputCombination("Plugins/x86", new TargetCpus(TargetCpu.X86_SSE2)));
+                combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
+                combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
             }
             else if (targetPlatform == TargetPlatform.Lumin)
             {
@@ -494,47 +557,38 @@ extern ""C""
                         Environment.SetEnvironmentVariable("LUMINSDK_UNITY", sdkRoot);
                     }
                 }
-                combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
+                combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpus));
             }
             else if (targetPlatform == TargetPlatform.Switch)
             {
-                combinations.Add(new BurstOutputCombination("NativePlugins/", targetCpu));
+                combinations.Add(new BurstOutputCombination("NativePlugins/", targetCpus));
             }
 #if UNITY_2019_3_OR_NEWER
             else if (targetPlatform == TargetPlatform.Stadia)
             {
-                combinations.Add(new BurstOutputCombination("NativePlugins", targetCpu));
+                combinations.Add(new BurstOutputCombination("NativePlugins", targetCpus));
             }
 #endif
             else
             {
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
                 if (targetPlatform == TargetPlatform.Windows)
                 {
                     // This is what is expected by PlatformDependent\Win\Plugins.cpp
-                    switch (targetCpu.max)
+                    if (targetCpus.IsX86())
                     {
-                        case TargetCpu.X86_SSE2:
-                        case TargetCpu.X86_SSE4:
-                            combinations.Add(new BurstOutputCombination("Data/Plugins/x86", targetCpu));
-                            break;
-                        case TargetCpu.X64_SSE2:
-                        case TargetCpu.X64_SSE4:
-                        case TargetCpu.AVX:
-                        case TargetCpu.AVX2:
-                            combinations.Add(new BurstOutputCombination("Data/Plugins/x86_64", targetCpu));
-                            break;
-                        default:
-                            // Safeguard
-                            combinations.Add(new BurstOutputCombination("Data/Plugins", targetCpu));
-                            break;
+                        combinations.Add(new BurstOutputCombination("Data/Plugins/x86", targetCpus));
+                    }
+                    else
+                    {
+                        combinations.Add(new BurstOutputCombination("Data/Plugins/x86_64", targetCpus));
                     }
                 }
                 else
 #endif
                 {
                     // Safeguard
-                    combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpu));
+                    combinations.Add(new BurstOutputCombination("Data/Plugins/", targetCpus));
                 }
             }
 
@@ -586,7 +640,7 @@ extern ""C""
             return path.IndexOf(editorDir, StringComparison.OrdinalIgnoreCase) != -1 && path.IndexOf("netstandard", StringComparison.OrdinalIgnoreCase) != -1 && path.IndexOf("shims", StringComparison.OrdinalIgnoreCase) != -1;
         }
 
-        private static TargetPlatform GetTargetPlatformAndDefaultCpu(BuildTarget target, out MinMaxTargetCpu targetCpu)
+        private static TargetPlatform GetTargetPlatformAndDefaultCpu(BuildTarget target, out TargetCpus targetCpu)
         {
             var platform = TryGetTargetPlatform(target, out targetCpu);
             if (!platform.HasValue)
@@ -598,64 +652,62 @@ extern ""C""
 
         private static bool IsSupportedPlatform(BuildTarget target)
         {
-            MinMaxTargetCpu cpu;
-            return TryGetTargetPlatform(target, out cpu).HasValue;
+            return TryGetTargetPlatform(target, out var _).HasValue;
         }
 
-        private static TargetPlatform? TryGetTargetPlatform(BuildTarget target, out MinMaxTargetCpu targetCpu)
+        private static TargetPlatform? TryGetTargetPlatform(BuildTarget target, out TargetCpus targetCpus)
         {
             var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(target);
 
-            // TODO: Add support for multi-CPU switch
-            targetCpu.min = TargetCpu.Auto;
-            targetCpu.max = TargetCpu.Auto;
             switch (target)
             {
                 case BuildTarget.StandaloneWindows:
-                    targetCpu = aotSettingsForTarget.GetDesktopCpu32Bit();
+                    targetCpus = aotSettingsForTarget.GetDesktopCpu32Bit();
                     return TargetPlatform.Windows;
                 case BuildTarget.StandaloneWindows64:
-                    targetCpu = aotSettingsForTarget.GetDesktopCpu64Bit();
+                    targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
                     return TargetPlatform.Windows;
                 case BuildTarget.StandaloneOSX:
-                    targetCpu = aotSettingsForTarget.GetDesktopCpu64Bit();
+                    targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
                     return TargetPlatform.macOS;
 #if !UNITY_2019_2_OR_NEWER
-                //32 bit linux support was deprecated
+                // 32 bit linux support was deprecated
                 case BuildTarget.StandaloneLinux:
-                    targetCpu = aotSettingsForTarget.GetDesktopCpu32Bit();
+                    targetCpus = aotSettingsForTarget.GetDesktopCpu32Bit();
                     return TargetPlatform.Linux;
 #endif
                 case BuildTarget.StandaloneLinux64:
-                    targetCpu = aotSettingsForTarget.GetDesktopCpu64Bit();
+                    targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
                     return TargetPlatform.Linux;
                 case BuildTarget.WSAPlayer:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.X64_SSE4);
+                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.UWP;
                 case BuildTarget.XboxOne:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.X64_SSE4);
+                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
                 case BuildTarget.PS4:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.X64_SSE4);
+                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.PS4;
                 case BuildTarget.Android:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.ARMV7A_NEON32);
+                    targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.Android;
                 case BuildTarget.iOS:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.ARMV7A_NEON32);
+                    targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.iOS;
                 case BuildTarget.Lumin:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.ARMV8A_AARCH64);
+                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Lumin;
                 case BuildTarget.Switch:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.ARMV8A_AARCH64);
+                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Switch;
 #if UNITY_2019_3_OR_NEWER
                 case BuildTarget.Stadia:
-                    targetCpu = new MinMaxTargetCpu(TargetCpu.AVX2);
+                    targetCpus = new TargetCpus(TargetCpu.AVX2);
                     return TargetPlatform.Stadia;
 #endif
             }
+
+            targetCpus = new TargetCpus(TargetCpu.Auto);
             return null;
         }
 
@@ -675,20 +727,20 @@ extern ""C""
         /// </summary>
         private struct BurstOutputCombination
         {
-            public readonly MinMaxTargetCpu MinMaxTargetCpu;
+            public readonly TargetCpus TargetCpus;
             public readonly string OutputPath;
             public readonly string LibraryName;
 
-            public BurstOutputCombination(string outputPath, MinMaxTargetCpu minMaxTargetCpu, string libraryName = DefaultLibraryName)
+            public BurstOutputCombination(string outputPath, TargetCpus targetCpus, string libraryName = DefaultLibraryName)
             {
-                MinMaxTargetCpu = minMaxTargetCpu;
+                TargetCpus = targetCpus.Clone();
                 OutputPath = outputPath;
                 LibraryName = libraryName;
             }
 
             public override string ToString()
             {
-                return $"{nameof(MinMaxTargetCpu)}: {MinMaxTargetCpu}, {nameof(OutputPath)}: {OutputPath}, {nameof(LibraryName)}: {LibraryName}";
+                return $"{nameof(TargetCpus)}: {TargetCpus}, {nameof(OutputPath)}: {OutputPath}, {nameof(LibraryName)}: {LibraryName}";
             }
         }
 

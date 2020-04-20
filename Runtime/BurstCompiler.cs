@@ -192,6 +192,11 @@ namespace Unity.Burst
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandDomainReload);
         }
 
+        internal static string VersionNotify(string version)
+        {
+            return SendCommandToCompiler(BurstCompilerOptions.CompilerCommandVersionNotification, version);
+        }
+
         internal static void UpdateAssemblerFolders(List<string> folders)
         {
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandUpdateAssemblyFolders, $"{string.Join(";", folders)}");
@@ -237,7 +242,7 @@ namespace Unity.Burst
         }
 
 #if UNITY_EDITOR
-        private static void SendCommandToCompiler(string commandName, string commandArgs = null)
+        private static string SendCommandToCompiler(string commandName, string commandArgs = null)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));
 
@@ -247,7 +252,10 @@ namespace Unity.Burst
                 compilerOptions += " " + commandArgs;
             }
 
-            Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(DummyMethodInfo, compilerOptions);
+            var results = Unity.Burst.LowLevel.BurstCompilerService.GetDisassembly(DummyMethodInfo, compilerOptions);
+            if (!string.IsNullOrEmpty(results))
+                return results.TrimStart('\n');
+            return "";
         }
 
         private static readonly MethodInfo DummyMethodInfo = typeof(BurstCompiler).GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic);

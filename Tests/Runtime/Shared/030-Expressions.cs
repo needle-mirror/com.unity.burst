@@ -24,6 +24,26 @@ namespace Burst.Compiler.IL.Tests
             return (float) rx / -((float) int.MinValue);
         }
 
+        [TestCompiler((int)-1, (uint)17)]
+        [TestCompiler((int)(1 << 20), (uint)17)]
+        [TestCompiler((int)(1 << 15), (uint)17)]
+        [TestCompiler(int.MinValue, (uint)17)]
+        [TestCompiler(int.MaxValue, (uint)17)]
+        public static double ConvertIntToDouble(int rx, uint ry)
+        {
+            return (double)(rx  + (int)ry) * 0.5;
+        }
+
+        [TestCompiler((int)-1, (uint)17)]
+        [TestCompiler((int)(1 << 20), (uint)17)]
+        [TestCompiler((int)(1 << 15), (uint)17)]
+        [TestCompiler(int.MinValue, (uint)17)]
+        [TestCompiler(int.MaxValue, (uint)17)]
+        public static double ConvertIntToDouble2(int rx, uint ry)
+        {
+            return (double)((uint)rx + ry) * 0.5;
+        }
+
         [TestCompiler(int.MinValue)]
         [TestCompiler(-15)]
         [TestCompiler(-1)]
@@ -760,10 +780,66 @@ namespace Burst.Compiler.IL.Tests
             return -a;
         }
 
+        [TestCompiler((sbyte)3)]
+        [TestCompiler((sbyte)-4)]
+        [TestCompiler((sbyte)0)]
+        [TestCompiler(sbyte.MinValue)]
+        [TestCompiler(sbyte.MaxValue)]
+        public static int test_expr_negateResult_sbyte(sbyte a)
+        {
+            return -a;
+        }
+
+        [TestCompiler((byte)3)]
+        [TestCompiler((byte)0)]
+        [TestCompiler(byte.MaxValue, OverrideManagedResult = -255)] // TODO: IL2CPP on macOS currently produces incorrect result of "1". Remove this OverrideManagedResult when that bug is fixed.
+        public static int test_expr_negateResult_byte(byte a)
+        {
+            return -a;
+        }
+
+        [TestCompiler((short)3)]
+        [TestCompiler((short)-4)]
+        [TestCompiler((short)0)]
+        [TestCompiler(short.MinValue)]
+        [TestCompiler(short.MaxValue)]
+        public static int test_expr_negateResult_short(short a)
+        {
+            return -a;
+        }
+
+        [TestCompiler((ushort)3)]
+        [TestCompiler((ushort)0)]
+        [TestCompiler(ushort.MaxValue, OverrideManagedResult = -65535)] // TODO: IL2CPP on macOS currently produces incorrect result of "1". Remove this OverrideManagedResult when that bug is fixed.
+        public static int test_expr_negateResult_ushort(ushort a)
+        {
+            return -a;
+        }
+
         [TestCompiler(3)]
         [TestCompiler(-4)]
         [TestCompiler(0)]
+        [TestCompiler(int.MinValue)]
+        [TestCompiler(int.MaxValue)]
         public static int test_expr_negateResult_int(int a)
+        {
+            return -a;
+        }
+
+        [TestCompiler(3u)]
+        [TestCompiler(0u)]
+        [TestCompiler(uint.MaxValue)]
+        public static long test_expr_negateResult_uint(uint a)
+        {
+            return -a;
+        }
+
+        [TestCompiler((long)3)]
+        [TestCompiler((long)-4)]
+        [TestCompiler((long)0)]
+        [TestCompiler(long.MinValue)]
+        [TestCompiler(long.MaxValue)]
+        public static long test_expr_negateResult_long(long a)
         {
             return -a;
         }

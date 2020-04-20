@@ -84,6 +84,43 @@ namespace Burst.Compiler.IL.Tests
             a.x = 42;
         }
 
+        private interface ISomething
+        {
+            void DoSomething();
+        }
+
+        private struct Something : ISomething
+        {
+            public byte A;
+
+            public void DoSomething()
+            {
+                A = 42;
+            }
+        }
+
+        private static ISomething something = new Something { A = 13 };
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromManagedNonReadonlyStaticFieldNotSupported)]
+        public static void TestStaticInterfaceStore()
+        {
+            something.DoSomething();
+        }
+
+        private static int i = 42;
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromNonReadonlyStaticFieldNotSupported)]
+        public static int TestStaticIntLoad()
+        {
+            return i;
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionStsfldNotSupported)]
+        public static void TestStaticIntStore()
+        {
+            i = 13;
+        }
+
         public delegate char CharbyValueDelegate(char c);
 
 #if BURST_TESTS_ONLY
@@ -146,6 +183,48 @@ namespace Burst.Compiler.IL.Tests
         public static bool TestTypeof()
         {
             return typeof(int).IsPrimitive;
+        }
+
+        public class AwfulClass
+        {
+            public int Foo;
+        }
+
+        public struct BetterStruct
+        {
+            public int Foo;
+        }
+
+        public struct MixedStaticInits
+        {
+            public static readonly AwfulClass AC = new AwfulClass { Foo = 42 };
+            public static readonly BetterStruct BS = new BetterStruct { Foo = 42 };
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_ManagedStaticConstructor)]
+        public static int TestMixedStaticInits()
+        {
+            return MixedStaticInits.BS.Foo;
+        }
+
+        public struct StaticArrayWrapper
+        {
+            private const int ArrayLength = 4;
+            public static readonly int[] StaticArray = new int[4];
+
+            static StaticArrayWrapper()
+            {
+                for (int i = 0; i < ArrayLength; ++i)
+                {
+                    StaticArray[i] = i;
+                }
+            }
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StaticConstantArrayInStaticConstructor)]
+        public unsafe static int TestStaticArrayWrapper()
+        {
+            return StaticArrayWrapper.StaticArray[0];
         }
     }
 }

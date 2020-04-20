@@ -1,4 +1,5 @@
 using Burst.Compiler.IL.Tests.Helpers;
+using System.Linq.Expressions;
 using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests

@@ -46,6 +46,12 @@ namespace Burst.Compiler.IL.Tests
             return (float)Math.Atan(value);
         }
 
+        [TestCompiler(DataRange.ZeroExclusiveToOneInclusive, DataRange.ZeroExclusiveToOneInclusive)]
+        public static float TestAtan2(float y, float x)
+        {
+            return (float)Math.Atan2(y, x);
+        }
+
         [TestCompiler(DataRange.Standard)]
         public static double TestCosh(float value)
         {

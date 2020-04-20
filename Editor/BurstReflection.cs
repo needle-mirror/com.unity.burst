@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEditor.Compilation;
 using Debug = UnityEngine.Debug;
@@ -14,7 +13,7 @@ namespace Unity.Burst.Editor
 
     internal static class BurstReflection
     {
-        public static List<BurstCompileTarget> FindExecuteMethods(AssembliesType assemblyTypes)
+        public static FindExecuteMethodsResult FindExecuteMethods(IEnumerable<System.Reflection.Assembly> assemblyList)
         {
             var methodsToCompile = new List<BurstCompileTarget>();
             var methodsToCompileSet = new HashSet<MethodInfo>();
@@ -22,7 +21,10 @@ namespace Unity.Burst.Editor
             var valueTypes = new List<TypeToVisit>();
             var interfaceToProducer = new Dictionary<Type, Type>();
 
-            var assemblyList = GetAssemblyList(assemblyTypes);
+            // This method can be called on a background thread, so we can't call Debug.Log etc.
+            // Instead collect all the log messages and return them.
+            var logMessages = new List<LogMessage>();
+
             //Debug.Log("Filtered Assembly List: " + string.Join(", ", assemblyList.Select(assembly => assembly.GetName().Name)));
 
             // Find all ways to execute job types (via producer attributes)
@@ -46,7 +48,7 @@ namespace Unity.Burst.Editor
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning("Unexpected exception while collecting types in assembly `" + assembly.FullName + "` Exception: " + ex);
+                    logMessages.Add(new LogMessage(LogType.Warning, "Unexpected exception while collecting types in assembly `" + assembly.FullName + "` Exception: " + ex));
                 }
 
                 for (var i = 0; i < types.Count; i++)
@@ -80,7 +82,7 @@ namespace Unity.Burst.Editor
                                     catch (Exception ex)
                                     {
                                         var error = $"Unexpected Burst Inspector error. Invalid generic type instance. Trying to instantiate the generic type {nestedType.FullName} with the generic arguments <{string.Join(", ", parentGenericTypeArguments.Select(x => x.FullName))}> is not supported: {ex}";
-                                        Debug.LogWarning(error);
+                                        logMessages.Add(new LogMessage(LogType.Warning, error));
                                     }
                                 }
                             }
@@ -133,11 +135,12 @@ namespace Unity.Burst.Editor
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogWarning("Unexpected exception while inspecting type `" + t +
-                                  "` IsConstructedGenericType: " + t.IsConstructedGenericType +
-                                  " IsGenericTypeDef: " + t.IsGenericTypeDefinition +
-                                  " IsGenericParam: " + t.IsGenericParameter +
-                                  " Exception: " + ex);
+                        logMessages.Add(new LogMessage(LogType.Warning,
+                            "Unexpected exception while inspecting type `" + t +
+                            "` IsConstructedGenericType: " + t.IsConstructedGenericType +
+                            " IsGenericTypeDef: " + t.IsGenericTypeDefinition +
+                            " IsGenericParam: " + t.IsGenericParameter +
+                            " Exception: " + ex));
                     }
                 }
             }
@@ -166,7 +169,7 @@ namespace Unity.Burst.Editor
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogException(ex);
+                        logMessages.Add(new LogMessage(ex));
                     }
                 }
 
@@ -214,22 +217,58 @@ namespace Unity.Burst.Editor
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogException(ex);
+                            logMessages.Add(new LogMessage(ex));
                         }
                     }
                 }
             }
 
-            return methodsToCompile;
+            return new FindExecuteMethodsResult(methodsToCompile, logMessages);
         }
 
+        public sealed class FindExecuteMethodsResult
+        {
+            public readonly List<BurstCompileTarget> CompileTargets;
+            public readonly List<LogMessage> LogMessages;
+
+            public FindExecuteMethodsResult(List<BurstCompileTarget> compileTargets, List<LogMessage> logMessages)
+            {
+                CompileTargets = compileTargets;
+                LogMessages = logMessages;
+            }
+        }
+
+        public sealed class LogMessage
+        {
+            public readonly LogType LogType;
+            public readonly string Message;
+            public readonly Exception Exception;
+
+            public LogMessage(LogType logType, string message)
+            {
+                LogType = logType;
+                Message = message;
+            }
+
+            public LogMessage(Exception exception)
+            {
+                LogType = LogType.Exception;
+                Exception = exception;
+            }
+        }
+
+        public enum LogType
+        {
+            Warning,
+            Exception,
+        }
 
         /// <summary>
         /// Collects all assemblies - transitively that are valid for the specified type `Player` or `Editor`
         /// </summary>
         /// <param name="assemblyTypes">The assembly type</param>
         /// <returns>The list of assemblies valid for this platform</returns>
-        public static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes)
+        public static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes, bool onlyAssembliesThatPossiblyContainJobs = false)
         {
             // TODO: Not sure there is a better way to match assemblies returned by CompilationPipeline.GetAssemblies
             // with runtime assemblies contained in the AppDomain.CurrentDomain.GetAssemblies()
@@ -250,28 +289,61 @@ namespace Unity.Burst.Editor
                 {
                     continue;
                 }
-                CollectAssembly(assembly, allAssemblies);
+                CollectAssembly(assembly, allAssemblies, onlyAssembliesThatPossiblyContainJobs);
             }
 
             return allAssemblies.ToList();
         }
 
-        private static void CollectAssembly(System.Reflection.Assembly assembly, HashSet<System.Reflection.Assembly> collect)
+        // For an assembly to contain something "interesting" when we're scanning for things to compile,
+        // it needs to either:
+        // (a) be one of these assemblies, or
+        // (b) reference one of these assemblies
+        private static readonly string[] ScanMarkerAssemblies = new[]
         {
+            // Contains [BurstCompile] attribute
+            "Unity.Burst",
+
+            // Contains [JobProducerType] attribute
+            "UnityEngine.CoreModule"
+        };
+
+        private static void CollectAssembly(System.Reflection.Assembly assembly, HashSet<System.Reflection.Assembly> collect, bool onlyAssembliesThatPossiblyContainJobs)
+        {
+            AssemblyName[] referencedAssemblies = null;
+
+            if (onlyAssembliesThatPossiblyContainJobs)
+            {
+                // If this assembly can't possibly contain anything related to scanning for things to compile,
+                // then skip it.
+                var name = assembly.GetName().Name;
+                if (!ScanMarkerAssemblies.Contains(name))
+                {
+                    referencedAssemblies = assembly.GetReferencedAssemblies();
+                    if (referencedAssemblies.All(x => !ScanMarkerAssemblies.Contains(x.Name)))
+                    {
+                        return;
+                    }
+                }
+            }
+
             if (!collect.Add(assembly))
             {
                 return;
             }
 
-            foreach (var assemblyName in assembly.GetReferencedAssemblies())
+            foreach (var assemblyName in referencedAssemblies ?? assembly.GetReferencedAssemblies())
             {
                 try
                 {
-                    CollectAssembly(System.Reflection.Assembly.Load(assemblyName), collect);
+                    CollectAssembly(System.Reflection.Assembly.Load(assemblyName), collect, onlyAssembliesThatPossiblyContainJobs);
                 }
                 catch (Exception)
                 {
-                    Debug.LogWarning("Could not load assembly " + assemblyName);
+                    if (BurstLoader.IsDebugging)
+                    {
+                        Debug.LogWarning("Could not load assembly " + assemblyName);
+                    }
                 }
             }
         }

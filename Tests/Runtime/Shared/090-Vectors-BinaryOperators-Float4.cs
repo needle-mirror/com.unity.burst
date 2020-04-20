@@ -211,7 +211,8 @@ namespace Burst.Compiler.IL.Tests
 
         private static unsafe bool CompareViaIndexer(float4* start, int axis, float b)
         {
-            return (*start)[axis] >= b;
+            float4 copy = *start;
+            return copy[axis] >= b;
         }
 
         [TestCompiler(DataRange.Standard, DataRange.Standard)]

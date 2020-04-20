@@ -15,6 +15,9 @@ namespace Unity.Burst.Editor
     [InitializeOnLoad]
     internal class BurstLoader
     {
+        // Cache the delegate to make sure it doesn't get collected.
+        private static readonly BurstCompilerService.ExtractCompilerFlags TryGetOptionsFromMemberDelegate = TryGetOptionsFromMember;
+
         /// <summary>
         /// Gets the location to the runtime path of burst.
         /// </summary>
@@ -23,6 +26,37 @@ namespace Unity.Burst.Editor
         public static bool IsDebugging { get; private set; }
 
         public static int DebuggingLevel { get; private set; }
+
+        private static void VersionUpdateCheck()
+        {
+            var seek = "com.unity.burst@";
+            var first = RuntimePath.LastIndexOf(seek);
+            var last = RuntimePath.LastIndexOf(".Runtime");
+            var result = "";
+            var version = "";
+            if (first == -1 || last == -1 || last <= first)
+            {
+                version = "Unknown";
+            }
+            else
+            {
+                first += seek.Length;
+                last -= 1;
+                version = RuntimePath.Substring(first, last - first);
+                result = BurstCompiler.VersionNotify(version);
+            }
+
+            result = BurstCompiler.VersionNotify(version);
+            if (result != version)
+            {
+                if (IsDebugging)
+                {
+                    UnityEngine.Debug.LogWarning($"[com.unity.burst] - '{result}' != '{version}'");
+                }
+                EditorUtility.DisplayDialog("Burst Package Update Detected", "The version of Burst used by your project has changed. Please restart the Editor to continue.", "OK");
+                BurstCompiler.Shutdown();
+            }
+        }
 
         static BurstLoader()
         {
@@ -54,13 +88,15 @@ namespace Unity.Burst.Editor
 
             BurstEditorOptions.EnsureSynchronized();
 
-            BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMember);
+            BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMemberDelegate);
 
             EditorApplication.quitting += BurstCompiler.Shutdown;
 
             CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
             CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
             EditorApplication.playModeStateChanged += EditorApplicationOnPlayModeStateChanged;
+
+            VersionUpdateCheck();
 
             // Workaround to update the list of assembly folders as soon as possible
             // in order for the JitCompilerService to not fail with AssemblyResolveExceptions.

@@ -1505,5 +1505,45 @@ namespace Burst.Compiler.IL.Tests
             var ptr2 = (byte*)ptr1 + UnsafeUtility.SizeOf<Fixed1021>();
             UnsafeUtility.WriteArrayElement(ptr1, 0, UnsafeUtility.ReadArrayElement<Fixed1021>(ptr2, 0));
         }
+
+        [StructLayout(LayoutKind.Sequential, Size = 2)]
+        public struct WithPadding
+        {
+            public byte A;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new WithPadding { A = 42 };
+            }
+        }
+
+        private static readonly WithPadding withPadding = new WithPadding { A = 42 };
+
+        [TestCompiler(typeof(ReturnBox))]
+        public static unsafe byte TestWithPadding(WithPadding* o)
+        {
+            *o = withPadding;
+            return withPadding.A;
+        }
+
+        [CompilerGenerated]
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct MyCompilerGeneratedButNotReally
+        {
+            public fixed int A[1];
+        }
+
+        private static readonly MyCompilerGeneratedButNotReally myCompilerGeneratedButNotReally = new MyCompilerGeneratedButNotReally {};
+
+        [TestCompiler(typeof(ReturnBox))]
+        public static unsafe int TestMyCompilerGeneratedButNotReallyStruct(MyCompilerGeneratedButNotReally* o)
+        {
+            *o = myCompilerGeneratedButNotReally;
+
+            fixed (int* a = myCompilerGeneratedButNotReally.A)
+            {
+                return *a;
+            }
+        }
     }
 }
