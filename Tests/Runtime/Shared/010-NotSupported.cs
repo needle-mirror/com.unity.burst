@@ -201,10 +201,22 @@ namespace Burst.Compiler.IL.Tests
             public static readonly BetterStruct BS = new BetterStruct { Foo = 42 };
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_ManagedStaticConstructor)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_InstructionNewobjWithManagedTypeNotSupported, DiagnosticId.ERR_ManagedStaticConstructor })]
         public static int TestMixedStaticInits()
         {
             return MixedStaticInits.BS.Foo;
+        }
+
+        public struct MixedStaticInitsWithString
+        {
+            public static readonly string AC = "Heyo, gaia?";
+            public static readonly BetterStruct BS = new BetterStruct { Foo = 42 };
+        }
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_InstructionLdstrNotSupported, DiagnosticId.ERR_ManagedStaticConstructor })]
+        public static int TestMixedStaticInitsWithString()
+        {
+            return MixedStaticInitsWithString.BS.Foo;
         }
 
         public struct StaticArrayWrapper

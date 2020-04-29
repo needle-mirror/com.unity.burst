@@ -100,7 +100,13 @@ On the right pane, the window displays options for viewing the assembly and inte
    * **LLVM IR (Optimized)** provides a view on the internal LLVM IR after optimizations.
    * **LLVM IR Optimization Diagnostics** provides detailed LLVM diagnostics of the optimizations (i.e if they succeeded or failed).
 4. You can also turn on different options:
-   * The **Enhanced Disassembly** option colorizes the **Assembly** View and inserts the source C# statements, correlating the assembly code with the source file, line and statement.
+   * There is a dropdown to specify what output to show. If you click the **Copy to Clipboard** button it'll copy the output that matches what you specify here (so if you have coloured output you'll get all the `<color=#444444>foo</color>` tags). In general its best to view the coloured output in the inspector, but copy the plain output if you want to move it into an external tool.
+   ** Plain (No debug information) - raw output.
+   ** Plain (With debug information) - same as above but with debug information included too.
+   ** Enhanced (Minimal debug information) - enhanced output has the line information interweaved with the assembly to guide you as to what line in your code matches what assembly output.
+   ** Enhanced (Full debug information) - same as above but with debug information included too.
+   ** Coloured (Minimal debug information) - same as the enhanced output but the assembly is colourised nicely to aid reading.
+   ** Coloured (Full debug information) - same as above but with debug information included too.
    * The **Safety Checks** option generates code that includes container access safety checks (e.g check if a job is writing to a native container that is readonly).
 
 ## Command-line Options
@@ -377,6 +383,14 @@ struct Foo
 
 And lets assume that the pointer to the struct `Foo` has an alignment of 8 - the natural alignment of a `long` value. The `Interlocked.Read` of `a` would be successful because it lies on a _naturally aligned_ address, but `b` would not. Undefined behaviour will occur at the load of `b` as a result.
 
+#### `System.Threading.Thread`
+
+Burst supports the `MemoryBarrier` method of `System.Threading.Thread`.
+
+#### `System.Threading.Volatile`
+
+Burst supports the non-generic variants of `Read` and `Write` provided by `System.Threading.Volatile`.
+
 ### Unity.Burst.Intrinsics
 
 Burst provides low level close-to-the-metal intrinsics via the `Unity.Burst.Intrinsics` namespace.
@@ -392,6 +406,12 @@ The `Unity.Burst.Intrinsics.Common.Pause` is an **experimental** intrinsic that 
 It is used primarily to stop spin locks over contending on an atomic access, to reduce contention and power on that section of code.
 
 The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC` preprocessor define.
+
+##### Prefetch
+
+The `Unity.Burst.Intrinsics.Common.Prefetch` is an **experimental** intrinsic that provides a hint that the a memory location should be prefetched into the cache.
+
+The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC` preprocessor define.
 
 ##### umul128
 
@@ -411,8 +431,11 @@ using static Unity.Burst.Intrinsics.X86.Sse3;
 using static Unity.Burst.Intrinsics.X86.Ssse3;
 using static Unity.Burst.Intrinsics.X86.Sse4_1;
 using static Unity.Burst.Intrinsics.X86.Sse4_2;
+using static Unity.Burst.Intrinsics.X86.Popcnt;
 using static Unity.Burst.Intrinsics.X86.Avx;
 using static Unity.Burst.Intrinsics.X86.Avx2;
+using static Unity.Burst.Intrinsics.X86.Fma;
+using static Unity.Burst.Intrinsics.X86.F16C;
 ```
 
 Each feature level above provides a compile-time check to test if the feature
@@ -440,10 +463,12 @@ target which are also not bracketed with a feature level test, helping you to
 narrow in on what needs to be put inside a feature test.
 
 Note that when running in .NET, Mono or IL2CPP without Burst enabled, all the `IsXXXSupported` properties will return `false`.
-However, if you skip the test you can still run a reference version of all
-intrinsics in Mono, which can be helpful if you need to use the managed
+However, if you skip the test you can still run a reference version of most
+intrinsics in Mono (exceptions listed below), which can be helpful if you need to use the managed
 debugger. Please note however that the reference implementations are very slow
 and only intended for managed debugging.
+
+> Note that the FMA intrinsics that operate on doubles do not have a software fallback because of the inherit complexity in emulating fused 64-bit floating point math.
 
 Intrinsic usage is relatively straightforward and is based on the types `v128`
 and `v256`, which represent a 128-bit or 256-bit vector respectively. For example,
@@ -514,6 +539,11 @@ parameter or return types:
 > Note that passing structs by value is not supported; you need to pass them through a pointer or reference.
 The only exception is that "handle" structs are supported - these are structs that contain a 
 single field, of pointer or integer type.
+
+#### Known issues with `DllImport`
+
+- `DllImport` is not available on 32-bit or Arm platforms, with the exception that `DllImport("__Internal")` *is* supported on statically linked platforms (iOS).
+- `DllImport` is only supported for [native plugins](https://docs.unity3d.com/Manual/NativePlugins.html), not platform-dependent libraries like `kernel32.dll`.
 
 # Debugging
 
@@ -1943,7 +1973,6 @@ To keep the combinations of targets to a minimum, we make certain Burst targets 
 - The maximum target CPU is currently hardcoded per platform. For standalone builds that target desktop platforms (Windows/Linux/macOS) you can choose the supported targets via [Burst AOT Settings](#burst-aot-settings). For other platforms see the table above.
 - Building iOS player from Windows will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
 - Building Android player from Linux will not use Burst, (see [Burst AOT Requirements](#burst-aot-requirements))
-- `DllImport` is not available on 32bit platforms and on ARM platforms, (with the exception of DllImport("__Internal") on statically linked platforms (iOS)).
 - If you change the burst package version (via update for example), you need to close and restart the editor. A warning is now displayed to this effect.
 - Function pointers are not working in playmode tests before 2019.3. The feature will be backported.
 - Struct with explicit layout can generate non optimal native code

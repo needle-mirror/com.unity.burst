@@ -1,6 +1,7 @@
 #if UNITY_2019_3_OR_NEWER
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 #if BURST_UNITY_MOCK
 using System.Runtime.CompilerServices;
 #endif
@@ -21,6 +22,7 @@ namespace Unity.Burst
         private SharedStatic(void* buffer)
         {
             _buffer = buffer;
+            CheckIf_T_IsUnmanagedOrThrow(); // We will remove this once we have full support for unmanaged constraints with C# 8.0
         }
 
         /// <summary>
@@ -99,6 +101,13 @@ namespace Unity.Burst
                 (uint)UnsafeUtility.SizeOf<T>(), alignment == 0 ? (uint)4 : alignment));
         }
 #endif
+
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void CheckIf_T_IsUnmanagedOrThrow()
+        {
+            if (!UnsafeUtility.IsUnmanaged<T>())
+                throw new InvalidOperationException($"The type {typeof(T)} used in SharedStatic<{typeof(T)}> must be unmanaged (contain no managed types).");
+        }
     }
 
     internal static class SharedStatic
@@ -126,7 +135,7 @@ namespace Unity.Burst
                     {
                         var message = $"The type `{type}` has a hash conflict with `{existingType}`";
 #if !BURST_UNITY_MOCK
-                        Debug.LogError(message);
+                        UnityEngine.Debug.LogError(message);
 #endif
                         throw new InvalidOperationException(message);
                     }

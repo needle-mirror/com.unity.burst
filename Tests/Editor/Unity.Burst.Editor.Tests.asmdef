@@ -3,7 +3,8 @@
     "references": [
         "Unity.Burst",
         "Unity.Mathematics",
-        "Unity.Burst.Tests.UnitTests"
+        "Unity.Burst.Tests.UnitTests",
+        "SeparateAssembly"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"
@@ -13,9 +14,14 @@
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": []
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

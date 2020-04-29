@@ -82,6 +82,7 @@ namespace Unity.Burst
         internal const string OptionJitManagedFunctionPointer = "managed-function-pointer=";
 
         internal const string OptionJitProvider = "jit-provider=";
+        internal const string OptionJitSkipCheckDiskCache = "skip-check-disk-cache";
 
         // -------------------------------------------------------
         // Options used by the Aot compiler

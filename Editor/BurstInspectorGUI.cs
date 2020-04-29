@@ -94,6 +94,7 @@ namespace Unity.Burst.Editor
         [SerializeField] private int _assemblyKind = -1;
 
         private int _assemblyKindPrior = -1;
+        private bool _sameTargetButDifferentAssemblyKind = false;
         private Vector2 _scrollPos;
         private SearchField _searchField;
 
@@ -395,6 +396,21 @@ namespace Unity.Burst.Editor
                 {
                     targetRefresh = true;
                     _assemblyKindPrior = _assemblyKind;     // Needs to be refreshed, as we need to change disassembly options
+
+                    // If the target did not changed but our assembly kind did, we need to remember this.
+                    if (!targetChanged)
+                    {
+                        _sameTargetButDifferentAssemblyKind = true;
+                    }
+                }
+
+                // If the previous target changed the assembly kind and we have a target change, we need to
+                // refresh the assembly because we'll have cached the previous assembly kinds output rather
+                // than the one requested.
+                if (_sameTargetButDifferentAssemblyKind && targetChanged)
+                {
+                    targetRefresh = true;
+                    _sameTargetButDifferentAssemblyKind = false;
                 }
 
                 if (targetRefresh)

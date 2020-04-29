@@ -84,6 +84,21 @@ namespace Burst.Compiler.IL.Tests.Helpers
                 return;
             }
 
+            if (expected is float4x2 && result is float4x2)
+            {
+                var expectedF = (float4x2)expected;
+                var resultF = (float4x2)result;
+                Assert.True(NearEqualFloat(expectedF.c0.x, resultF.c0.x, maxUlp, out var ulp), $"Expected: {expectedF}.c0.x != Result: {resultF}.c0.x, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c0.y, resultF.c0.y, maxUlp, out ulp), $"Expected: {expectedF}.c0.y != Result: {resultF}.c0.y, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c0.z, resultF.c0.z, maxUlp, out ulp), $"Expected: {expectedF}.c0.z != Result: {resultF}.c0.z, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c0.w, resultF.c0.w, maxUlp, out ulp), $"Expected: {expectedF}.c0.w != Result: {resultF}.c0.w, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c1.x, resultF.c1.x, maxUlp, out ulp), $"Expected: {expectedF}.c1.x != Result: {resultF}.c1.x, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c1.y, resultF.c1.y, maxUlp, out ulp), $"Expected: {expectedF}.c1.y != Result: {resultF}.c1.y, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c1.z, resultF.c1.z, maxUlp, out ulp), $"Expected: {expectedF}.c1.z != Result: {resultF}.c1.z, ULPs: {ulp}");
+                Assert.True(NearEqualFloat(expectedF.c1.w, resultF.c1.w, maxUlp, out ulp), $"Expected: {expectedF}.c1.w != Result: {resultF}.c1.w, ULPs: {ulp}");
+                return;
+            }
+
             if (expected is double2 && result is double2)
             {
                 var expectedF = (double2)expected;

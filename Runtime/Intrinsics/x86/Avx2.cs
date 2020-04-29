@@ -66,7 +66,7 @@ namespace Unity.Burst.Intrinsics
             /// Copy the lower 32-bit integer in a to dst.
             /// </summary>
             [DebuggerStepThrough]
-            public static int m256_cvtsi256_si32(v256 a)
+            public static int mm256_cvtsi256_si32(v256 a)
             {
                 // Burst IR is fine here.
                 return a.SInt0;
@@ -76,7 +76,7 @@ namespace Unity.Burst.Intrinsics
             /// Copy the lower 64-bit integer in a to dst.
             /// </summary>
             [DebuggerStepThrough]
-            public static long m256_cvtsi256_si64(v256 a)
+            public static long mm256_cvtsi256_si64(v256 a)
             {
                 // Burst IR is fine here.
                 return a.SLong0;

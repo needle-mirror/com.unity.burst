@@ -1,10 +1,34 @@
 # Changelog
 
+## [1.3.0-preview.11] - 2020-04-30
+
+
+### Fixed
+- Fix potentially different hashes returned from `BurstRuntime.GetHashCode32/64` if called from different assemblies.
+- Fixed an issue where Burst was misidentifying F16C supporting CPUs as AVX2.
+- SDK level bumped for MacOS to ensure notarization requests are compatable.
+- Fixed a typo `m256_cvtsi256_si32` -> `mm256_cvtsi256_si32` and `m256_cvtsi256_si64` -> `mm256_cvtsi256_si64`.
+- The compiler is now generating a proper compiler error if a managed type used directly or indirectly with SharedStatic<T>.
+- Fixed a bug where implicitly stack allocated variables (`var foo = new Foo();`) in Burst were not being zero initialized, so any field of the variable that was not initialized during construction would have undefined values.
+- Fix potential race condition when accessing on-disk library cache
+- Fixed a bug where Burst was sometimes producing invalid code for iOS 11.0.3+.
+
+### Added
+- Added support for `System.Threading.Volatile` methods `Read` and `Write`, and for the `System.Threading.Thread.MemoryBarrier` method.
+- New FMA X86 intrinsics. These are gated on AVX2 support, as our AVX2 detection requires the AVX2, FMA, and F16C features.
+- `UnsafeUtility.MemCmp` now maps to a Burst optimal memory comparison path that uses vectorization.
+
+### Removed
+
+### Changed
+
+### Known Issues
+
 ## [1.3.0-preview.10] - 2020-04-21
 
 
 ### Fixed
-- Fix negation of integer types smaller than 32 bits
+- Fix negation of integer types smaller than 32 bits.
 - Fixed a bug where optimizer generated calls to `ldexp` would be incorrectly deduced when deterministic floating-point was enabled.
 - Swapped private linkage for internal linkage on functions, this fixes duplicate symbol issues on some targets.
 - variable scopes should now encompass the whole scope.
@@ -19,13 +43,13 @@
 - AVX2 now generates the correct AVX2 256-bit wide SLEEF functions instead of the FMA-optimized 128-bit variants.
 
 ### Added
-- Anonymous types are now named in debug information
+- Anonymous types are now named in debug information.
 - XCode/LLDB debugging of burst compiled code is now possible on macOS.
 - Added some extra documentation about how to enable `AVX`/`AVX2` in AOT builds, and how we gate some functionality on multiple instruction sets to reduce the combinations exposed underneath.
 - Optimized external functions (like `UnsafeUtility.Malloc`) such that if they are called multiple times the function-pointer address is cached.
-- Add support for string interpolation (e.g `$"This is a string with an {arg1} and {arg2}"`)
-- Add support for Debug.Log(object) (e.g `Debug.Log("Hello Log!");`)
-- Add support for string assignment to Unity.Collections.FixedString (e.g `"FixedString128 test = "Hello FixedString!"`)
+- Add support for string interpolation (e.g `$"This is a string with an {arg1} and {arg2}"`).
+- Add support for Debug.Log(object) (e.g `Debug.Log("Hello Log!");`).
+- Add support for string assignment to Unity.Collections.FixedString (e.g `"FixedString128 test = "Hello FixedString!"`).
 - If burst detects a package update, it now prompts a restart of Unity (via dialog). The restart was always required, but could be missed/forgotten.
 - Better error message for unsupported static readonly arrays.
 - Link to native debugging video to Presentations section of docs.
@@ -36,12 +60,12 @@
 ### Changed
 - iOS builds for latest xcode versions will now use LLVM version 9.
 - Burst AOT Settings now lets you specify the exact targets you want to compile for - so you could create a player with SSE2, AVX, and AVX2 (EG. _without_ SSE4 support if you choose to).
-- Improve speed of opening Burst Inspector by up to 2x
+- Improve speed of opening Burst Inspector by up to 2x.
 - Provided a better error message when structs with static readonly fields were a mix of managed/unmanaged which Burst doesn't support.
 - Tidied up the known issues section in the docs a little.
 - Enhanced disassembly option has been expanded to allow better control of what is shown, and allow a reduction in the amount of debug metadata shown.
-- Load Burst Inspector asynchronously to avoid locking-up Editor
-- Documented restrictions on argument and return types for DllImport, internal calls, and function pointers
+- Load Burst Inspector asynchronously to avoid locking-up Editor.
+- Documented restrictions on argument and return types for DllImport, internal calls, and function pointers.
 
 ### Known Issues
 
@@ -84,7 +108,7 @@
 
 ### Fixed
 - Fix an issue where a generic job instance (e.g `MyGenericJob<int>`) when used through a generic argument of a method or type would not be detected by the Burst compiler when building a standalone player.
-- [DlIimport("__Internal")] for iOS now handled correctly. Fixes crashes when using native plugins on iOS.
+- `[DlIimport("__Internal")]` for iOS now handled correctly. Fixes crashes when using native plugins on iOS.
 
 ### Removed
 
@@ -108,7 +132,7 @@
 - Embedded Portable PDB handling improved.
 - Fixed a case where our load/store optimizer would inadvertently combine a load/store into a cpblk where there were intermediate memory operations that should have been considered.
 - Fixed a bug where the no-alias analysis would, through chains of complicated pointer math, deduce that a no-alias return (like from `UnsafeUtility.Malloc`) would not alias with itself.
-- No longer log missing MonoPInvokeCallbackAttribute when running tests
+- No longer log missing MonoPInvokeCallbackAttribute when running tests.
 
 ### Known Issues
 
@@ -126,19 +150,19 @@
 
 ### Fixed
 - `MemCpy` and `MemSet` performance regression in Burst 1.3.0.preview.4 (as was spotted by [@tertle](https://forum.unity.com/members/33474/)) has been fixed.
-- Fix a crash when loading assembly with PublicKeyToken starting with a digit
-- Better handling of MonoPInvokeCallbackAttribute: no check for the namespace, don't print message on Mono builds
+- Fix a crash when loading assembly with PublicKeyToken starting with a digit.
+- Better handling of MonoPInvokeCallbackAttribute: no check for the namespace, don't print message on Mono builds.
 
 ### Changed
-- Improved error message for typeof usage
+- Improved error message for typeof usage.
 
 ## [1.3.0-preview.4] - 2020-03-02
 
 
 ### Added
-- Debug information for types
-- Debug information for local variables
-- Debug information for function parameters
+- Debug information for types.
+- Debug information for local variables.
+- Debug information for function parameters.
 - Support for `fixed` statements. These are useful when interacting with `fixed` buffers in structs, to get at the pointer data underneath.
 - A fast-math optimization for comparisons that benefits the [BurstBenchmarks](https://github.com/nxrighthere/BurstBenchmarks) that [nxrightthere](https://forum.unity.com/members/nxrighthere.568489/) has put together.
 - DOTS Runtime Jobs will now generate both `MarshalToBurst` and `MarshalFromBurst` functions when job structs in .Net builds are not blittable.
@@ -148,19 +172,19 @@
 
 ### Changed
 - Made it clear that the Burst aliasing intrinsics are tied to optimizations being enabled for a compilation.
-- Restore unwind information for all builds
-- Print a info message if compiling a function pointer with missing MonoPInvokeCallback attribute (this can lead to runtime issues on IL2CPP with Burst disabled). The message will be converted to a warning in future releases
+- Restore unwind information for all builds.
+- Print a info message if compiling a function pointer with missing MonoPInvokeCallback attribute (this can lead to runtime issues on IL2CPP with Burst disabled). The message will be converted to a warning in future releases.
 
 ### Fixed
 - Fixed an issue where DOTS Runtime generated job marshalling functiosn may throw a `FieldAccessException` when scheduling private and internal job structs.
-- Fix a bug that prevented entry point method names (and their declaring type names) from having a leading underscore
-- vector/array/pointer debug data now utilizes the correct size information
+- Fix a bug that prevented entry point method names (and their declaring type names) from having a leading underscore.
+- vector/array/pointer debug data now utilizes the correct size information.
 - DOTS Runtime will now only generate job marshaling functions on Windows, as all other platforms rely on Mono which does not require job marshalling.
 - `ldobj` / `stobj` of large structs being copied to stack-allocated variables could cause compile-time explosions that appeared to the user like the compiler had hung. Worked around these by turning them into memcpy's underneath in LLVM.
 - Don't always use latest tool chain on certain platforms.
-- Fix a crash when compiling job or function pointer that was previously cached, then unloaded, then reloaded
-- Fixed compiler error in array element access when index type is not `Int32`
-- Fix `set1_xxx` style x86 intrinsics generated compile time errors
+- Fix a crash when compiling job or function pointer that was previously cached, then unloaded, then reloaded.
+- Fixed compiler error in array element access when index type is not `Int32`.
+- Fix `set1_xxx` style x86 intrinsics generated compile time errors.
 
 ### Known Issues
 - Native debugger feature is only available on windows host platform at the moment.
@@ -170,7 +194,7 @@
 
 ### Changed
 - Changed how the inliner chooses to inline functions to give the compiler much more say over inlining decisions based on heuristics.
-- Updated AOT requirements to be clearer about cross platform support
+- Updated AOT requirements to be clearer about cross platform support.
 
 ### Added
 - 1.3.0-preview.1 added support for desktop cross compilation, but the changelog forgot to mention it.
@@ -187,7 +211,7 @@
 ## [1.3.0-preview.2] - 2020-02-10
 
 ### Fixed
-- Fix the error `Burst failed to compile the function pointer Int32 DoGetCSRTrampoline()` that could happen when loading a project using Burst with Burst disabled
+- Fix the error `Burst failed to compile the function pointer Int32 DoGetCSRTrampoline()` that could happen when loading a project using Burst with Burst disabled.
 
 ## [1.3.0-preview.1] - 2020-02-04
 
@@ -203,8 +227,8 @@
 - Add `IsCreated` to the `FunctionPointer` class to allow checks on whether a given function pointer has a valid (non null) pointer within it.
 - Add AVX2 intrinsics
 - Add some missing intrinsics from SSE, SSE2 and AVX
-- X86 intrinsics from SSE-AVX2
-- AVX and AVX2 CPU targets are now available for x64 AOT builds
+- Added explicit X86 intrinsics from SSE-AVX2.
+- AVX and AVX2 CPU targets are now available for x64 AOT builds.
 - Allow handle structs (structs with a single pointer/integer in them) to be inside another struct as long as they are the single member, as these require no ABI pain.
 - Added support for `Interlocked.Read`.
 - Added a new intrinsic `Common.umul128` which lets you get the low and high components of a 64-bit multiplication. This is especially useful for things like large hash creation.
@@ -219,8 +243,8 @@
 - Update the documentation of `CompileSynchronously` to advise against any general use of setting `CompileSynchronously = true`.
 - Take the `Unity.Burst.CompilerServices.Aliasing` intrinsics out of experimental. These intrinsics form part of our strategy to give users more insight into how the compiler understands their code, by producing compiler errors when user expectations are not met. Questions like _'Does A alias with B?'_ can now be definitively answered for developers. See the **Aliasing Checks** section of the Burst documentation for information.
 - Align disassembly instruction output in Inspector (x86/x64 only).
-- Renamed `m128` to `v128`
-- Renamed `m256` to `v256`
+- Renamed `m128` to `v128`.
+- Renamed `m256` to `v256`.
 - BurstCompile(Debug=true), now modifies the burst code generator (reducing some optimisations) in order to allow a better experience in debugging in a native debugger.
 
 ### Fixed
@@ -229,22 +253,22 @@
 - Fix some issues with Burst AOT Settings, including changing the settings to be Enable rather than Disable.
 - Fix an issue where WASM was being incorrectly shown in the disassembly view.
 - Fixed an issue where if the `Unity.Entities.StaticTypeRegistry` assembly wasn't present in a build, Burst would throw a `NullReferenceException`.
-- Fix issue with type conversion in m128/m256 table initializers
+- Fix issue with type conversion in m128/m256 table initializers.
 - Fix inspector source line information (and source debug information) from being lost depending on inlining.
-- Fix occasional poor code generation for on stack AVX2 variables
-- Fix `xor_ps` was incorrectly downcoded
-- Fix reference version of AVX2 64-bit variable shifts intrinsics
-- Fix reference version of SSE4.2 `cmpestrz`
-- Fix bitwise correctness issue with SSE4.2/AVX explicit rounding in CEIL mode for negative numbers that round to zero (was not correctly computing negative zero like the h/w)
-- Fix calls to `SHUFFLE`, `SHUFFLE_PS` and similar macro-like functions would not work in non-entrypoint functions
+- Fix occasional poor code generation for on stack AVX2 variables.
+- Fix `xor_ps` was incorrectly downcoded.
+- Fix reference version of AVX2 64-bit variable shifts intrinsics.
+- Fix reference version of SSE4.2 `cmpestrz`.
+- Fix bitwise correctness issue with SSE4.2/AVX explicit rounding in CEIL mode for negative numbers that round to zero (was not correctly computing negative zero like the h/w).
+- Fix calls to `SHUFFLE`, `SHUFFLE_PS` and similar macro-like functions would not work in non-entrypoint functions.
 - Source location information was offset by one on occasions.
-- Debug metadata is now tracked on branch/switch instructions
-- Fix poor error reporting when intrinsic immediates were not specified as literals
-- Fix basic loads and stores (using explicit calls) were not unaligned and sometimes non-temporal when they shouldn't be
+- Debug metadata is now tracked on branch/switch instructions.
+- Fix poor error reporting when intrinsic immediates were not specified as literals.
+- Fix basic loads and stores (using explicit calls) were not unaligned and sometimes non-temporal when they shouldn't be.
 - Removed the  `<>c__DisplayClass_` infix that was inserted into every `Entities.ForEach` in the Burst inspector to clean up the user experience when searching for Entities.ForEach jobs.
-- Fix background compile errors accessing X86 `MXCSR` from job threads
-- Fix possible `ExecutionEngineException` when resolving external functions
-- Fix linker output not being propagated through to the Editor console
+- Fix background compile errors accessing X86 `MXCSR` from job threads.
+- Fix possible `ExecutionEngineException` when resolving external functions.
+- Fix linker output not being propagated through to the Editor console.
 
 ### Known Issues
 

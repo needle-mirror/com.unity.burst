@@ -112,7 +112,7 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingManagedArrayNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_AccessingManagedArrayNotSupported, DiagnosticId.ERR_ManagedStaticConstructor })]
         public static int TestStaticReadonlyArrayWithNonConstantStelemIndex()
         {
             return StructQ.Value[1];
@@ -156,7 +156,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         // Right now we don't support initialization of readonly arrays outside the array constructor
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingManagedArrayNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_AccessingManagedArrayNotSupported, DiagnosticId.ERR_ManagedStaticConstructor })]
         public static int TestStaticReadonlyArrayExplicitConstruction()
         {
             int sum = 0;

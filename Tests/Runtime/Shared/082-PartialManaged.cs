@@ -85,7 +85,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0649
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static int AccessClassFromStruct()
         {
             var val = new StructWithManaged();
@@ -93,7 +93,7 @@ namespace Burst.Compiler.IL.Tests
             return val.myClassValue.value;
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static void AccessStringFromStruct()
         {
             var val = new StructWithManaged();
@@ -102,7 +102,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static void AccessObjectFromStruct()
         {
             var val = new StructWithManaged();
@@ -112,7 +112,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFieldWithManagedTypeNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static void AccessArrayFromStruct()
         {
             var val = new StructWithManaged();
@@ -120,7 +120,7 @@ namespace Burst.Compiler.IL.Tests
             p[0] = val.value;
         }
 
-        [TestCompiler]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_TypeNotSupported)]
         public static int GetValueFromStructWithClassField()
         {
             var val = new StructWithManaged();

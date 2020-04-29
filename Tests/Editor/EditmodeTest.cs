@@ -122,4 +122,40 @@ public class EditModeTest
         array.Dispose();
         Assert.AreNotEqual(0.0f, result);
     }
+
+    [BurstCompile(CompileSynchronously = true)]
+    private struct HashTestJob : IJob
+    {
+        public NativeArray<int> Hashes;
+
+        public void Execute()
+        {
+            Hashes[0] = BurstRuntime.GetHashCode32<int>();
+            Hashes[1] = TypeHashWrapper.GetIntHash();
+
+            Hashes[2] = BurstRuntime.GetHashCode32<TypeHashWrapper.SomeStruct<int>>();
+            Hashes[3] = TypeHashWrapper.GetGenericHash<int>();
+        }
+    }
+
+    [Test]
+    public static void TestTypeHash()
+    {
+        HashTestJob job = new HashTestJob
+        {
+            Hashes = new NativeArray<int>(4, Allocator.TempJob)
+        };
+        job.Schedule().Complete();
+
+        var hash0 = job.Hashes[0];
+        var hash1 = job.Hashes[1];
+
+        var hash2 = job.Hashes[2];
+        var hash3 = job.Hashes[3];
+
+        job.Hashes.Dispose();
+
+        Assert.AreEqual(hash0, hash1, "BurstRuntime.GetHashCode32<int>() has returned two different hashes");
+        Assert.AreEqual(hash2, hash3, "BurstRuntime.GetHashCode32<SomeStruct<int>>() has returned two different hashes");
+    }
 }

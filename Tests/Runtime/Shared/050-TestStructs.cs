@@ -190,7 +190,7 @@ namespace Burst.Compiler.IL.Tests
                 SignedA = -13,
                 UnsignedB = 37
             };
-            var b = pair.SignedA - ((int) pair.UnsignedA) + pair.SignedB - ((int) pair.UnsignedB);
+            var b = pair.SignedA - ((int)pair.UnsignedA) + pair.SignedB - ((int)pair.UnsignedB);
             return ((int)a) + b;
         }
 
@@ -315,9 +315,9 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
         [Ignore("This test fails on mobile platforms")]
-        #endif
+#endif
         [TestCompiler(typeof(ExplicitLayoutStructFixedBuffer.Provider))]
         public static unsafe int TestExplicitLayoutStructFixedBuffer(ref ExplicitLayoutStructFixedBuffer x)
         {
@@ -852,7 +852,7 @@ namespace Burst.Compiler.IL.Tests
             [FieldOffset(0)] public uint AsUint;
         }
 
-        [StructLayout(LayoutKind.Explicit, Size =  24)]
+        [StructLayout(LayoutKind.Explicit, Size = 24)]
         private struct PaddedStruct
         {
             [FieldOffset(8)] public int Value;
@@ -1019,9 +1019,9 @@ namespace Burst.Compiler.IL.Tests
             public uint Property;
         }
 
-        #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
         [Ignore("This test fails on mobile platforms")]
-        #endif
+#endif
         [TestCompiler(typeof(NetworkEndPoint.Provider), typeof(NetworkEndPoint.Provider), ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StructByValueNotSupported)]
         public static bool TestABITransformIntoExplicitLayoutTransform(NetworkEndPoint a, NetworkEndPoint b)
         {
@@ -1064,9 +1064,9 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
         [Ignore("This test fails on mobile platforms")]
-        #endif
+#endif
         [TestCompiler(typeof(SequentialStructWithPaddingAndVectorField.Provider))]
         public static int TestSequentialStructWithPaddingAndVectorField(ref SequentialStructWithPaddingAndVectorField value)
         {
@@ -1079,9 +1079,9 @@ namespace Burst.Compiler.IL.Tests
             value.b = value.b.yx;
         }
 
-        #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
         [Ignore("This test fails on mobile platforms")]
-        #endif
+#endif
         [TestCompiler(typeof(SequentialStructWithPaddingAndVectorField.Provider))]
         public static int TestSequentialStructWithPaddingAndVectorFieldRef(ref SequentialStructWithPaddingAndVectorField value)
         {
@@ -1119,7 +1119,7 @@ namespace Burst.Compiler.IL.Tests
         [TestCompiler]
         public static unsafe int TestVectorLoadFromExplicitStruct()
         {
-            var header = new ExplicitVectors{ };
+            var header = new ExplicitVectors { };
 
             return header.B.x;
         }
@@ -1127,7 +1127,7 @@ namespace Burst.Compiler.IL.Tests
         [TestCompiler(DataRange.Standard)]
         public static unsafe int TestVectorStoreToExplicitStruct(ref int2 a)
         {
-            var header = new ExplicitVectors{ B=a};
+            var header = new ExplicitVectors { B = a };
 
             return header.B.x;
         }
@@ -1467,8 +1467,8 @@ namespace Burst.Compiler.IL.Tests
         [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
         public static unsafe void TestGetStructThroughGeneric(ref Fixed4096 a, ref Fixed4096 b)
         {
-           var elem = GenericGetT<Fixed4096>((Fixed4096*)UnsafeUtility.AddressOf(ref a));
-           b = elem;
+            var elem = GenericGetT<Fixed4096>((Fixed4096*)UnsafeUtility.AddressOf(ref a));
+            b = elem;
         }
 
         [TestCompiler(typeof(Fixed4096.Provider), typeof(Fixed4096.Provider))]
@@ -1533,7 +1533,7 @@ namespace Burst.Compiler.IL.Tests
             public fixed int A[1];
         }
 
-        private static readonly MyCompilerGeneratedButNotReally myCompilerGeneratedButNotReally = new MyCompilerGeneratedButNotReally {};
+        private static readonly MyCompilerGeneratedButNotReally myCompilerGeneratedButNotReally = new MyCompilerGeneratedButNotReally { };
 
         [TestCompiler(typeof(ReturnBox))]
         public static unsafe int TestMyCompilerGeneratedButNotReallyStruct(MyCompilerGeneratedButNotReally* o)
@@ -1544,6 +1544,34 @@ namespace Burst.Compiler.IL.Tests
             {
                 return *a;
             }
+        }
+
+        public unsafe struct UninitFieldsAreZero
+        {
+            public fixed ushort a[3];
+            public fixed byte b[3];
+
+            public UninitFieldsAreZero(ushort x, ushort y, ushort z)
+            {
+                a[0] = x;
+                a[1] = y;
+                a[2] = z;
+            }
+        }
+
+        [TestCompiler(typeof(ReturnBox))]
+        public static unsafe void TestUninitFieldsAreZero(UninitFieldsAreZero* o)
+        {
+            o->a[0] = 42;
+            o->a[1] = 42;
+            o->a[2] = 42;
+            o->b[0] = 42;
+            o->b[1] = 42;
+            o->b[2] = 42;
+
+            var n = new UninitFieldsAreZero(13, 53, 4);
+
+            *o = n;
         }
     }
 }
