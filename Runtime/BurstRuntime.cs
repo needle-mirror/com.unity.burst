@@ -119,7 +119,13 @@ namespace Unity.Burst
 
 #if !BURST_COMPILER_SHARED
 
-#if UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+        // TODO: Temporary fix to use the function pointer approach for logging under 2020.1 until BurstCompilerService.Log is fixed
+        // UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+#if BURST_INTERNAL
+        internal static void Initialize()
+        {
+        }
+
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
             BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
@@ -171,17 +177,23 @@ namespace Unity.Burst
             LogHelper.Instance.Data = new FunctionPointer<NativeLogDelegate>(Marshal.GetFunctionPointerForDelegate(ManagedNativeLog));
         }
 
+
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         internal static void Initialize()
         {
         }
 #else
+        internal static void Initialize()
+        {
+        }
+
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
         }
 #endif // !UNITY_2020_1_OR_NEWER
 
 #endif // !BURST_COMPILER_SHARED
+
 
     }
 }

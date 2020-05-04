@@ -2,6 +2,7 @@
 #if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace Unity.Burst
         internal const string DefaultLibraryName = "lib_burst_generated";
 
         internal const string BurstInitializeName = "burst.initialize";
+
+        internal static readonly string DefaultCacheFolder = Path.Combine(Environment.CurrentDirectory, "Library", "BurstCache", "JIT");
+        internal const string DeleteCacheMarkerFileName = "DeleteCache.txt";
 
         // -------------------------------------------------------
         // Common options used by the compiler

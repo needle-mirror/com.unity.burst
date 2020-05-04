@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0-preview.12] - 2020-05-05
+
+
+### Fixed
+- Fix an issue when changing the base type of an enum that would not trigger a new compilation and would keep code previously compiled, leading to potential memory corruptions or crashes.
+- Fixed a subtle AArch64 ABI bug with struct-return's (structs that are returned via a pointer argument) that was found by our partners at Arm.
+- Fix an issue that was preventing Debug.Log to be used from a Job in Unity 2020.1
+
+### Changed
+- JIT cache is now cleared when changing Burst version
+
 ## [1.3.0-preview.11] - 2020-04-30
 
 

@@ -32,8 +32,7 @@ namespace Unity.Burst.Editor
             var seek = "com.unity.burst@";
             var first = RuntimePath.LastIndexOf(seek);
             var last = RuntimePath.LastIndexOf(".Runtime");
-            var result = "";
-            var version = "";
+            string version;
             if (first == -1 || last == -1 || last <= first)
             {
                 version = "Unknown";
@@ -43,19 +42,34 @@ namespace Unity.Burst.Editor
                 first += seek.Length;
                 last -= 1;
                 version = RuntimePath.Substring(first, last - first);
-                result = BurstCompiler.VersionNotify(version);
             }
 
-            result = BurstCompiler.VersionNotify(version);
+            var result = BurstCompiler.VersionNotify(version);
             if (result != version)
             {
                 if (IsDebugging)
                 {
                     UnityEngine.Debug.LogWarning($"[com.unity.burst] - '{result}' != '{version}'");
                 }
-                EditorUtility.DisplayDialog("Burst Package Update Detected", "The version of Burst used by your project has changed. Please restart the Editor to continue.", "OK");
-                BurstCompiler.Shutdown();
+                OnVersionChangeDetected();
             }
+        }
+
+        private static void OnVersionChangeDetected()
+        {
+            // Write marker file to tell Burst to delete the cache at next startup.
+            try
+            {
+                File.Create(Path.Combine(BurstCompilerOptions.DefaultCacheFolder, BurstCompilerOptions.DeleteCacheMarkerFileName)).Dispose();
+            }
+            catch (IOException)
+            {
+                // In the unlikely scenario that two processes are creating this marker file at the same time,
+                // and one of them fails, do nothing because the other one has hopefully succeeded.
+            }
+
+            EditorUtility.DisplayDialog("Burst Package Update Detected", "The version of Burst used by your project has changed. Please restart the Editor to continue.", "OK");
+            BurstCompiler.Shutdown();
         }
 
         static BurstLoader()
@@ -145,6 +159,9 @@ namespace Unity.Burst.Editor
 
             // Make sure that the X86 CSR function pointers are compiled
             Intrinsics.X86.CompileManagedCsrAccessors();
+
+            // Make sure BurstRuntime is initialized
+            BurstRuntime.Initialize();
         }
 
         private static void EditorApplicationOnPlayModeStateChanged(PlayModeStateChange state)

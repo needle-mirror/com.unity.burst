@@ -99,30 +99,6 @@ public class EditModeTest
     }
 #endif
 
-    [UnityTest]
-    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
-    public IEnumerator CheckBurstAsyncJob()
-    {
-        BurstCompiler.Options.EnableBurstCompileSynchronously = false;
-        BurstCompiler.Options.EnableBurstCompilation = true;
-
-        var iteration = 0;
-        var result = 0.0f;
-        var array = new NativeArray<float>(10, Allocator.Persistent);
-
-        while (result == 0.0f && iteration < MaxIterations)
-        {
-            array[0] = 0.0f;
-            var job = new BurstJobTester2.MyJobAsync { Result = array };
-            job.Schedule().Complete();
-            result = job.Result[0];
-            iteration++;
-            yield return null;
-        }
-        array.Dispose();
-        Assert.AreNotEqual(0.0f, result);
-    }
-
     [BurstCompile(CompileSynchronously = true)]
     private struct HashTestJob : IJob
     {
@@ -157,5 +133,27 @@ public class EditModeTest
 
         Assert.AreEqual(hash0, hash1, "BurstRuntime.GetHashCode32<int>() has returned two different hashes");
         Assert.AreEqual(hash2, hash3, "BurstRuntime.GetHashCode32<SomeStruct<int>>() has returned two different hashes");
+    }
+
+
+    [BurstCompile(CompileSynchronously = true)]
+    private struct DebugLogJob : IJob
+    {
+        public int Value;
+
+        public void Execute()
+        {
+            Debug.Log($"This is a string logged from a job with burst with the following {Value}");
+        }
+    }
+
+    [Test]
+    public static void TestDebugLog()
+    {
+        var job = new DebugLogJob
+        {
+            Value = 256
+        };
+        job.Schedule().Complete();
     }
 }
