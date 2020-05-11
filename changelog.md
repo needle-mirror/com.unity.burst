@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0-preview.13] - 2020-05-12
+
+
+### Fixed
+- Fixed incorrect struct layout for certain configurations of explicit-layout structs with overlapping fields
+- Fixed a bug where the `mm256_cvtepi32_ps` intrinsic would crash the compiler.
+
 ## [1.3.0-preview.12] - 2020-05-05
 
 

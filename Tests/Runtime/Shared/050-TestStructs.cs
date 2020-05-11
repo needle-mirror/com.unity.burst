@@ -1573,5 +1573,31 @@ namespace Burst.Compiler.IL.Tests
 
             *o = n;
         }
+
+#pragma warning disable 0649
+        private struct ExplicitSizesMatchB
+        {
+            public uint U;
+        }
+        private struct ExplicitSizesMatchC
+        {
+            public ulong L;
+            public uint U;
+            public ushort S;
+            public byte B;
+        }
+        [StructLayout(LayoutKind.Explicit)]
+        private struct ExplicitSizesMatch
+        {
+            [FieldOffset(0)] public int A;
+            [FieldOffset(4)] public ExplicitSizesMatchB B;
+            [FieldOffset(4)] public ExplicitSizesMatchC C;
+        }
+#pragma warning restore 0649
+        [TestCompiler]
+        public static unsafe int TestExplicitSizesMatch()
+        {
+            return sizeof(ExplicitSizesMatch);
+        }
     }
 }
