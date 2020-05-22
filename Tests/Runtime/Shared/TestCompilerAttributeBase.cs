@@ -270,6 +270,8 @@ namespace Burst.Compiler.IL.Tests
 
         private static readonly int MaxReturnBoxSize = 512;
 
+        protected bool RunManagedBeforeNative { get; set; }
+
         private unsafe TestResult ExecuteMethod(ExecutionContext context)
         {
             byte* returnBox = stackalloc byte[MaxReturnBoxSize];
@@ -351,21 +353,31 @@ namespace Burst.Compiler.IL.Tests
             }
             else
             {
+                object resultNative = null;
+
                 // We are forced to run native before managed, because on IL2CPP, if a parameter
                 // is a ref, it will keep the same memory location for both managed and burst
                 // while in .NET CLR we have a different behavior
                 // The result is that on functions expecting the same input value through the ref
                 // it won't be anymore true because the managed could have modified the value before
                 // burst
-                var resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
 
-                if (returnBoxType != null)
+                // ------------------------------------------------------------------
+                // Run Native (Before)
+                // ------------------------------------------------------------------
+                if (!RunManagedBeforeNative)
                 {
-                    resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                    resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
+                    if (returnBoxType != null)
+                    {
+                        resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                    }
                 }
 
+                // ------------------------------------------------------------------
+                // Run Managed
+                // ------------------------------------------------------------------
                 object resultClr;
-
                 // This option skips running the managed version completely
                 var overrideManagedResult = _originalMethod.Properties.Get("OverrideManagedResult");
                 if (overrideManagedResult != null)
@@ -390,6 +402,18 @@ namespace Burst.Compiler.IL.Tests
                     resultClr = overrideResultOnMono;
                 }
 
+                // ------------------------------------------------------------------
+                // Run Native (After)
+                // ------------------------------------------------------------------
+                if (RunManagedBeforeNative)
+                {
+                    resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
+                    if (returnBoxType != null)
+                    {
+                        resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                    }
+                }
+                
                 // Use our own version (for handling correctly float precision)
                 AssertHelper.AreEqual(resultClr, resultNative, GetULP());
 

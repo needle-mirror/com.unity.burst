@@ -35,7 +35,10 @@ namespace Burst.Compiler.IL.Tests
 
             public unsafe ref int GetValuePtr()
             {
-                return ref *(int*)UnsafeUtility.AddressOf(ref this);
+                fixed (void* ptr = &this)
+                {
+                    return ref *(int*) ptr;
+                }
             }
         }
 #endif

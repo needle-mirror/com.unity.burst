@@ -107,6 +107,11 @@ namespace Unity.Burst
 
             void* function;
 
+#if BURST_INTERNAL
+            // Internally in Burst tests, we callback the C# method instead
+            function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+#else
+
 #if UNITY_EDITOR
             string defaultOptions;
 
@@ -162,7 +167,7 @@ namespace Unity.Burst
             {
                 throw new InvalidOperationException($"Burst cannot compile the function pointer `{delegateMethod.Method}` because the `[BurstCompile]` attribute is missing");
             }
-
+#endif
             // Should not happen but in that case, we are still trying to generated an error
             // It can be null if we are trying to compile a function in a standalone player
             // and the function was not compiled. In that case, we need to output an error

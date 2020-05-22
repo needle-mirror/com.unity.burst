@@ -317,7 +317,7 @@ namespace Burst.Compiler.IL.Tests
         public static unsafe void CheckAliasingWithSelf()
         {
             var s = new AliasingWithSelf { ptr = null };
-            s.ptr = (AliasingWithSelf*)UnsafeUtility.AddressOf(ref s);
+            s.ptr = (AliasingWithSelf*) &s;
             s.CheckAlias();
         }
 
@@ -336,7 +336,7 @@ namespace Burst.Compiler.IL.Tests
         public static unsafe void CheckAliasingWithHiddenSelf()
         {
             var s = new AliasingWithHiddenSelf { ptr = null };
-            s.ptr = UnsafeUtility.AddressOf(ref s);
+            s.ptr = &s;
             s.CheckAlias();
         }
 

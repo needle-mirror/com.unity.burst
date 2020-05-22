@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2020-05-23
+
+
+### Changed
+- Bump package version to 1.3.0 stable release.
+
 ## [1.3.0-preview.13] - 2020-05-12
 
 
