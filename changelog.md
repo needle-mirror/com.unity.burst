@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.1] - 2020-06-05
+
+
+### Fixed
+- Burst compilation is no longer cancelled when exiting play mode.
+- Filter symbol warnings to prevent them reaching logs.
+- Fixed handling of conversion from signed integer to pointer which caused issues as discovered by Zuntatos on the forums.
+- Fix an issue where a function/job could run without being initialized.
+- Fixed a bug with constant expressions that could cause a compile-time hang.
+
+### Added
+
+### Removed
+
+### Changed
+- To avoid users falling into the consistent trap of having `Safety Checks` set to `Off`, any reload of the Editor will issue a warning telling the user that `Safety Checks` have been reset to `On`.
+- The command line option --burst-disable-compilation is now disabling entirely Burst, including the AppDomain.
+
+### Known Issues
+
 ## [1.3.0] - 2020-05-23
 
 

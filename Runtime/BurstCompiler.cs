@@ -115,6 +115,14 @@ namespace Unity.Burst
 #if UNITY_EDITOR
             string defaultOptions;
 
+            // In case Burst is disabled entirely from the command line
+            if (BurstCompilerOptions.ForceDisableBurstCompilation)
+            {
+                GCHandle.Alloc(delegateMethod);
+                function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                return function;
+            }
+
             if (isFunctionPointer)
             {
                 defaultOptions = "--" + BurstCompilerOptions.OptionJitIsForFunctionPointer + "\n";

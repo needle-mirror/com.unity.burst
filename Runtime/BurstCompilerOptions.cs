@@ -133,7 +133,7 @@ namespace Unity.Burst
 
 #if !BURST_COMPILER_SHARED
         // These fields are only setup at startup
-        private static readonly bool ForceDisableBurstCompilation;
+        internal static readonly bool ForceDisableBurstCompilation;
         private static readonly bool ForceBurstCompilationSynchronously;
 
 #if UNITY_EDITOR

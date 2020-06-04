@@ -1,6 +1,7 @@
 using System;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
+using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -1444,5 +1445,18 @@ namespace Burst.Compiler.IL.Tests
 
         [TestCompiler((long)0)]
         public static int LdelemInt64(long index) => MyArray[index];
+
+        [TestCompiler(1.0f)]
+        public static float FSubByDenormBecomesFAdd(float x)
+        {
+            return x - 1.40129846432481707092e-45f;
+        }
+
+        [TestCompiler(1.0f)]
+        public static float FSubByDenormBecomesFAddWithVec(float x)
+        {
+            var r = x - new float2(1.40129846432481707092e-45f, -1.40129846432481707092e-45f);
+            return r.x * r.y;
+        }
     }
 }

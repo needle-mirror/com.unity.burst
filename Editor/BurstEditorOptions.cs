@@ -66,6 +66,14 @@ namespace Unity.Burst.Editor
                 global.EnableBurstTimings = EditorPrefs.GetBool(EnableBurstTimingsText, false);
                 global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
 
+                // We do not save Safety Checks = Off because that is dangerous behaviour and the user must re-request it.
+                if (!global.EnableBurstSafetyChecks)
+                {
+                    UnityEngine.Debug.LogWarning("Burst - Safety Checks were set to 'Off', and were reset to 'On' during Editor launch. Disabling Safety Checks is dangerous and advised against when developing with Burst");
+                    global.EnableBurstSafetyChecks = true;
+                    EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+                }
+
                 global.OptionsChanged += GlobalOnOptionsChanged;
                 _isSynchronized = true;
             }

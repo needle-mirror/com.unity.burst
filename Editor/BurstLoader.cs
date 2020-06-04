@@ -74,6 +74,12 @@ namespace Unity.Burst.Editor
 
         static BurstLoader()
         {
+            if (BurstCompilerOptions.ForceDisableBurstCompilation)
+            {
+                UnityEngine.Debug.LogWarning("[com.unity.burst] Burst is disabled entirely from the command line");
+                return;
+            }
+
             // This can be setup to get more diagnostics
             var debuggingStr = Environment.GetEnvironmentVariable("UNITY_BURST_DEBUG");
             IsDebugging = debuggingStr != null;
@@ -169,17 +175,6 @@ namespace Unity.Burst.Editor
             if (DebuggingLevel > 2)
             {
                 UnityEngine.Debug.Log($"Burst - Change of Editor State: {state}");
-            }
-
-            if (state == PlayModeStateChange.ExitingPlayMode)
-            {
-                if (DebuggingLevel > 2)
-                {
-                    UnityEngine.Debug.Log("Burst - Exiting PlayMode - cancelling any pending jobs");
-                }
-
-                // Cancel also on exit PlayMode
-                BurstCompiler.Cancel();
             }
         }
 
