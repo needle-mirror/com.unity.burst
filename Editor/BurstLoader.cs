@@ -45,7 +45,8 @@ namespace Unity.Burst.Editor
             }
 
             var result = BurstCompiler.VersionNotify(version);
-            if (result != version)
+            // result will be empty if we are shutting down, and thus we shouldn't popup a dialog
+            if (!String.IsNullOrEmpty(result) && result != version)
             {
                 if (IsDebugging)
                 {

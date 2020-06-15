@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using NUnit.Framework;
 using UnityEngine;
 using Unity.Jobs.LowLevel.Unsafe;
@@ -8,6 +9,8 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using System.Threading;
+using UnityEditor;
+using Debug = UnityEngine.Debug;
 
 [TestFixture]
 public class EditModeTest
@@ -135,6 +138,70 @@ public class EditModeTest
         Assert.AreEqual(hash2, hash3, "BurstRuntime.GetHashCode32<SomeStruct<int>>() has returned two different hashes");
     }
 
+#if UNITY_2019_3_OR_NEWER
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksWithDomainReload()
+    {
+        {
+            var job = new SafetyCheckJobWithDomainReload();
+            {
+                // Run with safety-checks true
+                BurstCompiler.Options.EnableBurstSafetyChecks = true;
+                job.Result = new NativeArray<int>(1, Allocator.TempJob);
+                try
+                {
+                    var handle = job.Schedule();
+                    handle.Complete();
+                    Assert.AreEqual(2, job.Result[0]);
+                }
+                finally
+                {
+                    job.Result.Dispose();
+                }
+            }
+
+            {
+                // Run with safety-checks false
+                BurstCompiler.Options.EnableBurstSafetyChecks = false;
+                job.Result = new NativeArray<int>(1, Allocator.TempJob);
+                bool hasException = false;
+                try
+                {
+                    var handle = job.Schedule();
+                    handle.Complete();
+                    Assert.AreEqual(1, job.Result[0]);
+                }
+                catch
+                {
+                    hasException = true;
+                    throw;
+                }
+                finally
+                {
+                    job.Result.Dispose();
+                    if (hasException)
+                    {
+                        BurstCompiler.Options.EnableBurstSafetyChecks = true;
+                    }
+                }
+            }
+        }
+
+        // Ask for domain reload
+        EditorUtility.RequestScriptReload();
+
+        // Wait for the domain reload to be completed
+        yield return new WaitForDomainReload();
+
+        {
+            // The safety checks should have been disabled by the previous code
+            Assert.False(BurstCompiler.Options.EnableBurstSafetyChecks);
+            // Restore safety checks
+            BurstCompiler.Options.EnableBurstSafetyChecks = true;
+        }
+    }
+#endif
 
     [BurstCompile(CompileSynchronously = true)]
     private struct DebugLogJob : IJob
@@ -155,5 +222,24 @@ public class EditModeTest
             Value = 256
         };
         job.Schedule().Complete();
+    }
+
+
+    [BurstCompile(CompileSynchronously = true)]
+    private struct SafetyCheckJobWithDomainReload : IJob
+    {
+        public NativeArray<int> Result;
+
+        public void Execute()
+        {
+            Result[0] = 1;
+            SetResultWithSafetyChecksOnly();
+        }
+
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private void SetResultWithSafetyChecksOnly()
+        {
+            Result[0] = 2;
+        }
     }
 }

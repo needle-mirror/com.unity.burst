@@ -7,7 +7,10 @@ namespace Unity.Burst.Editor
     /// </summary>
     internal static class BurstEditorOptions
     {
+        // Properties stored in SessionState (survive between domain reloads, but stays alive only during the life of the editor)
         private const string EnableBurstSafetyChecksText = "BurstSafetyChecks";
+
+        // Properties stored in EditorPrefs (survive between editor restart)
         private const string EnableBurstCompilationText = "BurstCompilation";
         private const string EnableBurstTimingsText = "BurstShowTimings";
         private const string EnableBurstCompileSynchronouslyText = "BurstCompileSynchronously";
@@ -61,19 +64,13 @@ namespace Unity.Burst.Editor
             {
                 // setup the synchronization
                 global.EnableBurstCompilation = EditorPrefs.GetBool(EnableBurstCompilationText, true);
-                global.EnableBurstSafetyChecks = EditorPrefs.GetBool(EnableBurstSafetyChecksText, true);
                 global.EnableBurstCompileSynchronously = EditorPrefs.GetBool(EnableBurstCompileSynchronouslyText, false);
                 global.EnableBurstTimings = EditorPrefs.GetBool(EnableBurstTimingsText, false);
                 global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
 
-                // We do not save Safety Checks = Off because that is dangerous behaviour and the user must re-request it.
-                if (!global.EnableBurstSafetyChecks)
-                {
-                    UnityEngine.Debug.LogWarning("Burst - Safety Checks were set to 'Off', and were reset to 'On' during Editor launch. Disabling Safety Checks is dangerous and advised against when developing with Burst");
-                    global.EnableBurstSafetyChecks = true;
-                    EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
-                }
-
+                // Session only properties
+                global.EnableBurstSafetyChecks = SessionState.GetBool(EnableBurstSafetyChecksText, true);
+                
                 global.OptionsChanged += GlobalOnOptionsChanged;
                 _isSynchronized = true;
             }
@@ -86,10 +83,12 @@ namespace Unity.Burst.Editor
             var global = BurstCompiler.Options;
             // We are not optimizing anything here, so whenever one option is set, we reset all of them
             EditorPrefs.SetBool(EnableBurstCompilationText, global.EnableBurstCompilation);
-            EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
             EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, global.EnableBurstCompileSynchronously);
             EditorPrefs.SetBool(EnableBurstTimingsText, global.EnableBurstTimings);
             EditorPrefs.SetBool(EnableBurstDebugText, global.EnableBurstDebug);
+
+            // Session only properties
+            SessionState.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
         }
     }
 }

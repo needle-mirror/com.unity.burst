@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.2] - 2020-06-16
+
+
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+- Burst package has been upgraded popup could fire erroneously under shutdown conditions.
+- Debug information for anonymous structs could be created partially multiple times for the same type.
+- IntPtr.Size now correctly returns int32 size (rather than UInt64) - fixes an assert.
+- Fix safety checks in editor to not log a warning. Safety checks are now restored to true when restarting the editor and are no longer stored as an editor preference.
+
+### Known Issues
+
 ## [1.3.1] - 2020-06-05
 
 

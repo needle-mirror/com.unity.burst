@@ -72,7 +72,7 @@ The Burst package adds a few menu entries to the Jobs menu for controlling Burst
 ![Burst menu entries](images/burst-menu.png)
 
 - **Enable Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
-- **Enable Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked.
+- **Enable Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked. Safety checks are always restored to `on` when restarting the editor.
 - **Synchronous Compilation**: When checked, Burst will compile synchronously - See [`[BurstCompile]` options](#synchronous-compilation). Default is unchecked.
 - **Native Debug Mode Compilation**: When checked, Burst will disable optimizations on all code compiled, in order to make it easier to debug via a native debugger - See [Native Debugging](#native-debugging). Default is unchecked.
 - **Show Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.

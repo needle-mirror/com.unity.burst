@@ -186,6 +186,13 @@ namespace Burst.Compiler.IL.Tests
             return IntPtr.Size;
         }
 
+        // asserted in IntPtrProcessor
+        [TestCompiler]
+        public static bool IntPtrSizeCompared()
+        {
+            return IntPtr.Size == 4;
+        }
+
         [TestCompiler]
         public static IntPtr IntPtrZero()
         {
