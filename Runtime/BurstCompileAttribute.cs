@@ -99,6 +99,16 @@ namespace Unity.Burst
         /// </value>
         public bool Debug { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether to disable safety checks for the current job or function pointer.
+        /// If this is set to <c>true</c>, the current job or function pointer will be compiled
+        /// with safety checks disabled unless the global 'Safety Checks/Force On' option is active.
+        /// </summary>
+        /// <value>
+        /// The default is <c>false</c>.
+        /// </value>
+        public bool DisableSafetyChecks { get; set; }
+
         internal string[] Options { get; set; }
 
         /// <summary>
@@ -135,6 +145,11 @@ namespace Unity.Burst
         {
             FloatMode = floatMode;
             FloatPrecision = floatPrecision;
+        }
+
+        internal BurstCompileAttribute(string[] options)
+        {
+            Options = options;
         }
     }
 }

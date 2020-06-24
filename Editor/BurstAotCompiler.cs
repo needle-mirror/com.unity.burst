@@ -152,6 +152,7 @@ extern ""C""
         private const string TempStaging = @"Temp/StagingArea/";
         private const string TempStagingManaged = TempStaging + @"Data/Managed/";
         private const string LibraryPlayerScriptAssemblies = "Library/PlayerScriptAssemblies";
+        private const string TempManagedSymbols = @"Temp/ManagedSymbols/";
 
         int IOrderedCallback.callbackOrder => 0;
 
@@ -341,7 +342,7 @@ extern ""C""
                     options.Add(GetOption(OptionTarget, cpu));
                 }
 
-                if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.Switch)
+                if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.tvOS || targetPlatform == TargetPlatform.Switch)
                 {
                     options.Add(GetOption(OptionStaticLinkage));
                 }
@@ -388,6 +389,9 @@ extern ""C""
                         // ignored
                     }
                 }
+
+                // Allow burst to find managed symbols in the backup location in case the symbols are stripped in the build location
+                options.Add(GetOption(OptionAotPdbSearchPaths, TempManagedSymbols));
 
                 // Write current options to the response file
                 var responseFile = Path.GetTempFileName();
@@ -454,11 +458,11 @@ extern ""C""
                 combinations.Add(new BurstOutputCombination("UnityPlayer.app/Contents/Plugins", targetCpus));
 #endif
             }
-            else if (targetPlatform == TargetPlatform.iOS)
+            else if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.tvOS)
             {
                 if (Application.platform != RuntimePlatform.OSXEditor)
                 {
-                    Debug.LogWarning("Burst Cross Compilation to iOS for standalone player, is only supported on OSX Editor at this time, burst is disabled for this build.");
+                    Debug.LogWarning("Burst Cross Compilation to iOS/tvOS for standalone player, is only supported on OSX Editor at this time, burst is disabled for this build.");
                 }
                 else
                 {
@@ -694,6 +698,9 @@ extern ""C""
                 case BuildTarget.iOS:
                     targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.iOS;
+                case BuildTarget.tvOS:
+                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                    return TargetPlatform.tvOS;
                 case BuildTarget.Lumin:
                     targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Lumin;
@@ -979,6 +986,17 @@ extern ""C""
                 if (target == BuildTarget.iOS)
                 {
                     var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.iOS);
+
+                    // Early exit if burst is not activated
+                    if (!aotSettingsForTarget.EnableBurstCompilation)
+                    {
+                        return;
+                    }
+                    PostAddStaticLibraries(path);
+                }
+                if (target == BuildTarget.tvOS)
+                {
+                    var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.tvOS);
 
                     // Early exit if burst is not activated
                     if (!aotSettingsForTarget.EnableBurstCompilation)

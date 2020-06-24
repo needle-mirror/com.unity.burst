@@ -35,7 +35,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         //[TestCompiler(ExpectCompilerException = true)]
-        [TestCompiler()] // Because MarshalAs is used in mathematics we cannot disable it for now
+        [TestCompiler] // Because MarshalAs is used in mathematics we cannot disable it for now
         public static void TestStructWithMarshalAs()
         {
 #pragma warning disable 0219

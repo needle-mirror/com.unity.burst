@@ -38,6 +38,9 @@ namespace Unity.Burst
         internal static readonly string DefaultCacheFolder = Path.Combine(Environment.CurrentDirectory, "Library", "BurstCache", "JIT");
         internal const string DeleteCacheMarkerFileName = "DeleteCache.txt";
 
+        internal const string OptionDoNotEagerCompile = "do-not-eager-compile";
+        internal const string DoNotEagerCompile = "--" + OptionDoNotEagerCompile;
+
         // -------------------------------------------------------
         // Common options used by the compiler
         // -------------------------------------------------------
@@ -77,6 +80,7 @@ namespace Unity.Burst
         internal const string OptionJitDisableAssemblyCaching = "disable-assembly-caching";
         internal const string OptionJitEnableAssemblyCachingLogs = "enable-assembly-caching-logs";
         internal const string OptionJitEnableSynchronousCompilation = "enable-synchronous-compilation";
+        internal const string OptionJitCompilationPriority = "compilation-priority=";
 
         // TODO: Remove this option and use proper dump flags or revisit how we log timings
         internal const string OptionJitLogTimings = "log-timings";
@@ -87,6 +91,7 @@ namespace Unity.Burst
 
         internal const string OptionJitProvider = "jit-provider=";
         internal const string OptionJitSkipCheckDiskCache = "skip-check-disk-cache";
+        internal const string OptionJitSkipBurstInitialize = "skip-burst-initialize";
 
         // -------------------------------------------------------
         // Options used by the Aot compiler
@@ -124,10 +129,14 @@ namespace Unity.Burst
         internal const string CompilerCommandEnableCompiler = "$enable_compiler";
         internal const string CompilerCommandDisableCompiler = "$disable_compiler";
         internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
+        internal const string CompilerCommandEagerCompileMethod = "$eager_compile_method";
+        internal const string CompilerCommandWaitUntilCompilationFinished = "$wait_until_compilation_finished";
         internal const string CompilerCommandReset = "$reset";
         internal const string CompilerCommandDomainReload = "$domain_reload";
         internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";
         internal const string CompilerCommandVersionNotification = "$version";
+        internal const string CompilerCommandSetProgressCallback = "$set_progress_callback";
+        internal const string CompilerCommandRequestClearJitCache = "$request_clear_jit_cache";
 
         // All the following content is exposed to the public interface
 
@@ -137,7 +146,7 @@ namespace Unity.Burst
         private static readonly bool ForceBurstCompilationSynchronously;
 
 #if UNITY_EDITOR
-        private readonly bool _isConstructing;
+        internal bool IsInitializing;
 #endif
 
         private bool _enableBurstCompilation;
@@ -145,6 +154,7 @@ namespace Unity.Burst
         private bool _enableBurstSafetyChecks;
         private bool _enableBurstTimings;
         private bool _enableBurstDebug;
+        private bool _forceEnableBurstSafetyChecks;
 
         private BurstCompilerOptions() : this(false)
         {
@@ -153,7 +163,7 @@ namespace Unity.Burst
         internal BurstCompilerOptions(bool isGlobal)
         {
 #if UNITY_EDITOR
-            _isConstructing = true;
+            IsInitializing = true;
 #endif
 
             try
@@ -166,7 +176,7 @@ namespace Unity.Burst
             finally
             {
 #if UNITY_EDITOR
-                _isConstructing = false;
+                IsInitializing = false;
 #endif
             }
         }
@@ -200,7 +210,7 @@ namespace Unity.Burst
 #if UNITY_EDITOR && !UNITY_2019_3_OR_NEWER // Enabling Burst while in PlayMode is only supported in 2019.3+
                 // Prevent Burst compilation being enabled while in PlayMode, because
                 // we can't currently support this for jobs.
-                if (!_isConstructing && IsGlobal && changed && value && UnityEngine.Application.isPlaying)
+                if (!IsInitializing && IsGlobal && changed && value && UnityEngine.Application.isPlaying)
                 {
                     throw new InvalidOperationException("Burst compilation can't be switched on while in PlayMode");
                 }
@@ -211,12 +221,13 @@ namespace Unity.Burst
                 // Modify only JobsUtility.JobCompilerEnabled when modifying global settings
                 if (IsGlobal)
                 {
+#if !BURST_INTERNAL
                     // We need also to disable jobs as functions are being cached by the job system
                     // and when we ask for disabling burst, we are also asking the job system
                     // to no longer use the cached functions
                     JobsUtility.JobCompilerEnabled = value;
-
-                    if (changed)
+#if UNITY_EDITOR
+                    if (!IsInitializing && changed)
                     {
                         // Send the command to the compiler service
                         if (value)
@@ -229,6 +240,11 @@ namespace Unity.Burst
                             BurstCompiler.Disable();
                         }
                     }
+#endif
+#endif
+
+                    // Store the option directly into BurstCompiler.IsEnabled
+                    BurstCompiler._IsEnabled = value;
                 }
 
                 if (changed)
@@ -268,6 +284,29 @@ namespace Unity.Burst
             {
                 bool changed = _enableBurstSafetyChecks != value;
                 _enableBurstSafetyChecks = value;
+                if (changed)
+                {
+                    OnOptionsChanged();
+                    MaybeTriggerRecompilation();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a boolean to force enable safety checks, irrespective of what
+        /// <c>EnableBurstSafetyChecks</c> is set to, or whether the job or function
+        /// has <c>DisableSafetyChecks</c> set.
+        /// </summary>
+        /// <remarks>
+        /// This is only available at Editor time. Does not have an impact on player mode.
+        /// </remarks>
+        public bool ForceEnableBurstSafetyChecks
+        {
+            get => _forceEnableBurstSafetyChecks;
+            set
+            {
+                bool changed = _forceEnableBurstSafetyChecks != value;
+                _forceEnableBurstSafetyChecks = value;
                 if (changed)
                 {
                     OnOptionsChanged();
@@ -340,12 +379,13 @@ namespace Unity.Burst
                 EnableBurstCompileSynchronously = EnableBurstCompileSynchronously,
                 EnableBurstSafetyChecks = EnableBurstSafetyChecks,
                 EnableBurstTimings = EnableBurstTimings,
-                EnableBurstDebug = EnableBurstDebug
+                EnableBurstDebug = EnableBurstDebug,
+                ForceEnableBurstSafetyChecks = ForceEnableBurstSafetyChecks,
             };
             return clone;
         }
 
-        private static bool TryGetAttribute(MemberInfo member, out BurstCompileAttribute attribute)
+        private static bool TryGetAttribute(MemberInfo member, out BurstCompileAttribute attribute, bool isForEagerCompilation = false)
         {
             attribute = null;
             // We don't fail if member == null as this method is being called by native code and doesn't expect to crash
@@ -356,7 +396,18 @@ namespace Unity.Burst
 
             // Fetch options from attribute
             attribute = GetBurstCompileAttribute(member);
-            return attribute != null;
+            if (attribute == null)
+            {
+                return false;
+            }
+
+            // If we're compiling for eager compilation, and this method has requested not to be eager-compiled... don't compile it.
+            if (isForEagerCompilation && (attribute.Options?.Contains(DoNotEagerCompile) ?? false))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static BurstCompileAttribute GetBurstCompileAttribute(MemberInfo memberInfo)
@@ -369,9 +420,26 @@ namespace Unity.Burst
 
             foreach (var a in memberInfo.GetCustomAttributes())
             {
-                if (a.GetType().FullName == "Burst.Compiler.IL.Tests.TestCompilerAttribute")
+                var attributeType = a.GetType();
+                if (attributeType.FullName == "Burst.Compiler.IL.Tests.TestCompilerAttribute")
                 {
-                    return new BurstCompileAttribute(FloatPrecision.Standard, FloatMode.Default) { CompileSynchronously = true };
+                    var options = new List<string>();
+
+                    // Don't eager-compile tests that we expect to fail compilation.
+                    var expectCompilerExceptionProperty = attributeType.GetProperty("ExpectCompilerException");
+                    var expectCompilerException = (expectCompilerExceptionProperty != null)
+                        ? (bool)expectCompilerExceptionProperty.GetValue(a)
+                        : false;
+                    if (expectCompilerException)
+                    {
+                        options.Add(DoNotEagerCompile);
+                    }
+
+                    return new BurstCompileAttribute(FloatPrecision.Standard, FloatMode.Default)
+                    {
+                        CompileSynchronously = true,
+                        Options = options.ToArray(),
+                    };
                 }
             }
 
@@ -389,29 +457,46 @@ namespace Unity.Burst
         /// Gets the options for the specified member. Returns <c>false</c> if the `[BurstCompile]` attribute was not found
         /// </summary>
         /// <returns><c>false</c> if the `[BurstCompile]` attribute was not found; otherwise <c>true</c></returns>
-        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut)
+        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, bool isForEagerCompilation = false)
         {
             flagsOut = null;
             BurstCompileAttribute attr;
-            if (!TryGetAttribute(member, out attr))
+            if (!TryGetAttribute(member, out attr, isForEagerCompilation))
             {
                 return false;
             }
 
-            flagsOut = GetOptions(isJit, attr);
+            flagsOut = GetOptions(isJit, attr, isForEagerCompilation);
             return true;
         }
 
-        internal string GetOptions(bool isJit, BurstCompileAttribute attr = null)
+        internal string GetOptions(bool isJit, BurstCompileAttribute attr = null, bool isForEagerCompilation = false)
         {
             // Add debug to Jit options instead of passing it here
             // attr.Debug
 
             var flagsBuilderOut = new StringBuilder();
 
-            if (isJit && ((attr?.CompileSynchronously ?? false) || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
+            if (isJit && !isForEagerCompilation && ((attr?.CompileSynchronously ?? false) || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
             {
                 AddOption(flagsBuilderOut, GetOption(OptionJitEnableSynchronousCompilation));
+            }
+
+            var shouldEnableSafetyChecks = EnableBurstSafetyChecks;
+            
+            // Eager compilation must always be asynchronous, but for synchronous jobs, we set the compilation priority to HighPriority.
+            // This has two effects:
+            // - These synchronous jobs will be compiled ahead of asynchronous jobs.
+            // - We will block on these compilations when entering PlayMode.
+            if (isJit && isForEagerCompilation && (attr?.CompileSynchronously ?? false))
+            {
+                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, CompilationPriority.HighPriority));
+            }
+
+            if (isJit && isForEagerCompilation)
+            {
+                // Don't call `burst.initialize` when we're eager-compiling.
+                AddOption(flagsBuilderOut, GetOption(OptionJitSkipBurstInitialize));
             }
 
             if (attr != null)
@@ -426,6 +511,12 @@ namespace Unity.Burst
                     AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
                 }
 
+                // [BurstCompile(DisableSafetyChecks = true)] takes precedence over EnableBurstSafetyChecks
+                if (attr.DisableSafetyChecks)
+                {
+                    shouldEnableSafetyChecks = false;
+                }
+
                 if (attr.Options != null)
                 {
                     foreach (var option in attr.Options)
@@ -438,8 +529,14 @@ namespace Unity.Burst
                 }
             }
 
+            // ForceEnableBurstSafetyChecks takes precedence over any other setting.
+            if (ForceEnableBurstSafetyChecks)
+            {
+                shouldEnableSafetyChecks = true;
+            }
+
             // Fetch options from attribute
-            if (EnableBurstSafetyChecks)
+            if (shouldEnableSafetyChecks)
             {
                 AddOption(flagsBuilderOut, GetOption(OptionSafetyChecks));
             }
@@ -482,7 +579,7 @@ namespace Unity.Burst
         private void MaybeTriggerRecompilation()
         {
 #if UNITY_EDITOR
-            if (IsGlobal && IsEnabled && !_isConstructing)
+            if (IsGlobal && IsEnabled && !IsInitializing)
             {
                 BurstCompiler.TriggerRecompilation();
             }
@@ -510,11 +607,11 @@ namespace Unity.Burst
         }
 #endif
 #endif // !BURST_COMPILER_SHARED
-    }
+                }
 
 #if UNITY_EDITOR
-    // NOTE: This must be synchronized with Backend.TargetPlatform
-    internal enum TargetPlatform
+                // NOTE: This must be synchronized with Backend.TargetPlatform
+        internal enum TargetPlatform
     {
         Windows = 0,
         macOS = 1,
@@ -528,6 +625,7 @@ namespace Unity.Burst
         Lumin = 9,
         Switch = 10,
         Stadia = 11,
+        tvOS = 12,
     }
 
     // NOTE: This must be synchronized with Backend.TargetCpu
@@ -612,6 +710,26 @@ namespace Unity.Burst
         /// Dumps all normal output.
         /// </summary>
         All = IL | ILPre | IR | IROptimized | Asm | Function | Analysis | IRPassAnalysis
+    }
+
+#if BURST_COMPILER_SHARED
+    public enum WaitUntilCompilationFinishedType
+#else
+    internal enum WaitUntilCompilationFinishedType
+#endif
+    {
+        WaitForEverything,
+        WaitForHighPriorityOnly,
+    }
+
+#if BURST_COMPILER_SHARED
+    public enum CompilationPriority
+#else
+    internal enum CompilationPriority
+#endif
+    {
+        StandardPriority,
+        HighPriority
     }
 }
 #endif

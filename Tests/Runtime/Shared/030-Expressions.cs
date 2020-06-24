@@ -67,7 +67,7 @@ namespace Burst.Compiler.IL.Tests
             return (ulong)value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong ConvertIntToLongConst()
         {
             return int.MaxValue;
@@ -81,7 +81,7 @@ namespace Burst.Compiler.IL.Tests
             return value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong ConvertUIntToLongConst()
         {
             return uint.MaxValue;
@@ -95,7 +95,7 @@ namespace Burst.Compiler.IL.Tests
             return value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong ConvertUIntToULongConst()
         {
             return uint.MaxValue;
@@ -112,25 +112,25 @@ namespace Burst.Compiler.IL.Tests
             return value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int ConvertShortToIntConstMin()
         {
             return short.MinValue;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int ConvertShortToIntConstMax()
         {
             return short.MaxValue;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int ConvertUShortToIntConstMax()
         {
             return ushort.MaxValue;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static uint ConvertUShortToUIntConstMax()
         {
             return ushort.MaxValue;
@@ -147,13 +147,13 @@ namespace Burst.Compiler.IL.Tests
             return value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static long ConvertShortToLongConstMin()
         {
             return short.MinValue;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static long ConvertShortToLongConstMax()
         {
             return short.MaxValue;
@@ -170,13 +170,13 @@ namespace Burst.Compiler.IL.Tests
             return (ulong)value;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong ConvertShortToULongConstMin()
         {
             return unchecked((ulong)short.MinValue);
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong ConvertShortToULongConstMax()
         {
             return (ulong)short.MaxValue;
@@ -998,7 +998,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         const int ConstValue = 5;
-        [TestCompiler()]
+        [TestCompiler]
         public static int test_expr_load_static_constant()
         {
             return ConstValue;
@@ -1107,7 +1107,7 @@ namespace Burst.Compiler.IL.Tests
             return x > 5;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static unsafe uint TestStackAlloc()
         {
             uint* result = stackalloc uint[4];
@@ -1130,7 +1130,7 @@ namespace Burst.Compiler.IL.Tests
             return 1;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int LocalBoolPassedByRef()
         {
             var isDone = false;
@@ -1154,7 +1154,7 @@ namespace Burst.Compiler.IL.Tests
             return diff;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static float EnumToFloatConversion()
         {
             return SameCode(TestEnum.v6, TestEnum.v0);

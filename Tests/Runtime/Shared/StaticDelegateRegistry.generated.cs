@@ -192,6 +192,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int), new Type[] { typeof(ushort) }, typeof(R_Int32_P_0_UInt16_Delegate), Call_R_Int32_P_0_UInt16_Delegate);
             Register(typeof(int), new Type[] { typeof(ushort).MakeByRefType() }, typeof(R_Int32_P_0_UInt16_Ref_Delegate), Call_R_Int32_P_0_UInt16_Ref_Delegate);
             Register(typeof(long), Array.Empty<Type>(), typeof(R_Int64_P_Delegate), Call_R_Int64_P_Delegate);
+            Register(typeof(long), new Type[] { typeof(Burst.Compiler.IL.Tests.Pointers.PointerArithmetic).MakeByRefType() }, typeof(R_Int64_P_0_Burst_Compiler_IL_Tests_Pointers_PointerArithmetic_Ref_Delegate), Call_R_Int64_P_0_Burst_Compiler_IL_Tests_Pointers_PointerArithmetic_Ref_Delegate);
             Register(typeof(long), new Type[] { typeof(double) }, typeof(R_Int64_P_0_Double_Delegate), Call_R_Int64_P_0_Double_Delegate);
             Register(typeof(long), new Type[] { typeof(int) }, typeof(R_Int64_P_0_Int32_Delegate), Call_R_Int64_P_0_Int32_Delegate);
             Register(typeof(long), new Type[] { typeof(int), typeof(int) }, typeof(R_Int64_P_0_Int32_1_Int32_Delegate), Call_R_Int64_P_0_Int32_1_Int32_Delegate);
@@ -295,6 +296,8 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(bool), new Type[] { typeof(ushort) }, typeof(R_Boolean_P_0_UInt16_Delegate), Call_R_Boolean_P_0_UInt16_Delegate);
             Register(typeof(char), Array.Empty<Type>(), typeof(R_Char_P_Delegate), Call_R_Char_P_Delegate);
             Register(typeof(double), Array.Empty<Type>(), typeof(R_Double_P_Delegate), Call_R_Double_P_Delegate);
+            Register(typeof(double), new Type[] { typeof(Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer).MakeByRefType() }, typeof(R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate), Call_R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate);
+            Register(typeof(double), new Type[] { typeof(Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer).MakeByRefType() }, typeof(R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_1_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_2_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate), Call_R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_1_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_2_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate);
             Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.CalliBinding.BindingContainer).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_CalliBinding_BindingContainer_Ref_Delegate);
             Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.ChunkedTestDataWrapper).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_ChunkedTestDataWrapper_Ref_Delegate);
             Register(typeof(float), new Type[] { typeof(Burst.Compiler.IL.Tests.FullSOATestDataWrapper).MakeByRefType() }, typeof(R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate), Call_R_Single_P_0_Burst_Compiler_IL_Tests_FullSOATestDataWrapper_Ref_Delegate);
@@ -461,6 +464,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4x2*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4x2_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4x2_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.quaternion*) }, typeof(R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.DivisionByScalar).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.IntToFloatPenalty).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.PartialWrite).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate);
@@ -2749,6 +2753,18 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate long R_Int64_P_0_Burst_Compiler_IL_Tests_Pointers_PointerArithmetic_Ref_Delegate(ref Burst.Compiler.IL.Tests.Pointers.PointerArithmetic arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_Int64_P_0_Burst_Compiler_IL_Tests_Pointers_PointerArithmetic_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int64_P_0_Burst_Compiler_IL_Tests_Pointers_PointerArithmetic_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.Pointers.PointerArithmetic)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private delegate long R_Int64_P_0_Double_Delegate(double arg0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_Int64_P_0_Double_Delegate(object delegateObj, object[] p)
@@ -3973,6 +3989,32 @@ namespace Burst.Compiler.IL.Tests
             var d = (R_Double_P_Delegate)delegateObj;
             object result = null;
             result = d();
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate double R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate(ref Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer)p[0];
+            result = d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate double R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_1_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_2_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate(ref Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer arg0, ref Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer arg1, ref Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer arg2);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_1_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_2_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Double_P_0_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_1_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_2_Burst_Compiler_IL_Tests_SafetyChecks_MySafetyCheckedContainer_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer)p[0];
+            var arg1 = (Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer)p[1];
+            var arg2 = (Burst.Compiler.IL.Tests.SafetyChecks.MySafetyCheckedContainer)p[2];
+            result = d(ref arg0, ref arg1, ref arg2);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -6119,6 +6161,18 @@ namespace Burst.Compiler.IL.Tests
             var arg0 = (Unity.Mathematics.float4x2*)(IntPtr)p[0];
             var arg1 = (int)p[1];
             d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate(Unity.Mathematics.quaternion* arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.quaternion*)(IntPtr)p[0];
+            d(arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

@@ -1,64 +1,55 @@
 # Changelog
 
-## [1.3.3] - 2020-06-25
-
-
-### Fixed
-- Fixed compatibility issues between burst and older linux distros.
-- Fixed an issue preventing player builds to succeed when burst compilation is disabled.
-
-### Known Issues
-- Output of `Debug.Log` is temporarily disabled when used in Burst Function Pointers/Jobs to avoid a deadlock on a domain reload. A fix for the Unity editor is being developed.
-
-## [1.3.2] - 2020-06-16
+## [1.4.0-preview.1] - 2020-06-25
 
 
 ### Added
+- Experimental support for tvOS
+- Add intrinsics support for `AtomicSafetyHandle.NewStaticSafetyId<T>`
+- A new option `[BurstCompile(DisableSafetyChecks = true)]` that allows per job or function-pointer disabling of safety checks. This allows users to have blessed code run fast always.
+- Improve Editor experience by scheduling compilation immediately after assemblies are changed, instead of waiting until Play Mode is entered.
+- Improved our aliasing detection to allow `DynamicBuffer` structs to be easily vectorizable.
+- Added a compiler warning for any use of throwing an exception from a method **not guarded by** `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]`. Since exceptions in Burst are only supported in the editor, this provides a useful warning to users who may be relying on try/catch behaviors for control-flow which is not supported in final game builds.
+- Burst compilation status is now displayed in the Background Tasks window in Unity 2020.1 and above (click the spinner in the bottom-right of the Editor to open this window).
+- Upgraded Burst to use LLVM Version 10.0.0 by default, bringing the latest optimization improvements from the LLVM project.
+- Add support for try/finally and using/foreach for IDisposable patterns.
+- Add `BurstCompiler.IsEnabled` API.
 
 ### Removed
 
 ### Changed
-
-### Fixed
-- Burst package has been upgraded popup could fire erroneously under shutdown conditions.
-- Debug information for anonymous structs could be created partially multiple times for the same type.
-- IntPtr.Size now correctly returns int32 size (rather than UInt64) - fixes an assert.
-- Fix safety checks in editor to not log a warning. Safety checks are now restored to true when restarting the editor and are no longer stored as an editor preference.
-
-### Known Issues
-
-## [1.3.1] - 2020-06-05
-
-
-### Fixed
-- Burst compilation is no longer cancelled when exiting play mode.
-- Filter symbol warnings to prevent them reaching logs.
-- Fixed handling of conversion from signed integer to pointer which caused issues as discovered by Zuntatos on the forums.
-- Fix an issue where a function/job could run without being initialized.
-- Fixed a bug with constant expressions that could cause a compile-time hang.
-
-### Added
-
-### Removed
-
-### Changed
-- To avoid users falling into the consistent trap of having `Safety Checks` set to `Off`, any reload of the Editor will issue a warning telling the user that `Safety Checks` have been reset to `On`.
-- The command line option --burst-disable-compilation is now disabling entirely Burst, including the AppDomain.
-
-### Known Issues
-
-## [1.3.0] - 2020-05-23
-
-
-### Changed
-- Bump package version to 1.3.0 stable release.
-
-## [1.3.0-preview.13] - 2020-05-12
-
+- Made the compiler better at constant-folding complex static readonly constructors.
+- Bursted DOTS Runtime Jobs are now decorated with `[NativePInvokeCallback]` instead of `[MonoPInvokeCallback]` which could generate callback wrappers which could cause native code to inadvertently interop with the managed VM.
+- The Burst menu-item `Safety Checks` has been changed to a modal choice of `Off`, `On`, and `Force On`. `Force On` will overwrite any user job or function-pointer with `DisableSafetyChecks = true`. To avoid users falling into the consistent trap of having `Safety Checks` set to `Off`, any reload of the Editor will issue a warning telling the user that `Safety Checks` have been reset to `On`.
+- Use platform provided memory intrinsics for iOS, tvOS, WASM, and console platforms.
+- Updated Cross Compilation Tooling To LLVM 10
+- The command line option `--burst-disable-compilation` is now disabling entirely Burst, including the AppDomain.
 
 ### Fixed
 - Fixed incorrect struct layout for certain configurations of explicit-layout structs with overlapping fields
-- Fixed a bug where the `mm256_cvtepi32_ps` intrinsic would crash the compiler.
+- Fixes a caching issue where stale cached libraries may have been used if a project was copied to a different folder, or Unity was upgraded to a newer version
+- Burst will now error if a `cpblk` was used to copy into a `[ReadOnly]` parameter or field.
+- Fixed a bug where the mm256_cvtepi32_ps intrinsic would crash the compiler.
+- Fixed a bug with constant expressions that could cause a compile-time hang.
+- Debug symbols are now output when using the native toolchain on mac.
+- Sleef fallback to scalar float for WASM.
+- ABI struct ret/by val for trivial aggregates for WASM is now respected.
+- Fixed a bug with float/double vector constructors of `Unity.Mathematics` that take half or half vector parameters.
+- Debug information for anonymous structs could be created partially multiple times for the same type.
+- Filter symbol warnings to prevent them reaching logs.
+- Fixed an issue where UNITY_DOTSPLAYER builds not building for NET_DOTS would be unable to compile do to references to UnityEngine.
+- Fixed handling of conversion from signed integer to pointer which caused issues as discovered by Zuntatos on the forums.
+- Allow to call `[BurstCompile]` functions from other `[BurstCompile]` functions
+- IntPtr.Size now correctly returns int32 size (rather than UInt64) - fixes an assert.
+- Burst package has been upgraded popup could fire erroneously under shutdown conditions.
+- Fixed an issue preventing player builds to succeed when burst compilation is disabled.
+- Debug symbols for function names on some platforms are no longer hashes.
+- Job Entry point symbols should now reflect the job name and type rather than a hash in callstacks/native profilers
+- Job entry points without symbols now use the Execute location rather than pointing to unknown/unknown
+- Dwarf symbols from multiple modules (e.g. multithreaded AOT compilation) now have correct compilation unit information.
+
+### Known Issues
+- Output of `Debug.Log` is temporarily disabled in Burst Function Pointers/Jobs to avoid a deadlock on a domain reload. A fix for the Unity editor is being developed.
 
 ## [1.3.0-preview.12] - 2020-05-05
 

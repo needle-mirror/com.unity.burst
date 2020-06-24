@@ -328,13 +328,6 @@ namespace Burst.Compiler.IL.Tests
             if (compiledFunction == null)
                 return context.CurrentResult;
 
-            // Check for expected compiler warnings (we'll check for compiler errors below,
-            // but this is for tests that we expect to pass but still log a warning).
-            if (!CheckExpectedDiagnostics(context, "Compiling code"))
-            {
-                return context.CurrentResult;
-            }
-
             if (_compileOnly) // If the test only wants to compile the code, bail now.
             {
                 return context.CurrentResult;
@@ -667,11 +660,23 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        private bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
+        private static string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds)
+        {
+            if (diagnosticIds.Count() == 0)
+            {
+                return "None";
+            }
+            else
+            {
+                return string.Join(",", diagnosticIds);
+            }
+        }
+
+        protected bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
         {
             var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
             var expectedDiagnosticIds = _expectedDiagnosticIds.OrderBy(x => x);
-            string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds) => string.Join(",", diagnosticIds);
+            
             if (!loggedDiagnosticIds.SequenceEqual(expectedDiagnosticIds))
             {
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic(s) to be logged with IDs {GetDiagnosticIds(_expectedDiagnosticIds)} but instead the following diagnostic(s) were logged: {GetDiagnosticIds(loggedDiagnosticIds)}");
@@ -681,6 +686,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         protected virtual IEnumerable<DiagnosticId> GetLoggedDiagnosticIds() => Array.Empty<DiagnosticId>();
+        protected virtual IEnumerable<DiagnosticId> GetExpectedDiagnosticIds() => _expectedDiagnosticIds;
 
         protected void RunDeterminismValidation(TestMethod method, object resultNative)
         {

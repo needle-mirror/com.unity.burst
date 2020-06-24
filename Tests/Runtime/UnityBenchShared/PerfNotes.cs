@@ -12,7 +12,7 @@ namespace UnityBenchShared
 
     internal static class PerfNotes
     {
-        public static int BenchArraySize = 20 * 1024;
+        public static int BenchArraySize = 16 * 1024 * 1024;
     }
 
     internal struct PartialWrite : IJob, IDisposable
@@ -128,7 +128,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    var length = PerfNotes.BenchArraySize;
+                    var length = PerfNotes.BenchArraySize * 4;
                     var job = new IntToFloatPenalty()
                     {
                         b = new NativeArray<float>(length, Allocator.Persistent)
@@ -257,7 +257,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    var length = PerfNotes.BenchArraySize;
+                    var length = PerfNotes.BenchArraySize / 2;
                     var job = new SquareRootRecip()
                     {
                         a = new NativeArray<float>(length, Allocator.Persistent),
@@ -301,7 +301,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    var length = PerfNotes.BenchArraySize;
+                    var length = PerfNotes.BenchArraySize * 2;
                     var job = new RedundantStore()
                     {
                         a = new NativeArray<int>(length, Allocator.Persistent)
@@ -343,7 +343,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    var length = PerfNotes.BenchArraySize;
+                    var length = PerfNotes.BenchArraySize * 2;
                     var job = new RedundantStoreWorkaround()
                     {
                         a = new NativeArray<int>(length, Allocator.Persistent)
@@ -374,7 +374,7 @@ namespace UnityBenchShared
         }
     }
 
-    /* TODO: Is from the notes, but we don't have have a mock of IComponentData 
+    /* TODO: Is from the notes, but we don't have have a mock of IComponentData
     public struct SimpleComponentData : IComponentData
     {
         public int val;

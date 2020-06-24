@@ -204,7 +204,7 @@ namespace Burst.Compiler.IL.Tests
             return color.G;
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static uint TestExplicitLayoutWrite()
         {
             var color = new Color() { Value = 0xAABBCCDD };

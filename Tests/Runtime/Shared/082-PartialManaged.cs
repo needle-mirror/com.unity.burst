@@ -24,7 +24,7 @@ namespace Burst.Compiler.IL.Tests
     internal class PartialManaged
     {
 #if BURST_TESTS_ONLY || ENABLE_UNITY_COLLECTIONS_CHECKS
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestWriteNullReference()
         {
             var element = new Element();
@@ -48,7 +48,7 @@ namespace Burst.Compiler.IL.Tests
         }
 #endif
 
-        [TestCompiler()]
+        [TestCompiler]
         public static void AssignNullToLocalVariableClass()
         {
             MyClass x = null;

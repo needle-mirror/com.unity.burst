@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using NUnit.Framework;
 using UnityEngine;
 using Unity.Jobs.LowLevel.Unsafe;
@@ -9,6 +8,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using System.Threading;
+using System.Diagnostics;
 using UnityEditor;
 using Debug = UnityEngine.Debug;
 
@@ -18,7 +18,8 @@ public class EditModeTest
     private const int MaxIterations = 500;
 
 //    [UnityTest]
-    public IEnumerator CheckBurstJobEnabledDisabled() {
+    public IEnumerator CheckBurstJobEnabledDisabled()
+    {
         BurstCompiler.Options.EnableBurstCompileSynchronously = true;
 #if UNITY_2019_3_OR_NEWER
         foreach(var item in CheckBurstJobDisabled()) yield return item;
@@ -210,7 +211,7 @@ public class EditModeTest
 
         public void Execute()
         {
-            Debug.Log($"This is a string logged from a job with burst with the following {Value}");
+            UnityEngine.Debug.Log($"This is a string logged from a job with burst with the following {Value}");
         }
     }
 
@@ -242,4 +243,325 @@ public class EditModeTest
             Result[0] = 2;
         }
     }
+
+    [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+    private static void SafelySetSomeBool(ref bool b)
+    {
+        b = true;
+    }
+
+    [BurstCompile(DisableSafetyChecks = false)]
+    private struct EnabledSafetyChecksJob : IJob
+    {
+        [WriteOnly] public NativeArray<int> WasHit;
+
+        public void Execute()
+        {
+            var b = false;
+            SafelySetSomeBool(ref b);
+            WasHit[0] = b ? 1 : 0;
+        }
+    }
+
+    [BurstCompile(DisableSafetyChecks = true)]
+    private struct DisabledSafetyChecksJob : IJob
+    {
+        [WriteOnly] public NativeArray<int> WasHit;
+
+        public void Execute()
+        {
+            var b = false;
+            SafelySetSomeBool(ref b);
+            WasHit[0] = b ? 1 : 0;
+        }
+    }
+
+#if UNITY_2019_3_OR_NEWER
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOffGloballyAndOnInJob()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = false;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var job = new EnabledSafetyChecksJob()
+        {
+            WasHit = new NativeArray<int>(1, Allocator.TempJob)
+        };
+
+        job.Schedule().Complete();
+
+        try
+        {
+            // Safety checks are off globally which overwrites the job having safety checks on.
+            Assert.AreEqual(0, job.WasHit[0]);
+        }
+        finally
+        {
+            job.WasHit.Dispose();
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOffGloballyAndOffInJob()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = false;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var job = new DisabledSafetyChecksJob()
+        {
+            WasHit = new NativeArray<int>(1, Allocator.TempJob)
+        };
+
+        job.Schedule().Complete();
+
+        try
+        {
+            // Safety checks are off globally and off in job.
+            Assert.AreEqual(0, job.WasHit[0]);
+        }
+        finally
+        {
+            job.WasHit.Dispose();
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOnGloballyAndOnInJob()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = true;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var job = new EnabledSafetyChecksJob()
+        {
+            WasHit = new NativeArray<int>(1, Allocator.TempJob)
+        };
+
+        job.Schedule().Complete();
+
+        try
+        {
+            // Safety checks are on globally and on in job.
+            Assert.AreEqual(1, job.WasHit[0]);
+        }
+        finally
+        {
+            job.WasHit.Dispose();
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOnGloballyAndOffInJob()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = true;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var job = new DisabledSafetyChecksJob()
+        {
+            WasHit = new NativeArray<int>(1, Allocator.TempJob)
+        };
+
+        job.Schedule().Complete();
+
+        try
+        {
+            // Safety checks are on globally but off in job.
+            Assert.AreEqual(0, job.WasHit[0]);
+        }
+        finally
+        {
+            job.WasHit.Dispose();
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckForceSafetyChecksWorks()
+    {
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = true;
+
+        yield return null;
+
+        var job = new DisabledSafetyChecksJob()
+        {
+            WasHit = new NativeArray<int>(1, Allocator.TempJob)
+        };
+
+        job.Schedule().Complete();
+
+        try
+        {
+            // Even though the job has set disabled safety checks, the menu item 'Force On'
+            // has been set which overrides any other requested behaviour.
+            Assert.AreEqual(1, job.WasHit[0]);
+        }
+        finally
+        {
+            job.WasHit.Dispose();
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSharedStaticWithDomainReload()
+    {
+        // Check that on a first access, SharedStatic is always empty
+        AssertTestSharedStaticEmpty();
+
+        // Fill with some data
+        TestSharedStatic.SharedValue.Data = new TestSharedStatic(1, 2, 3, 4);
+
+        Assert.AreEqual(1, TestSharedStatic.SharedValue.Data.Value1);
+        Assert.AreEqual(2, TestSharedStatic.SharedValue.Data.Value2);
+        Assert.AreEqual(3, TestSharedStatic.SharedValue.Data.Value3);
+        Assert.AreEqual(4, TestSharedStatic.SharedValue.Data.Value4);
+
+        // Ask for domain reload
+        EditorUtility.RequestScriptReload();
+
+        // Wait for the domain reload to be completed
+        yield return new WaitForDomainReload();
+
+        // Make sure that after a domain reload everything is initialized back to zero
+        AssertTestSharedStaticEmpty();
+    }
+
+    private static void AssertTestSharedStaticEmpty()
+    {
+        Assert.AreEqual(0, TestSharedStatic.SharedValue.Data.Value1);
+        Assert.AreEqual(0, TestSharedStatic.SharedValue.Data.Value2);
+        Assert.AreEqual(0, TestSharedStatic.SharedValue.Data.Value3);
+        Assert.AreEqual(0, TestSharedStatic.SharedValue.Data.Value4);
+    }
+    
+    private struct TestSharedStatic
+    {
+        public static readonly SharedStatic<TestSharedStatic> SharedValue = SharedStatic<TestSharedStatic>.GetOrCreate<TestSharedStatic>();
+
+        public TestSharedStatic(int value1, long value2, long value3, long value4)
+        {
+            Value1 = value1;
+            Value2 = value2;
+            Value3 = value3;
+            Value4 = value4;
+        }
+
+        public int Value1;
+        public long Value2;
+        public long Value3;
+        public long Value4;
+    }
+
+    static EditModeTest()
+    {
+        // UnityEngine.Debug.Log("Domain Reload");
+    }
+    [BurstCompile]
+    private static class FunctionPointers
+    {
+        public delegate int SafetyChecksDelegate();
+
+        [BurstCompile(DisableSafetyChecks = false)]
+        public static int WithSafetyChecksEnabled()
+        {
+            var b = false;
+            SafelySetSomeBool(ref b);
+            return b ? 1 : 0;
+        }
+
+        [BurstCompile(DisableSafetyChecks = true)]
+        public static int WithSafetyChecksDisabled()
+        {
+            var b = false;
+            SafelySetSomeBool(ref b);
+            return b ? 1 : 0;
+        }
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOffGloballyAndOffInFunctionPointer()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = false;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var funcPtr = BurstCompiler.CompileFunctionPointer<FunctionPointers.SafetyChecksDelegate>(FunctionPointers.WithSafetyChecksDisabled);
+
+        // Safety Checks are off globally and off in the job.
+        Assert.AreEqual(0, funcPtr.Invoke());
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOffGloballyAndOnInFunctionPointer()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = false;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var funcPtr = BurstCompiler.CompileFunctionPointer<FunctionPointers.SafetyChecksDelegate>(FunctionPointers.WithSafetyChecksEnabled);
+
+        // Safety Checks are off globally and on in job, but the global setting takes precedence.
+        Assert.AreEqual(0, funcPtr.Invoke());
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOnGloballyAndOffInFunctionPointer()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = true;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var funcPtr = BurstCompiler.CompileFunctionPointer<FunctionPointers.SafetyChecksDelegate>(FunctionPointers.WithSafetyChecksDisabled);
+
+        // Safety Checks are on globally and off in the job, so the job takes predence.
+        Assert.AreEqual(0, funcPtr.Invoke());
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckSafetyChecksOnGloballyAndOnInFunctionPointer()
+    {
+        BurstCompiler.Options.EnableBurstSafetyChecks = true;
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = false;
+
+        yield return null;
+
+        var funcPtr = BurstCompiler.CompileFunctionPointer<FunctionPointers.SafetyChecksDelegate>(FunctionPointers.WithSafetyChecksEnabled);
+
+        // Safety Checks are on globally and on in the job.
+        Assert.AreEqual(1, funcPtr.Invoke());
+    }
+
+    [UnityTest]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
+    public IEnumerator CheckFunctionPointerForceSafetyChecksWorks()
+    {
+        BurstCompiler.Options.ForceEnableBurstSafetyChecks = true;
+
+        yield return null;
+
+        var funcPtr = BurstCompiler.CompileFunctionPointer<FunctionPointers.SafetyChecksDelegate>(FunctionPointers.WithSafetyChecksDisabled);
+
+        // Even though the job has set disabled safety checks, the menu item 'Force On'
+        // has been set which overrides any other requested behaviour.
+        Assert.AreEqual(1, funcPtr.Invoke());
+    }
+#endif
 }

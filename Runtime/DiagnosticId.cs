@@ -23,7 +23,7 @@ namespace Unity.Burst
         // ILCompiler
         ERR_UnexpectedEmptyMethodBody = 1003,
         ERR_ManagedArgumentsNotSupported = 1004,
-        ERR_TryConstructionNotSupported = 1005,
+        // ERR_TryConstructionNotSupported = 1005, // not used anymore
         ERR_CatchConstructionNotSupported = 1006,
         ERR_CatchAndFilterConstructionNotSupported = 1007,
         ERR_LdfldaWithFixedArrayExpected = 1008,
@@ -83,7 +83,7 @@ namespace Unity.Burst
         INF_FunctionPointerMethodAndTypeMissingMonoPInvokeCallbackAttribute = 10590,
 
         // ILVisitor
-        ERR_EntryPointFunctionCannotBeCalledInternally = 1060,
+        // ERR_EntryPointFunctionCannotBeCalledInternally = 1060, // no longer used
 
         // ExternalFunctionParameterChecks
         ERR_MarshalAsOnParameterNotSupported = 1061,
@@ -191,5 +191,8 @@ namespace Unity.Burst
         // Static constructor
         ERR_ManagedStaticConstructor = 1360,
         ERR_StaticConstantArrayInStaticConstructor = 1361,
+
+        // Safety check warning
+        WRN_ExceptionThrownInNonSafetyCheckGuardedFunction = 1370,
     }
 }

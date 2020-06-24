@@ -86,6 +86,11 @@ namespace Unity.Burst.Intrinsics
         [FieldOffset(0)] public double Double0;
         [FieldOffset(8)] public double Double1;
 
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        [FieldOffset(0)] public v64 Lo64;
+        [FieldOffset(8)] public v64 Hi64;
+#endif
+
         /// <summary>
         /// Splat a single byte across the v128
         /// </summary>
@@ -329,5 +334,17 @@ namespace Unity.Burst.Intrinsics
             ULong0 = a;
             ULong1 = b;
         }
+
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Initialize the v128 with 2 v64's
+        /// </summary>
+        public v128(v64 lo, v64 hi)
+        {
+            this = default(v128);
+            Lo64 = lo;
+            Hi64 = hi;
+        }
+#endif
     }
 }

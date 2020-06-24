@@ -72,7 +72,10 @@ The Burst package adds a few menu entries to the Jobs menu for controlling Burst
 ![Burst menu entries](images/burst-menu.png)
 
 - **Enable Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
-- **Enable Safety Checks**: When checked, Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. Note that this option disables the noaliasing performance optimizations, by default. Default is checked. Safety checks are always restored to `on` when restarting the editor.
+- **Enable Safety Checks**: Has three options in a sub-menu:
+  - Off - disable safety checks across all Burst jobs/function-pointers. This is a dangerous setting that should only be used when you want more realistic profiling results from in-editor captures. A reload of the Unity Editor will always reset this to On.
+  - On - Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. This is the default.
+  - Force On - Force safety checks on _even for jobs/function-pointers that have_ `DisableSafetyChecks = true`. Prior to reporting any Burst bug this option should be set to rule out any problems that safety checks could have caught.
 - **Synchronous Compilation**: When checked, Burst will compile synchronously - See [`[BurstCompile]` options](#synchronous-compilation). Default is unchecked.
 - **Native Debug Mode Compilation**: When checked, Burst will disable optimizations on all code compiled, in order to make it easier to debug via a native debugger - See [Native Debugging](#native-debugging). Default is unchecked.
 - **Show Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.
@@ -237,7 +240,9 @@ Burst supports most of the expressions and statements:
 - Some special IL opcodes like `cpblk`, `initblk`, `sizeof`.
 - Loading from static readonly fields.
 - Support for `fixed` statements.
-- [Partial support for strings and `Debug.Log`](#partial-support-for-strings-and-debuglog).
+- Support for `try`/`finally` and associated IDisposable patterns (`using` and `foreach`)
+  - Note that if an exception occurs, the behavior will differ from .NET. In .NET, if an exception occurs inside a `try` block, control flow would go to the `finally` block. In Burst, if an exception occurs whether inside or outside a `try` block, the currently running job or function pointer will terminate immediately.
+  - [Partial support for strings and `Debug.Log`](#partial-support-for-strings-and-debuglog).
 
 Burst provides also alternatives for some C# constructions not directly accessible to HPC#:
 
@@ -246,11 +251,15 @@ Burst provides also alternatives for some C# constructions not directly accessib
 
 Burst does not support:
 
-- `catch`
-- `try`/`finally` (which will come at some point)
-- `foreach` as it is requiring `try`/`finally` (This should be supported in a future version)
+- Catching exceptions `catch` in a `try`/`catch`.
 - Storing to static fields except via [Shared Static](#shared-static)
 - Any methods related to managed objects (e.g string methods...etc.)
+
+### Throw and Exceptions
+
+Burst supports `throw` expressions for exceptions in the Editor (`2019.3+` only), but crucially **not** in standalone player builds. Exceptions in Burst are to be used solely for _exceptional_ behavior. To ensure that code does not end up relying on exceptions for things like general control flow, Burst will produce the following warning on code that tries to `throw` within a method not attributed by `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]`:
+
+> Burst warning BC1370: An exception was thrown from a function without the correct [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")] guard. Exceptions only work in the editor and so should be protected by this guard
 
 ### Partial support for strings and `Debug.Log`
 
@@ -635,6 +644,25 @@ When `CompileSynchronously = true` is set, no asynchronous compilation can occur
 - If you are profiling a Burst job and thus want to be certain that the code that is being tested is from the Burst compiler. In this scenario you should perform a warmup to throw away any timing measurements from the first call to the job as that would include the compilation cost and skew the result.
 - If you suspect that there are some crucial differences between managed and Burst compiled code. This is really only as a debugging aid, as the Burst compiler strives to match any and all behaviour that managed code could produce.
 
+## Disable Safety Checks
+
+Burst allows a user to mark a job or function-pointer as not requiring safety checks:
+
+```c#
+[BurstCompile(DisableSafetyChecks = true)]
+public struct MyJob : IJob
+{
+    // ...
+}
+```
+
+When set, Burst will remove all safety check code, resulting in code-generation that is generally faster. This option is _dangerous_ though as you really need to be certain that you are using containers in a safe fashion.
+
+This option has some interactions with the global `Enable Safety Checks` option in the Burst menu:
+
+- If `Enable Safety Checks` is set to `On`, safety checks will be enabled for all Burst-compiled code except those marked explicitly with `DisableSafetyChecks = true`.
+- If `Enable Safety Checks` is set to `Force On`, all code _even that marked with_ `DisableSafetyChecks = true` will be compiled with safety checks. This option allows users to enable safety checks even in any downstream packages they depend on so that if they encounter some unexpected behaviour they can first check that the safety checks would not have caught it.
+
 ## Function Pointers
 
 It is often required to work with dynamic functions that can process data based on other data states. In that case, a user would expect to use C# delegates but in Burst, because these delegates are managed objects, we need to provide a HPC# compatible alternative. In that case you can use `FunctionPointer<T>`.
@@ -694,7 +722,6 @@ Note that you can also use these function pointers from regular C# as well, but 
 > - Function pointers are compiled asynchronously by default as for jobs. You can still force a synchronous compilation of function pointers by specifying this via the `[BurstCompile(SynchronousCompilation = true)]`.
 > - Function pointers have limited support for exceptions. As is the case for jobs, exceptions only work in the editor (`2019.3+` only) and they will result in a crash if they are used within a standalone player. It is recommended not to rely on any logic related to exception handling when working with function pointers.
 > - Using Burst-compiled function pointers from C# could be slower than their pure C# version counterparts if the function is too small compared to the cost of P/Invoke interop.
-> - A function pointer compiled with Burst cannot be called directly from another function pointer. This limitation will be lifted in a future release. You can workaround this limitation by creating a wrapper function with the `[BurstCompile]` attribute and to use the shared function from there.
 > - Function pointers don't support generic delegates.
 > - Argument and return types are subject to the same restrictions as described for [`DllImport` and internal calls](#dllimport-and-internal-calls).
 

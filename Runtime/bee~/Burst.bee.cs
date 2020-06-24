@@ -46,7 +46,7 @@ public abstract class BurstCompiler
     public abstract bool UseOwnToolchain { get; set; }
     public virtual bool OnlyStaticMethods { get; set; } = false;
 
-    public virtual string BurstBackend { get; set; } = "burst-llvm-9";
+    public virtual string BurstBackend { get; set; } = "burst-llvm-10";	// Bumping this, but really should not be specifying by default, or when we bump llvm dots runtime gets left behind
 
     // Options
     public virtual bool SafetyChecks { get; set; } = false;

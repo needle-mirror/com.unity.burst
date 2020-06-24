@@ -9,19 +9,6 @@ namespace Burst.Compiler.IL.Tests
 {
     internal class ControlFlows
     {
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionLeaveNotSupported })]
-        public static int TryCatch()
-        {
-            try
-            {
-                return default(int);
-            }
-            catch (InvalidOperationException)
-            {
-                return 1;
-            }
-        }
-
         [TestCompiler]
         public static int For()
         {
@@ -533,18 +520,6 @@ namespace Burst.Compiler.IL.Tests
             return a;
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_TryConstructionNotSupported, DiagnosticId.ERR_InstructionLeaveNotSupported })]
-        public static int ForEachDispose()
-        {
-            var array = new NativeArray<int>();
-            foreach (var item in array)
-            {
-                return item;
-            }
-
-            return 0;
-        }
-
         [TestCompiler(0)]
         [TestCompiler(1)]
         [TestCompiler(2)]
@@ -693,22 +668,22 @@ namespace Burst.Compiler.IL.Tests
             Case3,
         }
 
-        [TestCompiler(ExpectedException = typeof(InvalidOperationException))]
+        [TestCompiler(ExpectedException = typeof(InvalidOperationException), ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int ExceptionReachedReturn()
         {
             throw new InvalidOperationException("This is bad 1");
         }
 
-        [TestCompiler(ExpectedException = typeof(InvalidOperationException))]
+        [TestCompiler(ExpectedException = typeof(InvalidOperationException), ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static void ExceptionReached()
         {
             throw new InvalidOperationException("This is bad 2");
         }
 
-        [TestCompiler(1)]
-        [TestCompiler(2)]
+        [TestCompiler(1, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(2, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static void ExceptionNotReached(int a)
         {
             if (a > 10)
@@ -717,8 +692,8 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(1)]
-        [TestCompiler(2)]
+        [TestCompiler(1, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(2, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static void ExceptionMultipleNotReached(int a)
         {
             if (a > 10)
@@ -742,8 +717,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 
-        [TestCompiler(1)]
-        [TestCompiler(2)]
+        [TestCompiler(1, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static int ExceptionNotReachedReturn(int a)
         {
             int b = a;
@@ -756,8 +730,8 @@ namespace Burst.Compiler.IL.Tests
         }
 
 
-        [TestCompiler(13)]
-        [TestCompiler(1)]
+        [TestCompiler(13, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(1, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static int ExceptionMultipleNotReachedReturn(int a)
         {
             if (a > 10)

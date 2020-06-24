@@ -32,7 +32,7 @@ namespace Unity.Burst
         {
             get
             {
-#if NET_DOTS
+#if UNITY_DOTSPLAYER
                 return ref UnsafeUtility.AsRef<T>(_buffer);
 #else
                 return ref Unsafe.AsRef<T>(_buffer);
@@ -134,7 +134,7 @@ namespace Unity.Burst
                     if (existingType != type)
                     {
                         var message = $"The type `{type}` has a hash conflict with `{existingType}`";
-#if !BURST_UNITY_MOCK
+#if !BURST_UNITY_MOCK && !UNITY_DOTSPLAYER
                         UnityEngine.Debug.LogError(message);
 #endif
                         throw new InvalidOperationException(message);
@@ -148,15 +148,25 @@ namespace Unity.Burst
             return hash;
         }
 #endif
-        public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
+
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void CheckSizeOf(uint sizeOf)
         {
             if (sizeOf == 0) throw new ArgumentException("sizeOf must be > 0", nameof(sizeOf));
+        }
+
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static unsafe void CheckResult(void* result)
+        {
+            if (result == null) throw new InvalidOperationException("Unable to create a SharedStatic for this key. It is likely that the same key was used to allocate a shared memory with a smaller size while the new size requested is bigger");
+        }
+
+        public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
+        {
+            CheckSizeOf(sizeOf);
             var hash128 = new Hash128((ulong)getHashCode64, (ulong)getSubHashCode64);
             var result = BurstCompilerService.GetOrCreateSharedMemory(ref hash128, sizeOf, alignment);
-            if (result == null)
-            {
-                throw new InvalidOperationException("Unable to create a SharedStatic for this key. It is likely that the same key was used to allocate a shared memory with a smaller size while the new size requested is bigger");
-            }
+            CheckResult(result);
             return result;
         }
     }

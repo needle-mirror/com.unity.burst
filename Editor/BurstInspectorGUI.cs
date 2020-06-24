@@ -447,6 +447,8 @@ namespace Unity.Burst.Editor
                                 break;
                         }
 
+                        options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionJitSkipBurstInitialize));
+
                         var baseOptions = options.ToString().Trim('\n', ' ');
 
                         target.RawDisassembly = GetDisassembly(target.Method, baseOptions + DisasmOptions[(int)_disasmKind]);

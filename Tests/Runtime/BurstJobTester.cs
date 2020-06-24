@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -73,8 +74,14 @@ public class BurstJobTester2 : IDisposable
     {
         DiscardFunction(ref a);
         DiscardFunction(ref b);
-        if (a > 0) throw new ArgumentException("Invalid a must be < 0");
+        if (a > 0) ThrowNewArgumentException();
         return a + b;
+    }
+
+    [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+    private static void ThrowNewArgumentException()
+    {
+        throw new ArgumentException("Invalid a must be < 0");
     }
 
     [BurstDiscard]
