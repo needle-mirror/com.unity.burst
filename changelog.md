@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.3] - 2020-06-25
+
+
+### Fixed
+- Fixed compatibility issues between burst and older linux distros.
+- Fixed an issue preventing player builds to succeed when burst compilation is disabled.
+
+### Known Issues
+- Output of `Debug.Log` is temporarily disabled when used in Burst Function Pointers/Jobs to avoid a deadlock on a domain reload. A fix for the Unity editor is being developed.
+
 ## [1.3.2] - 2020-06-16
 
 

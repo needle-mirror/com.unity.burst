@@ -174,7 +174,7 @@ extern ""C""
             var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(buildTarget);
 
             // Early exit if burst is not activated or the platform is not supported
-            if (!aotSettingsForTarget.EnableBurstCompilation || !IsSupportedPlatform(buildTarget))
+            if (BurstCompilerOptions.ForceDisableBurstCompilation || !aotSettingsForTarget.EnableBurstCompilation || !IsSupportedPlatform(buildTarget))
             {
                 return;
             }
@@ -380,7 +380,7 @@ extern ""C""
                                 writer.WriteLine("   |- " + assemblyOrDll +  " Size: " + fileInfo.Length + " Date: " + fileInfo.LastWriteTime);
                             }
                         }
-                        
+
                         File.AppendAllText(debugLogFile, writer.ToString());
                     }
                     catch
@@ -392,7 +392,7 @@ extern ""C""
                 // Write current options to the response file
                 var responseFile = Path.GetTempFileName();
                 File.WriteAllLines(responseFile, options);
-                
+
                 if (BurstLoader.IsDebugging)
                 {
                     Debug.Log($"bcl @{responseFile}\n\nResponse File:\n" + string.Join("\n", options));
@@ -598,7 +598,7 @@ extern ""C""
         private static Assembly[] GetPlayerAssemblies(BuildReport report)
         {
             // We need to build the list of root assemblies based from the "PlayerScriptAssemblies" folder.
-            // This is so we compile the versions of the library built for the individual platforms, not the editor version. 
+            // This is so we compile the versions of the library built for the individual platforms, not the editor version.
             var oldOutputDir = EditorCompilationInterface.GetCompileScriptsOutputDirectory();
             try
             {
