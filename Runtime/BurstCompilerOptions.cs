@@ -56,6 +56,7 @@ namespace Unity.Burst
         internal const string OptionCpuOpt = "cpu-opt=";
         internal const string OptionFloatPrecision = "float-precision=";
         internal const string OptionFloatMode = "float-mode=";
+        internal const string OptionDisableWarnings = "disable-warnings=";
         internal const string OptionDump = "dump=";
         internal const string OptionFormat = "format=";
         internal const string OptionDebugTrap = "debugtrap";

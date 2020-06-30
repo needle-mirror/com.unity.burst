@@ -1,6 +1,22 @@
 # Changelog
 
-## [1.4.0-preview.1] - 2020-06-25
+## [1.4.0-preview.2] - 2020-07-01
+
+
+### Added
+
+### Removed
+
+### Changed
+- The Burst Inspector no longer uses JIT compilation. The code it shows is now compiled the same way as for editor / player usage.
+- Warnings are hidden in the inspector view
+
+### Fixed
+- Fixed potential error that could occur when unloading cached libraries
+
+### Known Issues
+
+## [1.4.0-preview.1] - 2020-06-26
 
 
 ### Added
@@ -14,6 +30,7 @@
 - Upgraded Burst to use LLVM Version 10.0.0 by default, bringing the latest optimization improvements from the LLVM project.
 - Add support for try/finally and using/foreach for IDisposable patterns.
 - Add `BurstCompiler.IsEnabled` API.
+- Add syntax colouring for LLVM IR and Optimized IR panels in the inspector
 
 ### Removed
 

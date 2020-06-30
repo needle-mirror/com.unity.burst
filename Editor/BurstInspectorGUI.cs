@@ -374,8 +374,10 @@ namespace Unity.Burst.Editor
                 // -14 to add a little bit of space for the vertical scrollbar to display correctly
                 RenderButtonBars((position.width*2)/3 - 14, target, out doCopy, out fontSize);
 
+                var supportsEnhancedRendering = _disasmKind == DisassemblyKind.Asm || _disasmKind == DisassemblyKind.OptimizedIR || _disasmKind == DisassemblyKind.UnoptimizedIR;
+
                 // We are currently formatting only Asm output
-                var isTextFormatted = IsEnhanced((AssemblyKind)_assemblyKind) && _disasmKind == DisassemblyKind.Asm;
+                var isTextFormatted = IsEnhanced((AssemblyKind)_assemblyKind) && supportsEnhancedRendering;
 
                 // Depending if we are formatted or not, we don't render the same text
                 var textToRender = isTextFormatted ? target.FormattedDisassembly : target.RawDisassembly;
@@ -429,6 +431,11 @@ namespace Unity.Burst.Editor
                     {
                         options.Append(defaultOptions);
 
+                        // Disables the 2 current warnings generated from code (since they clutter up the inspector display)
+                        // BC1370 - throw inside code not guarded with ConditionalSafetyCheck attribute
+                        // BC1322 - loop intrinsic on loop that has been optimised away
+                        options.Append($"\n{BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDisableWarnings, "BC1370;BC1322")}");
+
                         options.AppendFormat("\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionTarget, TargetCpuNames[(int)_targetCpu]));
 
                         switch ((AssemblyKind)_assemblyKind)
@@ -455,7 +462,7 @@ namespace Unity.Burst.Editor
 
                         if (isTextFormatted)
                         {
-                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, FetchAsmKind(_targetCpu), target.IsDarkMode, IsColoured((AssemblyKind)_assemblyKind));
+                            target.FormattedDisassembly = _burstDisassembler.Process(target.RawDisassembly, FetchAsmKind(_targetCpu, _disasmKind), target.IsDarkMode, IsColoured((AssemblyKind)_assemblyKind));
                             textToRender = target.FormattedDisassembly;
                         }
                         else
@@ -524,19 +531,26 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static BurstDisassembler.AsmKind FetchAsmKind(TargetCpu cpu)
+        private static BurstDisassembler.AsmKind FetchAsmKind(TargetCpu cpu, DisassemblyKind kind)
         {
-            switch (cpu)
+            if (kind == DisassemblyKind.Asm)
             {
-                case TargetCpu.ARMV7A_NEON32:
-                case TargetCpu.ARMV8A_AARCH64:
-                case TargetCpu.ARMV8A_AARCH64_HALFFP:
-                case TargetCpu.THUMB2_NEON32:
-                    return BurstDisassembler.AsmKind.ARM;
-                case TargetCpu.WASM32:
-                    return BurstDisassembler.AsmKind.Wasm;
+                switch (cpu)
+                {
+                    case TargetCpu.ARMV7A_NEON32:
+                    case TargetCpu.ARMV8A_AARCH64:
+                    case TargetCpu.ARMV8A_AARCH64_HALFFP:
+                    case TargetCpu.THUMB2_NEON32:
+                        return BurstDisassembler.AsmKind.ARM;
+                    case TargetCpu.WASM32:
+                        return BurstDisassembler.AsmKind.Wasm;
+                }
+                return BurstDisassembler.AsmKind.Intel;
             }
-            return BurstDisassembler.AsmKind.Intel;
+            else
+            {
+                return BurstDisassembler.AsmKind.LLVMIR;
+            }
         }
     }
 
