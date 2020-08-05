@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.4] - 2020-08-06
+
+
+### Fixed
+- Fixed a potential error when running the linker with a failure on lld command.
+- If path to the package contained spaces, then native command execution could fail. This would manifiest as weird errors with 'lld' or 'vswhere' or other native tools.
+- Added support for External symbols on a platform that required it.
+- Fixed Debug.Log by re-enabling it when used in function pointers or jobs.
+- Fixed errors when opening Inspector with a non-public Execute method on a job producer type
+
+### Added
+
+### Removed
+
+### Changed
+- Asserts that are currently discarded no longer discard arguments with potential side effects.
+- Bump com.unity.mathematics to 1.2.1 version
+
+### Known Issues
+
 ## [1.3.3] - 2020-06-25
 
 

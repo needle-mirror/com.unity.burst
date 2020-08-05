@@ -200,7 +200,7 @@ namespace Unity.Burst.Editor
                         try
                         {
                             var executeType = foundProducer.MakeGenericType(genericParams.ToArray());
-                            var executeMethod = executeType.GetMethod("Execute");
+                            var executeMethod = executeType.GetMethod("Execute", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                             if (executeMethod == null)
                             {
                                 throw new InvalidOperationException($"Burst reflection error. The type `{executeType}` does not contain an `Execute` method");

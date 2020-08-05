@@ -119,9 +119,7 @@ namespace Unity.Burst
 
 #if !BURST_COMPILER_SHARED
 
-        // TODO: Temporary fix to use the function pointer approach for logging under 2020.1 until BurstCompilerService.Log is fixed
-        // UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
-#if BURST_INTERNAL
+#if UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
         internal static void Initialize()
         {
         }
@@ -130,7 +128,7 @@ namespace Unity.Burst
         {
             BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
         }
-#elif UNITY_2019_3_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+#elif UNITY_2019_4_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
         // Because we can't back-port the new API BurstCompilerService.Log introduced in 2020.1
         // we are still trying to allow to log on earlier version of Unity by going back to managed
         // code when we are using Debug.Log. It is not great in terms of performance but it should not
@@ -138,14 +136,12 @@ namespace Unity.Burst
 
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
-            // DISABLE LOG UNTIL https://github.cds.internal.unity3d.com/unity/burst/issues/1779 IS RESOLVED
-
-            //var fp = LogHelper.Instance.Data;
-            //// If we have a domain reload, the function pointer will be cleared, so we can't call it.
-            //if (fp.IsCreated)
-            //{
-            //    fp.Invoke(message, logType, fileName, lineNumber);
-            //}
+            var fp = LogHelper.Instance.Data;
+            // If we have a domain reload, the function pointer will be cleared, so we can't call it.
+            if (fp.IsCreated)
+            {
+                fp.Invoke(message, logType, fileName, lineNumber);
+            }
         }
 
         private unsafe delegate void NativeLogDelegate(byte* message, int logType, byte* filename, int lineNumber);
