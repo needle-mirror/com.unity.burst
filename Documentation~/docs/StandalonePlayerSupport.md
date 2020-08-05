@@ -81,7 +81,7 @@ If compiling for a non desktop platform, or you have disabled cross compilation 
     <td>Windows</td>
     <td>Xbox One</td>
     <td><code>x64 SSE4</code></td>
-    <td>Visual Studio 2015<br/>Microsoft XDK</td>
+    <td>Visual Studio 2015 or Visual Studio 2017<br/>Microsoft XDK</td>
   </tr>
   <tr>
     <td>Windows</td>

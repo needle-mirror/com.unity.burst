@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.4.0-preview.3] - 2020-08-06
+
+
+### Added
+- VS 2017 support for platform that needs it.
+- Added first batch of Arm Neon intrinsics. Currently, only ArmV8 (AArch64) targets are supported. The supported intrinsics include all ArmV7 and ArmV8 ones.
+
+### Removed
+
+### Changed
+- In versions of Unity older than 2019.3, changing the following options in the Burst menu now requires the Editor to be restarted: Enable Compilation, Safety Checks, and Native Debug Mode Compilation. In versions of Unity older than 2019.3, previously-compiled methods will not be recompiled after changing those options, which could lead to undefined behavior where methods may or may not be compiled with the correct options. This change removes that possibility.
+- Improved performance of "eager-compilation" (scheduling compilation immediately after assemblies are changed) by cancelling queued eager-compilation when entering play mode with Synchronous Compilation unchecked
+- Improved performance of eager-compilation by not eager-compiling test assemblies
+- Asserts that are currently discarded no longer discard arguments with potential side effects.
+
+### Fixed
+- We no longer attempt to replace the debug metadata multiple times for a given export.
+- Fixed a subtle codegen bug that could occur when the target is an Arm or AArch64 CPU with vectors of 3 elements.
+- Inspector slow down when scrolling/moving the window on large listings.
+- Fixed a bug where a `stfld` into an element of a vector could deduce the wrong type for the underlying vector.
+- Fixed a potential error when running the linker with a failure on lld command.
+- If path to the package contained spaces, then native command execution could fail. This would manifiest as weird errors with 'lld' or 'vswhere' or other native tools.
+- Fixed Debug.Log by re-enabling it when used in function pointers or jobs.
+- Fixed errors when opening Inspector with a non-public Execute method on a job producer type
+
+### Known Issues
+
 ## [1.4.0-preview.2] - 2020-07-01
 
 

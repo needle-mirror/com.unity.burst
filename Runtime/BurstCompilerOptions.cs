@@ -57,6 +57,7 @@ namespace Unity.Burst
         internal const string OptionFloatPrecision = "float-precision=";
         internal const string OptionFloatMode = "float-mode=";
         internal const string OptionDisableWarnings = "disable-warnings=";
+        internal const string OptionCompilationDefines = "compilation-defines=";
         internal const string OptionDump = "dump=";
         internal const string OptionFormat = "format=";
         internal const string OptionDebugTrap = "debugtrap";
@@ -132,6 +133,7 @@ namespace Unity.Burst
         internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
         internal const string CompilerCommandEagerCompileMethod = "$eager_compile_method";
         internal const string CompilerCommandWaitUntilCompilationFinished = "$wait_until_compilation_finished";
+        internal const string CompilerCommandClearEagerCompilationQueues = "$clear_eager_compilation_queues";
         internal const string CompilerCommandReset = "$reset";
         internal const string CompilerCommandDomainReload = "$domain_reload";
         internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";
@@ -208,14 +210,10 @@ namespace Unity.Burst
 
                 bool changed = _enableBurstCompilation != value;
 
-#if UNITY_EDITOR && !UNITY_2019_3_OR_NEWER // Enabling Burst while in PlayMode is only supported in 2019.3+
-                // Prevent Burst compilation being enabled while in PlayMode, because
-                // we can't currently support this for jobs.
-                if (!IsInitializing && IsGlobal && changed && value && UnityEngine.Application.isPlaying)
+                if (changed && value)
                 {
-                    throw new InvalidOperationException("Burst compilation can't be switched on while in PlayMode");
+                    MaybePreventChangingOption();
                 }
-#endif
 
                 _enableBurstCompilation = value;
 
@@ -284,6 +282,12 @@ namespace Unity.Burst
             set
             {
                 bool changed = _enableBurstSafetyChecks != value;
+
+                if (changed)
+                {
+                    MaybePreventChangingOption();
+                }
+
                 _enableBurstSafetyChecks = value;
                 if (changed)
                 {
@@ -307,6 +311,12 @@ namespace Unity.Burst
             set
             {
                 bool changed = _forceEnableBurstSafetyChecks != value;
+
+                if (changed)
+                {
+                    MaybePreventChangingOption();
+                }
+
                 _forceEnableBurstSafetyChecks = value;
                 if (changed)
                 {
@@ -322,6 +332,12 @@ namespace Unity.Burst
             set
             {
                 bool changed = _enableBurstDebug != value;
+
+                if (changed)
+                {
+                    MaybePreventChangingOption();
+                }
+
                 _enableBurstDebug = value;
                 if (changed)
                 {
@@ -367,6 +383,8 @@ namespace Unity.Burst
                 if (changed) OnOptionsChanged();
             }
         }
+
+        internal bool RequiresSynchronousCompilation => EnableBurstCompileSynchronously || ForceBurstCompilationSynchronously;
 
         internal Action OptionsChanged { get; set; }
 
@@ -478,24 +496,33 @@ namespace Unity.Burst
 
             var flagsBuilderOut = new StringBuilder();
 
-            if (isJit && !isForEagerCompilation && ((attr?.CompileSynchronously ?? false) || ForceBurstCompilationSynchronously || EnableBurstCompileSynchronously))
+            if (isJit && !isForEagerCompilation && ((attr?.CompileSynchronously ?? false) || RequiresSynchronousCompilation))
             {
                 AddOption(flagsBuilderOut, GetOption(OptionJitEnableSynchronousCompilation));
             }
 
             var shouldEnableSafetyChecks = EnableBurstSafetyChecks;
             
-            // Eager compilation must always be asynchronous, but for synchronous jobs, we set the compilation priority to HighPriority.
-            // This has two effects:
-            // - These synchronous jobs will be compiled ahead of asynchronous jobs.
-            // - We will block on these compilations when entering PlayMode.
-            if (isJit && isForEagerCompilation && (attr?.CompileSynchronously ?? false))
-            {
-                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, CompilationPriority.HighPriority));
-            }
-
             if (isJit && isForEagerCompilation)
             {
+                // Eager compilation must always be asynchronous.
+                // - For synchronous jobs, we set the compilation priority to HighPriority.
+                //   This has two effects:
+                //   - These synchronous jobs will be compiled before asynchronous jobs.
+                //   - We will block on these compilations when entering PlayMode.
+                // - For asynchronous jobs, we set the compilation priority to LowPriority.
+                //   These jobs will be compiled after "normal" compilation requests
+                //   for asynchronous jobs.
+                // Note that we ignore the global "compile synchronously" option here because:
+                // - If it's set when entering play mode, then we'll wait for all
+                //   methods to be compiled anyway.
+                // - If it's not set when entering play mode, then we only want to wait
+                //   for methods that explicitly have CompileSynchronously=true on their attributes.
+                var priority = (attr?.CompileSynchronously ?? false)
+                    ? CompilationPriority.HighPriority
+                    : CompilationPriority.LowPriority;
+                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, priority));
+
                 // Don't call `burst.initialize` when we're eager-compiling.
                 AddOption(flagsBuilderOut, GetOption(OptionJitSkipBurstInitialize));
             }
@@ -579,10 +606,34 @@ namespace Unity.Burst
 
         private void MaybeTriggerRecompilation()
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
             if (IsGlobal && IsEnabled && !IsInitializing)
             {
                 BurstCompiler.TriggerRecompilation();
+            }
+#endif
+        }
+
+        /// <summary>
+        /// This method should be called before changing any option that requires
+        /// an Editor restart in versions older than 2019.3.
+        ///
+        /// This is because Editors older than 2019.3 don't support recompilation
+        /// of already-compiled jobs.
+        /// </summary>
+        private void MaybePreventChangingOption()
+        {
+#if UNITY_EDITOR && !UNITY_2019_3_OR_NEWER
+            if (IsGlobal && !IsInitializing)
+            {
+                if (RequiresRestartUtility.CalledFromUI)
+                {
+                    RequiresRestartUtility.RequiresRestart = true;
+                }
+                else
+                {
+                    throw new InvalidOperationException("This option cannot be set programmatically in 2019.2 and older versions of the Editor");
+                }
             }
 #endif
         }
@@ -714,23 +765,30 @@ namespace Unity.Burst
     }
 
 #if BURST_COMPILER_SHARED
-    public enum WaitUntilCompilationFinishedType
-#else
-    internal enum WaitUntilCompilationFinishedType
-#endif
-    {
-        WaitForEverything,
-        WaitForHighPriorityOnly,
-    }
-
-#if BURST_COMPILER_SHARED
     public enum CompilationPriority
 #else
     internal enum CompilationPriority
 #endif
     {
-        StandardPriority,
-        HighPriority
+        HighPriority     = 0,
+        StandardPriority = 1,
+        LowPriority      = 2,
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Some options cannot be applied until after an Editor restart, in Editor versions prior to 2019.3.
+    /// This class assists with allowing the relevant settings to be changed via the menu,
+    /// followed by displaying a message to the user to say a restart is necessary.
+    /// </summary>
+    internal static class RequiresRestartUtility
+    {
+        [ThreadStatic]
+        public static bool CalledFromUI;
+
+        [ThreadStatic]
+        public static bool RequiresRestart;
+    }
+#endif
 }
 #endif

@@ -131,7 +131,7 @@ namespace Unity.Burst.Editor
             if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState());
             _safetyChecks = BurstCompiler.Options.EnableBurstSafetyChecks;
 
-            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, onlyAssembliesThatPossiblyContainJobs: true);
+            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, BurstReflectionAssemblyOptions.OnlyIncludeAssembliesThatPossiblyContainJobs);
 
             Task.Run(
                 () =>
@@ -342,6 +342,8 @@ namespace Unity.Burst.Editor
 
             _treeView.OnGUI(GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)));
 
+            var lastRectSize = GUILayoutUtility.GetLastRect();
+
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
@@ -478,7 +480,7 @@ namespace Unity.Burst.Editor
                     _textArea.Text = textToRender;
                     if (targetChanged) _scrollPos = Vector2.zero;
                     _scrollPos = GUILayout.BeginScrollView(_scrollPos, true, true);
-                    _textArea.Render(_fixedFontStyle);
+                    _textArea.Render(_fixedFontStyle, _scrollPos, lastRectSize);
                     GUILayout.EndScrollView();
                 }
 
@@ -490,6 +492,7 @@ namespace Unity.Burst.Editor
 
                 if (fontSize != _fontSizeIndex)
                 {
+                    _textArea.Invalidate();
                     _fontSizeIndex = fontSize;
                     EditorPrefs.SetInt(FontSizeIndexPref, fontSize);
                     _fixedFontStyle = null;

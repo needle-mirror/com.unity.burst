@@ -173,6 +173,7 @@ extern ""C""
         {
             var buildTarget = report.summary.platform;
             var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(buildTarget);
+            HashSet<string> assemblyDefines = new HashSet<string>();
 
             // Early exit if burst is not activated or the platform is not supported
             if (BurstCompilerOptions.ForceDisableBurstCompilation || !aotSettingsForTarget.EnableBurstCompilation || !IsSupportedPlatform(buildTarget))
@@ -288,11 +289,12 @@ extern ""C""
                 else
                 {
                     rootAssemblies.Add(playerAssemblyPathToStaging);
+                    assemblyDefines.UnionWith(playerAssembly.defines);
                 }
             }
 
             commonOptions.AddRange(assemblyFolders.Select(folder => GetOption(OptionAotAssemblyFolder, folder)));
-
+            commonOptions.AddRange(assemblyDefines.Select(define => GetOption(OptionCompilationDefines, define)));
 
             // --------------------------------------------------------------------------------------------------------
             // 3) Calculate the different target CPU combinations for the specified OS

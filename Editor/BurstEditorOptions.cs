@@ -81,8 +81,14 @@ namespace Unity.Burst.Editor
                     global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
                     global.ForceEnableBurstSafetyChecks = EditorPrefs.GetBool(ForceEnableBurstSafetyChecksText, false);
 
+#if UNITY_2019_3_OR_NEWER
                     // Session only properties
                     global.EnableBurstSafetyChecks = SessionState.GetBool(EnableBurstSafetyChecksText, true);
+#else
+                    // In editors older than 2019.3, it's necessary to restart the Editor when changing safety check options.
+                    // So to make it possible to actually set the safety checks option, we need to persist it.
+                    global.EnableBurstSafetyChecks = EditorPrefs.GetBool(EnableBurstSafetyChecksText, true);
+#endif
                 }
                 finally
                 {
@@ -105,9 +111,15 @@ namespace Unity.Burst.Editor
             EditorPrefs.SetBool(EnableBurstTimingsText, global.EnableBurstTimings);
             EditorPrefs.SetBool(EnableBurstDebugText, global.EnableBurstDebug);
             EditorPrefs.SetBool(ForceEnableBurstSafetyChecksText, global.ForceEnableBurstSafetyChecks);
-            
+
+#if UNITY_2019_3_OR_NEWER
             // Session only properties
             SessionState.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+#else
+            // In editors older than 2019.3, it's necessary to restart the Editor when changing safety check options.
+            // So to make it possible to actually set the safety checks option, we need to persist it.
+            EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+#endif
         }
     }
 }

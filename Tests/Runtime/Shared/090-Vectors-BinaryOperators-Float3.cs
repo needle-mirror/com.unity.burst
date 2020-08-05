@@ -1,5 +1,4 @@
 using Burst.Compiler.IL.Tests.Helpers;
-using NUnit.Framework;
 using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests

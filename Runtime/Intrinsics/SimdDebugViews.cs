@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace Unity.Burst.Intrinsics
 {
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
     internal unsafe class V64DebugView
     {
         v64 m_Value;
@@ -155,7 +154,6 @@ namespace Unity.Burst.Intrinsics
             }
         }
     }
-#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 
     internal unsafe class V128DebugView
     {

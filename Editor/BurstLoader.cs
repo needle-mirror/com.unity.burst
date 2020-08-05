@@ -191,11 +191,9 @@ namespace Unity.Burst.Editor
             // Schedule upfront compilation of all methods in all assemblies,
             // with the goal of having as many methods as possible Burst-compiled
             // by the time the user enters PlayMode.
-            if (BurstCompiler.Options.IsEnabled
-                && !EditorApplication.isPlayingOrWillChangePlaymode
-                && Environment.GetEnvironmentVariable("UNITY_BURST_EAGER_COMPILATION_DISABLED") == null)
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
             {
-                TriggerEagerCompilation();
+                MaybeTriggerEagerCompilation();
             }
 
 #if UNITY_2020_1_OR_NEWER
@@ -252,20 +250,51 @@ namespace Unity.Burst.Editor
             switch (state)
             {
                 case PlayModeStateChange.ExitingEditMode:
-                    if (DebuggingLevel > 2)
+                    if (BurstCompiler.Options.RequiresSynchronousCompilation)
                     {
-                        UnityEngine.Debug.Log("Burst - Exiting EditMode - waiting for any pending synchronous jobs");
+                        if (DebuggingLevel > 2)
+                        {
+                            UnityEngine.Debug.Log("Burst - Exiting EditMode - waiting for any pending synchronous jobs");
+                        }
+
+                        EditorUtility.DisplayProgressBar("Burst", "Waiting for synchronous compilation to finish", -1);
+                        try
+                        {
+                            BurstCompiler.WaitUntilCompilationFinished();
+                        }
+                        finally
+                        {
+                            EditorUtility.ClearProgressBar();
+                        }
+
+                        if (DebuggingLevel > 2)
+                        {
+                            UnityEngine.Debug.Log("Burst - Exiting EditMode - finished waiting for any pending synchronous jobs");
+                        }
                     }
-
-                    // Even if Synchronous Compilation is unchecked, we still need potentially to block,
-                    // because individual jobs may have [BurstCompile(CompileSynchronously=true)].
-                    BurstCompiler.WaitUntilCompilationFinished();
-
-                    if (DebuggingLevel > 2)
+                    else
                     {
-                        UnityEngine.Debug.Log("Burst - Exiting EditMode - finished waiting for any pending synchronous jobs");
+                        BurstCompiler.ClearEagerCompilationQueues();
+                        if (DebuggingLevel > 2)
+                        {
+                            UnityEngine.Debug.Log("Burst - Exiting EditMode - cleared eager-compilation queues");
+                        }
                     }
+                    break;
 
+                case PlayModeStateChange.ExitingPlayMode:
+                    // If Synchronous Compilation is checked, then we will already have waited for eager-compilation to finish
+                    // before entering playmode. But if it was unchecked, we may have cancelled in-progress eager-compilation.
+                    // We start it again here.
+                    if (!BurstCompiler.Options.RequiresSynchronousCompilation)
+                    {
+                        if (DebuggingLevel > 2)
+                        {
+                            UnityEngine.Debug.Log("Burst - Exiting PlayMode - triggering eager-compilation");
+                        }
+
+                        MaybeTriggerEagerCompilation();
+                    }
                     break;
             }
         }
@@ -292,6 +321,66 @@ namespace Unity.Burst.Editor
             return BurstCompiler.Options.TryGetOptions(member, true, out flagsOut);
         }
 
+        private static void MaybeTriggerEagerCompilation()
+        {
+            var isEagerCompilationEnabled =
+                BurstCompiler.Options.IsEnabled
+                && Environment.GetEnvironmentVariable("UNITY_BURST_EAGER_COMPILATION_DISABLED") == null
+                && (!UnityEngine.Application.isBatchMode || Environment.GetEnvironmentVariable("UNITY_BURST_EAGER_COMPILATION_ENABLED") != null);
+
+            if (!isEagerCompilationEnabled)
+            {
+                return;
+            }
+
+            // Trigger compilation only if one of the following is true:
+            // 1. Unity version is 2020.1 or older, AND the CompilationPipeline.IsCodegenComplete() API exists and returns true
+            // 2. Unity version is 2020.1 or older, AND the CompilationPipeline.IsCodegenComplete() API does not exist
+            // 3. Unity version is 2020.2+
+            //
+            // Eager-compilation logging is only enabled if one of the following is true:
+            // 1. Unity version is 2020.2+
+            // 2. Unity version is 2020.1 or older, AND the CompilationPipeline.IsCodegenComplete() API exists and returns true
+#if UNITY_2020_2_OR_NEWER
+            var shouldTriggerEagerCompilation = true;
+            var loggingEnabled = true;
+#else
+            var isCodegenCompleteMethod = typeof(CompilationPipeline).GetMethod("IsCodegenComplete", BindingFlags.NonPublic | BindingFlags.Static);
+            var hasValidCodegenCompleteMethod =
+                isCodegenCompleteMethod != null &&
+                isCodegenCompleteMethod.GetParameters().Length == 0 &&
+                isCodegenCompleteMethod.ReturnType == typeof(bool);
+            var shouldTriggerEagerCompilation = true;
+            var loggingEnabled = false;
+            if (hasValidCodegenCompleteMethod)
+            {
+                try
+                {
+                    shouldTriggerEagerCompilation = (bool)isCodegenCompleteMethod.Invoke(null, Array.Empty<object>());
+                    loggingEnabled = shouldTriggerEagerCompilation;
+                    if (shouldTriggerEagerCompilation && DebuggingLevel > 2)
+                    {
+                        UnityEngine.Debug.Log("CompilationPipeline.IsCodegenComplete() exists and returned true");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (DebuggingLevel > 2)
+                    {
+                        UnityEngine.Debug.Log("CompilationPipeline.IsCodegenComplete() exists but there was an error calling it: " + ex);
+                    }
+                }
+            }
+#endif
+
+            BurstCompiler.EagerCompilationLoggingEnabled = loggingEnabled;
+
+            if (shouldTriggerEagerCompilation)
+            {
+                TriggerEagerCompilation();
+            }
+        }
+
         private static void TriggerEagerCompilation()
         {
             if (DebuggingLevel > 2)
@@ -299,7 +388,7 @@ namespace Unity.Burst.Editor
                 UnityEngine.Debug.Log("Burst - Finding methods for eager-compilation");
             }
 
-            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, onlyAssembliesThatPossiblyContainJobs: true);
+            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, BurstReflectionAssemblyOptions.OnlyIncludeAssembliesThatPossiblyContainJobs | BurstReflectionAssemblyOptions.ExcludeTestAssemblies);
             var compileTargets = BurstReflection.FindExecuteMethods(assemblyList).CompileTargets;
 
             if (DebuggingLevel > 2)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Unity.Jobs.LowLevel.Unsafe;
@@ -200,7 +201,7 @@ namespace Unity.Burst.Editor
                         try
                         {
                             var executeType = foundProducer.MakeGenericType(genericParams.ToArray());
-                            var executeMethod = executeType.GetMethod("Execute");
+                            var executeMethod = executeType.GetMethod("Execute", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                             if (executeMethod == null)
                             {
                                 throw new InvalidOperationException($"Burst reflection error. The type `{executeType}` does not contain an `Execute` method");
@@ -268,7 +269,7 @@ namespace Unity.Burst.Editor
         /// </summary>
         /// <param name="assemblyTypes">The assembly type</param>
         /// <returns>The list of assemblies valid for this platform</returns>
-        public static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes, bool onlyAssembliesThatPossiblyContainJobs = false)
+        public static List<System.Reflection.Assembly> GetAssemblyList(AssembliesType assemblyTypes, BurstReflectionAssemblyOptions options = BurstReflectionAssemblyOptions.None)
         {
             // TODO: Not sure there is a better way to match assemblies returned by CompilationPipeline.GetAssemblies
             // with runtime assemblies contained in the AppDomain.CurrentDomain.GetAssemblies()
@@ -279,7 +280,7 @@ namespace Unity.Burst.Editor
             var assemblyNames = new HashSet<string>();
             foreach (var assembly in assemblyList)
             {
-                CollectAssemblyNames(assembly, assemblyNames);
+                CollectAssemblyNames(assembly, assemblyNames, options);
             }
 
             var allAssemblies = new HashSet<System.Reflection.Assembly>();
@@ -289,7 +290,7 @@ namespace Unity.Burst.Editor
                 {
                     continue;
                 }
-                CollectAssembly(assembly, allAssemblies, onlyAssembliesThatPossiblyContainJobs);
+                CollectAssembly(assembly, allAssemblies, options);
             }
 
             return allAssemblies.ToList();
@@ -308,11 +309,11 @@ namespace Unity.Burst.Editor
             "UnityEngine.CoreModule"
         };
 
-        private static void CollectAssembly(System.Reflection.Assembly assembly, HashSet<System.Reflection.Assembly> collect, bool onlyAssembliesThatPossiblyContainJobs)
+        private static void CollectAssembly(System.Reflection.Assembly assembly, HashSet<System.Reflection.Assembly> collect, BurstReflectionAssemblyOptions options)
         {
             AssemblyName[] referencedAssemblies = null;
 
-            if (onlyAssembliesThatPossiblyContainJobs)
+            if (options.HasFlag(BurstReflectionAssemblyOptions.OnlyIncludeAssembliesThatPossiblyContainJobs))
             {
                 // If this assembly can't possibly contain anything related to scanning for things to compile,
                 // then skip it.
@@ -327,6 +328,12 @@ namespace Unity.Burst.Editor
                 }
             }
 
+            if (options.HasFlag(BurstReflectionAssemblyOptions.ExcludeTestAssemblies)
+                && assembly.GetReferencedAssemblies().Any(x => IsNUnitDll(x.Name)))
+            {
+                return;
+            }
+
             if (!collect.Add(assembly))
             {
                 return;
@@ -336,7 +343,7 @@ namespace Unity.Burst.Editor
             {
                 try
                 {
-                    CollectAssembly(System.Reflection.Assembly.Load(assemblyName), collect, onlyAssembliesThatPossiblyContainJobs);
+                    CollectAssembly(System.Reflection.Assembly.Load(assemblyName), collect, options);
                 }
                 catch (Exception)
                 {
@@ -348,9 +355,20 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static void CollectAssemblyNames(UnityEditor.Compilation.Assembly assembly, HashSet<string> collect)
+        private static bool IsNUnitDll(string value)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(value, "nunit.framework.dll") >= 0;
+        }
+
+        private static void CollectAssemblyNames(UnityEditor.Compilation.Assembly assembly, HashSet<string> collect, BurstReflectionAssemblyOptions options)
         {
             if (assembly == null || assembly.name == null) return;
+
+            if (options.HasFlag(BurstReflectionAssemblyOptions.ExcludeTestAssemblies)
+                && assembly.compiledAssemblyReferences.Any(x => IsNUnitDll(x)))
+            {
+                return;
+            }
 
             if (!collect.Add(assembly.name))
             {
@@ -359,7 +377,7 @@ namespace Unity.Burst.Editor
 
             foreach (var assemblyRef in assembly.assemblyReferences)
             {
-                CollectAssemblyNames(assemblyRef, collect);
+                CollectAssemblyNames(assemblyRef, collect, options);
             }
         }
 
@@ -490,5 +508,13 @@ namespace Unity.Burst.Editor
 
             public readonly bool CollectStaticMethods;
         }
+    }
+
+    [Flags]
+    internal enum BurstReflectionAssemblyOptions
+    {
+        None = 0,
+        OnlyIncludeAssembliesThatPossiblyContainJobs = 1,
+        ExcludeTestAssemblies = 2,
     }
 }

@@ -295,9 +295,13 @@ namespace Unity.Burst
 
         private static unsafe void EagerCompileLogCallback(void* userData, int logType, byte* message, byte* fileName, int lineNumber)
         {
-            // TODO: Eager-compilation logging is temporary disabled, until double-domain-reload API is available.
-            //BurstRuntime.Log(message, logType, fileName, lineNumber);
+            if (EagerCompilationLoggingEnabled)
+            {
+                BurstRuntime.Log(message, logType, fileName, lineNumber);
+            }
         }
+
+        internal static bool EagerCompilationLoggingEnabled = false;
 
         private static readonly string EagerCompileLogCallbackFunctionPointer;
 #endif
@@ -305,11 +309,14 @@ namespace Unity.Burst
         internal static void WaitUntilCompilationFinished()
         {
 #if UNITY_EDITOR
-            var waitType = Options.EnableBurstCompileSynchronously
-                ? WaitUntilCompilationFinishedType.WaitForEverything
-                : WaitUntilCompilationFinishedType.WaitForHighPriorityOnly;
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandWaitUntilCompilationFinished);
+#endif
+        }
 
-            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandWaitUntilCompilationFinished, waitType.ToString());
+        internal static void ClearEagerCompilationQueues()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandClearEagerCompilationQueues);
 #endif
         }
 
