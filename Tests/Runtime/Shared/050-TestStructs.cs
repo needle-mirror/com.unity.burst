@@ -526,6 +526,38 @@ namespace Burst.Compiler.IL.Tests
             return UnsafeUtility.SizeOf<NestedExplicit0>();
         }
 
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitStrictWithEmptySequentialFields
+        {
+            [FieldOffset(0)]
+            public SequentialStructEmptyNoAttributes FieldA;
+
+            [FieldOffset(0)]
+            public SequentialStructEmptyNoAttributes FieldB;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitStrictWithEmptySequentialFields()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStrictWithEmptySequentialFields>();
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ExplicitStrictWithEmptyAndNonEmptySequentialFields
+        {
+            [FieldOffset(0)]
+            public SequentialStructEmptyNoAttributes FieldA;
+
+            [FieldOffset(0)]
+            public SequentialStructWithoutSize FieldB;
+        }
+
+        [TestCompiler]
+        public static unsafe int TestExplicitStrictWithEmptyAndNonEmptySequentialFields()
+        {
+            return UnsafeUtility.SizeOf<ExplicitStrictWithEmptyAndNonEmptySequentialFields>();
+        }
+
         [TestCompiler]
         public static uint TestBitcast()
         {

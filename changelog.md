@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0-preview.4] - 2020-08-17
+
+
+### Fixed
+- Fixed a bug introduced in 1.4.0-preview.3 that prevented some `UnityEngine.Debug` methods (such as `DrawLine`) from being called
+- Fixed compiler error when explicit-layout struct contains a field which is itself an empty struct
+- Fixed a bug that if you used more than four arguments in a function _declared within another function_, and then implicitly captured a few variables, Burst would map the variables wrongly.
+
+### Changed
+- Bump com.unity.mathematics to 1.2.1 version
+
 ## [1.4.0-preview.3] - 2020-08-06
 
 

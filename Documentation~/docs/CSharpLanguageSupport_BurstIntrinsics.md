@@ -26,9 +26,10 @@ The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users t
 
 ## Processor specific SIMD extensions
 
-Burst exposes all Intel SIMD intrinsics from SSE and up to and including AVX2,
-by means of the `Unity.Burst.Intrinsics.X86` family of nested classes. These
-are intended to be statically imported as they are plain functions:
+Burst exposes all Intel SIMD intrinsics from SSE and up to and including AVX2
+by means of the `Unity.Burst.Intrinsics.X86` family of nested classes, 
+and **experimental** Arm Neon intrinsics for Armv7 and Armv8 by means of the `Unity.Burst.Intrinsics.Arm.Neon` class. 
+These are intended to be statically imported as they contain plain static functions:
 
 ```c#
 using static Unity.Burst.Intrinsics.X86;
@@ -43,6 +44,7 @@ using static Unity.Burst.Intrinsics.X86.Avx;
 using static Unity.Burst.Intrinsics.X86.Avx2;
 using static Unity.Burst.Intrinsics.X86.Fma;
 using static Unity.Burst.Intrinsics.X86.F16C;
+using static Unity.Burst.Intrinsics.Arm.Neon;
 ```
 
 Each feature level above provides a compile-time check to test if the feature
@@ -56,6 +58,10 @@ if (IsAvx2Supported)
 else if (IsSse42Supported)
 {
     // Code path for SSE4.2 instructions
+}
+else if (IsNeonSupported)
+{
+    // Code path for Arm Neon instructions
 }
 else
 {
@@ -75,10 +81,11 @@ intrinsics in Mono (exceptions listed below), which can be helpful if you need t
 debugger. Please note however that the reference implementations are very slow
 and only intended for managed debugging.
 
+> Please note that there is no reference managed implementation of Arm Neon intrinsics. This means that you cannot use the technique mentioned in the previous paragraph to step through the intrinsics in Mono.
 > Note that the FMA intrinsics that operate on doubles do not have a software fallback because of the inherit complexity in emulating fused 64-bit floating point math.
 
-Intrinsic usage is relatively straightforward and is based on the types `v128`
-and `v256`, which represent a 128-bit or 256-bit vector respectively. For example,
+Intrinsic usage is relatively straightforward and is based on the types `v64` (Arm only), `v128`
+and `v256`, which represent a 64-bit, 128-bit or 256-bit vector respectively. For example,
 given a `NativeArray<float>` and a `Lut` lookup table of v128 shuffle masks,
 a code fragment like this performs lane left packing, demonstrating the use
 of vector load/store reinterpretation and direct intrinsic calls:
@@ -92,13 +99,24 @@ Output.ReinterpretStore(outputIndex, packed);
 outputIndex += popcnt_u32((uint)m);
 ```
 
-In general the API mirrors the [C/C++ Intel instrinsics API](https://software.intel.com/sites/landingpage/IntrinsicsGuide/), with a few mostly
+The Intel intrinsics API mirrors the [C/C++ Intel instrinsics API](https://software.intel.com/sites/landingpage/IntrinsicsGuide/), with a few mostly
 mechanical differences:
 
 * All 128-bit vector types (`__m128`, `__m128i` and `__m128d`) have been collapsed into `v128`
 * All 256-bit vector types (`__m256`, `__m256i` and `__m256d`) have been collapsed into `v256`
 * All `_mm` prefixes on instructions and macros have been dropped, as C# has namespaces
 * All bitfield constants (for e.g. rounding mode selection) have been replaced with C# bitflag enum values
+
+The Arm Neon intrinsics API mirrors the [Arm C Language Extensions](https://developer.arm.com/architectures/instruction-sets/simd-isas/neon/intrinsics), 
+with the following differences:
+
+* All vector types have been collapsed into `v64` and `v128`, becoming "typeless". It means that you must make sure that the vector type actually contains expected element type and count when calling an API.
+* The *x2, *x3, *x4 vector types are not supported.
+* poly* types are not supported.
+* reinterpret* functions are not supported (they are not needed because of the usage of `v64` and `v128` vector types).
+* Intrinsic usage is only supported on Armv8 (64-bit) hardware.
+
+The Arm Neon intrinsics are **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS` preprocessor define.
 
 # `DllImport` and internal calls
 

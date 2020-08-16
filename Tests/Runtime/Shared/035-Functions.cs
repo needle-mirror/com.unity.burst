@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Unity.Burst;
+using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -70,6 +71,52 @@ namespace Burst.Compiler.IL.Tests
         public static int TestNoOptimization(int x)
         {
             return NoOptimization(x);
+        }
+
+        [TestCompiler(42)]
+        public static int TestImplicitCapture(int x)
+        {
+            return SomeFunction();
+
+            int SomeFunction()
+            {
+                return x;
+            }
+        }
+
+        public struct Pair
+        {
+            public int X;
+            public int Y;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new Pair { X = 13, Y = 42 };
+            }
+        }
+
+        [TestCompiler(42, typeof(Pair.Provider))]
+        public static int TestImplicitCaptureInLoop(int x, ref Pair rp)
+        {
+            int total = 0;
+            Pair p = rp;
+
+            for (int i = 0; i < x; i++)
+            {
+                total += SomeFunction(42, 42, 42, 42, 42, i);
+
+                int SomeFunction(int a, int b, int c, int d, int e, int otherI)
+                {
+                    if (p.Y != 0)
+                    {
+                        return (otherI == i) ? 56 : -13;
+                    }
+
+                    return 0;
+                }
+            }
+
+            return total;
         }
     }
 }
