@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5] - 2020-08-18
+
+
+### Fixed
+- Fixed compiler error when explicit-layout struct contains a field which is itself an empty struct
+- Fixed a bug that if you used more than four arguments in a function _declared within another function_, and then implicitly captured a few variables, Burst would map the variables wrongly.
+
 ## [1.3.4] - 2020-08-06
 
 
