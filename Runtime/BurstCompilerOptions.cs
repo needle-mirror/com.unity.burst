@@ -64,6 +64,7 @@ namespace Unity.Burst
         internal const string OptionJobMarshalling = "generate-job-marshalling-methods";
         internal const string OptionTempDirectory = "temp-folder=";
         internal const string OptionEnableDirectExternalLinking = "enable-direct-external-linking";
+        internal const string OptionLinkerOptions = "linker-options=";
 
         // -------------------------------------------------------
         // Options used by the Jit and Bcl compilers

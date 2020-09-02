@@ -348,6 +348,11 @@ extern ""C""
                     options.Add(GetOption(OptionStaticLinkage));
                 }
 
+                if (targetPlatform == TargetPlatform.Windows)
+                {
+                    options.Add(GetOption(OptionLinkerOptions, $"PdbAltPath=\"{PlayerSettings.productName}_{combination.OutputPath}\""));
+                }
+
                 // finally add method group options
                 options.AddRange(rootAssemblies.Select(path => GetOption(OptionRootAssembly, path)));
 
@@ -422,6 +427,14 @@ extern ""C""
                         $"{extraGlobalOptions} \"@{responseFile}\"",
                         new BclOutputErrorParser(),
                         report);
+
+                    // Additionally copy the pdb to the root of the player build so run in editor also locates the symbols
+                    var pdbPath = $"{Path.Combine(stagingOutputFolder, combination.LibraryName)}.pdb";
+                    if (File.Exists(pdbPath))
+                    {
+                        var dstPath = Path.Combine(TempStaging, $"{combination.LibraryName}.pdb");
+                        File.Copy(pdbPath, dstPath, overwrite: true);
+                    }
                 }
                 catch (BuildFailedException)
                 {

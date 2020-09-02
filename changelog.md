@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.6] - 2020-09-03
+
+
+### Fixed
+- Fixed a subtle codegen bug that could occur when the target is an Arm or AArch64 CPU with vectors of 3 elements.
+- Pdb location for player builds is now linked relative to the final lib_burst_generated.dll, this allows the crashdump utility to access the symbols and provide better callstacks.
+
+### Added
+
+### Removed
+
+### Changed
+- We now copy the lib_burst_generated.pdb into the root of the player build (in addition to being alongside the lib_burst_generated.dll), this allows the unity crash handler to resolve the callstacks from burst code.
+
+### Known Issues
+
 ## [1.3.5] - 2020-08-18
 
 
