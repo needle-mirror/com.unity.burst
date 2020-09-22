@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.4.0-preview.5] - 2020-09-23
+
+
+### Added
+- You can now select explicit x86/x64 architecture SIMD target for Universal Windows Platform.
+- An error message if attempting to BurstCompiler.CompileFunctionPointer() on a multicast delegate, since this is not supported in Burst.
+
+### Changed
+- When using "Executable Only" build type on Universal Windows Platform, Burst will now only generate code for a single CPU architecture that you're building for.
+- We now copy the lib_burst_generated.pdb into the root of the player build (in addition to being alongside the lib_burst_generated.dll), this allows the unity crash handler to resolve the callstacks from burst code.
+- Improved eager-compilation performance
+- Improved Burst Inspector loading time
+- Improved Burst initialization time
+
+### Removed
+
+### Fixed
+- Pdb location for player builds is now linked relative to the final lib_burst_generated.dll, this allows the crashdump utility to access the symbols and provide better callstacks.
+- bitmask intrinsic was broken on non intel platforms
+- Fix a bug where a `static readonly` variable that was a `System.Guid` would result in an internal compiler error.
+- Fixed a bug where `math.fmod` would be unable to find the correct SLEEF math function when compiling for double support on 32-bit platforms.
+- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now fixed.
+- Fixed a bug where a cloned function (say through no-aliasing propagation cloning) would re-create any global variables used rather than use the original variable.
+
+### Known Issues
+
 ## [1.4.0-preview.4] - 2020-08-17
 
 

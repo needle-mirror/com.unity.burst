@@ -68,6 +68,7 @@ namespace Unity.Burst
         internal const string OptionJobMarshalling = "generate-job-marshalling-methods";
         internal const string OptionTempDirectory = "temp-folder=";
         internal const string OptionEnableDirectExternalLinking = "enable-direct-external-linking";
+        internal const string OptionLinkerOptions = "linker-options=";
 
         // -------------------------------------------------------
         // Options used by the Jit and Bcl compilers
@@ -131,7 +132,7 @@ namespace Unity.Burst
         internal const string CompilerCommandEnableCompiler = "$enable_compiler";
         internal const string CompilerCommandDisableCompiler = "$disable_compiler";
         internal const string CompilerCommandTriggerRecompilation = "$trigger_recompilation";
-        internal const string CompilerCommandEagerCompileMethod = "$eager_compile_method";
+        internal const string CompilerCommandEagerCompileMethods = "$eager_compile_methods";
         internal const string CompilerCommandWaitUntilCompilationFinished = "$wait_until_compilation_finished";
         internal const string CompilerCommandClearEagerCompilationQueues = "$clear_eager_compilation_queues";
         internal const string CompilerCommandReset = "$reset";
@@ -325,7 +326,9 @@ namespace Unity.Burst
                 }
             }
         }
-
+		/// <summary> 
+		/// Enable debugging mode
+		/// </summary>
         public bool EnableBurstDebug
         {
             get => _enableBurstDebug;
@@ -609,7 +612,15 @@ namespace Unity.Burst
 #if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
             if (IsGlobal && IsEnabled && !IsInitializing)
             {
-                BurstCompiler.TriggerRecompilation();
+                UnityEditor.EditorUtility.DisplayProgressBar("Burst", "Waiting for compilation to finish", -1);
+                try
+                {
+                    BurstCompiler.TriggerRecompilation();
+                }
+                finally
+                {
+                    UnityEditor.EditorUtility.ClearProgressBar();
+                }
             }
 #endif
         }
@@ -790,5 +801,17 @@ namespace Unity.Burst
         public static bool RequiresRestart;
     }
 #endif
+
+    internal readonly struct EagerCompilationRequest
+    {
+        public EagerCompilationRequest(string encodedMethod, string options)
+        {
+            EncodedMethod = encodedMethod;
+            Options = options;
+        }
+
+        public readonly string EncodedMethod;
+        public readonly string Options;
+    }
 }
 #endif

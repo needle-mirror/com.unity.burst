@@ -349,6 +349,11 @@ extern ""C""
                     options.Add(GetOption(OptionStaticLinkage));
                 }
 
+                if (targetPlatform == TargetPlatform.Windows)
+                {
+                    options.Add(GetOption(OptionLinkerOptions, $"PdbAltPath=\"{PlayerSettings.productName}_{combination.OutputPath}\""));
+                }
+
                 // finally add method group options
                 options.AddRange(rootAssemblies.Select(path => GetOption(OptionRootAssembly, path)));
 
@@ -426,6 +431,14 @@ extern ""C""
                         $"{extraGlobalOptions} \"@{responseFile}\"",
                         new BclOutputErrorParser(),
                         report);
+
+                    // Additionally copy the pdb to the root of the player build so run in editor also locates the symbols
+                    var pdbPath = $"{Path.Combine(stagingOutputFolder, combination.LibraryName)}.pdb";
+                    if (File.Exists(pdbPath))
+                    {
+                        var dstPath = Path.Combine(TempStaging, $"{combination.LibraryName}.pdb");
+                        File.Copy(pdbPath, dstPath, overwrite: true);
+                    }
                 }
                 catch (BuildFailedException)
                 {
@@ -546,11 +559,21 @@ extern ""C""
             }
             else if (targetPlatform == TargetPlatform.UWP)
             {
-                // TODO: Make it configurable for x86 (sse2, sse4)
-                combinations.Add(new BurstOutputCombination("Plugins/x64", new TargetCpus(TargetCpu.X64_SSE4)));
-                combinations.Add(new BurstOutputCombination("Plugins/x86", new TargetCpus(TargetCpu.X86_SSE2)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(report.summary.platform);
+
+#if UNITY_2019_1_OR_NEWER
+                if (EditorUserBuildSettings.wsaUWPBuildType == WSAUWPBuildType.ExecutableOnly)
+                {
+                    combinations.Add(new BurstOutputCombination($"Plugins/{GetUWPTargetArchitecture()}", targetCpus));
+                }
+                else
+#endif
+                {
+                    combinations.Add(new BurstOutputCombination("Plugins/x64", aotSettingsForTarget.GetDesktopCpu64Bit()));
+                    combinations.Add(new BurstOutputCombination("Plugins/x86", aotSettingsForTarget.GetDesktopCpu32Bit()));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                }
             }
             else if (targetPlatform == TargetPlatform.Lumin)
             {
@@ -686,8 +709,31 @@ extern ""C""
                     targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
                     return TargetPlatform.Linux;
                 case BuildTarget.WSAPlayer:
-                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
-                    return TargetPlatform.UWP;
+                    {
+                        var uwpArchitecture = GetUWPTargetArchitecture();
+                        if (string.Equals(uwpArchitecture, "x64", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
+                        }
+                        else if (string.Equals(uwpArchitecture, "x86", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = aotSettingsForTarget.GetDesktopCpu32Bit();
+                        }
+                        else if (string.Equals(uwpArchitecture, "ARM", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = new TargetCpus(TargetCpu.THUMB2_NEON32);
+                        }
+                        else if (string.Equals(uwpArchitecture, "ARM64", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Unknown UWP CPU architecture: " + uwpArchitecture);
+                        }
+
+                        return TargetPlatform.UWP;
+                    }
                 case BuildTarget.XboxOne:
                     targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
@@ -729,6 +775,22 @@ extern ""C""
             ARMv7,
             ARM64,
             Universal
+        }
+
+        private static string GetUWPTargetArchitecture()
+        {
+            var architecture = EditorUserBuildSettings.wsaArchitecture;
+
+            if (string.Equals(architecture, "x64", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "x86", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "ARM", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "ARM64", StringComparison.OrdinalIgnoreCase))
+            {
+                return architecture;
+            }
+
+            // Default to x64 if editor user build setting is garbage
+            return "x64";
         }
 
         /// <summary>

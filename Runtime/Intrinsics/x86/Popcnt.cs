@@ -22,6 +22,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** popcnt r32, r32
             /// </remarks>
+			/// <param name="v">Integer to be counted in</param>
+			/// <returns>Count</returns>
             [DebuggerStepThrough]
             public static int popcnt_u32(uint v)
             {
@@ -41,6 +43,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** popcnt r64, r64
             /// </remarks>
+			/// <param name="v">Integer to be counted in</param>
+			/// <returns>Count</returns>
             [DebuggerStepThrough]
             public static int popcnt_u64(ulong v)
             {

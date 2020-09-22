@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.Burst.LowLevel;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -17,6 +19,10 @@ namespace Unity.Burst.Editor
     {
         // Cache the delegate to make sure it doesn't get collected.
         private static readonly BurstCompilerService.ExtractCompilerFlags TryGetOptionsFromMemberDelegate = TryGetOptionsFromMember;
+
+        private static readonly object EagerCompilationLockObject = new object();
+        private static readonly CancellationTokenSource EagerCompilationTokenSource = new CancellationTokenSource();
+        private static List<BurstCompileTarget> _cachedCompileTargets;
 
         /// <summary>
         /// Gets the location to the runtime path of burst.
@@ -117,24 +123,32 @@ namespace Unity.Burst.Editor
                 UnityEngine.Debug.LogWarning($"[com.unity.burst] Runtime directory set to {RuntimePath}");
             }
 
-            BurstEditorOptions.EnsureSynchronized();
-
             BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMemberDelegate);
+
+            // It's important that this call comes *after* BurstCompilerService.Initialize,
+            // otherwise any calls from within EnsureSynchronized to BurstCompilerService,
+            // such as BurstCompiler.Disable(), will silently fail.
+            BurstEditorOptions.EnsureSynchronized();
 
             EditorApplication.quitting += BurstCompiler.Shutdown;
 
             CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
             CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
             EditorApplication.playModeStateChanged += EditorApplicationOnPlayModeStateChanged;
-            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+            AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
 
             VersionUpdateCheck();
 
+            BurstReflection.EnsureInitialized();  
+
+#if !UNITY_2019_3_OR_NEWER
             // Workaround to update the list of assembly folders as soon as possible
             // in order for the JitCompilerService to not fail with AssemblyResolveExceptions.
+            // This workaround is only necessary for editors prior to 2019.3 (i.e. 2018.4),
+            // because 2019.3+ include a fix on the Unity side.
             try
             {
-                var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor);
+                var assemblyList = BurstReflection.AllEditorAssemblies;
                 var assemblyFolders = new HashSet<string>();
                 foreach (var assembly in assemblyList)
                 {
@@ -159,12 +173,13 @@ namespace Unity.Burst.Editor
                 {
                     UnityEngine.Debug.Log($"Burst - Change of list of assembly folders:\n{string.Join("\n", assemblyFolderList)}");
                 }
-                BurstCompiler.UpdateAssemblerFolders(assemblyFolderList);
+                BurstCompiler.UpdateAssemblerFolders(assemblyFolderList); 
             }
             catch
             {
                 // ignore
             }
+#endif
 
             // Notify the compiler about a domain reload
             if (IsDebugging)
@@ -345,7 +360,7 @@ namespace Unity.Burst.Editor
             var shouldTriggerEagerCompilation = true;
             var loggingEnabled = true;
 #else
-            var isCodegenCompleteMethod = typeof(CompilationPipeline).GetMethod("IsCodegenComplete", BindingFlags.NonPublic | BindingFlags.Static);
+            var isCodegenCompleteMethod = typeof(CompilationPipeline).GetMethod("IsCodegenComplete", BindingFlags.NonPublic | BindingFlags.Static); 
             var hasValidCodegenCompleteMethod =
                 isCodegenCompleteMethod != null &&
                 isCodegenCompleteMethod.GetParameters().Length == 0 &&
@@ -383,45 +398,82 @@ namespace Unity.Burst.Editor
 
         private static void TriggerEagerCompilation()
         {
-            if (DebuggingLevel > 2)
+            if (_cachedCompileTargets != null)
             {
-                UnityEngine.Debug.Log("Burst - Finding methods for eager-compilation");
+                Task.Run(ScheduleEagerCompilation, EagerCompilationTokenSource.Token);
             }
-
-            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, BurstReflectionAssemblyOptions.OnlyIncludeAssembliesThatPossiblyContainJobs | BurstReflectionAssemblyOptions.ExcludeTestAssemblies);
-            var compileTargets = BurstReflection.FindExecuteMethods(assemblyList).CompileTargets;
-
-            if (DebuggingLevel > 2)
+            else
             {
-                UnityEngine.Debug.Log($"Burst - Starting scheduling eager-compilation");
-            }
-
-            var methodCount = 0;
-            foreach (var compileTarget in compileTargets)
-            {
-                var member = compileTarget.IsStaticMethod
-                    ? (MemberInfo)compileTarget.Method
-                    : compileTarget.JobType;
-
-                if (compileTarget.Options.TryGetOptions(member, true, out var optionsString, isForEagerCompilation: true))
+                if (DebuggingLevel > 2)
                 {
-                    var encodedMethod = BurstCompilerService.GetMethodSignature(compileTarget.Method);
-                    BurstCompiler.EagerCompileMethod(encodedMethod, optionsString);
-                    methodCount++;
+                    UnityEngine.Debug.Log("Burst - Finding methods for eager-compilation");
                 }
-            }
 
-            if (DebuggingLevel > 2)
-            {
-                UnityEngine.Debug.Log($"Burst - Finished scheduling eager-compilation of {methodCount} methods");
+                var assemblyList = BurstReflection.EditorAssembliesThatCanPossiblyContainJobsExcludingTestAssemblies;
+
+                Task.Run(
+                    () =>
+                    {
+                        _cachedCompileTargets = BurstReflection.FindExecuteMethods(assemblyList, BurstReflectionAssemblyOptions.ExcludeTestAssemblies).CompileTargets;
+
+                        ScheduleEagerCompilation();
+                    },
+                    EagerCompilationTokenSource.Token);
             }
         }
 
-        private static void OnBeforeAssemblyReload()
+        private static void ScheduleEagerCompilation()
+        {
+            lock (EagerCompilationLockObject)
+            {
+                if (EagerCompilationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                if (_cachedCompileTargets == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (DebuggingLevel > 2)
+                {
+                    UnityEngine.Debug.Log($"Burst - Starting scheduling eager-compilation");
+                }
+
+                var methodsToCompile = new List<EagerCompilationRequest>();
+                foreach (var compileTarget in _cachedCompileTargets)
+                {
+                    var member = compileTarget.IsStaticMethod
+                        ? (MemberInfo)compileTarget.Method
+                        : compileTarget.JobType;
+
+                    if (compileTarget.Options.TryGetOptions(member, true, out var optionsString, isForEagerCompilation: true))
+                    {
+                        var encodedMethod = BurstCompilerService.GetMethodSignature(compileTarget.Method);
+                        methodsToCompile.Add(new EagerCompilationRequest(encodedMethod, optionsString));
+                    }
+                }
+
+                BurstCompiler.EagerCompileMethods(methodsToCompile);
+
+                if (DebuggingLevel > 2)
+                {
+                    UnityEngine.Debug.Log($"Burst - Finished scheduling eager-compilation of {methodsToCompile.Count} methods");
+                }
+            }
+        }
+
+        private static void OnDomainUnload(object sender, EventArgs e)
         {
             if (DebuggingLevel > 2)
             {
-                UnityEngine.Debug.Log($"Burst - BeforeAssemblyReload");
+                UnityEngine.Debug.Log($"Burst - OnDomainUnload");
+            }
+
+            lock (EagerCompilationLockObject)
+            {
+                EagerCompilationTokenSource.Cancel();
             }
 
             BurstCompiler.Cancel();

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 #if ENABLE_IL2CPP
 using System.Linq;
 #endif
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Unity.Burst
 {
@@ -54,7 +56,7 @@ namespace Unity.Burst
         /// <summary>
         /// Gets a value indicating whether Burst is enabled.
         /// </summary>
-#if UNITY_EDITOR
+#if UNITY_EDITOR || BURST_INTERNAL
         public static bool IsEnabled => _IsEnabled;
 #else
         public static bool IsEnabled => _IsEnabled && BurstCompilerHelper.IsBurstGenerated;
@@ -95,6 +97,15 @@ namespace Unity.Burst
             return (T)res;
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void VerifyDelegateIsNotMulticast<T>(T delegateMethod) where T : class
+        {
+            var delegateKind = delegateMethod as Delegate;
+            if (delegateKind.GetInvocationList().Length > 1)
+            {
+                throw new InvalidOperationException($"Burst does not support multicast delegates, please use a regular delegate for `{delegateMethod}'");
+            }
+        }
         /// <summary>
         /// Compile the following delegate into a function pointer with burst, invokable from a Burst Job or from regular C#.
         /// </summary>
@@ -103,6 +114,7 @@ namespace Unity.Burst
         /// <returns>A function pointer invokable from a Burst Job or from regular C#</returns>
         public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : class
         {
+            VerifyDelegateIsNotMulticast<T>(delegateMethod);
             // We have added support for runtime CompileDelegate in 2018.2+
             void* function = Compile(delegateMethod, true);
             return new FunctionPointer<T>(new IntPtr(function));
@@ -273,14 +285,32 @@ namespace Unity.Burst
 #endif
         }
 
-        internal static void EagerCompileMethod(string encodedMethod, string optionsString)
+        internal static void EagerCompileMethods(List<EagerCompilationRequest> requests)
         {
 #if UNITY_EDITOR
-            // The order of these arguments MUST match the corresponding code in JitCompilerService.EagerCompileMethod.
-            optionsString += "***" + EagerCompileCompileCallbackFunctionPointer;
-            optionsString += "***" + EagerCompileLogCallbackFunctionPointer;
-            optionsString += "***" + encodedMethod;
-            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandEagerCompileMethod, optionsString);
+            // The order of these arguments MUST match the corresponding code in JitCompilerService.EagerCompileMethods.
+            const string parameterSeparator = "***";
+            const string requestParametersSeparator = "+++";
+            const string methodSeparator = "```";
+
+            var builder = new StringBuilder();
+
+            builder.Append(EagerCompileCompileCallbackFunctionPointer);
+            builder.Append(parameterSeparator);
+            builder.Append(EagerCompileLogCallbackFunctionPointer);
+            builder.Append(parameterSeparator);
+
+            foreach (var request in requests)
+            {
+                builder.Append(request.EncodedMethod);
+                builder.Append(requestParametersSeparator);
+                builder.Append(request.Options);
+                builder.Append(methodSeparator);
+            }
+
+            builder.Append(parameterSeparator);
+
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandEagerCompileMethods, builder.ToString());
 #endif
         }
 
@@ -354,7 +384,7 @@ namespace Unity.Burst
 #endif
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || BURST_INTERNAL
         private static string SendCommandToCompiler(string commandName, string commandArgs = null)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));

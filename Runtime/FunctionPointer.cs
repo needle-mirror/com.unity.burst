@@ -59,6 +59,11 @@ namespace Unity.Burst
         /// </summary>
         public bool IsCreated => _ptr != IntPtr.Zero;
 
+		/// <summary>
+        /// Converts a pointer to a function pointer.
+        /// </summary>
+        /// <param name="ptr">The native pointer.</param>
+        /// <returns>An instance of this interface.</returns>
         IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr) => new FunctionPointer<T>(ptr);
     }
 }

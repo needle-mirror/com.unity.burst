@@ -125,6 +125,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypes).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypes_Ref_Delegate);
             Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.StructWithNonBlittableTypesWithMarshalAs).MakeByRefType() }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_TestStructs_StructWithNonBlittableTypesWithMarshalAs_Ref_Delegate);
             Register(typeof(int), new Type[] { typeof(Burst.Compiler.IL.Tests.Types.MyEnum) }, typeof(R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate), Call_R_Int32_P_0_Burst_Compiler_IL_Tests_Types_MyEnum_Delegate);
+            Register(typeof(int), new Type[] { typeof(System.Guid).MakeByRefType() }, typeof(R_Int32_P_0_System_Guid_Ref_Delegate), Call_R_Int32_P_0_System_Guid_Ref_Delegate);
             Register(typeof(int), new Type[] { typeof(System.IntPtr) }, typeof(R_Int32_P_0_IntPtr_Delegate), Call_R_Int32_P_0_IntPtr_Delegate);
             Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_Delegate);
             Register(typeof(int), new Type[] { typeof(Unity.Mathematics.bool2).MakeByRefType(), typeof(Unity.Mathematics.bool2).MakeByRefType() }, typeof(R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate), Call_R_Int32_P_0_Unity_Mathematics_bool2_Ref_1_Unity_Mathematics_bool2_Ref_Delegate);
@@ -1910,6 +1911,18 @@ namespace Burst.Compiler.IL.Tests
             object result = null;
             var arg0 = (Burst.Compiler.IL.Tests.Types.MyEnum)p[0];
             result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate int R_Int32_P_0_System_Guid_Ref_Delegate(ref System.Guid arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_Int32_P_0_System_Guid_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Int32_P_0_System_Guid_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (System.Guid)p[0];
+            result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

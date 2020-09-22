@@ -17,6 +17,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_addsub_ps
             /// <summary> Alternatively add and subtract packed single-precision (32-bit) floating-point elements in "a" to/from packed elements in "b", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 addsub_ps(v128 a, v128 b)
             {
@@ -30,6 +33,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_addsub_pd
             /// <summary> Alternatively add and subtract packed double-precision (64-bit) floating-point elements in "a" to/from packed elements in "b", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 addsub_pd(v128 a, v128 b)
             {
@@ -41,6 +47,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hadd_pd
             /// <summary> Horizontally add adjacent pairs of double-precision (64-bit) floating-point elements in "a" and "b", and pack the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hadd_pd(v128 a, v128 b)
             {
@@ -52,6 +61,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hadd_ps
             /// <summary> Horizontally add adjacent pairs of single-precision (32-bit) floating-point elements in "a" and "b", and pack the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hadd_ps(v128 a, v128 b)
             {
@@ -65,6 +77,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hsub_pd
             /// <summary> Horizontally subtract adjacent pairs of double-precision (64-bit) floating-point elements in "a" and "b", and pack the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hsub_pd(v128 a, v128 b)
             {
@@ -76,6 +91,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hsub_ps
             /// <summary> Horizontally add adjacent pairs of single-precision (32-bit) floating-point elements in "a" and "b", and pack the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hsub_ps(v128 a, v128 b)
             {
@@ -89,6 +107,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_movedup_pd
             /// <summary> Duplicate the low double-precision (64-bit) floating-point element from "a", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 movedup_pd(v128 a)
             {
@@ -101,6 +121,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_movehdup_ps
             /// <summary> Duplicate odd-indexed single-precision (32-bit) floating-point elements from "a", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 movehdup_ps(v128 a)
             {
@@ -115,6 +137,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_moveldup_ps
             /// <summary> Duplicate even-indexed single-precision (32-bit) floating-point elements from "a", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 moveldup_ps(v128 a)
             {

@@ -131,13 +131,13 @@ namespace Unity.Burst.Editor
             if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState());
             _safetyChecks = BurstCompiler.Options.EnableBurstSafetyChecks;
 
-            var assemblyList = BurstReflection.GetAssemblyList(AssembliesType.Editor, BurstReflectionAssemblyOptions.OnlyIncludeAssembliesThatPossiblyContainJobs);
+            var assemblyList = BurstReflection.EditorAssembliesThatCanPossiblyContainJobs;
 
             Task.Run(
                 () =>
                 {
                     // Do this stuff asynchronously.
-                    var result = BurstReflection.FindExecuteMethods(assemblyList);
+                    var result = BurstReflection.FindExecuteMethods(assemblyList, BurstReflectionAssemblyOptions.None);
                     _targets = result.CompileTargets;
                     _targets.Sort((left, right) => string.Compare(left.GetDisplayName(), right.GetDisplayName(), StringComparison.Ordinal));
                     return result;

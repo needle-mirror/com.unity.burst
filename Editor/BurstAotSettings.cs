@@ -119,14 +119,14 @@ namespace Unity.Burst.Editor
         internal static readonly string CpuTargetsX32_ToolTip = "Use this to specify the set of target architectures to support for the currently selected platform.";
         internal static bool CpuTargetsX32_Display(BuildTarget selectedTarget)
         {
-            return IsStandalone(selectedTarget) && Has32BitSupport(selectedTarget);
+            return (IsStandalone(selectedTarget) || selectedTarget == BuildTarget.WSAPlayer) && Has32BitSupport(selectedTarget);
         }
 
         internal static readonly string CpuTargetsX64_DisplayName = "Target 64Bit CPU Architectures";
         internal static readonly string CpuTargetsX64_ToolTip = "Use this to specify the target architectures to support for the currently selected platform.";
         internal static bool CpuTargetsX64_Display(BuildTarget selectedTarget)
         {
-            return IsStandalone(selectedTarget);
+            return IsStandalone(selectedTarget) || selectedTarget == BuildTarget.WSAPlayer;
         }
 
         internal static bool IsStandalone(BuildTarget target)
@@ -369,6 +369,7 @@ namespace Unity.Burst.Editor
 #endif
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
+                case BuildTarget.WSAPlayer:
                     return true;
                 default:
                     return false;
