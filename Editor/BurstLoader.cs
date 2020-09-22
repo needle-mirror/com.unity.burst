@@ -107,9 +107,12 @@ namespace Unity.Burst.Editor
                 UnityEngine.Debug.LogWarning($"[com.unity.burst] Runtime directory set to {RuntimePath}");
             }
 
-            BurstEditorOptions.EnsureSynchronized();
-
             BurstCompilerService.Initialize(RuntimePath, TryGetOptionsFromMemberDelegate);
+
+            // It's important that this call comes *after* BurstCompilerService.Initialize,
+            // otherwise any calls from within EnsureSynchronized to BurstCompilerService,
+            // such as BurstCompiler.Disable(), will silently fail.
+            BurstEditorOptions.EnsureSynchronized();
 
             EditorApplication.quitting += BurstCompiler.Shutdown;
 

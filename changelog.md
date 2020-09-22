@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.7] - 2020-09-23
+
+
+### Fixed
+- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now fixed.
+- Fixed a bug where `math.fmod` would be unable to find the correct SLEEF math function when compiling for double support on 32-bit platforms.
+- Fixed a bug where a cloned function (say through no-aliasing propagation cloning) would re-create any global variables used rather than use the original variable.
+
 ## [1.3.6] - 2020-09-03
 
 
