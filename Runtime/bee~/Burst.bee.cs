@@ -5,9 +5,13 @@ using Bee.Core;
 using Bee.DotNet;
 using JetBrains.Annotations;
 using NiceIO;
+#if NEW_BEE_NAMESPACES_REMOVE
+using Bee.NativeProgramSupport;
+using Bee.Tools;
+#else
 using Unity.BuildSystem.NativeProgramSupport;
 using Unity.BuildTools;
-
+#endif
 /*
 
 // Activate this part once we have found a workaround for compiling against a custom Unity.Burst.Unsafe
@@ -46,7 +50,7 @@ public abstract class BurstCompiler
     public abstract bool UseOwnToolchain { get; set; }
     public virtual bool OnlyStaticMethods { get; set; } = false;
 
-    public virtual string BurstBackend { get; set; } = "burst-llvm-9";
+    public virtual string BurstBackend { get; set; } = "burst-llvm-10";	// Bumping this, but really should not be specifying by default, or when we bump llvm dots runtime gets left behind
 
     // Options
     public virtual bool SafetyChecks { get; set; } = false;
@@ -61,6 +65,7 @@ public abstract class BurstCompiler
     public virtual bool EnableStaticLinkage { get; set; } = false;
     public virtual bool EnableJobMarshalling { get; set; } = false;
     public virtual bool EnableDirectExternalLinking { get; set; } = false;
+    public virtual string DisableWarnings { get; set; } = "";  // ; seperated list of ids, e.g. BC1370;BC1322
 
     static string[] GetBurstCommandLineArgs(
         BurstCompiler compiler,
@@ -92,7 +97,8 @@ public abstract class BurstCompiler
             compiler.EnableDirectExternalLinking ? "--enable-direct-external-linking" : "",
             compiler.DisableOpt ? "--disable-opt" : "",
             $"--threads={compiler.Threads}",
-            compiler.EnableGuard ? "--enable-guard" : ""
+            compiler.EnableGuard ? "--enable-guard" : "",
+            !String.IsNullOrEmpty(compiler.DisableWarnings) ? $"--disable-warnings={compiler.DisableWarnings}" : ""
         }.Concat(inputAssemblies.Select(asm => $"--root-assembly={asm.Path}"));
         if (!compiler.UseOwnToolchain)
             commandLineArguments = commandLineArguments.Concat(new[] {"--no-native-toolchain"});

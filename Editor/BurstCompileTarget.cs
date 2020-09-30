@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
 namespace Unity.Burst.Editor
 {
+    [DebuggerDisplay("{GetDisplayName(),nq}")]
     internal class BurstCompileTarget
     {
         public BurstCompileTarget(MethodInfo method, Type jobType, Type interfaceType, bool isStaticMethod)

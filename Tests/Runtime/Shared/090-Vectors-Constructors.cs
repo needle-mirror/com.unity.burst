@@ -45,6 +45,20 @@ namespace Burst.Compiler.IL.Tests
             return Vectors.ConvertToFloat((float4) new float4(a).x);
         }
 
+        [TestCompiler(DataRange.Standard)]
+        public static float Float4Half(float a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToFloat((float4)new float4(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static float Float4Half4(ref float4 a)
+        {
+            var h = new half4(a);
+            return Vectors.ConvertToFloat((float4)new float4(h).x);
+        }
+
         // ---------------------------------------------------
         // float3
         // ---------------------------------------------------
@@ -73,6 +87,20 @@ namespace Burst.Compiler.IL.Tests
             return Vectors.ConvertToFloat(new float3(new float2(a), 5.0f));
         }
 
+        [TestCompiler(DataRange.Standard)]
+        public static float Float3Half(float a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToFloat((float3)new float3(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static float Float3Half3(ref float3 a)
+        {
+            var h = new half3(a);
+            return Vectors.ConvertToFloat((float3)new float3(h).x);
+        }
+
         // ---------------------------------------------------
         // float2
         // ---------------------------------------------------
@@ -93,6 +121,20 @@ namespace Burst.Compiler.IL.Tests
         public static float Float2Float(float a)
         {
             return Vectors.ConvertToFloat(new float2(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static float Float2Half(float a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToFloat((float2)new float2(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static float Float2Half2(ref float2 a)
+        {
+            var h = new half2(a);
+            return Vectors.ConvertToFloat((float2)new float2(h).x);
         }
 
         // ---------------------------------------------------
@@ -228,6 +270,138 @@ namespace Burst.Compiler.IL.Tests
         public static int Bool22Ints(bool a, bool b)
         {
             return Vectors.ConvertToInt(new bool2(a, b));
+        }
+
+        // ---------------------------------------------------
+        // double4
+        // ---------------------------------------------------
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Int(int a)
+        {
+            return Vectors.ConvertToDouble(new double4(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Double3Double(double x)
+        {
+            return Vectors.ConvertToDouble(new double4(new double3(x), 5.0f));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Double2Double2(double x)
+        {
+            return Vectors.ConvertToDouble(new double4(new double2(x), new double2(5.0f)));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double44Doubles(double a)
+        {
+            return Vectors.ConvertToDouble(new double4(1.0f, 2.0f, 3.0f + a, 4.0f));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Double(double a)
+        {
+            return Vectors.ConvertToDouble(new double4(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Int4(ref int4 a)
+        {
+            return Vectors.ConvertToDouble((double4)new double4(a).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Half(double a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToDouble((double4)new double4(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double4Half4(ref double4 a)
+        {
+            var h = new half4(a);
+            return Vectors.ConvertToDouble((double4)new double4(h).x);
+        }
+
+        // ---------------------------------------------------
+        // double3
+        // ---------------------------------------------------
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double3Int(int a)
+        {
+            return Vectors.ConvertToDouble(new double3(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double33Doubles(double a)
+        {
+            return Vectors.ConvertToDouble(new double3(1.0f, 2.0f, 3.0f + a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double3Double(double a)
+        {
+            return Vectors.ConvertToDouble(new double3(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double3Double2Double(double a)
+        {
+            return Vectors.ConvertToDouble(new double3(new double2(a), 5.0f));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double3Half(double a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToDouble((double3)new double3(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double3Half3(ref double3 a)
+        {
+            var h = new half3(a);
+            return Vectors.ConvertToDouble((double3)new double3(h).x);
+        }
+
+        // ---------------------------------------------------
+        // double2
+        // ---------------------------------------------------
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double2Int(int a)
+        {
+            return Vectors.ConvertToDouble(new double2(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double22Doubles(double a)
+        {
+            return Vectors.ConvertToDouble(new double2(1.0f, 3.0f + a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double2Double(double a)
+        {
+            return Vectors.ConvertToDouble(new double2(a));
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double2Half(double a)
+        {
+            var h = new half(a);
+            return Vectors.ConvertToDouble((double2)new double2(h).x);
+        }
+
+        [TestCompiler(DataRange.Standard)]
+        public static double Double2Half2(ref double2 a)
+        {
+            var h = new half2(a);
+            return Vectors.ConvertToDouble((double2)new double2(h).x);
         }
     }
 }

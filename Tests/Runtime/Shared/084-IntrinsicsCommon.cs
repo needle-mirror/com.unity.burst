@@ -1,5 +1,6 @@
 using Burst.Compiler.IL.Tests.Helpers;
 using System;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityBenchShared;
@@ -9,6 +10,12 @@ namespace Burst.Compiler.IL.Tests
 {
     internal partial class IntrinsicsCommon
     {
+        [TestCompiler]
+        public static int CheckBurstCompiler()
+        {
+            return BurstCompiler.IsEnabled ? 1 : 0;
+        }
+
 #if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC
         [TestCompiler]
         public static void CheckPause()

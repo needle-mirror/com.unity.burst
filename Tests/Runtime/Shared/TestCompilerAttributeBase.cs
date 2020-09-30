@@ -278,165 +278,161 @@ namespace Burst.Compiler.IL.Tests
             Setup();
             var methodInfo = _originalMethod.Method.MethodInfo;
 
-            var arguments = GetArgumentsArray(_originalMethod);
-
-            // Special case for Compiler Exceptions when IL can't be translated
-            if (_expectCompilerException)
+            if (!RunningArmTestOnIntelCPU(methodInfo))
             {
-                // We still need to transform arguments here in case there's a function pointer that we expect to fail compilation.
-                var expectedExceptionResult = TryExpectedException(
-                    context,
-                    () => TransformArguments(_originalMethod.Method.MethodInfo, arguments, out _, out _, returnBox, out _),
-                    "Transforming arguments",
-                    type => true,
-                    "Any exception",
-                    false,
-                    false);
-                if (expectedExceptionResult != TryExpectedExceptionResult.DidNotThrowException)
+                var arguments = GetArgumentsArray(_originalMethod);
+
+                // Special case for Compiler Exceptions when IL can't be translated
+                if (_expectCompilerException)
                 {
-                    return context.CurrentResult;
-                }
-
-                return HandleCompilerException(context, methodInfo);
-            }
-
-            object[] nativeArgs;
-            Type[] nativeArgTypes;
-            TransformArguments(_originalMethod.Method.MethodInfo, arguments, out nativeArgs, out nativeArgTypes, returnBox, out Type returnBoxType);
-
-            bool isInRegistry = false;
-            Func<object, object[], object> nativeDelegateCaller;
-            var delegateType = CreateNativeDelegateType(_originalMethod.Method.MethodInfo.ReturnType, nativeArgTypes, out isInRegistry, out nativeDelegateCaller);
-            if (!isInRegistry)
-            {
-                Console.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
-            }
-
-            Delegate compiledFunction;
-            try
-            {
-                compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
-            }
-            catch (Exception ex) when (_expectedException != null && ex.GetType() == _expectedException)
-            {
-                context.CurrentResult.SetResult(ResultState.Success);
-                return context.CurrentResult;
-            }
-
-            Assert.IsTrue(returnBoxType == null || Marshal.SizeOf(returnBoxType) <= MaxReturnBoxSize);
-
-            if (compiledFunction == null)
-                return context.CurrentResult;
-
-            // Check for expected compiler warnings (we'll check for compiler errors below,
-            // but this is for tests that we expect to pass but still log a warning).
-            if (!CheckExpectedDiagnostics(context, "Compiling code"))
-            {
-                return context.CurrentResult;
-            }
-
-            if (_compileOnly) // If the test only wants to compile the code, bail now.
-            {
-                return context.CurrentResult;
-            }
-            else if (_expectedException != null) // Special case if we have an expected exception
-            {
-                if (TryExpectedException(context, () => _originalMethod.Method.Invoke(context.TestObject, arguments), ".NET", type => type == _expectedException, _expectedException.FullName, false) != TryExpectedExceptionResult.ThrewExpectedException)
-                {
-                    return context.CurrentResult;
-                }
-
-                if (TryExpectedException(context, () => nativeDelegateCaller(compiledFunction, nativeArgs), "Native", type => type == _expectedException, _expectedException.FullName, true) != TryExpectedExceptionResult.ThrewExpectedException)
-                {
-                    return context.CurrentResult;
-                }
-            }
-            else
-            {
-                object resultNative = null;
-
-                // We are forced to run native before managed, because on IL2CPP, if a parameter
-                // is a ref, it will keep the same memory location for both managed and burst
-                // while in .NET CLR we have a different behavior
-                // The result is that on functions expecting the same input value through the ref
-                // it won't be anymore true because the managed could have modified the value before
-                // burst
-
-                // ------------------------------------------------------------------
-                // Run Native (Before)
-                // ------------------------------------------------------------------
-                if (!RunManagedBeforeNative)
-                {
-                    resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
-                    if (returnBoxType != null)
+                    // We still need to transform arguments here in case there's a function pointer that we expect to fail compilation.
+                    var expectedExceptionResult = TryExpectedException(
+                        context,
+                        () => TransformArguments(_originalMethod.Method.MethodInfo, arguments, out _, out _, returnBox, out _),
+                        "Transforming arguments",
+                        type => true,
+                        "Any exception",
+                        false,
+                        false);
+                    if (expectedExceptionResult != TryExpectedExceptionResult.DidNotThrowException)
                     {
-                        resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        return context.CurrentResult;
                     }
+
+                    return HandleCompilerException(context, methodInfo);
                 }
 
-                // ------------------------------------------------------------------
-                // Run Managed
-                // ------------------------------------------------------------------
-                object resultClr;
-                // This option skips running the managed version completely
-                var overrideManagedResult = _originalMethod.Properties.Get("OverrideManagedResult");
-                if (overrideManagedResult != null)
+                object[] nativeArgs;
+                Type[] nativeArgTypes;
+                TransformArguments(_originalMethod.Method.MethodInfo, arguments, out nativeArgs, out nativeArgTypes, returnBox, out Type returnBoxType);
+
+                bool isInRegistry = false;
+                Func<object, object[], object> nativeDelegateCaller;
+                var delegateType = CreateNativeDelegateType(_originalMethod.Method.MethodInfo.ReturnType, nativeArgTypes, out isInRegistry, out nativeDelegateCaller);
+                if (!isInRegistry)
                 {
-                    Console.WriteLine($"Using OverrideManagedResult: `{overrideManagedResult}` to compare to burst `{resultNative}`, managed version not run");
-                    resultClr = overrideManagedResult;
+                    Console.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
+                }
+
+                Delegate compiledFunction;
+                try
+                {
+                    compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
+                }
+                catch (Exception ex) when (_expectedException != null && ex.GetType() == _expectedException)
+                {
+                    context.CurrentResult.SetResult(ResultState.Success);
+                    return context.CurrentResult;
+                }
+
+                Assert.IsTrue(returnBoxType == null || Marshal.SizeOf(returnBoxType) <= MaxReturnBoxSize);
+
+                if (compiledFunction == null)
+                    return context.CurrentResult;
+
+                if (_compileOnly) // If the test only wants to compile the code, bail now.
+                {
+                    return context.CurrentResult;
+                }
+                else if (_expectedException != null) // Special case if we have an expected exception
+                {
+                    if (TryExpectedException(context, () => _originalMethod.Method.Invoke(context.TestObject, arguments), ".NET", type => type == _expectedException, _expectedException.FullName, false) != TryExpectedExceptionResult.ThrewExpectedException)
+                    {
+                        return context.CurrentResult;
+                    }
+
+                    if (TryExpectedException(context, () => nativeDelegateCaller(compiledFunction, nativeArgs), "Native", type => type == _expectedException, _expectedException.FullName, true) != TryExpectedExceptionResult.ThrewExpectedException)
+                    {
+                        return context.CurrentResult;
+                    }
                 }
                 else
                 {
-                    resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
+                    object resultNative = null;
 
-                    if (returnBoxType != null)
+                    // We are forced to run native before managed, because on IL2CPP, if a parameter
+                    // is a ref, it will keep the same memory location for both managed and burst
+                    // while in .NET CLR we have a different behavior
+                    // The result is that on functions expecting the same input value through the ref
+                    // it won't be anymore true because the managed could have modified the value before
+                    // burst
+
+                    // ------------------------------------------------------------------
+                    // Run Native (Before)
+                    // ------------------------------------------------------------------
+                    if (!RunManagedBeforeNative)
                     {
-                        resultClr = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
+                        if (returnBoxType != null)
+                        {
+                            resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        }
                     }
-                }
 
-                var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");
-                if (overrideResultOnMono != null)
-                {
-                    Console.WriteLine($"Using OverrideResultOnMono: `{overrideResultOnMono}` instead of `{resultClr}` compare to burst `{resultNative}`");
-                    resultClr = overrideResultOnMono;
-                }
-
-                // ------------------------------------------------------------------
-                // Run Native (After)
-                // ------------------------------------------------------------------
-                if (RunManagedBeforeNative)
-                {
-                    resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
-                    if (returnBoxType != null)
+                    // ------------------------------------------------------------------
+                    // Run Managed
+                    // ------------------------------------------------------------------
+                    object resultClr;
+                    // This option skips running the managed version completely
+                    var overrideManagedResult = _originalMethod.Properties.Get("OverrideManagedResult");
+                    if (overrideManagedResult != null)
                     {
-                        resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        Console.WriteLine($"Using OverrideManagedResult: `{overrideManagedResult}` to compare to burst `{resultNative}`, managed version not run");
+                        resultClr = overrideManagedResult;
                     }
+                    else
+                    {
+                        resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
+
+                        if (returnBoxType != null)
+                        {
+                            resultClr = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        }
+                    }
+
+                    var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");
+                    if (overrideResultOnMono != null)
+                    {
+                        Console.WriteLine($"Using OverrideResultOnMono: `{overrideResultOnMono}` instead of `{resultClr}` compare to burst `{resultNative}`");
+                        resultClr = overrideResultOnMono;
+                    }
+
+                    // ------------------------------------------------------------------
+                    // Run Native (After)
+                    // ------------------------------------------------------------------
+                    if (RunManagedBeforeNative)
+                    {
+                        resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
+                        if (returnBoxType != null)
+                        {
+                            resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
+                        }
+                    }
+
+                    // Use our own version (for handling correctly float precision)
+                    AssertHelper.AreEqual(resultClr, resultNative, GetULP());
+
+                    // Validate deterministic outputs - Disabled for now
+                    //RunDeterminismValidation(_originalMethod, resultNative);
+
+                    // Allow to process native result
+                    ProcessNativeResult(_originalMethod, resultNative);
+
+                    context.CurrentResult.SetResult(ResultState.Success);
+
+                    PostAssert(context);
                 }
-                
-                // Use our own version (for handling correctly float precision)
-                AssertHelper.AreEqual(resultClr, resultNative, GetULP());
 
-                // Validate deterministic outputs - Disabled for now
-                //RunDeterminismValidation(_originalMethod, resultNative);
+                // Check that the method is actually in the registry
+                Assert.True(isInRegistry, "The test method is not in the registry, recompile the project with the updated StaticDelegateRegistry.generated.cs");
 
-                // Allow to process native result
-                ProcessNativeResult(_originalMethod, resultNative);
-
-                context.CurrentResult.SetResult(ResultState.Success);
-
-                PostAssert(context);
+                // Make an attempt to clean up arguments (to reduce wasted native heap memory)
+                DisposeObjects(arguments);
+                DisposeObjects(nativeArgs);
             }
-
-            // Check that the method is actually in the registry
-            Assert.True(isInRegistry, "The test method is not in the registry, recompile the project with the updated StaticDelegateRegistry.generated.cs");
 
             // Compile the method once again, this time for Arm CPU to check against gold asm images
             CompileDelegateForArm(methodInfo);
-
-            // Make an attempt to clean up arguments (to reduce wasted native heap memory)
-            DisposeObjects(arguments);
-            DisposeObjects(nativeArgs);
 
             CompleteTest(context);
 
@@ -667,11 +663,23 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        private bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
+        private static string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds)
+        {
+            if (diagnosticIds.Count() == 0)
+            {
+                return "None";
+            }
+            else
+            {
+                return string.Join(",", diagnosticIds);
+            }
+        }
+
+        protected bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
         {
             var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
             var expectedDiagnosticIds = _expectedDiagnosticIds.OrderBy(x => x);
-            string GetDiagnosticIds(IEnumerable<DiagnosticId> diagnosticIds) => string.Join(",", diagnosticIds);
+
             if (!loggedDiagnosticIds.SequenceEqual(expectedDiagnosticIds))
             {
                 context.CurrentResult.SetResult(ResultState.Failure, $"In {contextName} code, expecting diagnostic(s) to be logged with IDs {GetDiagnosticIds(_expectedDiagnosticIds)} but instead the following diagnostic(s) were logged: {GetDiagnosticIds(loggedDiagnosticIds)}");
@@ -681,6 +689,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
         protected virtual IEnumerable<DiagnosticId> GetLoggedDiagnosticIds() => Array.Empty<DiagnosticId>();
+        protected virtual IEnumerable<DiagnosticId> GetExpectedDiagnosticIds() => _expectedDiagnosticIds;
 
         protected void RunDeterminismValidation(TestMethod method, object resultNative)
         {
@@ -746,6 +755,8 @@ namespace Burst.Compiler.IL.Tests
         protected abstract unsafe Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType, byte* returnBox, out Type returnBoxType);
 
         protected abstract void CompileDelegateForArm(MethodInfo methodInfo);
+
+        protected abstract bool RunningArmTestOnIntelCPU(MethodInfo methodInfo);
 
         protected abstract object CompileFunctionPointer(MethodInfo methodInfo, Type functionType);
 

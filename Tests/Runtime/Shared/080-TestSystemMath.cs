@@ -1,5 +1,6 @@
 using System;
 using Burst.Compiler.IL.Tests.Helpers;
+using Unity.Burst;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -167,20 +168,20 @@ namespace Burst.Compiler.IL.Tests
             return Math.Sign(value);
         }
 
-        [TestCompiler(DataRange.Standard & ~DataRange.NaN)]
+        [TestCompiler(DataRange.Standard & ~DataRange.NaN, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static int TestSignFloat(float value)
         {
             return Math.Sign(value);
         }
 
-        [TestCompiler(float.NaN, ExpectedException = typeof(ArithmeticException))]
+        [TestCompiler(float.NaN, ExpectedException = typeof(ArithmeticException), ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int TestSignException(float value)
         {
             return Math.Sign(value);
         }
 
-        [TestCompiler(DataRange.Standard & ~DataRange.NaN)]
+        [TestCompiler(DataRange.Standard & ~DataRange.NaN, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static int TestSignDouble(double value)
         {
             return Math.Sign(value);

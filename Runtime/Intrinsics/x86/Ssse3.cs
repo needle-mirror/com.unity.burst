@@ -17,6 +17,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_abs_epi8
             /// <summary> Compute the absolute value of packed 8-bit integers in "a", and store the unsigned results in "dst".  </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 abs_epi8(v128 a)
             {
@@ -32,6 +34,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_abs_epi16
             /// <summary> Compute the absolute value of packed 16-bit integers in "a", and store the unsigned results in "dst".  </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 abs_epi16(v128 a)
             {
@@ -47,6 +51,8 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_abs_epi32
             /// <summary> Compute the absolute value of packed 32-bit integers in "a", and store the unsigned results in "dst".  </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 abs_epi32(v128 a)
             {
@@ -62,6 +68,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_shuffle_epi8
             /// <summary> Shuffle packed 8-bit integers in "a" according to shuffle control mask in the corresponding 8-bit element of "b", and store the results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 shuffle_epi8(v128 a, v128 b)
             {
@@ -86,6 +95,10 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_alignr_epi8
             /// <summary> Concatenate 16-byte blocks in "a" and "b" into a 32-byte temporary result, shift the result right by "count" bytes, and store the low 16 bytes in "dst".  </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="count">Byte count</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 alignr_epi8(v128 a, v128 b, int count)
             {
@@ -113,6 +126,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hadd_epi16
             /// <summary> Horizontally add adjacent pairs of 16-bit integers in "a" and "b", and pack the signed 16-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hadd_epi16(v128 a, v128 b)
             {
@@ -130,6 +146,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hadds_epi16
             /// <summary> Horizontally add adjacent pairs of 16-bit integers in "a" and "b" using saturation, and pack the signed 16-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hadds_epi16(v128 a, v128 b)
             {
@@ -147,6 +166,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hadd_epi32
             /// <summary> Horizontally add adjacent pairs of 32-bit integers in "a" and "b", and pack the signed 32-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hadd_epi32(v128 a, v128 b)
             {
@@ -160,6 +182,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hsub_epi16
             /// <summary> Horizontally subtract adjacent pairs of 16-bit integers in "a" and "b", and pack the signed 16-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hsub_epi16(v128 a, v128 b)
             {
@@ -177,6 +202,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hsubs_epi16
             /// <summary> Horizontally subtract adjacent pairs of 16-bit integers in "a" and "b" using saturation, and pack the signed 16-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hsubs_epi16(v128 a, v128 b)
             {
@@ -194,6 +222,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_hsub_epi32
             /// <summary> Horizontally subtract adjacent pairs of 32-bit integers in "a" and "b", and pack the signed 32-bit results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 hsub_epi32(v128 a, v128 b)
             {
@@ -207,6 +238,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_maddubs_epi16
             /// <summary> Vertically multiply each unsigned 8-bit integer from "a" with the corresponding signed 8-bit integer from "b", producing intermediate signed 16-bit integers. Horizontally add adjacent pairs of intermediate signed 16-bit integers, and pack the saturated results in "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 maddubs_epi16(v128 a, v128 b)
             {
@@ -224,7 +258,10 @@ namespace Unity.Burst.Intrinsics
 
 
             // _mm_mulhrs_epi16
-            /// <summary> Multiply packed 16-bit integers in "a" and "b", producing intermediate signed 32-bit integers. Truncate each intermediate integer to the 18 most significant bits, round by adding 1, and store bits [16:1] to "dst".  </summary>
+            /// <summary> Multiply packed 16-bit integers in "a" and "b", producing intermediate signed 32-bit integers. Truncate each intermediate integer to the 18 most significant bits, round by adding 1, and store bits [16:1] to "dst". </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mulhrs_epi16(v128 a, v128 b)
             {
@@ -245,6 +282,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_sign_epi8
             /// <summary> Negate packed 8-bit integers in "a" when the corresponding signed 8-bit integer in "b" is negative, and store the results in "dst". Element in "dst" are zeroed out when the corresponding element in "b" is zero. </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 sign_epi8(v128 a, v128 b)
             {
@@ -272,6 +312,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_sign_epi16
             /// <summary> Negate packed 16-bit integers in "a" when the corresponding signed 16-bit integer in "b" is negative, and store the results in "dst". Element in "dst" are zeroed out when the corresponding element in "b" is zero. </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 sign_epi16(v128 a, v128 b)
             {
@@ -299,6 +342,9 @@ namespace Unity.Burst.Intrinsics
 
             // _mm_sign_epi32
             /// <summary> Negate packed 32-bit integers in "a" when the corresponding signed 32-bit integer in "b" is negative, and store the results in "dst". Element in "dst" are zeroed out when the corresponding element in "b" is zero. </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 sign_epi32(v128 a, v128 b)
             {

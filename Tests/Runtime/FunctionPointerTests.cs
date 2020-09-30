@@ -5,7 +5,7 @@ using Unity.Burst;
 [TestFixture, BurstCompile]
 public class FunctionPointerTests
 {
-    [BurstCompile(CompileSynchronously = true)]
+    [BurstCompile(new[] { BurstCompilerOptions.DoNotEagerCompile  }, CompileSynchronously = true)]
     private static T StaticFunctionNoArgsGenericReturnType<T>()
     {
         return default;

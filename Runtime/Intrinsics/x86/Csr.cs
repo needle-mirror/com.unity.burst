@@ -124,26 +124,80 @@ namespace Unity.Burst.Intrinsics
         [Flags]
         public enum RoundingMode
         {
+			/// <summary>
+			/// Round to the nearest integer
+			/// </summary>
             FROUND_TO_NEAREST_INT = 0x00,
+			/// <summary>
+			/// Round to negative infinity
+			/// </summary>
             FROUND_TO_NEG_INF = 0x01,
+			/// <summary>
+			/// Round to positive infinity
+			/// </summary>
             FROUND_TO_POS_INF = 0x02,
+			/// <summary>
+			/// Round to zero
+			/// </summary>
             FROUND_TO_ZERO = 0x03,
+			/// <summary>
+			/// Round to current direction
+			/// </summary>
             FROUND_CUR_DIRECTION = 0x04,
 
+			/// <summary>
+			/// Do not suppress exceptions
+			/// </summary>
             FROUND_RAISE_EXC = 0x00,
+			/// <summary>
+			/// Suppress exceptions
+			/// </summary>
             FROUND_NO_EXC = 0x08,
 
+			/// <summary>
+			/// Round to the nearest integer without suppressing exceptions
+			/// </summary>
             FROUND_NINT = FROUND_TO_NEAREST_INT | FROUND_RAISE_EXC,
+			/// <summary>
+			/// Round using Floor function without suppressing exceptions
+			/// </summary>
             FROUND_FLOOR = FROUND_TO_NEG_INF | FROUND_RAISE_EXC,
+			/// <summary>
+			/// Round using Ceiling function without suppressing exceptions
+			/// </summary>
             FROUND_CEIL = FROUND_TO_POS_INF | FROUND_RAISE_EXC,
+			/// <summary>
+			/// Round by truncating without suppressing exceptions
+			/// </summary>
             FROUND_TRUNC = FROUND_TO_ZERO | FROUND_RAISE_EXC,
+			/// <summary>
+			/// Round using MXCSR.RC without suppressing exceptions
+			/// </summary>
             FROUND_RINT = FROUND_CUR_DIRECTION | FROUND_RAISE_EXC,
+			/// <summary>
+			/// Round using MXCSR.RC and suppressing exceptions
+			/// </summary>
             FROUND_NEARBYINT = FROUND_CUR_DIRECTION | FROUND_NO_EXC,
 
+			/// <summary>
+			/// Round to nearest integer and suppressing exceptions
+			/// </summary>
             FROUND_NINT_NOEXC = FROUND_TO_NEAREST_INT | FROUND_NO_EXC,
+			/// <summary>
+			/// Round using Floor function and suppressing exceptions
+			/// </summary>
             FROUND_FLOOR_NOEXC = FROUND_TO_NEG_INF | FROUND_NO_EXC,
+			/// <summary>
+			/// Round using Ceiling function and suppressing exceptions
+			/// </summary>
             FROUND_CEIL_NOEXC = FROUND_TO_POS_INF | FROUND_NO_EXC,
+			/// <summary>
+			/// Round by truncating and suppressing exceptions
+			/// </summary>
             FROUND_TRUNC_NOEXC = FROUND_TO_ZERO | FROUND_NO_EXC,
+			/// <summary>
+			/// Round using MXCSR.RC and suppressing exceptions
+			/// </summary>
             FROUND_RINT_NOEXC = FROUND_CUR_DIRECTION | FROUND_NO_EXC,
         }
 

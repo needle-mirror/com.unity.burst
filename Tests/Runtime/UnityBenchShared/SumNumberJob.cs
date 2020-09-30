@@ -9,7 +9,7 @@ namespace UnityBenchShared
 {
     internal struct SumNumbersTest : IJob, IDisposable
     {
-        public const int Count = 1000;
+        public const int Count = 10000000;
 
         public NativeArray<float> output;
 

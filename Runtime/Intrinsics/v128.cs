@@ -10,85 +10,297 @@ namespace Unity.Burst.Intrinsics
 	[DebuggerTypeProxy(typeof(V128DebugView))]
     public struct v128
     {
+		/// <summary>
+		/// Get the 0th Byte of the vector
+		/// </summary>
         [FieldOffset(0)] public byte Byte0;
+		/// <summary>
+		/// Get the 1st Byte of the vector
+		/// </summary>
         [FieldOffset(1)] public byte Byte1;
+		/// <summary>
+		/// Get the 2nd Byte of the vector
+		/// </summary>
         [FieldOffset(2)] public byte Byte2;
+		/// <summary>
+		/// Get the 3rd Byte of the vector
+		/// </summary>
         [FieldOffset(3)] public byte Byte3;
+		/// <summary>
+		/// Get the 4th Byte of the vector
+		/// </summary>
         [FieldOffset(4)] public byte Byte4;
+		/// <summary>
+		/// Get the 5th Byte of the vector
+		/// </summary>
         [FieldOffset(5)] public byte Byte5;
+		/// <summary>
+		/// Get the 6th Byte of the vector
+		/// </summary>
         [FieldOffset(6)] public byte Byte6;
+		/// <summary>
+		/// Get the 7th Byte of the vector
+		/// </summary>
         [FieldOffset(7)] public byte Byte7;
+		/// <summary>
+		/// Get the 8th Byte of the vector
+		/// </summary>
         [FieldOffset(8)] public byte Byte8;
+		/// <summary>
+		/// Get the 9th Byte of the vector
+		/// </summary>
         [FieldOffset(9)] public byte Byte9;
+		/// <summary>
+		/// Get the 10th Byte of the vector
+		/// </summary>
         [FieldOffset(10)] public byte Byte10;
+		/// <summary>
+		/// Get the 11th Byte of the vector
+		/// </summary>
         [FieldOffset(11)] public byte Byte11;
+		/// <summary>
+		/// Get the 12 Byte of the vector
+		/// </summary>
         [FieldOffset(12)] public byte Byte12;
+		/// <summary>
+		/// Get the 13th Byte of the vector
+		/// </summary>
         [FieldOffset(13)] public byte Byte13;
+		/// <summary>
+		/// Get the 14th Byte of the vector
+		/// </summary>
         [FieldOffset(14)] public byte Byte14;
+		/// <summary>
+		/// Get the 15th Byte of the vector
+		/// </summary>
         [FieldOffset(15)] public byte Byte15;
 
-        [FieldOffset(0)] public sbyte SByte0;
-        [FieldOffset(1)] public sbyte SByte1;
-        [FieldOffset(2)] public sbyte SByte2;
-        [FieldOffset(3)] public sbyte SByte3;
-        [FieldOffset(4)] public sbyte SByte4;
-        [FieldOffset(5)] public sbyte SByte5;
-        [FieldOffset(6)] public sbyte SByte6;
-        [FieldOffset(7)] public sbyte SByte7;
-        [FieldOffset(8)] public sbyte SByte8;
-        [FieldOffset(9)] public sbyte SByte9;
-        [FieldOffset(10)] public sbyte SByte10;
-        [FieldOffset(11)] public sbyte SByte11;
-        [FieldOffset(12)] public sbyte SByte12;
-        [FieldOffset(13)] public sbyte SByte13;
-        [FieldOffset(14)] public sbyte SByte14;
-        [FieldOffset(15)] public sbyte SByte15;
 
+		/// <summary>
+		/// Get the 0th SByte of the vector
+		/// </summary>
+        [FieldOffset(0)] public sbyte SByte0;
+		/// <summary>
+		/// Get the 1st SByte of the vector
+		/// </summary>
+        [FieldOffset(1)] public sbyte SByte1;
+		/// <summary>
+		/// Get the 2nd SByte of the vector
+		/// </summary>
+        [FieldOffset(2)] public sbyte SByte2;
+		/// <summary>
+		/// Get the 3rd SByte of the vector
+		/// </summary>
+        [FieldOffset(3)] public sbyte SByte3;
+		/// <summary>
+		/// Get the 4th SByte of the vector
+		/// </summary>
+        [FieldOffset(4)] public sbyte SByte4;
+		/// <summary>
+		/// Get the 5th SByte of the vector
+		/// </summary>
+        [FieldOffset(5)] public sbyte SByte5;
+		/// <summary>
+		/// Get the 6th SByte of the vector
+		/// </summary>
+        [FieldOffset(6)] public sbyte SByte6;
+		/// <summary>
+		/// Get the 7th SByte of the vector
+		/// </summary>
+        [FieldOffset(7)] public sbyte SByte7;
+		/// <summary>
+		/// Get the 8th SByte of the vector
+		/// </summary>
+        [FieldOffset(8)] public sbyte SByte8;
+		/// <summary>
+		/// Get the 9th SByte of the vector
+		/// </summary>
+        [FieldOffset(9)] public sbyte SByte9;
+		/// <summary>
+		/// Get the 10th SByte of the vector
+		/// </summary>
+        [FieldOffset(10)] public sbyte SByte10;
+		/// <summary>
+		/// Get the 11th SByte of the vector
+		/// </summary>
+        [FieldOffset(11)] public sbyte SByte11;
+		/// <summary>
+		/// Get the 12th SByte of the vector
+		/// </summary>
+        [FieldOffset(12)] public sbyte SByte12;
+		/// <summary>
+		/// Get the 13th SByte of the vector
+		/// </summary>
+        [FieldOffset(13)] public sbyte SByte13;
+		/// <summary>
+		/// Get the 14th SByte of the vector
+		/// </summary>
+        [FieldOffset(14)] public sbyte SByte14;
+		/// <summary>
+		/// Get the 15th SByte of the vector
+		/// </summary>
+        [FieldOffset(15)] public sbyte SByte15;
+		
+
+		/// <summary>
+		/// Get the 0th UShort of the vector
+		/// </summary>
         [FieldOffset(0)] public ushort UShort0;
+		/// <summary>
+		/// Get the 1st UShort of the vector
+		/// </summary>
         [FieldOffset(2)] public ushort UShort1;
+		/// <summary>
+		/// Get the 2nd UShort of the vector
+		/// </summary>
         [FieldOffset(4)] public ushort UShort2;
+		/// <summary>
+		/// Get the 3rd UShort of the vector
+		/// </summary>
         [FieldOffset(6)] public ushort UShort3;
+		/// <summary>
+		/// Get the 4th UShort of the vector
+		/// </summary>
         [FieldOffset(8)] public ushort UShort4;
+		/// <summary>
+		/// Get the 5th UShort of the vector
+		/// </summary>
         [FieldOffset(10)] public ushort UShort5;
+		/// <summary>
+		/// Get the 6th UShort of the vector
+		/// </summary>
         [FieldOffset(12)] public ushort UShort6;
+		/// <summary>
+		/// Get the 7th UShort of the vector
+		/// </summary>
         [FieldOffset(14)] public ushort UShort7;
 
+		/// <summary>
+		/// Get the 0th SShort of the vector
+		/// </summary>
         [FieldOffset(0)] public short SShort0;
+		/// <summary>
+		/// Get the 1st UShort of the vector
+		/// </summary>
         [FieldOffset(2)] public short SShort1;
+		/// <summary>
+		/// Get the 2nd UShort of the vector
+		/// </summary>
         [FieldOffset(4)] public short SShort2;
+		/// <summary>
+		/// Get the 3rd UShort of the vector
+		/// </summary>
         [FieldOffset(6)] public short SShort3;
+		/// <summary>
+		/// Get the 4th UShort of the vector
+		/// </summary>
         [FieldOffset(8)] public short SShort4;
+		/// <summary>
+		/// Get the 5th UShort of the vector
+		/// </summary>
         [FieldOffset(10)] public short SShort5;
+		/// <summary>
+		/// Get the 6th UShort of the vector
+		/// </summary>
         [FieldOffset(12)] public short SShort6;
+		/// <summary>
+		/// Get the 7th UShort of the vector
+		/// </summary>
         [FieldOffset(14)] public short SShort7;
 
+		/// <summary>
+		/// Get the 0th UInt of the vector
+		/// </summary>
         [FieldOffset(0)] public uint UInt0;
+		/// <summary>
+		/// Get the 1st UInt of the vector
+		/// </summary>
         [FieldOffset(4)] public uint UInt1;
+		/// <summary>
+		/// Get the 2nd UInt of the vector
+		/// </summary>
         [FieldOffset(8)] public uint UInt2;
+		/// <summary>
+		/// Get the 3rd UInt of the vector
+		/// </summary>
         [FieldOffset(12)] public uint UInt3;
 
+		/// <summary>
+		/// Get the 0th SInt of the vector
+		/// </summary>
         [FieldOffset(0)] public int SInt0;
+		/// <summary>
+		/// Get the 1st SInt of the vector
+		/// </summary>
         [FieldOffset(4)] public int SInt1;
+		/// <summary>
+		/// Get the 2nd SInt of the vector
+		/// </summary>
         [FieldOffset(8)] public int SInt2;
+		/// <summary>
+		/// Get the 3rd SInt of the vector
+		/// </summary>
         [FieldOffset(12)] public int SInt3;
 
+		/// <summary>
+		/// Get the 0th ULong of the vector
+		/// </summary>
         [FieldOffset(0)] public ulong ULong0;
+		/// <summary>
+		/// Get the 1st ULong of the vector
+		/// </summary>
         [FieldOffset(8)] public ulong ULong1;
 
+		/// <summary>
+		/// Get the 0th SLong of the vector
+		/// </summary>
         [FieldOffset(0)] public long SLong0;
+		/// <summary>
+		/// Get the 1st SLong of the vector
+		/// </summary>
         [FieldOffset(8)] public long SLong1;
 
+		/// <summary>
+		/// Get the 0th Float of the vector
+		/// </summary>
         [FieldOffset(0)] public float Float0;
+		/// <summary>
+		/// Get the 1st Float of the vector
+		/// </summary>
         [FieldOffset(4)] public float Float1;
+		/// <summary>
+		/// Get the 2nd Float of the vector
+		/// </summary>
         [FieldOffset(8)] public float Float2;
+		/// <summary>
+		/// Get the 3rd Float of the vector
+		/// </summary>
         [FieldOffset(12)] public float Float3;
 
+		/// <summary>
+		/// Get the 0th Double of the vector
+		/// </summary>
         [FieldOffset(0)] public double Double0;
+		/// <summary>
+		/// Get the 1st Double of the vector
+		/// </summary>
         [FieldOffset(8)] public double Double1;
+
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+		/// <summary>
+		/// Get the low half of the vector
+		/// </summary>
+        [FieldOffset(0)] public v64 Lo64;
+		/// <summary>
+		/// Get the high half of the vector
+		/// </summary>
+        [FieldOffset(8)] public v64 Hi64;
+#endif
 
         /// <summary>
         /// Splat a single byte across the v128
         /// </summary>
+		/// <param name="b">Splatted byte.</param>
         public v128(byte b)
         {
             this = default(v128);
@@ -98,6 +310,22 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 16 bytes
         /// </summary>
+		/// <param name="a">byte a.</param>
+		/// <param name="b">byte b.</param>
+		/// <param name="c">byte c.</param>
+		/// <param name="d">byte d.</param>
+		/// <param name="e">byte e.</param>
+		/// <param name="f">byte f.</param>
+		/// <param name="g">byte g.</param>
+		/// <param name="h">byte h.</param>
+		/// <param name="i">byte i.</param>
+		/// <param name="j">byte j.</param>
+		/// <param name="k">byte k.</param>
+		/// <param name="l">byte l.</param>
+		/// <param name="m">byte m.</param>
+		/// <param name="n">byte n.</param>
+		/// <param name="o">byte o.</param>
+		/// <param name="p">byte p.</param>
         public v128(
             byte a, byte b, byte c, byte d,
             byte e, byte f, byte g, byte h,
@@ -126,6 +354,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single sbyte across the v128
         /// </summary>
+		/// <param name="b">Splatted sbyte.</param>
         public v128(sbyte b)
         {
             this = default(v128);
@@ -135,6 +364,22 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 16 sbytes
         /// </summary>
+		/// <param name="a">sbyte a.</param>
+		/// <param name="b">sbyte b.</param>
+		/// <param name="c">sbyte c.</param>
+		/// <param name="d">sbyte d.</param>
+		/// <param name="e">sbyte e.</param>
+		/// <param name="f">sbyte f.</param>
+		/// <param name="g">sbyte g.</param>
+		/// <param name="h">sbyte h.</param>
+		/// <param name="i">sbyte i.</param>
+		/// <param name="j">sbyte j.</param>
+		/// <param name="k">sbyte k.</param>
+		/// <param name="l">sbyte l.</param>
+		/// <param name="m">sbyte m.</param>
+		/// <param name="n">sbyte n.</param>
+		/// <param name="o">sbyte o.</param>
+		/// <param name="p">sbyte p.</param>
         public v128(
             sbyte a, sbyte b, sbyte c, sbyte d,
             sbyte e, sbyte f, sbyte g, sbyte h,
@@ -163,6 +408,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single short across the v128
         /// </summary>
+		/// <param name="v">Splatted short.</param>
         public v128(short v)
         {
             this = default(v128);
@@ -172,6 +418,14 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 8 shorts
         /// </summary>
+		/// <param name="a">short a.</param>
+		/// <param name="b">short b.</param>
+		/// <param name="c">short c.</param>
+		/// <param name="d">short d.</param>
+		/// <param name="e">short e.</param>
+		/// <param name="f">short f.</param>
+		/// <param name="g">short g.</param>
+		/// <param name="h">short h.</param>
         public v128(short a, short b, short c, short d, short e, short f, short g, short h)
         {
             this = default(v128);
@@ -188,6 +442,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single ushort across the v128
         /// </summary>
+		/// <param name="v">Splatted ushort.</param>
         public v128(ushort v)
         {
             this = default(v128);
@@ -197,6 +452,14 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 8 ushorts
         /// </summary>
+		/// <param name="a">ushort a.</param>
+		/// <param name="b">ushort b.</param>
+		/// <param name="c">ushort c.</param>
+		/// <param name="d">ushort d.</param>
+		/// <param name="e">ushort e.</param>
+		/// <param name="f">ushort f.</param>
+		/// <param name="g">ushort g.</param>
+		/// <param name="h">ushort h.</param>
         public v128(ushort a, ushort b, ushort c, ushort d, ushort e, ushort f, ushort g, ushort h)
         {
             this = default(v128);
@@ -213,6 +476,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single int across the v128
         /// </summary>
+		/// <param name="v">Splatted int.</param>
         public v128(int v)
         {
             this = default(v128);
@@ -222,6 +486,10 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 4 ints
         /// </summary>
+		/// <param name="a">int a.</param>
+		/// <param name="b">int b.</param>
+		/// <param name="c">int c.</param>
+		/// <param name="d">int d.</param>
         public v128(int a, int b, int c, int d)
         {
             this = default(v128);
@@ -234,6 +502,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single uint across the v128
         /// </summary>
+		/// <param name="v">Splatted uint.</param>
         public v128(uint v)
         {
             this = default(v128);
@@ -243,6 +512,10 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 4 uints
         /// </summary>
+		/// <param name="a">uint a.</param>
+		/// <param name="b">uint b.</param>
+		/// <param name="c">uint c.</param>
+		/// <param name="d">uint d.</param>
         public v128(uint a, uint b, uint c, uint d)
         {
             this = default(v128);
@@ -255,6 +528,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single float across the v128
         /// </summary>
+		/// <param name="f">Splatted float.</param>
         public v128(float f)
         {
             this = default(v128);
@@ -264,6 +538,10 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 4 floats
         /// </summary>
+		/// <param name="a">float a.</param>
+		/// <param name="b">float b.</param>
+		/// <param name="c">float c.</param>
+		/// <param name="d">float d.</param>
         public v128(float a, float b, float c, float d)
         {
             this = default(v128);
@@ -276,6 +554,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single double across the v128
         /// </summary>
+		/// <param name="f">Splatted double.</param>
         public v128(double f)
         {
             this = default(v128);
@@ -285,6 +564,8 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 2 doubles
         /// </summary>
+		/// <param name="a">double a.</param>
+		/// <param name="b">double b.</param>
         public v128(double a, double b)
         {
             this = default(v128);
@@ -295,6 +576,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single long across the v128
         /// </summary>
+		/// <param name="f">Splatted long.</param>
         public v128(long f)
         {
             this = default(v128);
@@ -304,6 +586,8 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 2 longs
         /// </summary>
+		/// <param name="a">long a.</param>
+		/// <param name="b">long b.</param>
         public v128(long a, long b)
         {
             this = default(v128);
@@ -314,6 +598,7 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Splat a single ulong across the v128
         /// </summary>
+		/// <param name="f">Splatted ulong.</param>
         public v128(ulong f)
         {
             this = default(v128);
@@ -323,11 +608,27 @@ namespace Unity.Burst.Intrinsics
         /// <summary>
         /// Initialize the v128 with 2 ulongs
         /// </summary>
+		/// <param name="a">ulong a.</param>
+		/// <param name="b">ulong b.</param>
         public v128(ulong a, ulong b)
         {
             this = default(v128);
             ULong0 = a;
             ULong1 = b;
         }
+
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Initialize the v128 with 2 v64's
+        /// </summary>
+		/// <param name="lo">Low half of v64.</param>
+		/// <param name="hi">High half of v64.</param>
+        public v128(v64 lo, v64 hi)
+        {
+            this = default(v128);
+            Lo64 = lo;
+            Hi64 = hi;
+        }
+#endif
     }
 }

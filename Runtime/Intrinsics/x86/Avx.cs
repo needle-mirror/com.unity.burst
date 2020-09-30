@@ -153,6 +153,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed double-precision (64-bit) floating-point elements in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_pd(v256 a, v256 b)
             {
@@ -162,6 +165,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed single-precision (32-bit) floating-point elements in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_ps(v256 a, v256 b)
             {
@@ -171,6 +177,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Alternatively add and subtract packed double-precision (64-bit) floating-point elements in a to/from packed elements in b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_addsub_pd(v256 a, v256 b)
             {
@@ -180,6 +189,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Alternatively add and subtract packed single-precision (32-bit) floating-point elements in a to/from packed elements in b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_addsub_ps(v256 a, v256 b)
             {
@@ -189,6 +201,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise AND of packed double-precision (64-bit) floating-point elements in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_and_pd(v256 a, v256 b)
             {
@@ -198,6 +213,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise AND of packed single-precision (32-bit) floating-point elements in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_and_ps(v256 a, v256 b)
             {
@@ -207,6 +225,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise NOT of packed double-precision (64-bit) floating-point elements in a and then AND with b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_andnot_pd(v256 a, v256 b)
             {
@@ -216,6 +237,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise NOT of packed single-precision (32-bit) floating-point elements in a and then AND with b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_andnot_ps(v256 a, v256 b)
             {
@@ -236,6 +260,10 @@ namespace Unity.Burst.Intrinsics
             /// value in the second source operand is copied, else the value in the first
             /// source operand is copied
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blend_pd(v256 a, v256 b, int imm8)
             {
@@ -256,6 +284,10 @@ namespace Unity.Burst.Intrinsics
             /// value in the second source operand is copied, else the value in the first
             /// source operand is copied
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blend_ps(v256 a, v256 b, int imm8)
             {
@@ -272,6 +304,10 @@ namespace Unity.Burst.Intrinsics
             /// first source operand (second operand) depending on mask bits defined in the
             /// mask register operand (fourth operand).
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blendv_pd(v256 a, v256 b, v256 mask)
             {
@@ -289,6 +325,10 @@ namespace Unity.Burst.Intrinsics
             /// first source operand (second operand) depending on mask bits defined in the
             /// mask register operand (fourth operand).
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blendv_ps(v256 a, v256 b, v256 mask)
             {
@@ -304,6 +344,9 @@ namespace Unity.Burst.Intrinsics
             /// values in the first source operand by the four packed double-precision
             /// floating-point values in the second source operand
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_div_pd(v256 a, v256 b)
             {
@@ -320,6 +363,9 @@ namespace Unity.Burst.Intrinsics
             /// floating-point values in the first source operand by the eight packed
             /// single-precision floating-point values in the second source operand
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_div_ps(v256 a, v256 b)
             {
@@ -344,6 +390,10 @@ namespace Unity.Burst.Intrinsics
             /// low bit 0-3 of the mask is zero, the destination is set to zero.
             /// The process is replicated for the high elements of the destination.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_dp_ps(v256 a, v256 b, int imm8)
             {
@@ -359,6 +409,9 @@ namespace Unity.Burst.Intrinsics
             /// first source operand and second source operand and stores results in
             /// the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hadd_pd(v256 a, v256 b)
             {
@@ -374,6 +427,9 @@ namespace Unity.Burst.Intrinsics
             /// first source operand and second source operand and stores results in
             /// the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hadd_ps(v256 a, v256 b)
             {
@@ -389,6 +445,9 @@ namespace Unity.Burst.Intrinsics
             /// the first source operand and second source operand and stores results
             /// in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hsub_pd(v256 a, v256 b)
             {
@@ -404,6 +463,9 @@ namespace Unity.Burst.Intrinsics
             /// the first source operand and second source operand and stores results
             /// in the destination.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hsub_ps(v256 a, v256 b)
             {
@@ -419,6 +481,9 @@ namespace Unity.Burst.Intrinsics
             /// values in the first source operand and the second source operand and
             /// returns the maximum value for each pair of values to the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_pd(v256 a, v256 b)
             {
@@ -434,6 +499,9 @@ namespace Unity.Burst.Intrinsics
             /// values in the first source operand and the second source operand and
             /// returns the maximum value for each pair of values to the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_ps(v256 a, v256 b)
             {
@@ -449,6 +517,9 @@ namespace Unity.Burst.Intrinsics
             /// values in the first source operand and the second source operand and
             /// returns the minimum value for each pair of values to the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_pd(v256 a, v256 b)
             {
@@ -464,6 +535,9 @@ namespace Unity.Burst.Intrinsics
             /// values in the first source operand and the second source operand and
             /// returns the minimum value for each pair of values to the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_ps(v256 a, v256 b)
             {
@@ -480,6 +554,9 @@ namespace Unity.Burst.Intrinsics
             /// stores the packed double-precision floating-point results in the
             /// destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mul_pd(v256 a, v256 b)
             {
@@ -496,6 +573,9 @@ namespace Unity.Burst.Intrinsics
             /// operand, and stores the packed double-precision floating-point results in
             /// the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mul_ps(v256 a, v256 b)
             {
@@ -511,6 +591,9 @@ namespace Unity.Burst.Intrinsics
             /// floating-point values from the first source operand and the second
             /// source operand, and stores the result in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_or_pd(v256 a, v256 b)
             {
@@ -526,6 +609,9 @@ namespace Unity.Burst.Intrinsics
             /// floating-point values from the first source operand and the second
             /// source operand, and stores the result in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_or_ps(v256 a, v256 b)
             {
@@ -544,6 +630,10 @@ namespace Unity.Burst.Intrinsics
             /// the high quadword of each double quadword of the destination operand.
             /// The selector operand determines which values are moved to the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shuffle_pd(v256 a, v256 b, int imm8)
             {
@@ -563,6 +653,10 @@ namespace Unity.Burst.Intrinsics
             /// of the destination. The selector operand determines which values are moved
             /// to the destination.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shuffle_ps(v256 a, v256 b, int imm8)
             {
@@ -578,6 +672,9 @@ namespace Unity.Burst.Intrinsics
             /// values of the second Source operand from the first Source operand, and
             /// stores the packed double-precision floating-point results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_pd(v256 a, v256 b)
             {
@@ -594,6 +691,9 @@ namespace Unity.Burst.Intrinsics
             /// operand, and stores the packed single-precision floating-point results in
             /// the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_ps(v256 a, v256 b)
             {
@@ -609,6 +709,9 @@ namespace Unity.Burst.Intrinsics
             /// floating-point values from the first source operand and the second
             /// source operand, and stores the result in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_xor_pd(v256 a, v256 b)
             {
@@ -624,6 +727,9 @@ namespace Unity.Burst.Intrinsics
             /// floating-point values from the first source operand and the second
             /// source operand, and stores the result in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_xor_ps(v256 a, v256 b)
             {
@@ -645,6 +751,10 @@ namespace Unity.Burst.Intrinsics
             /// compiler may generate SSE2 instructions if it is warranted for performance
             /// reasons.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmp_pd(v128 a, v128 b, int imm8)
             {
@@ -702,6 +812,10 @@ namespace Unity.Burst.Intrinsics
             /// (immediate) specifies the type of comparison performed on each of the pairs
             /// of packed values.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmp_pd(v256 a, v256 b, int imm8)
             {
@@ -724,6 +838,10 @@ namespace Unity.Burst.Intrinsics
             /// compiler may generate SSE2 instructions if it is warranted for performance
             /// reasons.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmp_ps(v128 a, v128 b, int imm8)
             {
@@ -781,6 +899,10 @@ namespace Unity.Burst.Intrinsics
             /// (immediate) specifies the type of comparison performed on each of the pairs
             /// of packed values.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmp_ps(v256 a, v256 b, int imm8)
             {
@@ -803,6 +925,10 @@ namespace Unity.Burst.Intrinsics
             /// For compare predicate values in range 0-7 compiler may generate SSE2
             /// instructions if it is warranted for performance reasons.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmp_sd(v128 a, v128 b, int imm8)
             {
@@ -827,6 +953,10 @@ namespace Unity.Burst.Intrinsics
             /// For compare predicate values in range 0-7 compiler may generate SSE2
             /// instructions if it is warranted for performance reasons.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmp_ss(v128 a, v128 b, int imm8)
             {
@@ -843,6 +973,7 @@ namespace Unity.Burst.Intrinsics
             /// Converts four packed signed doubleword integers in the source operand to
             /// four packed double-precision floating-point values in the destination
             /// </remarks>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi32_pd(v128 a)
             {
@@ -857,6 +988,8 @@ namespace Unity.Burst.Intrinsics
             /// Converts eight packed signed doubleword integers in the source operand to
             /// eight packed double-precision floating-point values in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi32_ps(v256 a)
             {
@@ -874,6 +1007,8 @@ namespace Unity.Burst.Intrinsics
             /// operand to four packed single-precision floating-point values in the
             /// destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_cvtpd_ps(v256 a)
             {
@@ -892,6 +1027,8 @@ namespace Unity.Burst.Intrinsics
             /// Converts eight packed single-precision floating-point values in the source
             /// operand to eight signed doubleword integers in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtps_epi32(v256 a)
             {
@@ -909,6 +1046,8 @@ namespace Unity.Burst.Intrinsics
             /// operand to four packed double-precision floating-point values in the
             /// destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtps_pd(v128 a)
             {
@@ -930,6 +1069,8 @@ namespace Unity.Burst.Intrinsics
             /// integer, the floating-point invalid exception is raised, and if this
             /// exception is masked, the indefinite integer value (80000000H) is returned
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_cvttpd_epi32(v256 a)
             {
@@ -945,6 +1086,8 @@ namespace Unity.Burst.Intrinsics
             /// Converts four packed double-precision floating-point values in the source
             /// operand to four packed signed doubleword integers in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_cvtpd_epi32(v256 a)
             {
@@ -967,6 +1110,8 @@ namespace Unity.Burst.Intrinsics
             /// integer, the floating-point invalid exception is raised, and if this
             /// exception is masked, the indefinite integer value (80000000H) is returned
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvttps_epi32(v256 a)
             {
@@ -983,6 +1128,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// Identical in HPC# to accessing Float0, kept for compatibility with existing code while porting.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Float</returns>
             [DebuggerStepThrough]
             public static float mm256_cvtss_f32(v256 a)
             {
@@ -996,6 +1143,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VEXTRACTF128 xmm1/v128, ymm2, imm8
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_extractf128_ps(v256 a, int imm8)
             {
@@ -1008,6 +1158,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VEXTRACTF128 xmm1/v128, ymm2, imm8
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_extractf128_pd(v256 a, int imm8)
             {
@@ -1020,6 +1173,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VEXTRACTF128 xmm1/v128, ymm2, imm8
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_extractf128_si256(v256 a, int imm8)
             {
@@ -1059,6 +1215,9 @@ namespace Unity.Burst.Intrinsics
             /// using 8-bit control fields in the low bytes of corresponding elements the
             /// shuffle control and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 permutevar_ps(v128 a, v128 b)
             {
@@ -1085,6 +1244,9 @@ namespace Unity.Burst.Intrinsics
             /// using 8-bit control fields in the low bytes of corresponding elements the
             /// shuffle control and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permutevar_ps(v256 a, v256 b)
             {
@@ -1100,6 +1262,9 @@ namespace Unity.Burst.Intrinsics
             /// using four 2-bit control fields in the 8-bit immediate and store results
             /// in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 permute_ps(v128 a, int imm8)
             {
@@ -1117,6 +1282,9 @@ namespace Unity.Burst.Intrinsics
             /// using four 2-bit control fields in the 8-bit immediate and store results
             /// in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute_ps(v256 a, int imm8)
             {
@@ -1132,6 +1300,9 @@ namespace Unity.Burst.Intrinsics
             /// using 8-bit control fields in the low bytes of the second source operand
             /// and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 permutevar_pd(v128 a, v128 b)
             {
@@ -1152,6 +1323,9 @@ namespace Unity.Burst.Intrinsics
             /// using 8-bit control fields in the low bytes of the second source operand
             /// and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permutevar_pd(v256 a, v256 b)
             {
@@ -1177,6 +1351,9 @@ namespace Unity.Burst.Intrinsics
             /// using two, 1-bit control fields in the low 2 bits of the 8-bit immediate
             /// and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute_pd(v256 a, int imm8)
             {
@@ -1192,6 +1369,9 @@ namespace Unity.Burst.Intrinsics
             /// using two, 1-bit control fields in the low 2 bits of the 8-bit immediate
             /// and store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 permute_pd(v128 a, int imm8)
             {
@@ -1226,6 +1406,10 @@ namespace Unity.Burst.Intrinsics
             /// operand and second source operand using bits in the 8-bit immediate and
             /// store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute2f128_ps(v256 a, v256 b, int imm8)
             {
@@ -1241,6 +1425,10 @@ namespace Unity.Burst.Intrinsics
             /// operand and second source operand using bits in the 8-bit immediate and
             /// store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute2f128_pd(v256 a, v256 b, int imm8)
             {
@@ -1257,6 +1445,10 @@ namespace Unity.Burst.Intrinsics
             /// operand and second source operand using bits in the 8-bit immediate and
             /// store results in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute2f128_si256(v256 a, v256 b, int imm8)
             {
@@ -1269,6 +1461,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VBROADCASTSS ymm1, m32
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcast_ss(void* ptr)
             {
@@ -1281,6 +1475,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VBROADCASTSS xmm1, m32
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcast_ss(void* ptr)
             {
@@ -1293,6 +1489,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VBROADCASTSD ymm1, m64
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcast_sd(void* ptr)
             {
@@ -1305,6 +1503,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VBROADCASTF128 ymm1, v128
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcast_ps(void* ptr)
             {
@@ -1315,7 +1515,7 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 128 bits from memory (composed of 2 packed double-precision (64-bit) floating-point elements) to all elements of dst.
             /// </summary>
-            /// <param name="ptr"></param>
+            /// <param name="ptr">Pointer</param>
             /// <returns>
             /// **** VBROADCASTF128 ymm1, v128
             /// </returns>
@@ -1335,6 +1535,10 @@ namespace Unity.Burst.Intrinsics
             /// imm8[0]. The remaining portions of the destination are written by the
             /// corresponding fields of the first source operand
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insertf128_ps(v256 a, v128 b, int imm8)
             {
@@ -1354,6 +1558,10 @@ namespace Unity.Burst.Intrinsics
             /// imm8[0]. The remaining portions of the destination are written by the
             /// corresponding fields of the first source operand
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insertf128_pd(v256 a, v128 b, int imm8)
             {
@@ -1370,6 +1578,10 @@ namespace Unity.Burst.Intrinsics
             /// imm8[0]. The remaining portions of the destination are written by the
             /// corresponding fields of the first source operand
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">imm8</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insertf128_si256(v256 a, v128 b, int imm8)
             {
@@ -1383,6 +1595,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_load_ps(void* ptr)
             {
@@ -1396,6 +1610,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="val">Value</param>
             [DebuggerStepThrough]
             public static void mm256_store_ps(void* ptr, v256 val)
             {
@@ -1409,6 +1625,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_load_pd(void* ptr)
             {
@@ -1422,6 +1640,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_store_pd(void* ptr, v256 a)
             {
@@ -1435,6 +1655,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu_pd(void* ptr)
             {
@@ -1448,6 +1670,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_storeu_pd(void* ptr, v256 a)
             {
@@ -1461,6 +1685,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu_ps(void* ptr)
             {
@@ -1474,6 +1700,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVUPS v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_storeu_ps(void* ptr, v256 a)
             {
@@ -1487,6 +1715,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVDQU ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_load_si256(void* ptr)
             {
@@ -1500,6 +1730,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVDQU v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="v">Vector</param>
             [DebuggerStepThrough]
             public static void mm256_store_si256(void* ptr, v256 v)
             {
@@ -1513,6 +1745,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVDQU ymm1, v256
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu_si256(void* ptr)
             {
@@ -1526,6 +1760,8 @@ namespace Unity.Burst.Intrinsics
             /// **** VMOVDQU v256, ymm1
             /// Burst only generates unaligned stores.
             /// </remarks>
+			/// <param name="ptr">Pointer</param>
+			/// <param name="v">Vector</param>
             [DebuggerStepThrough]
             public static void mm256_storeu_si256(void* ptr, v256 v)
             {
@@ -1541,6 +1777,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu2_m128(void* hiaddr, void* loaddr)
             {
@@ -1556,6 +1795,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu2_m128d(void* hiaddr, void* loaddr)
             {
@@ -1570,6 +1812,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_loadu2_m128i(void* hiaddr, void* loaddr)
             {
@@ -1577,10 +1822,14 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>
-            /// Set packed __m256 vector dst with the supplied values. 
+            /// Set packed __m256 vector dst with the supplied values.
+			/// </summary>
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_m128(v128 hi, v128 lo)
             {
@@ -1596,6 +1845,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <param name="val">Value</param>
             [DebuggerStepThrough]
             public static void mm256_storeu2_m128(void* hiaddr, void* loaddr, v256 val)
             {
@@ -1612,6 +1864,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <param name="val">Value</param>
             [DebuggerStepThrough]
             public static void mm256_storeu2_m128d(void* hiaddr, void* loaddr, v256 val)
             {
@@ -1627,6 +1882,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This is a composite function which can generate more than one instruction.
             /// </remarks>
+			/// <param name="hiaddr">High address pointer</param>
+			/// <param name="loaddr">Low address pointer</param>
+			/// <param name="val">Value</param>
             [DebuggerStepThrough]
             public static void mm256_storeu2_m128i(void* hiaddr, void* loaddr, v256 val)
             {
@@ -1642,6 +1900,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPD xmm1, xmm2, v128
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 maskload_pd(void* mem_addr, v128 mask)
             {
@@ -1660,6 +1921,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPD ymm1, ymm2, v256
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_maskload_pd(void* mem_addr, v256 mask)
             {
@@ -1672,6 +1936,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPD v128, xmm1, xmm2
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void maskstore_pd(void* mem_addr, v128 mask, v128 a)
             {
@@ -1686,6 +1953,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPD v256, ymm1, ymm2
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_maskstore_pd(void* mem_addr, v256 mask, v256 a)
             {
@@ -1701,6 +1971,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPS xmm1, xmm2, v128
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 maskload_ps(void* mem_addr, v128 mask)
             {
@@ -1721,6 +1994,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPS ymm1, ymm2, v256
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_maskload_ps(void* mem_addr, v256 mask)
             {
@@ -1733,6 +2009,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPS v128, xmm1, xmm2
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void maskstore_ps(void* mem_addr, v128 mask, v128 a)
             {
@@ -1749,6 +2028,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMASKMOVPS v256, ymm1, ymm2
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_maskstore_ps(void* mem_addr, v256 mask, v256 a)
             {
@@ -1767,6 +2049,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVSHDUP ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_movehdup_ps(v256 a)
             {
@@ -1779,6 +2063,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVSLDUP ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_moveldup_ps(v256 a)
             {
@@ -1792,6 +2078,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVDDUP ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_movedup_pd(v256 a)
             {
@@ -1806,6 +2094,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VLDDQU ymm1, v256
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_lddqu_si256(void* mem_addr)
             {
@@ -1826,6 +2116,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVNTDQ v256, ymm1
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_stream_si256(void* mem_addr, v256 a)
             {
@@ -1842,6 +2134,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVNTPD v256, ymm1
             /// </remarks>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_stream_pd(void* mem_addr, v256 a)
             {
@@ -1857,8 +2151,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VMOVNTPS v256, ymm1
             /// </remarks>
-            /// <param name="ptr"></param>
-            /// <param name="a"></param>
+            /// <param name="mem_addr">Memory address</param>
+            /// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_stream_ps(void* mem_addr, v256 a)
             {
@@ -1874,6 +2168,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VRCPPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_rcp_ps(v256 a)
             {
@@ -1889,6 +2185,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VRSQRTPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_rsqrt_ps(v256 a)
             {
@@ -1902,6 +2200,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VSQRTPD ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sqrt_pd(v256 a)
             {
@@ -1915,6 +2215,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VSQRTPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sqrt_ps(v256 a)
             {
@@ -1936,6 +2238,9 @@ namespace Unity.Burst.Intrinsics
             /// (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
             /// _MM_FROUND_CUR_DIRECTION                       // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="rounding">Rounding mode</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_round_pd(v256 a, int rounding)
             {
@@ -1948,6 +2253,8 @@ namespace Unity.Burst.Intrinsics
             /// elements in a up to an integer value, and store the results as
             /// packed double-precision floating-point elements in dst.
             /// </summary>
+			/// <param name="val">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_ceil_pd(v256 val)
             {
@@ -1959,6 +2266,8 @@ namespace Unity.Burst.Intrinsics
             /// elements in a down to an integer value, and store the results
             /// as packed double-precision floating-point elements in dst.
             /// </summary>
+			/// <param name="val">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_floor_pd(v256 val)
             {
@@ -1981,6 +2290,9 @@ namespace Unity.Burst.Intrinsics
             /// immediate operand. If any source operand is an SNaN then it will be
             /// converted to a QNaN.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="rounding">Rounding mode</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_round_ps(v256 a, int rounding)
             {
@@ -1992,6 +2304,8 @@ namespace Unity.Burst.Intrinsics
             /// elements in a up to an integer value, and store the results as
             /// packed single-precision floating-point elements in dst.
             /// </summary>
+			/// <param name="val">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_ceil_ps(v256 val)
             {
@@ -2003,6 +2317,8 @@ namespace Unity.Burst.Intrinsics
             /// elements in a down to an integer value, and store the results
             /// as packed single-precision floating-point elements in dst.
             /// </summary>
+			/// <param name="val">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_floor_ps(v256 val)
             {
@@ -2017,6 +2333,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VUNPCKHPD ymm1,ymm2,ymm3/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_pd(v256 a, v256 b)
             {
@@ -2031,6 +2350,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VUNPCKLPD ymm1,ymm2,ymm3/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_pd(v256 a, v256 b)
             {
@@ -2045,6 +2367,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VUNPCKHPS ymm1,ymm2,ymm3/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_ps(v256 a, v256 b)
             {
@@ -2059,6 +2384,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VUNPCKLPS ymm1,ymm2,ymm3/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_ps(v256 a, v256 b)
             {
@@ -2072,6 +2400,9 @@ namespace Unity.Burst.Intrinsics
             /// and set CF to 1 if the result is zero, otherwise set CF to 0.
             /// Return the ZF value.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>ZF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testz_si256(v256 a, v256 b)
             {
@@ -2085,6 +2416,9 @@ namespace Unity.Burst.Intrinsics
             /// and set CF to 1 if the result is zero, otherwise set CF to 0.
             /// Return the CF value.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>CF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testc_si256(v256 a, v256 b)
             {
@@ -2099,6 +2433,9 @@ namespace Unity.Burst.Intrinsics
             /// Return 1 if both the ZF and CF values are zero, otherwise
             /// return 0.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_testnzc_si256(v256 a, v256 b)
             {
@@ -2120,6 +2457,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>ZF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testz_pd(v256 a, v256 b)
             {
@@ -2146,6 +2486,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>CF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testc_pd(v256 a, v256 b)
             {
@@ -2173,6 +2516,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_testnzc_pd(v256 a, v256 b)
             {
@@ -2192,6 +2538,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>ZF value</returns>
             [DebuggerStepThrough]
             public static int testz_pd(v128 a, v128 b)
             {
@@ -2218,6 +2567,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>CF value</returns>
             [DebuggerStepThrough]
             public static int testc_pd(v128 a, v128 b)
             {
@@ -2245,6 +2597,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPD xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int testnzc_pd(v128 a, v128 b)
             {
@@ -2264,6 +2619,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>ZF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testz_ps(v256 a, v256 b)
             {
@@ -2291,6 +2649,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>CF value</returns>
             [DebuggerStepThrough]
             public static int mm256_testc_ps(v256 a, v256 b)
             {
@@ -2318,6 +2679,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS ymm1, ymm2/v256
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_testnzc_ps(v256 a, v256 b)
             {
@@ -2337,6 +2701,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>ZF value</returns>
             [DebuggerStepThrough]
             public static int testz_ps(v128 a, v128 b)
             {
@@ -2364,6 +2731,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>CF value</returns>
             [DebuggerStepThrough]
             public static int testc_ps(v128 a, v128 b)
             {
@@ -2391,6 +2761,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** VTESTPS xmm1, xmm2/v128
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int testnzc_ps(v128 a, v128 b)
             {
@@ -2406,6 +2779,8 @@ namespace Unity.Burst.Intrinsics
             /// values in the source operand, formats them into a 4-bit mask, and stores
             /// the mask in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_movemask_pd(v256 a)
             {
@@ -2422,6 +2797,8 @@ namespace Unity.Burst.Intrinsics
             /// values in the source operand, formats them into a 8-bit mask, and stores
             /// the mask in the destination
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_movemask_ps(v256 a)
             {
@@ -2431,26 +2808,34 @@ namespace Unity.Burst.Intrinsics
             // Normal IR is fine for this
 
             /// <summary>
-            /// Return a vector with all elements set to zero.
+            /// Return Vector with all elements set to zero.
             /// </summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setzero_pd() { return default; }
 
             /// <summary>
-            /// Return a vector with all elements set to zero.
+            /// Return Vector with all elements set to zero.
             /// </summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setzero_ps() { return default; }
 
             /// <summary>
-            /// Return a vector with all elements set to zero.
+            /// Return Vector with all elements set to zero.
             /// </summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setzero_si256() { return default; }
 
             /// <summary>
             /// Set packed double-precision (64-bit) floating-point elements in dst with the supplied values.
             /// </summary>
+			/// <param name="d">Element d</param>
+			/// <param name="c">Element c</param>
+			/// <param name="b">Element b</param>
+			/// <param name="a">Element a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_pd(double d, double c, double b, double a)
             {
@@ -2460,6 +2845,15 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed single-precision (32-bit) floating-point elements in dst with the supplied values.
             /// </summary>
+			/// <param name="e7">Element 7</param>
+			/// <param name="e6">Element 6</param>
+			/// <param name="e5">Element 5</param>
+			/// <param name="e4">Element 4</param>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_ps(float e7, float e6, float e5, float e4, float e3, float e2, float e1, float e0)
             {
@@ -2469,6 +2863,39 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed byte elements in dst with the supplied values.
             /// </summary>
+			/// <param name="e31_">Element 31</param>
+			/// <param name="e30_">Element 30</param>
+			/// <param name="e29_">Element 29</param>
+			/// <param name="e28_">Element 28</param>
+			/// <param name="e27_">Element 27</param>
+			/// <param name="e26_">Element 26</param>
+			/// <param name="e25_">Element 25</param>
+			/// <param name="e24_">Element 24</param>
+			/// <param name="e23_">Element 23</param>
+			/// <param name="e22_">Element 22</param>
+			/// <param name="e21_">Element 21</param>
+			/// <param name="e20_">Element 20</param>
+			/// <param name="e19_">Element 19</param>
+			/// <param name="e18_">Element 18</param>
+			/// <param name="e17_">Element 17</param>
+			/// <param name="e16_">Element 16</param>
+			/// <param name="e15_">Element 15</param>
+			/// <param name="e14_">Element 14</param>
+			/// <param name="e13_">Element 13</param>
+			/// <param name="e12_">Element 12</param>
+			/// <param name="e11_">Element 11</param>
+			/// <param name="e10_">Element 10</param>
+			/// <param name="e9_">Element 9</param>
+			/// <param name="e8_">Element 8</param>
+			/// <param name="e7_">Element 7</param>
+			/// <param name="e6_">Element 6</param>
+			/// <param name="e5_">Element 5</param>
+			/// <param name="e4_">Element 4</param>
+			/// <param name="e3_">Element 3</param>
+			/// <param name="e2_">Element 2</param>
+			/// <param name="e1_">Element 1</param>
+			/// <param name="e0_">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_epi8(
                 byte e31_, byte e30_, byte e29_, byte e28_, byte e27_, byte e26_, byte e25_, byte e24_, byte e23_, byte e22_, byte e21_, byte e20_, byte e19_, byte e18_, byte e17_, byte e16_,
@@ -2484,6 +2911,23 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed short elements in dst with the supplied values.
             /// </summary>
+			/// <param name="e15_">Element 15</param>
+			/// <param name="e14_">Element 14</param>
+			/// <param name="e13_">Element 13</param>
+			/// <param name="e12_">Element 12</param>
+			/// <param name="e11_">Element 11</param>
+			/// <param name="e10_">Element 10</param>
+			/// <param name="e9_">Element 9</param>
+			/// <param name="e8_">Element 8</param>
+			/// <param name="e7_">Element 7</param>
+			/// <param name="e6_">Element 6</param>
+			/// <param name="e5_">Element 5</param>
+			/// <param name="e4_">Element 4</param>
+			/// <param name="e3_">Element 3</param>
+			/// <param name="e2_">Element 2</param>
+			/// <param name="e1_">Element 1</param>
+			/// <param name="e0_">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_epi16(short e15_, short e14_, short e13_, short e12_, short e11_, short e10_, short e9_, short e8_, short e7_, short e6_, short e5_, short e4_, short e3_, short e2_, short e1_, short e0_)
             {
@@ -2495,6 +2939,15 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed int elements in dst with the supplied values.
             /// </summary>
+			/// <param name="e7">Element 7</param>
+			/// <param name="e6">Element 6</param>
+			/// <param name="e5">Element 5</param>
+			/// <param name="e4">Element 4</param>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_epi32(int e7, int e6, int e5, int e4, int e3, int e2, int e1, int e0)
             {
@@ -2504,6 +2957,11 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed 64-bit integers in dst with the supplied values.
             /// </summary>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_epi64x(long e3, long e2, long e1, long e0)
             {
@@ -2513,6 +2971,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed v256 vector with the supplied values.
             /// </summary>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_m128d(v128 hi, v128 lo)
             {
@@ -2522,6 +2983,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed v256 vector with the supplied values.
             /// </summary>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set_m128i(v128 hi, v128 lo)
             {
@@ -2531,6 +2995,11 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed double-precision (64-bit) floating-point elements in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="d">Element d</param>
+			/// <param name="c">Element c</param>
+			/// <param name="b">Element b</param>
+			/// <param name="a">Element a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_pd(double d, double c, double b, double a)
             {
@@ -2540,6 +3009,15 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed single-precision (32-bit) floating-point elements in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="e7">Element 7</param>
+			/// <param name="e6">Element 6</param>
+			/// <param name="e5">Element 5</param>
+			/// <param name="e4">Element 4</param>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_ps(float e7, float e6, float e5, float e4, float e3, float e2, float e1, float e0)
             {
@@ -2549,6 +3027,39 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed byte elements in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="e31_">Element 31</param>
+			/// <param name="e30_">Element 30</param>
+			/// <param name="e29_">Element 29</param>
+			/// <param name="e28_">Element 28</param>
+			/// <param name="e27_">Element 27</param>
+			/// <param name="e26_">Element 26</param>
+			/// <param name="e25_">Element 25</param>
+			/// <param name="e24_">Element 24</param>
+			/// <param name="e23_">Element 23</param>
+			/// <param name="e22_">Element 22</param>
+			/// <param name="e21_">Element 21</param>
+			/// <param name="e20_">Element 20</param>
+			/// <param name="e19_">Element 19</param>
+			/// <param name="e18_">Element 18</param>
+			/// <param name="e17_">Element 17</param>
+			/// <param name="e16_">Element 16</param>
+			/// <param name="e15_">Element 15</param>
+			/// <param name="e14_">Element 14</param>
+			/// <param name="e13_">Element 13</param>
+			/// <param name="e12_">Element 12</param>
+			/// <param name="e11_">Element 11</param>
+			/// <param name="e10_">Element 10</param>
+			/// <param name="e9_">Element 9</param>
+			/// <param name="e8_">Element 8</param>
+			/// <param name="e7_">Element 7</param>
+			/// <param name="e6_">Element 6</param>
+			/// <param name="e5_">Element 5</param>
+			/// <param name="e4_">Element 4</param>
+			/// <param name="e3_">Element 3</param>
+			/// <param name="e2_">Element 2</param>
+			/// <param name="e1_">Element 1</param>
+			/// <param name="e0_">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_epi8(
                 byte e31_, byte e30_, byte e29_, byte e28_, byte e27_, byte e26_, byte e25_, byte e24_, byte e23_, byte e22_, byte e21_, byte e20_, byte e19_, byte e18_, byte e17_, byte e16_,
@@ -2564,6 +3075,23 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed short elements in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="e15_">Element 15</param>
+			/// <param name="e14_">Element 14</param>
+			/// <param name="e13_">Element 13</param>
+			/// <param name="e12_">Element 12</param>
+			/// <param name="e11_">Element 11</param>
+			/// <param name="e10_">Element 10</param>
+			/// <param name="e9_">Element 9</param>
+			/// <param name="e8_">Element 8</param>
+			/// <param name="e7_">Element 7</param>
+			/// <param name="e6_">Element 6</param>
+			/// <param name="e5_">Element 5</param>
+			/// <param name="e4_">Element 4</param>
+			/// <param name="e3_">Element 3</param>
+			/// <param name="e2_">Element 2</param>
+			/// <param name="e1_">Element 1</param>
+			/// <param name="e0_">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_epi16(short e15_, short e14_, short e13_, short e12_, short e11_, short e10_, short e9_, short e8_, short e7_, short e6_, short e5_, short e4_, short e3_, short e2_, short e1_, short e0_)
             {
@@ -2575,6 +3103,15 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed int elements in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="e7">Element 7</param>
+			/// <param name="e6">Element 6</param>
+			/// <param name="e5">Element 5</param>
+			/// <param name="e4">Element 4</param>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_epi32(int e7, int e6, int e5, int e4, int e3, int e2, int e1, int e0)
             {
@@ -2584,6 +3121,11 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed 64-bit integers in dst with the supplied values in reverse order.
             /// </summary>
+			/// <param name="e3">Element 3</param>
+			/// <param name="e2">Element 2</param>
+			/// <param name="e1">Element 1</param>
+			/// <param name="e0">Element 0</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_epi64x(long e3, long e2, long e1, long e0)
             {
@@ -2593,6 +3135,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed v256 vector with the supplied values in reverse order.
             /// </summary>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_m128(v128 hi, v128 lo)
             {
@@ -2602,6 +3147,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed v256 vector with the supplied values in reverse order.
             /// </summary>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_m128d(v128 hi, v128 lo)
             {
@@ -2611,6 +3159,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Set packed v256 vector with the supplied values in reverse order.
             /// </summary>
+			/// <param name="hi">High half of the vector</param>
+			/// <param name="lo">Low half of the vector</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_setr_m128i(v128 hi, v128 lo)
             {
@@ -2620,6 +3171,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast double-precision (64-bit) floating-point value a to all elements of dst.
             /// </summary>
+			/// <param name="a">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_pd(double a)
             {
@@ -2629,6 +3182,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast single-precision (32-bit) floating-point value a to all elements of dst.
             /// </summary>
+			/// <param name="a">Value</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_ps(float a)
             {
@@ -2638,6 +3193,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 8-bit integer a to all elements of dst. This intrinsic may generate the vpbroadcastb instruction.
             /// </summary>
+			/// <param name="a">8-bit integer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_epi8(char a)
             {
@@ -2647,6 +3204,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 16-bit integer a to all all elements of dst. This intrinsic may generate the vpbroadcastw instruction.
             /// </summary>
+			/// <param name="a">16-bit integer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_epi16(short a)
             {
@@ -2656,6 +3215,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 32-bit integer a to all elements of dst. This intrinsic may generate the vpbroadcastd instruction.
             /// </summary>
+			/// <param name="a">32-bit integer</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_epi32(int a)
             {
@@ -2665,9 +3226,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 64-bit integer a to all elements of dst. This intrinsic may generate the vpbroadcastq instruction.
             /// </summary>
-            /// <param name=""></param>
-            /// <param name="a"></param>
-            /// <returns></returns>
+            /// <param name="a">64-bit integer</param>
+            /// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_set1_epi64x(long a)
             {
@@ -2675,43 +3235,68 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castpd_ps(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castps_pd(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castps_si256(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castpd_si256(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castsi256_ps(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castsi256_pd(v256 a) { return a; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_castps256_ps128(v256 a) { return a.Lo128; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_castpd256_pd128(v256 a) { return a.Lo128; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_castsi256_si128(v256 a) { return a.Lo128; }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castps128_ps256(v128 a) { return new v256(a, Sse.setzero_ps()); }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castpd128_pd256(v128 a) { return new v256(a, Sse.setzero_ps()); }
             /// <summary>For compatibility with C++ code only. This is a no-op in Burst.</summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_castsi128_si256(v128 a) { return new v256(a, Sse.setzero_ps()); }
 
             /// <summary>Return a 128-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 undefined_ps()
             {
@@ -2719,6 +3304,7 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>Return a 128-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 undefined_pd()
             {
@@ -2726,6 +3312,7 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>Return a 128-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 undefined_si128()
             {
@@ -2733,6 +3320,7 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>Return a 256-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_undefined_ps()
             {
@@ -2740,6 +3328,7 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>Return a 256-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_undefined_pd()
             {
@@ -2747,6 +3336,7 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>Return a 256-bit vector with undefined contents.</summary>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_undefined_si256()
             {
@@ -2760,6 +3350,8 @@ namespace Unity.Burst.Intrinsics
             /// are zeroed. This intrinsic is only used for compilation and does not
             /// generate any instructions, thus it has zero latency.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_zextps128_ps256(v128 a) { return new v256(a, Sse.setzero_ps()); }
 
@@ -2768,6 +3360,8 @@ namespace Unity.Burst.Intrinsics
             /// are zeroed. This intrinsic is only used for compilation and does not
             /// generate any instructions, thus it has zero latency.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_zextpd128_pd256(v128 a) { return mm256_zextps128_ps256(a); }
 
@@ -2776,6 +3370,8 @@ namespace Unity.Burst.Intrinsics
             /// are zeroed. This intrinsic is only used for compilation and does not
             /// generate any instructions, thus it has zero latency.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_zextsi128_si256(v128 a) { return mm256_zextps128_ps256(a); }
 
@@ -2783,6 +3379,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy a to dst, and insert the 8-bit integer i into dst at the location specified by index (which must be a constant).
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="i">8-bit integer i</param>
+			/// <param name="index">Location</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insert_epi8(v256 a, int i, int index)
             {
@@ -2795,6 +3395,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy a to dst, and insert the 16-bit integer i into dst at the location specified by index (which must be a constant).
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="i">16-bit integer i</param>
+			/// <param name="index">Location</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insert_epi16(v256 a, int i, int index)
             {
@@ -2807,6 +3411,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy a to dst, and insert the 32-bit integer i into dst at the location specified by index (which must be a constant).
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="i">32-bit integer i</param>
+			/// <param name="index">Location</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insert_epi32(v256 a, int i, int index)
             {
@@ -2822,6 +3430,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// This intrinsic requires a 64-bit processor.
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="i">64-bit integer i</param>
+			/// <param name="index">Location</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_insert_epi64(v256 a, long i, int index)
             {
@@ -2834,6 +3446,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Extract a 32-bit integer from a, selected with index (which must be a constant), and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="index">Index</param>
+			/// <returns>32-bit integer</returns>
             [DebuggerStepThrough]
             public static int mm256_extract_epi32(v256 a, int index)
             {
@@ -2843,6 +3458,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Extract a 64-bit integer from a, selected with index (which must be a constant), and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="index">Index</param>
+			/// <returns>64-bit integer</returns>
             [DebuggerStepThrough]
             public static long mm256_extract_epi64(v256 a, int index)
             {

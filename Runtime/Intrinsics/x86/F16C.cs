@@ -65,6 +65,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vcvtph2ps xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cvtph_ps(v128 a)
             {
@@ -77,6 +79,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vcvtph2ps ymm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtph_ps(v128 a)
             {
@@ -144,6 +148,7 @@ namespace Unity.Burst.Intrinsics
             /// Converts a float (hiding in a uint) to a half (hiding in a ushort).
             /// </summary>
             /// <param name="f">The float to convert</param>
+			/// <param name="rounding">Rounding mode</param>
             /// <returns>The half result</returns>
             [DebuggerStepThrough]
             private static ushort FloatToHalf(uint f, int rounding)
@@ -233,6 +238,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** cvtps2ph xmm, xmm, imm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="rounding">Rounding mode</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cvtps_ph(v128 a, int rounding)
             {
@@ -266,6 +274,9 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** cvtps2ph xmm, ymm, imm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="rounding">Rounding mode</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_cvtps_ph(v256 a, int rounding)
             {

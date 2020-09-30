@@ -21,6 +21,8 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vpmovmskb r32, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_movemask_epi8(v256 a)
             {
@@ -37,6 +39,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Extract an 8-bit integer from a, selected with index (which must be constant), and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="index">Index in the vector</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_extract_epi8(v256 a, int index)
             {
@@ -46,6 +51,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Extract a 16-bit integer from a, selected with index (which must be constant), and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="index">Index in the vector</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_extract_epi16(v256 a, int index)
             {
@@ -55,6 +63,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy the lower double-precision (64-bit) floating-point element of a to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Double</returns>
             [DebuggerStepThrough]
             public static double mm256_cvtsd_f64(v256 a)
             {
@@ -65,6 +75,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy the lower 32-bit integer in a to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Integer</returns>
             [DebuggerStepThrough]
             public static int mm256_cvtsi256_si32(v256 a)
             {
@@ -75,6 +87,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy the lower 64-bit integer in a to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>64-bit integer</returns>
             [DebuggerStepThrough]
             public static long mm256_cvtsi256_si64(v256 a)
             {
@@ -85,6 +99,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 8-bit integers in a and b for equality, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpeq_epi8(v256 a, v256 b)
             {
@@ -94,6 +111,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 16-bit integers in a and b for equality, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpeq_epi16(v256 a, v256 b)
             {
@@ -103,6 +123,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 32-bit integers in a and b for equality, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpeq_epi32(v256 a, v256 b)
             {
@@ -112,6 +135,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 64-bit integers in a and b for equality, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpeq_epi64(v256 a, v256 b)
             {
@@ -121,6 +147,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 8-bit integers in a and b for greater-than, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpgt_epi8(v256 a, v256 b)
             {
@@ -130,6 +159,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 16-bit integers in a and b for greater-than, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpgt_epi16(v256 a, v256 b)
             {
@@ -139,6 +171,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 32-bit integers in a and b for greater-than, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpgt_epi32(v256 a, v256 b)
             {
@@ -148,6 +183,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 64-bit integers in a and b for equality, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cmpgt_epi64(v256 a, v256 b)
             {
@@ -157,6 +195,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 8-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epi8(v256 a, v256 b)
             {
@@ -166,6 +207,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 16-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epi16(v256 a, v256 b)
             {
@@ -175,6 +219,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 32-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epi32(v256 a, v256 b)
             {
@@ -184,6 +231,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 8-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epu8(v256 a, v256 b)
             {
@@ -193,6 +243,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 16-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epu16(v256 a, v256 b)
             {
@@ -202,6 +255,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 32-bit integers in a and b, and store packed maximum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_max_epu32(v256 a, v256 b)
             {
@@ -211,6 +267,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 8-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epi8(v256 a, v256 b)
             {
@@ -220,6 +279,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 16-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epi16(v256 a, v256 b)
             {
@@ -229,6 +291,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed 32-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epi32(v256 a, v256 b)
             {
@@ -238,6 +303,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 8-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epu8(v256 a, v256 b)
             {
@@ -247,6 +315,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 16-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epu16(v256 a, v256 b)
             {
@@ -256,6 +327,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed unsigned 32-bit integers in a and b, and store packed minimum values in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_min_epu32(v256 a, v256 b)
             {
@@ -265,6 +339,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise AND of 256 bits (representing integer data) in a and b, and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_and_si256(v256 a, v256 b)
             {
@@ -274,6 +351,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise NOT of 256 bits (representing integer data) in a and then AND with b, and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_andnot_si256(v256 a, v256 b)
             {
@@ -283,6 +363,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise OR of 256 bits (representing integer data) in a and b, and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_or_si256(v256 a, v256 b)
             {
@@ -292,6 +375,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the bitwise XOR of 256 bits (representing integer data) in a and b, and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_xor_si256(v256 a, v256 b)
             {
@@ -301,6 +387,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the absolute value of packed 8-bit integers in a, and store the unsigned results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_abs_epi8(v256 a)
             {
@@ -310,6 +398,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the absolute value of packed 16-bit integers in a, and store the unsigned results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_abs_epi16(v256 a)
             {
@@ -319,8 +409,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compute the absolute value of packed 32-bit integers in a, and store the unsigned results in dst. 
             /// </summary>
-            /// <param name="a"></param>
-            /// <returns></returns>
+            /// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_abs_epi32(v256 a)
             {
@@ -330,6 +420,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 8-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_epi8(v256 a, v256 b)
             {
@@ -339,6 +432,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 16-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_epi16(v256 a, v256 b)
             {
@@ -348,6 +444,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 32-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_epi32(v256 a, v256 b)
             {
@@ -357,6 +456,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 64-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_add_epi64(v256 a, v256 b)
             {
@@ -366,6 +468,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 8-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_adds_epi8(v256 a, v256 b)
             {
@@ -375,6 +480,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed 16-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_adds_epi16(v256 a, v256 b)
             {
@@ -384,6 +492,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed unsigned 8-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_adds_epu8(v256 a, v256 b)
             {
@@ -393,6 +504,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Add packed unsigned 16-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_adds_epu16(v256 a, v256 b)
             {
@@ -403,6 +517,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 8-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_epi8(v256 a, v256 b)
             {
@@ -412,6 +529,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 16-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_epi16(v256 a, v256 b)
             {
@@ -421,6 +541,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 32-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_epi32(v256 a, v256 b)
             {
@@ -430,6 +553,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 64-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sub_epi64(v256 a, v256 b)
             {
@@ -439,6 +565,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 8-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_subs_epi8(v256 a, v256 b)
             {
@@ -448,6 +577,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed 16-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_subs_epi16(v256 a, v256 b)
             {
@@ -457,6 +589,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed unsigned 8-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_subs_epu8(v256 a, v256 b)
             {
@@ -466,6 +601,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Subtract packed unsigned 16-bit integers in a and b using saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_subs_epu16(v256 a, v256 b)
             {
@@ -475,6 +613,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Average packed unsigned 8-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_avg_epu8(v256 a, v256 b)
             {
@@ -484,6 +625,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Average packed unsigned 16-bit integers in a and b, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_avg_epu16(v256 a, v256 b)
             {
@@ -493,6 +637,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally add adjacent pairs of 16-bit integers in a and b, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hadd_epi16(v256 a, v256 b)
             {
@@ -502,6 +649,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally add adjacent pairs of 32-bit integers in a and b, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hadd_epi32(v256 a, v256 b)
             {
@@ -511,6 +661,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally add adjacent pairs of 16-bit integers in a and b using saturation, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hadds_epi16(v256 a, v256 b)
             {
@@ -520,6 +673,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally subtract adjacent pairs of 16-bit integers in a and b, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hsub_epi16(v256 a, v256 b)
             {
@@ -529,6 +685,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally subtract adjacent pairs of 32-bit integers in a and b, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hsub_epi32(v256 a, v256 b)
             {
@@ -538,6 +697,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Horizontally subtract adjacent pairs of 16-bit integers in a and b using saturation, and pack the signed 16-bit results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_hsubs_epi16(v256 a, v256 b)
             {
@@ -549,6 +711,9 @@ namespace Unity.Burst.Intrinsics
             /// intermediate signed 32-bit integers. Horizontally add adjacent
             /// pairs of intermediate 32-bit integers, and pack the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_madd_epi16(v256 a, v256 b)
             {
@@ -562,6 +727,9 @@ namespace Unity.Burst.Intrinsics
             /// pairs of intermediate signed 16-bit integers, and pack the
             /// saturated results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_maddubs_epi16(v256 a, v256 b)
             {
@@ -571,6 +739,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Multiply the packed 16-bit integers in a and b, producing intermediate 32-bit integers, and store the high 16 bits of the intermediate integers in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mulhi_epi16(v256 a, v256 b)
             {
@@ -582,6 +753,9 @@ namespace Unity.Burst.Intrinsics
             /// producing intermediate 32-bit integers, and store the high 16
             /// bits of the intermediate integers in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mulhi_epu16(v256 a, v256 b)
             {
@@ -593,6 +767,9 @@ namespace Unity.Burst.Intrinsics
             /// intermediate 32-bit integers, and store the low 16 bits of the
             /// intermediate integers in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mullo_epi16(v256 a, v256 b)
             {
@@ -604,6 +781,9 @@ namespace Unity.Burst.Intrinsics
             /// intermediate 64-bit integers, and store the low 32 bits of the
             /// intermediate integers in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mullo_epi32(v256 a, v256 b)
             {
@@ -613,6 +793,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Multiply the low unsigned 32-bit integers from each packed 64-bit element in a and b, and store the unsigned 64-bit results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mul_epu32(v256 a, v256 b)
             {
@@ -622,6 +805,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Multiply the low 32-bit integers from each packed 64-bit element in a and b, and store the signed 64-bit results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mul_epi32(v256 a, v256 b)
             {
@@ -634,6 +820,9 @@ namespace Unity.Burst.Intrinsics
             /// Element in dst are zeroed out when the corresponding element in
             /// b is zero.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sign_epi8(v256 a, v256 b)
             {
@@ -646,6 +835,9 @@ namespace Unity.Burst.Intrinsics
             /// Element in dst are zeroed out when the corresponding element in
             /// b is zero.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sign_epi16(v256 a, v256 b)
             {
@@ -658,6 +850,9 @@ namespace Unity.Burst.Intrinsics
             /// Element in dst are zeroed out when the corresponding element in
             /// b is zero.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sign_epi32(v256 a, v256 b)
             {
@@ -671,6 +866,9 @@ namespace Unity.Burst.Intrinsics
             /// integer to the 18 most significant bits, round by adding 1, and
             /// store bits [16:1] to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mulhrs_epi16(v256 a, v256 b)
             {
@@ -685,6 +883,9 @@ namespace Unity.Burst.Intrinsics
             /// these unsigned 16-bit integers in the low 16 bits of 64-bit
             /// elements in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sad_epu8(v256 a, v256 b)
             {
@@ -701,6 +902,10 @@ namespace Unity.Burst.Intrinsics
             /// sequential 8-bit integers selected from a starting at the offset
             /// specified in imm8.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mpsadbw_epu8(v256 a, v256 b, int imm8)
             {
@@ -710,6 +915,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift 128-bit lanes in a left by imm8 bytes while shifting in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_slli_si256(v256 a, int imm8)
             {
@@ -720,6 +928,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift 128-bit lanes in a left by imm8 bytes while shifting in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_bslli_epi128(v256 a, int imm8)
             {
@@ -729,6 +940,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift 128-bit lanes in a right by imm8 bytes while shifting in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srli_si256(v256 a, int imm8)
             {
@@ -739,6 +953,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift 128-bit lanes in a right by imm8 bytes while shifting in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_bsrli_epi128(v256 a, int imm8)
             {
@@ -749,6 +966,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 16-bit integers in a left by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Shift amount</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sll_epi16(v256 a, v128 count)
             {
@@ -759,6 +979,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 32-bit integers in a left by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sll_epi32(v256 a, v128 count)
             {
@@ -769,6 +992,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 64-bit integers in a left by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sll_epi64(v256 a, v128 count)
             {
@@ -778,6 +1004,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 16-bit integers in a left by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_slli_epi16(v256 a, int imm8)
             {
@@ -787,6 +1016,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 32-bit integers in a left by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_slli_epi32(v256 a, int imm8)
             {
@@ -796,6 +1028,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 64-bit integers in a left by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_slli_epi64(v256 a, int imm8)
             {
@@ -807,6 +1042,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sllv_epi32(v256 a, v256 count)
             {
@@ -818,6 +1056,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sllv_epi64(v256 a, v256 count)
             {
@@ -829,6 +1070,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 sllv_epi32(v128 a, v128 count)
             {
@@ -856,6 +1100,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 sllv_epi64(v128 a, v128 count)
             {
@@ -881,6 +1128,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 16-bit integers in a right by count while shifting in sign bits, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sra_epi16(v256 a, v128 count)
             {
@@ -888,8 +1138,11 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>
-            /// </summary>
-            /// Shift packed 32-bit integers in a right by count while shifting in sign bits, and store the results in dst. 
+            /// Shift packed 32-bit integers in a right by count while shifting in sign bits, and store the results in dst.
+			/// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_sra_epi32(v256 a, v128 count)
             {
@@ -899,6 +1152,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 16-bit integers in a right by imm8 while shifting in sign bits, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srai_epi16(v256 a, int imm8)
             {
@@ -908,6 +1164,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 32-bit integers in a right by imm8 while shifting in sign bits, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srai_epi32(v256 a, int imm8)
             {
@@ -920,6 +1179,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in sign
             /// bits, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srav_epi32(v256 a, v256 count)
             {
@@ -931,6 +1193,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in sign
             /// bits, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 srav_epi32(v128 a, v128 count)
             {
@@ -959,6 +1224,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 16-bit integers in a right by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srl_epi16(v256 a, v128 count)
             {
@@ -969,6 +1237,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 32-bit integers in a right by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srl_epi32(v256 a, v128 count)
             {
@@ -979,6 +1250,9 @@ namespace Unity.Burst.Intrinsics
             /// Shift packed 64-bit integers in a right by count while shifting
             /// in zeros, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srl_epi64(v256 a, v128 count)
             {
@@ -988,6 +1262,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 16-bit integers in a right by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srli_epi16(v256 a, int imm8)
             {
@@ -997,6 +1274,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 32-bit integers in a right by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srli_epi32(v256 a, int imm8)
             {
@@ -1006,6 +1286,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shift packed 64-bit integers in a right by imm8 while shifting in zeros, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srli_epi64(v256 a, int imm8)
             {
@@ -1017,6 +1300,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srlv_epi32(v256 a, v256 count)
             {
@@ -1028,6 +1314,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_srlv_epi64(v256 a, v256 count)
             {
@@ -1039,6 +1328,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 srlv_epi32(v128 a, v128 count)
             {
@@ -1066,6 +1358,9 @@ namespace Unity.Burst.Intrinsics
             /// by the corresponding element in count while shifting in zeros,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="count">Corresponding element</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 srlv_epi64(v128 a, v128 count)
             {
@@ -1091,6 +1386,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Blend packed 32-bit integers from a and b using control mask imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 blend_epi32(v128 a, v128 b, int imm8)
             {
@@ -1100,6 +1399,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Blend packed 32-bit integers from a and b using control mask imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blend_epi32(v256 a, v256 b, int imm8)
             {
@@ -1107,8 +1410,12 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>
-            /// Concatenate pairs of 16-byte blocks in a and b into a 32-byte temporary result, shift the result right by count bytes, and store the low 16 bytes in dst. 
+            /// Concatenate pairs of 16-byte blocks in a and b into a 32-byte temporary result, shift the result right by imm8 bytes, and store the low 16 bytes in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Offset</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_alignr_epi8(v256 a, v256 b, int imm8)
             {
@@ -1118,6 +1425,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Blend packed 8-bit integers from a and b using mask, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blendv_epi8(v256 a, v256 b, v256 mask)
             {
@@ -1127,6 +1438,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Blend packed 16-bit integers from a and b within 128-bit lanes using control mask imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_blend_epi16(v256 a, v256 b, int imm8)
             {
@@ -1137,6 +1452,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Convert packed 16-bit integers from a and b to packed 8-bit integers using signed saturation, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_packs_epi16(v256 a, v256 b)
             {
@@ -1146,6 +1464,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Convert packed 32-bit integers from a and b to packed 16-bit integers using signed saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_packs_epi32(v256 a, v256 b)
             {
@@ -1155,6 +1476,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Convert packed 16-bit integers from a and b to packed 8-bit integers using unsigned saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_packus_epi16(v256 a, v256 b)
             {
@@ -1164,6 +1488,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Convert packed 32-bit integers from a and b to packed 16-bit integers using unsigned saturation, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_packus_epi32(v256 a, v256 b)
             {
@@ -1173,6 +1500,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 8-bit integers from the high half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_epi8(v256 a, v256 b)
             {
@@ -1182,6 +1512,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 16-bit integers from the high half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_epi16(v256 a, v256 b)
             {
@@ -1191,6 +1524,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 32-bit integers from the high half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_epi32(v256 a, v256 b)
             {
@@ -1200,6 +1536,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 64-bit integers from the high half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpackhi_epi64(v256 a, v256 b)
             {
@@ -1209,6 +1548,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 8-bit integers from the low half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_epi8(v256 a, v256 b)
             {
@@ -1218,6 +1560,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 16-bit integers from the low half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_epi16(v256 a, v256 b)
             {
@@ -1227,6 +1572,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 32-bit integers from the low half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_epi32(v256 a, v256 b)
             {
@@ -1236,6 +1584,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Unpack and interleave 64-bit integers from the low half of each 128-bit lane in a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_unpacklo_epi64(v256 a, v256 b)
             {
@@ -1247,6 +1598,9 @@ namespace Unity.Burst.Intrinsics
             /// shuffle control mask in the corresponding 8-bit element of b,
             /// and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shuffle_epi8(v256 a, v256 b)
             {
@@ -1256,6 +1610,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle 32-bit integers in a within 128-bit lanes using the control in imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shuffle_epi32(v256 a, int imm8)
             {
@@ -1268,6 +1625,9 @@ namespace Unity.Burst.Intrinsics
             /// bits of 128-bit lanes of dst, with the low 64 bits of 128-bit
             /// lanes being copied from from a to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shufflehi_epi16(v256 a, int imm8)
             {
@@ -1280,6 +1640,9 @@ namespace Unity.Burst.Intrinsics
             /// bits of 128-bit lanes of dst, with the high 64 bits of 128-bit
             /// lanes being copied from from a to dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_shufflelo_epi16(v256 a, int imm8)
             {
@@ -1289,6 +1652,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Extract 128 bits (composed of integer data) from a, selected with imm8, and store the result in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Selection</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_extracti128_si256(v256 a, int imm8)
             {
@@ -1299,6 +1665,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Copy a to dst, then insert 128 bits (composed of integer data) from b into dst at the location specified by imm8.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Location</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_inserti128_si256(v256 a, v128 b, int imm8)
             {
@@ -1309,6 +1679,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low single-precision (32-bit) floating-point element from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastss_ps(v128 a)
             {
@@ -1318,6 +1690,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low single-precision (32-bit) floating-point element from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastss_ps(v128 a)
             {
@@ -1327,6 +1701,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low double-precision (64-bit) floating-point element from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastsd_pd(v128 a)
             {
@@ -1336,6 +1712,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low double-precision (64-bit) floating-point element from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastsd_pd(v128 a)
             {
@@ -1345,6 +1723,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 8-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastb_epi8(v128 a)
             {
@@ -1354,6 +1734,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 16-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastw_epi16(v128 a)
             {
@@ -1363,6 +1745,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 32-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastd_epi32(v128 a)
             {
@@ -1372,6 +1756,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 64-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 broadcastq_epi64(v128 a)
             {
@@ -1381,6 +1767,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 8-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastb_epi8(v128 a)
             {
@@ -1390,6 +1778,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 16-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastw_epi16(v128 a)
             {
@@ -1399,6 +1789,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 32-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastd_epi32(v128 a)
             {
@@ -1408,6 +1800,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast the low packed 64-bit integer from a to all elements of dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastq_epi64(v128 a)
             {
@@ -1417,6 +1811,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Broadcast 128 bits of integer data from a to all 128-bit lanes in dst
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_broadcastsi128_si256(v128 a)
             {
@@ -1427,6 +1823,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 8-bit integers in a to packed 16-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi8_epi16(v128 a)
             {
@@ -1444,6 +1842,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 8-bit integers in a to packed 32-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi8_epi32(v128 a)
             {
@@ -1461,6 +1861,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 8-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi8_epi64(v128 a)
             {
@@ -1478,6 +1880,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 16-bit integers in a to packed 32-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi16_epi32(v128 a)
             {
@@ -1495,6 +1899,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 16-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi16_epi64(v128 a)
             {
@@ -1512,6 +1918,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed 32-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepi32_epi64(v128 a)
             {
@@ -1529,6 +1937,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 8-bit integers in a to packed 16-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu8_epi16(v128 a)
             {
@@ -1546,6 +1956,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 8-bit integers in a to packed 32-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu8_epi32(v128 a)
             {
@@ -1563,6 +1975,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 8-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu8_epi64(v128 a)
             {
@@ -1580,6 +1994,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 16-bit integers in a to packed 32-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu16_epi32(v128 a)
             {
@@ -1597,6 +2013,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 16-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu16_epi64(v128 a)
             {
@@ -1614,6 +2032,8 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Sign extend packed unsigned 32-bit integers in a to packed 64-bit integers, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_cvtepu32_epi64(v128 a)
             {
@@ -1633,6 +2053,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are zeroed out when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 maskload_epi32(void* mem_addr, v128 mask)
             {
@@ -1655,6 +2078,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are zeroed out when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 maskload_epi64(void* mem_addr, v128 mask)
             {
@@ -1677,6 +2103,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are not stored when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void maskstore_epi32(void* mem_addr, v128 mask, v128 a)
             {
@@ -1697,6 +2126,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are not stored when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void maskstore_epi64(void* mem_addr, v128 mask, v128 a)
             {
@@ -1717,6 +2149,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are zeroed out when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_maskload_epi32(void* mem_addr, v256 mask)
             {
@@ -1739,6 +2174,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are zeroed out when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_maskload_epi64(void* mem_addr, v256 mask)
             {
@@ -1761,6 +2199,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are not stored when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_maskstore_epi32(void* mem_addr, v256 mask, v256 a)
             {
@@ -1781,6 +2222,9 @@ namespace Unity.Burst.Intrinsics
             /// (elements are not stored when the highest bit is not set in the
             /// corresponding element).
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="a">Vector a</param>
             [DebuggerStepThrough]
             public static void mm256_maskstore_epi64(void* mem_addr, v256 mask, v256 a)
             {
@@ -1799,6 +2243,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle 32-bit integers in a across lanes using the corresponding index in idx, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="idx">idx</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permutevar8x32_epi32(v256 a, v256 idx)
             {
@@ -1819,6 +2266,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle single-precision (32-bit) floating-point elements in a across lanes using the corresponding index in idx.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="idx">idx</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permutevar8x32_ps(v256 a, v256 idx)
             {
@@ -1828,6 +2278,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle 64-bit integers in a across lanes using the control in imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute4x64_epi64(v256 a, int imm8)
             {
@@ -1846,6 +2299,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle double-precision (64-bit) floating-point elements in a across lanes using the control in imm8, and store the results in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute4x64_pd(v256 a, int imm8)
             {
@@ -1855,6 +2311,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Shuffle 128-bits (composed of integer data) selected by imm8 from a and b, and store the results in dst. 
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Selection</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_permute2x128_si256(v256 a, v256 b, int imm8)
             {
@@ -1866,6 +2326,8 @@ namespace Unity.Burst.Intrinsics
             /// non-temporal memory hint. mem_addr must be aligned on a 32-byte
             /// boundary or a general-protection exception may be generated.
             /// </summary>
+			/// <param name="mem_addr">Memory address</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_stream_load_si256(void* mem_addr)
             {
@@ -1911,6 +2373,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i32gather_epi32(void* base_addr, v256 vindex, int scale)
             {
@@ -1927,6 +2393,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i32gather_pd(void* base_addr, v128 vindex, int scale)
             {
@@ -1944,6 +2414,10 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i32gather_ps(void* base_addr, v256 vindex, int scale)
             {
@@ -1960,9 +2434,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
-            /// <param name="v256"></param>
-            /// <param name=""></param>
-            /// <returns></returns>
+            /// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i64gather_pd(void* base_addr, v256 vindex, int scale)
             {
@@ -1979,6 +2454,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_i64gather_ps(void* base_addr, v256 vindex, int scale)
             {
@@ -1995,6 +2474,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i32gather_pd(void* base_addr, v128 vindex, int scale)
             {
@@ -2011,6 +2494,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i32gather_ps(void* base_addr, v128 vindex, int scale)
             {
@@ -2027,6 +2514,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i64gather_pd(void* base_addr, v128 vindex, int scale)
             {
@@ -2042,6 +2533,10 @@ namespace Unity.Burst.Intrinsics
             /// scale). Gathered elements are merged into dst. scale should be
             /// 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i64gather_ps(void* base_addr, v128 vindex, int scale)
             {
@@ -2057,6 +2552,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i32gather_epi64(void* base_addr, v128 vindex, int scale)
             {
@@ -2073,6 +2572,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_i64gather_epi32(void* base_addr, v256 vindex, int scale)
             {
@@ -2088,6 +2591,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_i64gather_epi64(void* base_addr, v256 vindex, int scale)
             {
@@ -2104,6 +2611,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i32gather_epi32(void* base_addr, v128 vindex, int scale)
             {
@@ -2119,6 +2630,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i32gather_epi64(void* base_addr, v128 vindex, int scale)
             {
@@ -2134,6 +2649,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i64gather_epi32(void* base_addr, v128 vindex, int scale)
             {
@@ -2149,6 +2668,10 @@ namespace Unity.Burst.Intrinsics
             /// by the factor in scale). Gathered elements are merged into dst.
             /// scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 i64gather_epi64(void* base_addr, v128 vindex, int scale)
             {
@@ -2166,6 +2689,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i32gather_pd(v256 src, void* base_addr, v128 vindex, v256 mask, int scale)
             {
@@ -2183,6 +2712,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i32gather_ps(v256 src, void* base_addr, v256 vindex, v256 mask, int scale)
             {
@@ -2200,6 +2735,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i64gather_pd(v256 src, void* base_addr, v256 vindex, v256 mask, int scale)
             {
@@ -2217,6 +2758,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_mask_i64gather_ps(v128 src, void* base_addr, v256 vindex, v128 mask, int scale)
             {
@@ -2234,6 +2781,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i32gather_epi32(v256 src, void* base_addr, v256 vindex, v256 mask, int scale)
             {
@@ -2251,6 +2804,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i32gather_epi64(v256 src, void* base_addr, v128 vindex, v256 mask, int scale)
             {
@@ -2268,6 +2827,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_mask_i64gather_epi64(v256 src, void* base_addr, v256 vindex, v256 mask, int scale)
             {
@@ -2285,6 +2850,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mm256_mask_i64gather_epi32(v128 src, void* base_addr, v256 vindex, v128 mask, int scale)
             {
@@ -2302,6 +2873,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i32gather_pd(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2319,6 +2896,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i32gather_ps(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2336,6 +2919,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i64gather_pd(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2353,6 +2942,12 @@ namespace Unity.Burst.Intrinsics
             /// (elements are copied from src when the highest bit is not set
             /// in the corresponding element). scale should be 1, 2, 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i64gather_ps(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2371,6 +2966,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i32gather_epi32(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2388,6 +2989,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i32gather_epi64(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2405,6 +3012,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i64gather_epi32(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {
@@ -2423,6 +3036,12 @@ namespace Unity.Burst.Intrinsics
             /// is not set in the corresponding element). scale should be 1, 2,
             /// 4 or 8.
             /// </summary>
+			/// <param name="src">Source</param>
+			/// <param name="base_addr">Base address</param>
+			/// <param name="vindex">Offset</param>
+			/// <param name="mask">Mask</param>
+			/// <param name="scale">Index scale</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 mask_i64gather_epi64(v128 src, void* base_addr, v128 vindex, v128 mask, int scale)
             {

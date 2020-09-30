@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEditor;
 
 namespace Unity.Burst.Editor
@@ -15,6 +16,7 @@ namespace Unity.Burst.Editor
         private const string EnableBurstTimingsText = "BurstShowTimings";
         private const string EnableBurstCompileSynchronouslyText = "BurstCompileSynchronously";
         private const string EnableBurstDebugText = "BurstDebug";
+        private const string ForceEnableBurstSafetyChecksText = "BurstForceSafetyChecks";
 
         /// <summary>
         /// <c>true</c> if the menu options are synchronized with <see cref="BurstCompiler.Options"/>
@@ -56,21 +58,43 @@ namespace Unity.Burst.Editor
             set => GetGlobalOptions().EnableBurstDebug = value;
         }
 
+        public static bool ForceEnableBurstSafetyChecks
+        {
+            get => GetGlobalOptions().ForceEnableBurstSafetyChecks;
+            set => GetGlobalOptions().ForceEnableBurstSafetyChecks = value;
+        }
+
         private static BurstCompilerOptions GetGlobalOptions()
         {
             var global = BurstCompiler.Options;
             // If options are not synchronize with our global instance, setup the sync
             if (!_isSynchronized)
             {
-                // setup the synchronization
-                global.EnableBurstCompilation = EditorPrefs.GetBool(EnableBurstCompilationText, true);
-                global.EnableBurstCompileSynchronously = EditorPrefs.GetBool(EnableBurstCompileSynchronouslyText, false);
-                global.EnableBurstTimings = EditorPrefs.GetBool(EnableBurstTimingsText, false);
-                global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
+                global.IsInitializing = true;
 
-                // Session only properties
-                global.EnableBurstSafetyChecks = SessionState.GetBool(EnableBurstSafetyChecksText, true);
-                
+                try
+                {
+                    // Setup the synchronization
+                    global.EnableBurstCompilation = EditorPrefs.GetBool(EnableBurstCompilationText, true);
+                    global.EnableBurstCompileSynchronously = EditorPrefs.GetBool(EnableBurstCompileSynchronouslyText, false);
+                    global.EnableBurstTimings = EditorPrefs.GetBool(EnableBurstTimingsText, false);
+                    global.EnableBurstDebug = EditorPrefs.GetBool(EnableBurstDebugText, false);
+                    global.ForceEnableBurstSafetyChecks = EditorPrefs.GetBool(ForceEnableBurstSafetyChecksText, false);
+
+#if UNITY_2019_3_OR_NEWER
+                    // Session only properties
+                    global.EnableBurstSafetyChecks = SessionState.GetBool(EnableBurstSafetyChecksText, true);
+#else
+                    // In editors older than 2019.3, it's necessary to restart the Editor when changing safety check options.
+                    // So to make it possible to actually set the safety checks option, we need to persist it.
+                    global.EnableBurstSafetyChecks = EditorPrefs.GetBool(EnableBurstSafetyChecksText, true);
+#endif
+                }
+                finally
+                {
+                    global.IsInitializing = false;
+                }
+
                 global.OptionsChanged += GlobalOnOptionsChanged;
                 _isSynchronized = true;
             }
@@ -86,9 +110,16 @@ namespace Unity.Burst.Editor
             EditorPrefs.SetBool(EnableBurstCompileSynchronouslyText, global.EnableBurstCompileSynchronously);
             EditorPrefs.SetBool(EnableBurstTimingsText, global.EnableBurstTimings);
             EditorPrefs.SetBool(EnableBurstDebugText, global.EnableBurstDebug);
+            EditorPrefs.SetBool(ForceEnableBurstSafetyChecksText, global.ForceEnableBurstSafetyChecks);
 
+#if UNITY_2019_3_OR_NEWER
             // Session only properties
             SessionState.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+#else
+            // In editors older than 2019.3, it's necessary to restart the Editor when changing safety check options.
+            // So to make it possible to actually set the safety checks option, we need to persist it.
+            EditorPrefs.SetBool(EnableBurstSafetyChecksText, global.EnableBurstSafetyChecks);
+#endif
         }
     }
 }

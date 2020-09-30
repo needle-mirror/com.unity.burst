@@ -46,6 +46,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>>
             [DebuggerStepThrough]
             public static v128 fmadd_pd(v128 a, v128 b, v128 c)
             {
@@ -58,6 +62,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmadd_pd(v256 a, v256 b, v256 c)
             {
@@ -70,6 +78,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmadd_ps(v128 a, v128 b, v128 c)
             {
@@ -85,6 +97,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmadd_ps(v256 a, v256 b, v256 c)
             {
@@ -104,6 +120,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213sd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmadd_sd(v128 a, v128 b, v128 c)
             {
@@ -116,6 +136,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmadd213ss xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmadd_ss(v128 a, v128 b, v128 c)
             {
@@ -130,6 +154,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmaddsub213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmaddsub_pd(v128 a, v128 b, v128 c)
             {
@@ -142,6 +170,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmaddsub213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmaddsub_pd(v256 a, v256 b, v256 c)
             {
@@ -154,6 +186,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmaddsub213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmaddsub_ps(v128 a, v128 b, v128 c)
             {
@@ -169,6 +205,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmaddsub213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmaddsub_ps(v256 a, v256 b, v256 c)
             {
@@ -188,6 +228,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsub_pd(v128 a, v128 b, v128 c)
             {
@@ -200,6 +244,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmsub_pd(v256 a, v256 b, v256 c)
             {
@@ -212,6 +260,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsub_ps(v128 a, v128 b, v128 c)
             {
@@ -227,6 +279,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmsub_ps(v256 a, v256 b, v256 c)
             {
@@ -246,6 +302,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213sd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsub_sd(v128 a, v128 b, v128 c)
             {
@@ -258,6 +318,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsub213ss xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsub_ss(v128 a, v128 b, v128 c)
             {
@@ -272,6 +336,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsubadd213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsubadd_pd(v128 a, v128 b, v128 c)
             {
@@ -284,6 +352,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsubadd213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmsubadd_pd(v256 a, v256 b, v256 c)
             {
@@ -296,6 +368,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsubadd213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fmsubadd_ps(v128 a, v128 b, v128 c)
             {
@@ -311,6 +387,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfmsubadd213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fmsubadd_ps(v256 a, v256 b, v256 c)
             {
@@ -330,6 +410,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmadd_pd(v128 a, v128 b, v128 c)
             {
@@ -342,6 +426,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fnmadd_pd(v256 a, v256 b, v256 c)
             {
@@ -354,6 +442,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmadd_ps(v128 a, v128 b, v128 c)
             {
@@ -369,6 +461,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fnmadd_ps(v256 a, v256 b, v256 c)
             {
@@ -388,6 +484,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213sd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmadd_sd(v128 a, v128 b, v128 c)
             {
@@ -400,6 +500,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmadd213ss xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmadd_ss(v128 a, v128 b, v128 c)
             {
@@ -414,6 +518,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213pd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmsub_pd(v128 a, v128 b, v128 c)
             {
@@ -426,6 +534,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213pd ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fnmsub_pd(v256 a, v256 b, v256 c)
             {
@@ -438,6 +550,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213ps xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmsub_ps(v128 a, v128 b, v128 c)
             {
@@ -453,6 +569,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213ps ymm, ymm, ymm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v256 mm256_fnmsub_ps(v256 a, v256 b, v256 c)
             {
@@ -472,6 +592,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213sd xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmsub_sd(v128 a, v128 b, v128 c)
             {
@@ -484,6 +608,10 @@ namespace Unity.Burst.Intrinsics
             /// <remarks>
             /// **** vfnmsub213ss xmm, xmm, xmm
             /// </remarks>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="c">Vector c</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 fnmsub_ss(v128 a, v128 b, v128 c)
             {

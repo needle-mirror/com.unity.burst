@@ -37,7 +37,7 @@ namespace UnityBenchShared
     /// </summary>
     internal static class SphereCulling
     {
-        public static int BenchCount = 256 * 1024 + 3;
+        public static int BenchCount = 128 * 1024 + 3;
     }
 
     internal interface IJob<T> : IJob
@@ -81,7 +81,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    int length = SphereCulling.BenchCount;
+                    int length = SphereCulling.BenchCount * 2;
                     var job = new SphereCullingAOSJob()
                     {
                         Spheres = new NativeArray<Sphere>(length, Allocator.Persistent),
@@ -228,7 +228,7 @@ namespace UnityBenchShared
             {
                 get
                 {
-                    int length = SphereCulling.BenchCount;
+                    int length = SphereCulling.BenchCount * 2;
                     var job = new SphereCullingSOAJob()
                     {
                         X = new NativeArray<float>(length, Allocator.Persistent),
@@ -322,7 +322,7 @@ namespace UnityBenchShared
                 get
                 {
                     // Approximate a similar batch
-                    int length = (SphereCulling.BenchCount + 4) / 4;
+                    int length = ((SphereCulling.BenchCount * 2) + 4) / 4;
                     var job = new SphereCullingChunkSOAJob
                     {
                         Chunks = new NativeArray<SphereCullingChunkSOAJob.Chunk>(length, Allocator.Persistent),
@@ -415,7 +415,7 @@ namespace UnityBenchShared
                 get
                 {
                     // Approximate a similar batch
-                    int length = (SphereCulling.BenchCount + 4) / 4;
+                    int length = ((SphereCulling.BenchCount) + 4) / 2;
                     var job = new SphereCullingChunkFixedSOAJob
                     {
                         Chunks = new NativeArray<Chunk>(length, Allocator.Persistent),

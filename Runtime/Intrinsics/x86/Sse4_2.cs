@@ -378,6 +378,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and store the generated mask in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmpistrm(v128 a, v128 b, int imm8)
             {
@@ -401,6 +405,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and store the generated index in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Index</returns>
             [DebuggerStepThrough]
             public static int cmpistri(v128 a, v128 b, int imm8)
             {
@@ -419,6 +427,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and store the generated mask in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmpestrm(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -441,6 +455,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and store the generated index in dst.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Index</returns>
             [DebuggerStepThrough]
             public static int cmpestri(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -463,6 +483,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and returns 1 if any character in b was null, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpistrz(v128 a, v128 b, int imm8)
             {
@@ -476,6 +500,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and returns 1 if the resulting mask was non-zero, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpistrc(v128 a, v128 b, int imm8)
             {
@@ -485,6 +513,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and returns 1 if any character in a was null, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpistrs(v128 a, v128 b, int imm8)
             {
@@ -497,6 +529,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and returns bit 0 of the resulting bit mask.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Bit 0</returns>
             [DebuggerStepThrough]
             public static int cmpistro(v128 a, v128 b, int imm8)
             {
@@ -529,6 +565,10 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings with implicit lengths in a and b using the control in imm8, and returns 1 if b did not contain a null character and the resulting mask was zero, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpistra(v128 a, v128 b, int imm8)
             {
@@ -538,6 +578,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and returns 1 if any character in b was null, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpestrz(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -549,6 +595,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and returns 1 if the resulting mask was non-zero, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpestrc(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -574,6 +626,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and returns 1 if any character in a was null, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpestrs(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -586,6 +644,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and returns bit 0 of the resulting bit mask.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Bit 0</returns>
             [DebuggerStepThrough]
             public static int cmpestro(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -611,6 +675,12 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Compare packed strings in a and b with lengths la and lb using the control in imm8, and returns 1 if b did not contain a null character and the resulting mask was zero, and 0 otherwise.
             /// </summary>
+			/// <param name="a">Vector a</param>
+			/// <param name="b">Vector b</param>
+			/// <param name="la">Length a</param>
+			/// <param name="lb">Length b</param>
+			/// <param name="imm8">Control</param>
+			/// <returns>Boolean value</returns>
             [DebuggerStepThrough]
             public static int cmpestra(v128 a, int la, v128 b, int lb, int imm8)
             {
@@ -618,8 +688,11 @@ namespace Unity.Burst.Intrinsics
             }
 
             /// <summary>
-            // Compare packed 64-bit integers in a and b for greater-than, and store the results in dst.
+            /// Compare packed 64-bit integers in a and b for greater-than, and store the results in dst.
             /// </summary>
+			/// <param name="val1">Vector a</param>
+			/// <param name="val2">Vector b</param>
+			/// <returns>Vector</returns>
             [DebuggerStepThrough]
             public static v128 cmpgt_epi64(v128 val1, v128 val2)
             {
@@ -672,6 +745,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Starting with the initial value in crc, accumulates a CRC32 value for unsigned 32-bit integer v, and stores the result in dst.
             /// </summary>
+			/// <param name="crc">Initial value</param>
+			/// <param name="v">Unsigned 32-bit integer</param>
+			/// <returns>Result</returns>
             [DebuggerStepThrough]
             public static uint crc32_u32(uint crc, uint v)
             {
@@ -685,6 +761,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Starting with the initial value in crc, accumulates a CRC32 value for unsigned 8-bit integer v, and stores the result in dst.
             /// </summary>
+			/// <param name="crc">Initial value</param>
+			/// <param name="v">Unsigned 8-bit integer</param>
+			/// <returns>Result</returns>
             [DebuggerStepThrough]
             public static uint crc32_u8(uint crc, byte v)
             {
@@ -695,6 +774,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Starting with the initial value in crc, accumulates a CRC32 value for unsigned 16-bit integer v, and stores the result in dst.
             /// </summary>
+			/// <param name="crc">Initial value</param>
+			/// <param name="v">Unsigned 16-bit integer</param>
+			/// <returns>Result</returns>
             [DebuggerStepThrough]
             public static uint crc32_u16(uint crc, ushort v)
             {
@@ -706,6 +788,9 @@ namespace Unity.Burst.Intrinsics
             /// <summary>
             /// Starting with the initial value in crc, accumulates a CRC32 value for unsigned 64-bit integer v, and stores the result in dst.
             /// </summary>
+			/// <param name="crc_ul">Initial value</param>
+			/// <param name="v">Unsigned 64-bit integer</param>
+			/// <returns>Result</returns>
             [DebuggerStepThrough]
             public static ulong crc32_u64(ulong crc_ul, long v)
             {

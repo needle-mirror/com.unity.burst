@@ -14,7 +14,9 @@ namespace Unity.Burst.Editor
         private readonly List<AsmToken> _tokens;
 
         private static readonly StringSlice FileDirective = new StringSlice(".file");
+        private static readonly StringSlice CVFileDirective = new StringSlice(".cv_file");
         private static readonly StringSlice LocDirective = new StringSlice(".loc");
+        private static readonly StringSlice CVLocDirective = new StringSlice(".cv_loc");
 
         // This is used to aligned instructions and there operands so they look like this
         //
@@ -75,7 +77,8 @@ namespace Unity.Burst.Editor
         {
             Intel,
             ARM,
-            Wasm
+            Wasm,
+            LLVMIR
         }
 
         public string Process(string input, AsmKind asmKind, bool useDarkSkin = true, bool useSyntaxColouring = true)
@@ -155,6 +158,9 @@ namespace Unity.Burst.Editor
                 case AsmKind.Wasm:
                     asmTokenProvider = (AsmTokenKindProvider)WasmAsmTokenKindProvider.Instance;
                     break;
+                case AsmKind.LLVMIR:
+                    asmTokenProvider = (AsmTokenKindProvider)LLVMIRAsmTokenKindProvider.Instance;
+                    break;
             }
 
 
@@ -181,7 +187,7 @@ namespace Unity.Burst.Editor
                 var slice = token.Slice(input);
                 if (token.Kind == AsmTokenKind.Directive && i + 1 < _tokens.Count)
                 {
-                    if (slice == FileDirective)
+                    if (slice == FileDirective || slice == CVFileDirective)
                     {
                         // File is followed by an index and a string or just a string with an implied index = 0
                         i++;
@@ -219,14 +225,24 @@ namespace Unity.Burst.Editor
                         continue;
                     }
 
-                    if (slice == LocDirective)
+                    if (slice == LocDirective || slice == CVLocDirective)
                     {
                         // .loc {fileno} {lineno} [column] [options] -
+                        // .cv_loc funcid fileno lineno [column] 
                         int fileno = 0;
                         int colno = 0;
                         int lineno = 0;        // NB 0 indicates no information given
                         i++;
                         SkipSpaces(_tokens, ref i);
+                        if (slice == CVLocDirective)
+                        {
+                            // silently consume function id
+                            if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
+                            {
+                                i++;
+                            }
+                            SkipSpaces(_tokens, ref i);
+                        }
                         if (i < _tokens.Count && _tokens[i].Kind == AsmTokenKind.Number)
                         {
                             var numberAsStr = _tokens[i].ToString(input);

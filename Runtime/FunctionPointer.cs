@@ -1,4 +1,3 @@
-#if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
@@ -26,7 +25,11 @@ namespace Unity.Burst
     /// <typeparam name="T">Type of the delegate of this function pointer</typeparam>
     public readonly struct FunctionPointer<T> : IFunctionPointer
     {
+        // DOTSPLAYER's shim package relies on Burst for it's jobs code
+        // so Burst does not see the DOTSPLAYER definition of this attribute
+#if !UNITY_DOTSPLAYER
         [NativeDisableUnsafePtrRestriction]
+#endif
         private readonly IntPtr _ptr;
 
         /// <summary>
@@ -49,14 +52,18 @@ namespace Unity.Burst
         /// If calling from regular C#, it is recommended to cache the returned delegate of this property
         /// instead of using this property every time you need to call the delegate.
         /// </summary>
-        public T Invoke => (T)(object)Marshal.GetDelegateForFunctionPointer(_ptr, typeof(T));
+        public T Invoke => Marshal.GetDelegateForFunctionPointer<T>(_ptr);
 
         /// <summary>
         /// Whether the function pointer is valid.
         /// </summary>
         public bool IsCreated => _ptr != IntPtr.Zero;
 
+		/// <summary>
+        /// Converts a pointer to a function pointer.
+        /// </summary>
+        /// <param name="ptr">The native pointer.</param>
+        /// <returns>An instance of this interface.</returns>
         IFunctionPointer IFunctionPointer.FromIntPtr(IntPtr ptr) => new FunctionPointer<T>(ptr);
     }
 }
-#endif

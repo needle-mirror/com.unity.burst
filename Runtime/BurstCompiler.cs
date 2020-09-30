@@ -1,13 +1,12 @@
-// For some reasons Unity.Burst.LowLevel is not part of UnityEngine in 2018.2 but only in UnityEditor
-// In 2018.3 It should be fine
-
-#if !UNITY_DOTSPLAYER && !NET_DOTS && ((UNITY_2018_2_OR_NEWER && UNITY_EDITOR) || UNITY_2018_3_OR_NEWER)
-using System.Text;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+#if ENABLE_IL2CPP
 using System.Linq;
+#endif
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Unity.Burst
 {
@@ -16,24 +15,53 @@ namespace Unity.Burst
     /// </summary>
     public static class BurstCompiler
     {
-        private static readonly object GlobalLock = new object();
-        private static BurstCompilerOptions _global = null;
+#if !UNITY_DOTSPLAYER && !NET_DOTS
+#if UNITY_EDITOR
+        static unsafe BurstCompiler()
+        {
+            // Store pointers to Log and Compile callback methods.
+            // For more info about why we need to do this, see comments in CallbackStubManager.
+            string GetFunctionPointer<TDelegate>(TDelegate callback)
+            {
+                GCHandle.Alloc(callback); // Ensure delegate is never garbage-collected.
+                var callbackFunctionPointer = Marshal.GetFunctionPointerForDelegate(callback);
+                return "0x" + callbackFunctionPointer.ToInt64().ToString("X16");
+            }
+
+            EagerCompileCompileCallbackFunctionPointer = GetFunctionPointer<CompileCallbackDelegate>(EagerCompileCompileCallback);
+            EagerCompileLogCallbackFunctionPointer = GetFunctionPointer<LogCallbackDelegate>(EagerCompileLogCallback);
+#if UNITY_2020_1_OR_NEWER
+            ProgressCallbackFunctionPointer = GetFunctionPointer<ProgressCallbackDelegate>(ProgressCallback);
+#endif
+        }
+#endif
 
         /// <summary>
         /// Gets the global options for the burst compiler.
         /// </summary>
-        public static BurstCompilerOptions Options
-        {
-            get
-            {
-                // We only create it when it is used, not when this class is initialized
-                lock (GlobalLock)
-                {
-                    // Make sure to late initialize the settings
-                    return _global ?? (_global = new BurstCompilerOptions(true));
-                }
-            }
-        }
+        public static readonly BurstCompilerOptions Options = new BurstCompilerOptions(true);
+
+        /// <summary>
+        /// Internal variable setup by BurstCompilerOptions.
+        /// </summary>
+#if BURST_INTERNAL
+
+        [ThreadStatic] // As we are changing this boolean via BurstCompilerOptions in btests and we are running multithread tests
+        // we would change a global and it would generate random errors, so specifically for btests, we are using a TLS.
+        public static bool _IsEnabled;
+#else
+        internal static bool _IsEnabled;
+#endif
+
+        /// <summary>
+        /// Gets a value indicating whether Burst is enabled.
+        /// </summary>
+#if UNITY_EDITOR || BURST_INTERNAL
+        public static bool IsEnabled => _IsEnabled;
+#else
+        public static bool IsEnabled => _IsEnabled && BurstCompilerHelper.IsBurstGenerated;
+#endif
+
 
 #if UNITY_2019_3_OR_NEWER
         /// <summary>
@@ -69,6 +97,15 @@ namespace Unity.Burst
             return (T)res;
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void VerifyDelegateIsNotMulticast<T>(T delegateMethod) where T : class
+        {
+            var delegateKind = delegateMethod as Delegate;
+            if (delegateKind.GetInvocationList().Length > 1)
+            {
+                throw new InvalidOperationException($"Burst does not support multicast delegates, please use a regular delegate for `{delegateMethod}'");
+            }
+        }
         /// <summary>
         /// Compile the following delegate into a function pointer with burst, invokable from a Burst Job or from regular C#.
         /// </summary>
@@ -77,6 +114,7 @@ namespace Unity.Burst
         /// <returns>A function pointer invokable from a Burst Job or from regular C#</returns>
         public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : class
         {
+            VerifyDelegateIsNotMulticast<T>(delegateMethod);
             // We have added support for runtime CompileDelegate in 2018.2+
             void* function = Compile(delegateMethod, true);
             return new FunctionPointer<T>(new IntPtr(function));
@@ -247,6 +285,98 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void EagerCompileMethods(List<EagerCompilationRequest> requests)
+        {
+#if UNITY_EDITOR
+            // The order of these arguments MUST match the corresponding code in JitCompilerService.EagerCompileMethods.
+            const string parameterSeparator = "***";
+            const string requestParametersSeparator = "+++";
+            const string methodSeparator = "```";
+
+            var builder = new StringBuilder();
+
+            builder.Append(EagerCompileCompileCallbackFunctionPointer);
+            builder.Append(parameterSeparator);
+            builder.Append(EagerCompileLogCallbackFunctionPointer);
+            builder.Append(parameterSeparator);
+
+            foreach (var request in requests)
+            {
+                builder.Append(request.EncodedMethod);
+                builder.Append(requestParametersSeparator);
+                builder.Append(request.Options);
+                builder.Append(methodSeparator);
+            }
+
+            builder.Append(parameterSeparator);
+
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandEagerCompileMethods, builder.ToString());
+#endif
+        }
+
+#if UNITY_EDITOR
+        private unsafe delegate void CompileCallbackDelegate(void* userdata, NativeDumpFlags dumpFlags, void* dataPtr);
+
+        private static unsafe void EagerCompileCompileCallback(void* userData, NativeDumpFlags dumpFlags, void* dataPtr) { }
+
+        private static readonly string EagerCompileCompileCallbackFunctionPointer;
+
+        private unsafe delegate void LogCallbackDelegate(void* userData, int logType, byte* message, byte* fileName, int lineNumber);
+
+        private static unsafe void EagerCompileLogCallback(void* userData, int logType, byte* message, byte* fileName, int lineNumber)
+        {
+            if (EagerCompilationLoggingEnabled)
+            {
+                BurstRuntime.Log(message, logType, fileName, lineNumber);
+            }
+        }
+
+        internal static bool EagerCompilationLoggingEnabled = false;
+
+        private static readonly string EagerCompileLogCallbackFunctionPointer;
+#endif
+
+        internal static void WaitUntilCompilationFinished()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandWaitUntilCompilationFinished);
+#endif
+        }
+
+        internal static void ClearEagerCompilationQueues()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandClearEagerCompilationQueues);
+#endif
+        }
+
+        internal static void SetProgressCallback()
+        {
+#if UNITY_EDITOR && UNITY_2020_1_OR_NEWER
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandSetProgressCallback, ProgressCallbackFunctionPointer);
+#endif
+        }
+
+#if UNITY_EDITOR && UNITY_2020_1_OR_NEWER
+        private delegate void ProgressCallbackDelegate(int current, int total);
+
+        private static readonly string ProgressCallbackFunctionPointer;
+
+        private static void ProgressCallback(int current, int total)
+        {
+            OnProgress?.Invoke(current, total);
+        }
+
+        internal static event Action<int, int> OnProgress;
+#endif
+
+        internal static void RequestClearJitCache()
+        {
+#if UNITY_EDITOR && UNITY_2020_1_OR_NEWER
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandRequestClearJitCache);
+#endif
+        }
+
         internal static void Reset()
         {
 #if UNITY_EDITOR
@@ -254,7 +384,7 @@ namespace Unity.Burst
 #endif
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || BURST_INTERNAL
         private static string SendCommandToCompiler(string commandName, string commandArgs = null)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));
@@ -316,7 +446,21 @@ namespace Unity.Burst
             public static readonly bool IsBurstGenerated = IsCompiledByBurst(IsBurstEnabledImpl);
         }
 #endif
+#else    // UNITY_DOTSPLAYER || NET_DOTS
 
+        /// <summary>
+        /// Compile the following delegate into a function pointer with burst, invokable from a Burst Job or from regular C#.
+        /// </summary>
+        /// <typeparam name="T">Type of the delegate of the function pointer</typeparam>
+        /// <param name="delegateMethod">The delegate to compile</param>
+        /// <returns>A function pointer invokable from a Burst Job or from regular C#</returns>
+        public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : System.Delegate
+        {
+            // Make sure that the delegate will never be collected
+            GCHandle.Alloc(delegateMethod);
+
+            return new FunctionPointer<T>(Marshal.GetFunctionPointerForDelegate(delegateMethod));
+        }
+#endif
     }
 }
-#endif

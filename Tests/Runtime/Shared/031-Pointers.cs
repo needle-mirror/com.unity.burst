@@ -180,7 +180,7 @@ namespace Burst.Compiler.IL.Tests
             return new IntPtr(a).ToInt64();
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static int IntPtrSize()
         {
             return IntPtr.Size;
@@ -318,7 +318,7 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0649
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static unsafe void PointerCastWithStruct()
         {
 
@@ -339,7 +339,7 @@ namespace Burst.Compiler.IL.Tests
             public object Value => new IntPtr(1);
         }
 
-        [TestCompiler()]
+        [TestCompiler]
         public static unsafe int FixedField()
         {
             var fixedStruct = new MyStructWithFixed();
@@ -431,7 +431,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 #if BURST_TESTS_ONLY
-        [TestCompiler()]
+        [TestCompiler]
         public static int TestFieldOffset()
         {
             var t = default(StructWithFields);
@@ -543,7 +543,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 
-        [TestCompiler]
+        [TestCompiler(ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static void TestBlobAssetReferenceData()
         {
             var blob = new BlobAssetReferenceData(IntPtr.Zero);
@@ -628,6 +628,79 @@ namespace Burst.Compiler.IL.Tests
         public static unsafe int NativeIntAddCheck(int a)
         {
             return (int)(&a + 1) - (int)&a;
+        }
+
+        public unsafe struct PointerArithmetic : IJob, IDisposable
+        {
+            [NativeDisableUnsafePtrRestriction] public int** pointers;
+
+            public void Execute()
+            {
+                pointers[10] = pointers[10] + +1;
+                pointers[20] = pointers[20] - +1;
+                pointers[30] = pointers[30] - -1;
+                pointers[40] = pointers[40] + -1;
+            }
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value
+                {
+                    get
+                    {
+                        var value = new PointerArithmetic();
+                        value.pointers = (int**)UnsafeUtility.Malloc(1000*sizeof(int*), 8, Allocator.Persistent);
+                        UnsafeUtility.MemClear(value.pointers, 1000 * sizeof(int*));
+                        return value;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                UnsafeUtility.Free(pointers, Allocator.Persistent);
+            }
+        }
+
+        // The arithmetic test has been split to make it easier to see the mismatched value (rather than true!=false)
+        // According to : https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/unsafe-code#pointer-types
+        // Conversion between pointers and integrals is "Implementation Defined".
+
+
+        [TestCompiler(typeof(PointerArithmetic.Provider))]
+        public static unsafe Int64 TestArithmeticPointerA(ref PointerArithmetic job)
+        {
+            job.Execute();
+            if (sizeof(int*) == 4)
+                return (Int64)(UInt32)(job.pointers[10]);   // Workaround IL2CPP 32bit Bug : https://fogbugz.unity3d.com/f/cases/1254635/
+            return (Int64)job.pointers[10];
+        }
+
+        [TestCompiler(typeof(PointerArithmetic.Provider))]
+        public static unsafe Int64 TestArithmeticPointerB(ref PointerArithmetic job)
+        {
+            job.Execute();
+            if (sizeof(int*) == 4)
+                return (Int64)(UInt32)(job.pointers[20]);   // Workaround IL2CPP 32bit Bug : https://fogbugz.unity3d.com/f/cases/1254635/
+            return (Int64)job.pointers[20];
+        }
+
+        [TestCompiler(typeof(PointerArithmetic.Provider))]
+        public static unsafe Int64 TestArithmeticPointerC(ref PointerArithmetic job)
+        {
+            job.Execute();
+            if (sizeof(int*) == 4)
+                return (Int64)(UInt32)(job.pointers[30]);   // Workaround IL2CPP 32bit Bug : https://fogbugz.unity3d.com/f/cases/1254635/
+            return (Int64)job.pointers[30];
+        }
+
+        [TestCompiler(typeof(PointerArithmetic.Provider))]
+        public static unsafe Int64 TestArithmeticPointerD(ref PointerArithmetic job)
+        {
+            job.Execute();
+            if (sizeof(int*) == 4)
+                return (Int64)(UInt32)(job.pointers[40]);   // Workaround IL2CPP 32bit Bug : https://fogbugz.unity3d.com/f/cases/1254635/
+            return (Int64)job.pointers[40];
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Burst.Compiler.IL.Tests
     [TestFixture]
     internal partial class VectorsMaths
     {
-        [TestCompiler()]
+        [TestCompiler]
         public static ulong HalfToFloatAndDouble()
         {
             return math.asuint(new half {value = 0x0000})

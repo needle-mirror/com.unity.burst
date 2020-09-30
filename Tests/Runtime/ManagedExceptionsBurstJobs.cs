@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
 using Unity.Burst;
@@ -10,12 +12,18 @@ namespace ExceptionsFromBurstJobs
 {
     class ManagedExceptionsBurstJobs
     {
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewArgumentException()
+        {
+            throw new ArgumentException("A");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowArgumentExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.ArgumentException("A");
+                ThrowNewArgumentException();
             }
         }
 
@@ -30,12 +38,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewArgumentNullException()
+        {
+            throw new ArgumentNullException("N");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowArgumentNullExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.ArgumentNullException("N");
+                ThrowNewArgumentNullException();
             }
         }
 
@@ -50,12 +64,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewNullReferenceException()
+        {
+            throw new NullReferenceException("N");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowNullReferenceExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.NullReferenceException("N");
+                ThrowNewNullReferenceException();
             }
         }
 
@@ -70,12 +90,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewInvalidOperationException()
+        {
+            throw new InvalidOperationException("IO");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowInvalidOperationExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.InvalidOperationException("IO");
+                ThrowNewInvalidOperationException();
             }
         }
 
@@ -90,12 +116,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewNotSupportedException()
+        {
+            throw new NotSupportedException("NS");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowNotSupportedExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.NotSupportedException("NS");
+                ThrowNewNotSupportedException();
             }
         }
 
@@ -110,12 +142,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewUnityException()
+        {
+            throw new UnityException("UE");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowUnityExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new UnityException("UE");
+                ThrowNewUnityException();
             }
         }
 
@@ -130,12 +168,18 @@ namespace ExceptionsFromBurstJobs
             jobData.Run();
         }
 
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void ThrowNewIndexOutOfRangeException()
+        {
+            throw new IndexOutOfRangeException("IOOR");
+        }
+
         [BurstCompile(CompileSynchronously = true)]
         struct ThrowIndexOutOfRangeExceptionJob : IJob
         {
             public void Execute()
             {
-                throw new System.IndexOutOfRangeException("IOOR");
+                ThrowNewIndexOutOfRangeException();
             }
         }
 

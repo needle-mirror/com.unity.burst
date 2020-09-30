@@ -152,6 +152,7 @@ extern ""C""
         private const string TempStaging = @"Temp/StagingArea/";
         private const string TempStagingManaged = TempStaging + @"Data/Managed/";
         private const string LibraryPlayerScriptAssemblies = "Library/PlayerScriptAssemblies";
+        private const string TempManagedSymbols = @"Temp/ManagedSymbols/";
 
         int IOrderedCallback.callbackOrder => 0;
 
@@ -343,7 +344,7 @@ extern ""C""
                     options.Add(GetOption(OptionTarget, cpu));
                 }
 
-                if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.Switch)
+                if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.tvOS || targetPlatform == TargetPlatform.Switch)
                 {
                     options.Add(GetOption(OptionStaticLinkage));
                 }
@@ -395,6 +396,9 @@ extern ""C""
                         // ignored
                     }
                 }
+
+                // Allow burst to find managed symbols in the backup location in case the symbols are stripped in the build location
+                options.Add(GetOption(OptionAotPdbSearchPaths, TempManagedSymbols));
 
                 // Write current options to the response file
                 var responseFile = Path.GetTempFileName();
@@ -469,11 +473,11 @@ extern ""C""
                 combinations.Add(new BurstOutputCombination("UnityPlayer.app/Contents/Plugins", targetCpus));
 #endif
             }
-            else if (targetPlatform == TargetPlatform.iOS)
+            else if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.tvOS)
             {
                 if (Application.platform != RuntimePlatform.OSXEditor)
                 {
-                    Debug.LogWarning("Burst Cross Compilation to iOS for standalone player, is only supported on OSX Editor at this time, burst is disabled for this build.");
+                    Debug.LogWarning("Burst Cross Compilation to iOS/tvOS for standalone player, is only supported on OSX Editor at this time, burst is disabled for this build.");
                 }
                 else
                 {
@@ -555,11 +559,21 @@ extern ""C""
             }
             else if (targetPlatform == TargetPlatform.UWP)
             {
-                // TODO: Make it configurable for x86 (sse2, sse4)
-                combinations.Add(new BurstOutputCombination("Plugins/x64", new TargetCpus(TargetCpu.X64_SSE4)));
-                combinations.Add(new BurstOutputCombination("Plugins/x86", new TargetCpus(TargetCpu.X86_SSE2)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
-                combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(report.summary.platform);
+
+#if UNITY_2019_1_OR_NEWER
+                if (EditorUserBuildSettings.wsaUWPBuildType == WSAUWPBuildType.ExecutableOnly)
+                {
+                    combinations.Add(new BurstOutputCombination($"Plugins/{GetUWPTargetArchitecture()}", targetCpus));
+                }
+                else
+#endif
+                {
+                    combinations.Add(new BurstOutputCombination("Plugins/x64", aotSettingsForTarget.GetDesktopCpu64Bit()));
+                    combinations.Add(new BurstOutputCombination("Plugins/x86", aotSettingsForTarget.GetDesktopCpu32Bit()));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                }
             }
             else if (targetPlatform == TargetPlatform.Lumin)
             {
@@ -695,8 +709,31 @@ extern ""C""
                     targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
                     return TargetPlatform.Linux;
                 case BuildTarget.WSAPlayer:
-                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
-                    return TargetPlatform.UWP;
+                    {
+                        var uwpArchitecture = GetUWPTargetArchitecture();
+                        if (string.Equals(uwpArchitecture, "x64", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = aotSettingsForTarget.GetDesktopCpu64Bit();
+                        }
+                        else if (string.Equals(uwpArchitecture, "x86", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = aotSettingsForTarget.GetDesktopCpu32Bit();
+                        }
+                        else if (string.Equals(uwpArchitecture, "ARM", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = new TargetCpus(TargetCpu.THUMB2_NEON32);
+                        }
+                        else if (string.Equals(uwpArchitecture, "ARM64", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Unknown UWP CPU architecture: " + uwpArchitecture);
+                        }
+
+                        return TargetPlatform.UWP;
+                    }
                 case BuildTarget.XboxOne:
                     targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
@@ -709,6 +746,9 @@ extern ""C""
                 case BuildTarget.iOS:
                     targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.iOS;
+                case BuildTarget.tvOS:
+                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                    return TargetPlatform.tvOS;
                 case BuildTarget.Lumin:
                     targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Lumin;
@@ -735,6 +775,22 @@ extern ""C""
             ARMv7,
             ARM64,
             Universal
+        }
+
+        private static string GetUWPTargetArchitecture()
+        {
+            var architecture = EditorUserBuildSettings.wsaArchitecture;
+
+            if (string.Equals(architecture, "x64", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "x86", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "ARM", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(architecture, "ARM64", StringComparison.OrdinalIgnoreCase))
+            {
+                return architecture;
+            }
+
+            // Default to x64 if editor user build setting is garbage
+            return "x64";
         }
 
         /// <summary>
@@ -994,6 +1050,17 @@ extern ""C""
                 if (target == BuildTarget.iOS)
                 {
                     var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.iOS);
+
+                    // Early exit if burst is not activated
+                    if (!aotSettingsForTarget.EnableBurstCompilation)
+                    {
+                        return;
+                    }
+                    PostAddStaticLibraries(path);
+                }
+                if (target == BuildTarget.tvOS)
+                {
+                    var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.tvOS);
 
                     // Early exit if burst is not activated
                     if (!aotSettingsForTarget.EnableBurstCompilation)

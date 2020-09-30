@@ -155,6 +155,10 @@ namespace Burst.Compiler.IL.Tests
                         method.Method.ReturnType.IsType(typeof(float)));
             }
 
+            protected override bool RunningArmTestOnIntelCPU(MethodInfo methodInfo)
+            {
+                return false;
+            }
         }
     }
 }
