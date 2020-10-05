@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.8] - 2020-10-06
+
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+- If targeting multiple iOS architectures, produce a combined burst library containing all architectures, this fixes "New Build System" on xcode version 12.
+
+### Known Issues
 ## [1.3.7] - 2020-09-23
 
 
