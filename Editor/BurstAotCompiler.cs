@@ -652,12 +652,7 @@ extern ""C""
                     throw new NotSupportedException("Unknown Unity editor platform: " + currentEditorPlatform);
             }
 
-
-            var args = cmdLine.ToString();
-            var startInfo = new ProcessStartInfo(lipoPath, args);
-            startInfo.CreateNoWindow = true;
-
-            BclRunner.RunProgram(new Program(startInfo), lipoPath, args, Directory.GetCurrentDirectory(), null);
+            BclRunner.RunNativeProgram(lipoPath, cmdLine.ToString(), null);
         }
 
         private static Assembly[] GetPlayerAssemblies(BuildReport report)
@@ -841,6 +836,28 @@ extern ""C""
                 }
 
                 RunProgram(p, exe, args, workingDirectory, parser);
+            }
+
+            public static void RunNativeProgram(string exe, string args, CompilerOutputParserBase parser)
+            {
+                RunNativeProgram(exe, args, Application.dataPath + "/..", parser);
+            }
+
+            private static void RunNativeProgram(string exePath, string arguments, string workingDirectory, CompilerOutputParserBase parser)
+            {
+                // On non Windows platform, make sure that the command is executable
+                // This is a workaround - occasionally the execute bits are lost from our package
+                if (Application.platform != RuntimePlatform.WindowsEditor && Path.IsPathRooted(exePath))
+                {
+                    var escapedExePath = $"\"{exePath}\"";  // Ensure path is escaped in case it contains spaces
+                    arguments = $"-c '[ ! -x {escapedExePath} ] && chmod 755 {escapedExePath}; {escapedExePath} {arguments}'";
+                    exePath = "sh";
+                }
+
+                var startInfo = new ProcessStartInfo(exePath, arguments);
+                startInfo.CreateNoWindow = true;
+
+                RunProgram(new Program(startInfo), exePath, arguments, workingDirectory, parser);
             }
 
             public static void RunProgram(
@@ -1107,10 +1124,10 @@ extern ""C""
                     if (lib32Exists) libsCombine[libsIdx++] = lib32SrcPath;
                     if (lib64Exists) libsCombine[libsIdx++] = lib64SrcPath;
 
-		    // Combine the static libraries into a single file to support newer xcode build systems
-		    var libName = $"{DefaultLibraryName}.a";
-		    RunLipo(libsCombine, Path.Combine(dstCopyPath, libName));
-		    AddLibToProject(project, _AddFileToBuild, _AddFile, sourcetree, g, dstPath, libName);
+                    // Combine the static libraries into a single file to support newer xcode build systems
+                    var libName = $"{DefaultLibraryName}.a";
+                    RunLipo(libsCombine, Path.Combine(dstCopyPath, libName));
+                    AddLibToProject(project, _AddFileToBuild, _AddFile, sourcetree, g, dstPath, libName);
 
                     // Additionally we need a small cpp file (weak symbols won't unfortunately override directly from the libs
                     //presumably due to link order?

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.9] - 2020-10-08
+
+
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+- Fixed permissions error when running lipo tool to combine libraries.
+
+### Known Issues
+
 ## [1.3.8] - 2020-10-06
 
 ### Added
