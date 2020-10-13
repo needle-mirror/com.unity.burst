@@ -233,6 +233,7 @@ namespace Unity.Burst.Editor
                     if (Progress.Exists(BurstProgressId))
                     {
                         Progress.Remove(BurstProgressId);
+                        BurstProgressId = -1;
                     }
                 }
                 else
@@ -479,9 +480,10 @@ namespace Unity.Burst.Editor
             BurstCompiler.Cancel();
 
 #if UNITY_2020_1_OR_NEWER
-            if (Progress.Exists(BurstProgressId))
+            if (BurstProgressId!=-1)
             {
                 Progress.Remove(BurstProgressId);
+                BurstProgressId = -1;
             }
 #endif
         }

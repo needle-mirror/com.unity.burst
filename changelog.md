@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.1-pre.1] - 2020-10-14
+
+
+### Fixed
+- Fixed an issue that could prevent the Editor from shutting down
+
+## [1.4.0-pre.1] - 2020-10-01
+
+### Changed
+- Update package version to begin pre-release phase
+
 ## [1.4.0-preview.5] - 2020-09-23
 
 
