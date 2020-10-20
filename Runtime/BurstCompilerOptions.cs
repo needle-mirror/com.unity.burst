@@ -135,6 +135,7 @@ namespace Unity.Burst
         internal const string CompilerCommandEagerCompileMethods = "$eager_compile_methods";
         internal const string CompilerCommandWaitUntilCompilationFinished = "$wait_until_compilation_finished";
         internal const string CompilerCommandClearEagerCompilationQueues = "$clear_eager_compilation_queues";
+        internal const string CompilerCommandCancelEagerCompilation = "$cancel_eager_compilation";
         internal const string CompilerCommandReset = "$reset";
         internal const string CompilerCommandDomainReload = "$domain_reload";
         internal const string CompilerCommandUpdateAssemblyFolders = "$update_assembly_folders";

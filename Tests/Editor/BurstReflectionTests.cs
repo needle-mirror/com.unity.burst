@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Burst.Editor;
 using Unity.Jobs;
-using UnityEditor.Compilation;
 
 [TestFixture]
 public class BurstReflectionTests
@@ -42,8 +41,6 @@ public class BurstReflectionTests
         var compileTarget = result.CompileTargets.Find(x => x.GetDisplayName() == compileTargetName);
         Assert.That(compileTarget, Is.Not.Null);
     }
-
-    // Keep the following code in sync with BurstReflectionTestsSeparateAssembly.cs
 
     [BurstCompile]
     private struct MyJob : IJob
@@ -147,6 +144,27 @@ public class BurstReflectionTests
         private static void UseConcreteType()
         {
             new MyGenericJobSeparateAssembly<int>().Execute();
+        }
+    }
+
+    [Test]
+    [TestCase("BurstReflectionTests.GenericMethodContainer.GenericMethod(T)")]
+    public void ExcludesGenericMethods(string compileTargetName)
+    {
+        var result = BurstReflection.FindExecuteMethods(_assemblies, BurstReflectionAssemblyOptions.None);
+
+        Assert.That(result.LogMessages, Is.Empty);
+
+        var compileTarget = result.CompileTargets.Find(x => x.GetDisplayName() == compileTargetName);
+        Assert.That(compileTarget, Is.Null);
+    }
+
+    [BurstCompile]
+    private static class GenericMethodContainer
+    {
+        [BurstCompile]
+        private static void GenericMethod<T>(T p)
+        {
         }
     }
 }

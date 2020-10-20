@@ -350,6 +350,13 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void CancelEagerCompilation()
+        {
+#if UNITY_EDITOR
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandCancelEagerCompilation);
+#endif
+        }
+
         internal static void SetProgressCallback()
         {
 #if UNITY_EDITOR && UNITY_2020_1_OR_NEWER

@@ -104,7 +104,8 @@ namespace Unity.Burst.Editor
                         // NOTE: Make sure that we don't use a value type generic definition (e.g `class Outer<T> { struct Inner { } }`)
                         // We are only working on plain type or generic type instance!
                         if (!method.DeclaringType.IsGenericTypeDefinition &&
-                            method.IsStatic)
+                            method.IsStatic &&
+                            !method.ContainsGenericParameters)
                         {
                             AddTarget(new BurstCompileTarget(method, method.DeclaringType, null, true));
                         }
@@ -482,7 +483,7 @@ namespace Unity.Burst.Editor
                         var methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         foreach (var method in methods)
                         {
-                            if (HasBurstCompileAttribute(method))
+                            if (!method.ContainsGenericParameters && HasBurstCompileAttribute(method))
                             {
                                 var target = new BurstCompileTarget(method, type, null, true);
                                 methodsToCompile.Add(target);

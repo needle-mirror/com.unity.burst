@@ -238,5 +238,18 @@ namespace Burst.Compiler.IL.Tests
         {
             return StaticArrayWrapper.StaticArray[0];
         }
+
+        private static readonly int4[][] SomeOffsetThing =
+        {
+            new []{ new int4(0), new int4(0, 0, 1, 0), new int4(0, 1, 0, 0), new int4(0, 1, 1, 0) },
+            new []{ new int4(0), new int4(1, 0, 0, 0), new int4(0, 0, 1, 0), new int4(1, 0, 1, 0) },
+            new []{ new int4(0), new int4(0, 1, 0, 0), new int4(1, 0, 0, 0), new int4(1, 1, 0, 0) },
+        };
+
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingNestedManagedArrayNotSupported)]
+        public unsafe static int TestNestedManagedArrays()
+        {
+            return SomeOffsetThing[0][0].x;
+        }
     }
 }

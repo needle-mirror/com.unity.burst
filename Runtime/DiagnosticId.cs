@@ -194,5 +194,8 @@ namespace Unity.Burst
 
         // Safety check warning
         WRN_ExceptionThrownInNonSafetyCheckGuardedFunction = 1370,
+
+        // Accessing a nested managed array is not supported
+        ERR_AccessingNestedManagedArrayNotSupported = 1380,
     }
 }

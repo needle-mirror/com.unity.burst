@@ -13,6 +13,7 @@ namespace Burst.Compiler.IL.Tests
         static StaticDelegateRegistry()
         {
             Register(typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum), new Type[] { typeof(int), typeof(Burst.Compiler.IL.Tests.Pointers.MyCastEnum) }, typeof(R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate), Call_R_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_P_0_Int32_1_Burst_Compiler_IL_Tests_Pointers_MyCastEnum_Delegate);
+            Register(typeof(Burst.Compiler.IL.Tests.TestEnums.SomeByteEnum), new Type[] { typeof(Burst.Compiler.IL.Tests.TestEnums.FixedByte4Struct).MakeByRefType() }, typeof(R_Burst_Compiler_IL_Tests_TestEnums_SomeByteEnum_P_0_Burst_Compiler_IL_Tests_TestEnums_FixedByte4Struct_Ref_Delegate), Call_R_Burst_Compiler_IL_Tests_TestEnums_SomeByteEnum_P_0_Burst_Compiler_IL_Tests_TestEnums_FixedByte4Struct_Ref_Delegate);
             Register(typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte), new Type[] { typeof(Burst.Compiler.IL.Tests.Types.MyEnumByte).MakeByRefType() }, typeof(R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate), Call_R_Burst_Compiler_IL_Tests_Types_MyEnumByte_P_0_Burst_Compiler_IL_Tests_Types_MyEnumByte_Ref_Delegate);
             Register(typeof(System.IntPtr), Array.Empty<Type>(), typeof(R_IntPtr_P_Delegate), Call_R_IntPtr_P_Delegate);
             Register(typeof(System.IntPtr), new Type[] { typeof(System.IntPtr) }, typeof(R_IntPtr_P_0_IntPtr_Delegate), Call_R_IntPtr_P_0_IntPtr_Delegate);
@@ -518,6 +519,18 @@ namespace Burst.Compiler.IL.Tests
             var arg0 = (int)p[0];
             var arg1 = (Burst.Compiler.IL.Tests.Pointers.MyCastEnum)p[1];
             result = d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate Burst.Compiler.IL.Tests.TestEnums.SomeByteEnum R_Burst_Compiler_IL_Tests_TestEnums_SomeByteEnum_P_0_Burst_Compiler_IL_Tests_TestEnums_FixedByte4Struct_Ref_Delegate(ref Burst.Compiler.IL.Tests.TestEnums.FixedByte4Struct arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_Burst_Compiler_IL_Tests_TestEnums_SomeByteEnum_P_0_Burst_Compiler_IL_Tests_TestEnums_FixedByte4Struct_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_Burst_Compiler_IL_Tests_TestEnums_SomeByteEnum_P_0_Burst_Compiler_IL_Tests_TestEnums_FixedByte4Struct_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.TestEnums.FixedByte4Struct)p[0];
+            result = d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

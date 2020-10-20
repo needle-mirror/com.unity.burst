@@ -130,7 +130,11 @@ namespace Unity.Burst.Editor
             // such as BurstCompiler.Disable(), will silently fail.
             BurstEditorOptions.EnsureSynchronized();
 
-            EditorApplication.quitting += BurstCompiler.Shutdown;
+            EditorApplication.quitting += OnEditorApplicationQuitting;
+
+#if UNITY_2019_1_OR_NEWER
+            CompilationPipeline.compilationStarted += OnCompilationStarted;
+#endif
 
             CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
             CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
@@ -215,6 +219,19 @@ namespace Unity.Burst.Editor
             // Can't call Menu.AddMenuItem immediately, presumably because the menu controller isn't initialized yet.
             EditorApplication.CallDelayed(() => CreateDynamicMenuItems());
 #endif
+        }
+
+#if UNITY_2020_1_OR_NEWER
+        private static bool _isQuitting;
+#endif
+
+        private static void OnEditorApplicationQuitting()
+        {
+#if UNITY_2020_1_OR_NEWER
+            _isQuitting = true;
+#endif
+
+            BurstCompiler.Shutdown();
         }
 
 #if UNITY_2020_1_OR_NEWER
@@ -315,14 +332,34 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static void OnAssemblyCompilationFinished(string arg1, CompilerMessage[] arg2)
+        private static void CancelEagerCompilationPriorToAssemblyCompilation()
         {
-            // On assembly compilation finished, we cancel all pending compilation
+            BurstCompiler.CancelEagerCompilation();
+
             if (DebuggingLevel > 2)
             {
-                UnityEngine.Debug.Log($"{DateTime.UtcNow} Burst - Assembly compilation finished for '{arg1}' - cancelling any pending jobs");
+                UnityEngine.Debug.Log("Burst - Cancelled eager-compilation prior to assembly compilation");
             }
         }
+
+#if UNITY_2019_1_OR_NEWER
+        private static void OnCompilationStarted(object value)
+        {
+            CancelEagerCompilationPriorToAssemblyCompilation();
+        }
+#endif
+
+        private static void OnAssemblyCompilationFinished(string arg1, CompilerMessage[] arg2)
+        {
+            if (DebuggingLevel > 2)
+            {
+                UnityEngine.Debug.Log($"{DateTime.UtcNow} Burst - Assembly compilation finished for '{arg1}'");
+            }
+        }
+
+#if !UNITY_2019_1_OR_NEWER
+        private static bool _hasCompilationStarted;
+#endif
 
         private static void OnAssemblyCompilationStarted(string obj)
         {
@@ -330,6 +367,15 @@ namespace Unity.Burst.Editor
             {
                 UnityEngine.Debug.Log($"{DateTime.UtcNow} Burst - Assembly compilation started for '{obj}'");
             }
+
+#if !UNITY_2019_1_OR_NEWER
+            // This is a workaround for 2018.4 not having the CompilationPipeline.compilationStarted event.
+            if (!_hasCompilationStarted)
+            {
+                CancelEagerCompilationPriorToAssemblyCompilation();
+                _hasCompilationStarted = true;
+            }
+#endif
         }
 
         private static bool TryGetOptionsFromMember(MemberInfo member, out string flagsOut)
@@ -480,7 +526,13 @@ namespace Unity.Burst.Editor
             BurstCompiler.Cancel();
 
 #if UNITY_2020_1_OR_NEWER
-            if (BurstProgressId!=-1)
+            // Because of a check in Unity (specifically SCRIPTINGAPI_THREAD_AND_SERIALIZATION_CHECK),
+            // we are not allowed to call thread-unsafe methods (like Progress.Exists) after the
+            // kApplicationTerminating bit has been set. And because the domain is unloaded
+            // (thus triggering AppDomain.DomainUnload) *after* that bit is set, we can't call Progress.Exists
+            // during shutdown. So we check _isQuitting here. When quitting, it's fine for the progress item
+            // not to be removed since it's all being torn down anyway.
+            if (!_isQuitting && Progress.Exists(BurstProgressId))
             {
                 Progress.Remove(BurstProgressId);
                 BurstProgressId = -1;

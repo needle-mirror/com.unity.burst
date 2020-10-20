@@ -429,8 +429,7 @@ extern ""C""
 
                     BclRunner.RunManagedProgram(Path.Combine(BurstLoader.RuntimePath, BurstAotCompilerExecutable),
                         $"{extraGlobalOptions} \"@{responseFile}\"",
-                        new BclOutputErrorParser(),
-                        report);
+                        new BclOutputErrorParser());
 
                     // Additionally copy the pdb to the root of the player build so run in editor also locates the symbols
                     var pdbPath = $"{Path.Combine(stagingOutputFolder, combination.LibraryName)}.pdb";
@@ -622,6 +621,52 @@ extern ""C""
             }
 
             return combinations;
+        }
+
+
+        private static void RunLipo(string[] inputFiles, string outputFile)
+        {
+            var outputDir = Path.GetDirectoryName(outputFile);
+            Directory.CreateDirectory(outputDir);
+
+            var cmdLine = new StringBuilder();
+            foreach (var input in inputFiles)
+            {
+                if (string.IsNullOrEmpty(input))
+                    continue;
+
+                cmdLine.Append('"');
+                cmdLine.Append(input);
+                cmdLine.Append("\" ");
+            }
+
+            cmdLine.Append("-create -output ");
+            cmdLine.Append('"');
+            cmdLine.Append(outputFile);
+            cmdLine.Append('"');
+
+            string lipoPath;
+
+            var currentEditorPlatform = Application.platform;
+            switch (currentEditorPlatform)
+            {
+                case RuntimePlatform.LinuxEditor:
+                    lipoPath = Path.Combine(BurstLoader.RuntimePath, "hostlin", "llvm-lipo");
+                    break;
+
+                case RuntimePlatform.OSXEditor:
+                    lipoPath = Path.Combine(BurstLoader.RuntimePath, "hostmac", "llvm-lipo");
+                    break;
+
+                case RuntimePlatform.WindowsEditor:
+                    lipoPath = Path.Combine(BurstLoader.RuntimePath, "hostwin", "llvm-lipo.exe");
+                    break;
+
+                default:
+                    throw new NotSupportedException("Unknown Unity editor platform: " + currentEditorPlatform);
+            }
+
+            BclRunner.RunNativeProgram(lipoPath, cmdLine.ToString(), null);
         }
 
         private static Assembly[] GetPlayerAssemblies(BuildReport report)
@@ -819,17 +864,16 @@ extern ""C""
         {
             private static readonly Regex MatchVersion = new Regex(@"com.unity.burst@(\d+.*?)[\\/]");
 
-            public static void RunManagedProgram(string exe, string args, CompilerOutputParserBase parser, BuildReport report)
+            public static void RunManagedProgram(string exe, string args, CompilerOutputParserBase parser)
             {
-                RunManagedProgram(exe, args, Application.dataPath + "/..", parser, report);
+                RunManagedProgram(exe, args, Application.dataPath + "/..", parser);
             }
 
             private static void RunManagedProgram(
               string exe,
               string args,
               string workingDirectory,
-              CompilerOutputParserBase parser,
-              BuildReport report)
+              CompilerOutputParserBase parser)
             {
                 Program p;
                 if (Application.platform == RuntimePlatform.WindowsEditor)
@@ -847,16 +891,37 @@ extern ""C""
                     p = (Program) new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), (string) null, exe, args, false, null);
                 }
 
-                RunProgram(p, exe, args, workingDirectory, parser, report);
+                RunProgram(p, exe, args, workingDirectory, parser);
             }
 
-            private static void RunProgram(
+            public static void RunNativeProgram(string exe, string args, CompilerOutputParserBase parser)
+            {
+                RunNativeProgram(exe, args, Application.dataPath + "/..", parser);
+            }
+
+            private static void RunNativeProgram(string exePath, string arguments, string workingDirectory, CompilerOutputParserBase parser)
+            {
+                // On non Windows platform, make sure that the command is executable
+                // This is a workaround - occasionally the execute bits are lost from our package
+                if (Application.platform != RuntimePlatform.WindowsEditor && Path.IsPathRooted(exePath))
+                {
+                    var escapedExePath = $"\"{exePath}\"";  // Ensure path is escaped in case it contains spaces
+                    arguments = $"-c '[ ! -x {escapedExePath} ] && chmod 755 {escapedExePath}; {escapedExePath} {arguments}'";
+                    exePath = "sh";
+                }
+
+                var startInfo = new ProcessStartInfo(exePath, arguments);
+                startInfo.CreateNoWindow = true;
+
+                RunProgram(new Program(startInfo), exePath, arguments, workingDirectory, parser);
+            }
+
+            public static void RunProgram(
               Program p,
               string exe,
               string args,
               string workingDirectory,
-              CompilerOutputParserBase parser,
-              BuildReport report)
+              CompilerOutputParserBase parser)
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -1102,28 +1167,34 @@ extern ""C""
                     string g = (string) _TargetGuidByName?.Invoke(project, new object[] {tn});
 #endif
 
-                    string srcPath = TempSourceLibrary;
-                    string dstPath = "Libraries";
-                    string dstCopyPath = Path.Combine(path, dstPath);
+                    var srcPath = TempSourceLibrary;
+                    var dstPath = "Libraries";
+                    var dstCopyPath = Path.Combine(path, dstPath);
 
-                    string burstCppLinkFile = "lib_burst_generated.cpp";
-                    string libName = DefaultLibraryName + "32.a";
-                    if (File.Exists(Path.Combine(srcPath, libName)))
+                    var burstCppLinkFile = "lib_burst_generated.cpp";
+
+                    var lib32Name = $"{DefaultLibraryName}32.a";
+                    var lib64Name = $"{DefaultLibraryName}64.a";
+                    var lib32SrcPath = Path.Combine(srcPath, lib32Name);
+                    var lib64SrcPath = Path.Combine(srcPath, lib64Name);
+                    var lib32Exists = File.Exists(lib32SrcPath);
+                    var lib64Exists = File.Exists(lib64SrcPath);
+                    var numLibs = (lib32Exists?1:0)+(lib64Exists?1:0);
+
+                    if (numLibs==0)
                     {
-                        File.Copy(Path.Combine(srcPath, libName), Path.Combine(dstCopyPath, libName));
-                        string fg = (string)_AddFile?.Invoke(project,
-                            new object[] { Path.Combine(dstPath, libName), Path.Combine(dstPath, libName), sourcetree });
-                        _AddFileToBuild?.Invoke(project, new object[] { g, fg });
+                        return; // No libs, so don't write the cpp either
                     }
 
-                    libName = DefaultLibraryName + "64.a";
-                    if (File.Exists(Path.Combine(srcPath, libName)))
-                    {
-                        File.Copy(Path.Combine(srcPath, libName), Path.Combine(dstCopyPath, libName));
-                        string fg = (string)_AddFile?.Invoke(project,
-                            new object[] { Path.Combine(dstPath, libName), Path.Combine(dstPath, libName), sourcetree });
-                        _AddFileToBuild?.Invoke(project, new object[] { g, fg });
-                    }
+                    var libsCombine=new string [numLibs];
+                    var libsIdx=0;
+                    if (lib32Exists) libsCombine[libsIdx++] = lib32SrcPath;
+                    if (lib64Exists) libsCombine[libsIdx++] = lib64SrcPath;
+
+                    // Combine the static libraries into a single file to support newer xcode build systems
+                    var libName = $"{DefaultLibraryName}.a";
+                    RunLipo(libsCombine, Path.Combine(dstCopyPath, libName));
+                    AddLibToProject(project, _AddFileToBuild, _AddFile, sourcetree, g, dstPath, libName);
 
                     // Additionally we need a small cpp file (weak symbols won't unfortunately override directly from the libs
                     //presumably due to link order?
@@ -1146,6 +1217,13 @@ extern ""C""
                     string pstring = (string)_WriteToString?.Invoke(project, null);
                     File.WriteAllText(sPath, pstring);
                 }
+            }
+
+            private static void AddLibToProject(object project, System.Reflection.MethodInfo _AddFileToBuild, System.Reflection.MethodInfo _AddFile, object sourcetree, string g, string dstPath, string lib32Name)
+            {
+                string fg = (string)_AddFile?.Invoke(project,
+                    new object[] { Path.Combine(dstPath, lib32Name), Path.Combine(dstPath, lib32Name), sourcetree });
+                _AddFileToBuild?.Invoke(project, new object[] { g, fg });
             }
         }
 #endif

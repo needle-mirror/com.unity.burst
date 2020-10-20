@@ -1,7 +1,27 @@
 # Changelog
 
-## [1.4.1-pre.1] - 2020-10-14
+## [1.4.1-pre.2] - 2020-10-21
 
+
+### Fixed
+- Fixed a bug where if you used an enum argument to a function to index into a fixed array, a codegen error would occur.
+- Fixed a poor error message when a generic unsupported type (like a class or an auto-layout struct) combined with an unsupported managed array (like `(int, float)[]`) wouldn't give the user any context on where the code went wrong.
+- If targeting multiple iOS architectures, produce a combined burst library containing all architectures, this fixes "New Build System" on xcode version 12.
+- Fixed permissions error when running lipo tool to combine libraries.
+- Fixed an internal compiler error when nested managed static readonly arrays were used (produces a proper Burst error instead now).
+- Fixed a bug whereby for platforms that require us to write intermediate LLVM bitcode files, UTF paths would be incorrectly handled.
+
+### Changed
+- Open-generic static methods are not supported by Burst, but they were previously visible in Burst Inspector - they are now hidden
+- Eager-compilation is now cancelled when script compilation starts, to prevent spurious errors related to recompiled assemblies
+
+### Added
+
+### Removed
+
+### Known Issues
+
+## [1.4.1-pre.1] - 2020-10-14
 
 ### Fixed
 - Fixed an issue that could prevent the Editor from shutting down

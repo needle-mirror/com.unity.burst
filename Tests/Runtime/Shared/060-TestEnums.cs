@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -120,20 +121,31 @@ namespace Burst.Compiler.IL.Tests
             public SmallEnum d;
         }
 
+        public enum SomeByteEnum : byte
+        {
+            First = 0,
+            Last = 255
+        }
 
+        public unsafe struct FixedByte4Struct
+        {
+            fixed byte bytes[4];
 
-        //private struct StructContainingEnumProvider : IArgumentProvider
-        //{
-        //    public object[] Arguments
-        //    {
-        //        get
-        //        {
-        //            var value = new StructContainingEnum();
-        //            value.intValue = 5;
-        //            value.value = MyEnum.Something;
-        //            return new object[] { value };
-        //        }
-        //    }
-        //}
+            public SomeByteEnum this[SomeByteEnum index]
+            {
+                get { return (SomeByteEnum)bytes[(int)index]; }
+            }
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new FixedByte4Struct { };
+            }
+        }
+
+        [TestCompiler(typeof(FixedByte4Struct.Provider))]
+        public static SomeByteEnum test_enum_indexer(ref FixedByte4Struct bytes)
+        {
+            return bytes[0];
+        }
     }
 }
