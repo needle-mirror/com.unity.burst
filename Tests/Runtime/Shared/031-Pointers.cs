@@ -543,7 +543,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 
-        [TestCompiler(ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler]
         public static void TestBlobAssetReferenceData()
         {
             var blob = new BlobAssetReferenceData(IntPtr.Zero);

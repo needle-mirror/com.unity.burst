@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.1] - 2020-10-27
+
+### Removed
+- Temporarily removed the Burst compiler warning about exception throws not in `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]` methods, to let us address user feedback. The next minor version of Burst will reincorporate this in a more friendly manner.
 ## [1.4.1-pre.2] - 2020-10-21
 
 

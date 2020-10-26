@@ -168,20 +168,20 @@ namespace Burst.Compiler.IL.Tests
             return Math.Sign(value);
         }
 
-        [TestCompiler(DataRange.Standard & ~DataRange.NaN, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(DataRange.Standard & ~DataRange.NaN)]
         public static int TestSignFloat(float value)
         {
             return Math.Sign(value);
         }
 
-        [TestCompiler(float.NaN, ExpectedException = typeof(ArithmeticException), ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(float.NaN, ExpectedException = typeof(ArithmeticException))]
         [MonoOnly(".NET CLR does not support burst.abort correctly")]
         public static int TestSignException(float value)
         {
             return Math.Sign(value);
         }
 
-        [TestCompiler(DataRange.Standard & ~DataRange.NaN, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        [TestCompiler(DataRange.Standard & ~DataRange.NaN)]
         public static int TestSignDouble(double value)
         {
             return Math.Sign(value);
