@@ -10,13 +10,13 @@ The `Unity.Burst.Intrinsics.Common` intrinsics are for functionality that is sha
 
 The `Unity.Burst.Intrinsics.Common.Pause` is an **experimental** intrinsic that provides a hint that the current thread should pause. It maps to `pause` on x86, and `yield` on ARM.
 
-It is used primarily to stop spin locks over contending on an atomic access, to reduce contention and power on that section of code.
+It is primarily used to stop spin locks over contending on an atomic access, reduce contention, and power on that section of code.
 
 The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC` preprocessor define.
 
 ## Prefetch
 
-The `Unity.Burst.Intrinsics.Common.Prefetch` is an **experimental** intrinsic that provides a hint that the a memory location should be prefetched into the cache.
+The `Unity.Burst.Intrinsics.Common.Prefetch` is an **experimental** intrinsic that provides a hint that the memory location should be prefetched into the cache.
 
 The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC` preprocessor define.
 
@@ -26,7 +26,7 @@ The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users t
 
 ## Processor specific SIMD extensions
 
-Burst exposes all Intel SIMD intrinsics from SSE and up to and including AVX2
+Burst exposes all Intel SIMD intrinsics from SSE up to and including AVX2
 by means of the `Unity.Burst.Intrinsics.X86` family of nested classes, 
 and **experimental** Arm Neon intrinsics for Armv7 and Armv8 by means of the `Unity.Burst.Intrinsics.Arm.Neon` class. 
 These are intended to be statically imported as they contain plain static functions:
@@ -78,7 +78,7 @@ narrow in on what needs to be put inside a feature test.
 Note that when running in .NET, Mono or IL2CPP without Burst enabled, all the `IsXXXSupported` properties will return `false`.
 However, if you skip the test you can still run a reference version of most
 intrinsics in Mono (exceptions listed below), which can be helpful if you need to use the managed
-debugger. Please note however that the reference implementations are very slow
+debugger. However, please note that the reference implementations are very slow
 and only intended for managed debugging.
 
 > Please note that there is no reference managed implementation of Arm Neon intrinsics. This means that you cannot use the technique mentioned in the previous paragraph to step through the intrinsics in Mono.
@@ -163,6 +163,6 @@ parameter or return types:
 
 > Note that passing structs by value is not supported; you need to pass them through a pointer or reference.
 The only exception is that "handle" structs are supported - these are structs that contain a 
-single field, of pointer or integer type.
+single field of pointer or integer type.
 
 [Known issues with `DllImport`](KnownIssues.md#known-issues-with-dllimport)

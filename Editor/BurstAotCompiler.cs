@@ -680,8 +680,42 @@ extern ""C""
 
                 var shouldIncludeTestAssemblies = report.summary.options.HasFlag(BuildOptions.IncludeTestAssemblies);
 
-#if UNITY_2019_3_OR_NEWER
-                return CompilationPipeline.GetAssemblies(shouldIncludeTestAssemblies ? AssembliesType.Player : AssembliesType.PlayerWithoutTestAssemblies);
+#if UNITY_2021_1_OR_NEWER
+                // Workaround that with 'Server Build' ticked in the build options, since there is no 'AssembliesType.Server'
+                // enum, we need to manually add the BuildingForHeadlessPlayer compilation option.
+                if (report.summary.options.HasFlag(BuildOptions.EnableHeadlessMode))
+                {
+                    var compilationOptions = EditorCompilationInterface.GetAdditionalEditorScriptCompilationOptions();
+                    compilationOptions |= EditorScriptCompilationOptions.BuildingForHeadlessPlayer;
+
+                    if (shouldIncludeTestAssemblies)
+                    {
+                        compilationOptions |= EditorScriptCompilationOptions.BuildingIncludingTestAssemblies;
+                    }
+
+                    return CompilationPipeline.ToAssemblies(CompilationPipeline.GetScriptAssemblies(EditorCompilationInterface.Instance, compilationOptions));
+                }
+                else
+                {
+                    return CompilationPipeline.GetAssemblies(shouldIncludeTestAssemblies ? AssembliesType.Player : AssembliesType.PlayerWithoutTestAssemblies);
+                }
+#elif UNITY_2019_3_OR_NEWER
+                // Workaround that with 'Server Build' ticked in the build options, since there is no 'AssembliesType.Server'
+                // enum, we need to manually add the 'UNITY_SERVER' define to the player assembly search list.
+                if (report.summary.options.HasFlag(BuildOptions.EnableHeadlessMode))
+                {
+                    var compilationOptions = EditorCompilationInterface.GetAdditionalEditorScriptCompilationOptions();
+                    if (shouldIncludeTestAssemblies)
+                    {
+                        compilationOptions |= EditorScriptCompilationOptions.BuildingIncludingTestAssemblies;
+                    }
+
+                    return CompilationPipeline.GetPlayerAssemblies(EditorCompilationInterface.Instance, compilationOptions, new string[] { "UNITY_SERVER" });
+                }
+                else
+                {
+                    return CompilationPipeline.GetAssemblies(shouldIncludeTestAssemblies ? AssembliesType.Player : AssembliesType.PlayerWithoutTestAssemblies);
+                }
 #else
                 var compilationOptions = EditorCompilationInterface.GetAdditionalEditorScriptCompilationOptions();
                 if (shouldIncludeTestAssemblies)

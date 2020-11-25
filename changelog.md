@@ -1,9 +1,30 @@
 # Changelog
 
+## [1.4.2] - 2020-11-26
+
+
+### Fixed
+- Fixed a bug whereby if you had an assembly that was guarded by `UNITY_SERVER`, Burst would be unable to find the assembly when `Server Build` was ticked.
+- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now _actually_ fixed.
+- Fixed issues with Intel intrinsics mm256_inserti128_si256, mm256_bslli_epi128, mm256_bsrli_epi128
+- Debug information for instance methods is now correctly scoped. This means instance variables can now be inspected correctly.
+- Fixed managed (reference) implementation of mm256_cvttps_epi32 (case 1288563)
+
+### Added
+
+### Removed
+
+### Changed
+- Improved the performance of in-compiler hashing by 1.2x.
+- Improved our hashing performance some more by re-using fixed-sized buffers in the compiler to improve eager-compilation / warm-cache costs by 1.25x.
+
+### Known Issues
+
 ## [1.4.1] - 2020-10-27
 
 ### Removed
 - Temporarily removed the Burst compiler warning about exception throws not in `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]` methods, to let us address user feedback. The next minor version of Burst will reincorporate this in a more friendly manner.
+
 ## [1.4.1-pre.2] - 2020-10-21
 
 

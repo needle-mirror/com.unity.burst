@@ -40,7 +40,7 @@ Now, if the compiler is **noalias aware**, it will be able to optimize the previ
 
 ## Memory aliasing:
 
-Next, if for some reasons (that is not directly easy to introduce with the JobSystem today), the Output array is actually overlapping the Input array by one element off (e.g `Output[0]` points actually to `Input[1]`) meaning that memory are **aliasing**, we will get the following result when running the `CopyJob` (assuming that the auto-vectorizer is not running):
+Next, if for some reasons (that is not directly easy to introduce with the JobSystem today), the Output array is actually overlapping the Input array by one element off (e.g `Output[0]` actually points to `Input[1]`), meaning that memory is **aliasing**, we will get the following result when running the `CopyJob` (assuming that the auto-vectorizer is not running):
 
 ![Memory with aliasing](../images/burst-alias.png)
 
@@ -73,7 +73,7 @@ Let's take the example of the `x64` assembly targeted at `AVX2` for the loop in 
     test    r10d, r10d
     je      .LBB0_8
 ```
-As can be seen, the instruction `vmovups` is moving 8 floats here, so a single auto-vectorized loop is now moving 4 x 8 = **32 floats copied per loop iteration** instead of just one!
+As can be seen above, the instruction `vmovups` is moving 8 floats here, so a single auto-vectorized loop is now moving 4 x 8 = **32 floats copied per loop iteration** instead of just one!
 
 If we compile the same loop but artificially disable Burst's knowledge of aliasing, we get the following code:
 
@@ -89,15 +89,15 @@ If we compile the same loop but artificially disable Burst's knowledge of aliasi
     jl      .LBB0_2
 ```
 
-Which is entirely scalar, and will run roughly 32 times slower than the highly optimized vectorized variant that our alias analysis can produce.
+Which is entirely scalar and will run roughly 32 times slower than the highly optimized, vectorized variant that our alias analysis can produce.
 
 # Burst and the JobSystem
 
 Unity's job-system infrastructure imposes certain rules on what can alias within a job struct:
 
-- Structs attributed with `[NativeContainer]`, for example `NativeArray` and `NativeSlice`, that are members of a job struct **do not alias**.
-- But job struct members with the `[NativeDisableContainerSafetyRestriction]` attribute, these **can alias** with other members (because you as the user have explicitly opted in to this aliasing).
-- Pointers to structs attributed with `[NativeContainer]` cannot appear within other structs attributed with `[NativeContainer]`. For example you cannot have a `NativeArray<NativeSlice<T>>`. This kind of spaghetti code is awful for optimizing compilers to understand.
+- Structs attributed with `[NativeContainer]` (for example - `NativeArray` and `NativeSlice`) that are members of a job struct **do not alias**.
+- But job struct members with the `[NativeDisableContainerSafetyRestriction]` attribute **can alias** with other members (because you, as the user, have explicitly opted in to this aliasing).
+- Pointers to structs attributed with `[NativeContainer]` cannot appear within other structs attributed with `[NativeContainer]`. For example, you cannot have a `NativeArray<NativeSlice<T>>`. This kind of spaghetti code is awful for optimizing compilers to understand.
 
 Let us now look at an example job:
 
@@ -121,7 +121,7 @@ In the above example:
 - `a`, `b`, and `c` do not alias with each other.
 - But `d` **can alias** with `a`, `b`, or `c`.
 
-Those of you used to C/C++'s [Type Based Alias Analysis (TBAA)](https://en.wikipedia.org/wiki/Alias_analysis#Type-based_alias_analysis) might think _'But `d` has a different type from `a`, `b`, or `c`, so it should not alias!'_ - pointers in C\# do not have any assumption that pointing to a different type results in no aliasing though. So `d` must be assumed to alias with `a`, `b`, or `c`.
+Those of you used to C/C++'s [Type Based Alias Analysis (TBAA)](https://en.wikipedia.org/wiki/Alias_analysis#Type-based_alias_analysis) might think _'But `d` has a different type from `a`, `b`, or `c`, so it should not alias!'_ - pointers in C\# do not have any assumption that pointing to a different type results in no aliasing, though. So `d` must be assumed to alias with `a`, `b`, or `c`.
 
 # The NoAlias Attribute
 
@@ -132,11 +132,11 @@ Burst has a `[NoAlias]` attribute that can be used to give the compiler addition
 - On a struct itself it signifies that the address of the struct cannot appear within the struct itself.
 - On a function return value it signifies that the returned pointer does not alias with any other pointer returned from the same function.
 
-These attributes do not need to be used when dealing with `[NativeContainer]` attributed structs, or with fields in job structs - the Burst compiler is smart enough to infer the no-alias information about these without manual intervention from you, our users. This leads onto a general rule of thumb - the use of the `[NoAlias]` attribute is generally not required for user code, and we advise against its use. The attribute is exposed primarily for those constructing complex data structures where the aliasing cannot be inferred by the compiler. Any use of `[NoAlias]` on a pointer that could alias with another could result in undefined behaviour and hard to track down bugs.
+These attributes do not need to be used when dealing with `[NativeContainer]` attributed structs, or with fields in job structs - the Burst compiler is smart enough to infer the no-alias information about these without manual intervention from you, our users. This leads onto a general rule of thumb - the use of the `[NoAlias]` attribute is generally not required for user code, and we advise against its use. The attribute is exposed primarily for those constructing complex data structures where the aliasing cannot be inferred by the compiler. Any use of `[NoAlias]` attribute on a pointer that could alias with another could result in undefined behaviour and make it hard to track down bugs.
 
 ## NoAlias Function Parameter
 
-Lets take a look at the following classic aliasing example:
+Let's take a look at the following classic aliasing example:
 
 ```c#
 int Foo(ref int a, ref int b)
@@ -224,7 +224,7 @@ As can be seen it:
 - Stores 13 into it.
 - Reloads the data in `b` and converts it to an integer for returning.
 
-Let's assume that you as the user know that the two NativeArray's are not backed by the same memory, you could:
+Let's assume that you, as the user, know that the two NativeArray's are not backed by the same memory. Therefore you could do this:
 
 ```c#
 struct Bar
@@ -310,9 +310,9 @@ As can be seen it:
 - Loads `i` into `ecx`.
 - Returns the index into `p` by `i`.
 
-Notice that it loaded `p` twice - why? The reason is that the compiler does not know whether `p` points to the address of the struct `bar` itself - so once it has stored 42 into `p`, it has to reload the address of `p` from bar, just incase. A wasted load!
+Notice that it loaded `p` twice - why? The reason is that the compiler does not know whether `p` points to the address of the struct `bar` itself - so once it has stored 42 into `p`, it has to reload the address of `p` from bar, just in case. A wasted load!
 
-Lets add `[NoAlias]` now:
+Let's add `[NoAlias]` now:
 
 ```c#
 [NoAlias]
@@ -343,9 +343,9 @@ Notice that it only loaded the address of `p` once, because we've told the compi
 
 ## NoAlias Function Return
 
-Some functions can only return a unique pointer. For instance, `malloc` will only ever give you a unique pointer. For these cases `[return:NoAlias]` can provide the compiler with some useful information.
+Some functions can only return a unique pointer. For instance, `malloc` will only ever give you a unique pointer. For these cases `[return:NoAlias]` can provide some useful information to the compiler.
 
-Lets take an example using a bump allocator backed with a stack allocation:
+Let's take an example using a bump allocator backed with a stack allocation:
 
 ```c#
 // Only ever returns a unique address into the stackalloc'ed memory.
@@ -478,7 +478,7 @@ And notice that the compiler doesn't reload `ptr2` but simply moves 42 into the 
 
 # Function Cloning for Better Aliasing Deduction
 
-For function calls where Burst knows about the aliasing between parameters to the function, Burst can infer the aliasing and propagate this onto the called function to allow for greater optimization opportunities. Lets look at an example:
+For function calls where Burst knows about the aliasing between parameters to the function, Burst can infer the aliasing and propagate this onto the called function to allow for greater optimization opportunities. Let's look at an example:
 
 ```c#
 [MethodImpl(MethodImplOptions.NoInlining)]
@@ -507,7 +507,7 @@ mov     eax, dword ptr [rcx]
 ret
 ```
 
-This is because within the `Bar` function, the compiler did not know the aliasing of `a` and `b`. This is in line with what other compiler technologies will do with this code snippet.
+This is because the compiler did not know the aliasing of `a` and `b` within the `Bar` function. This is in line with what other compiler technologies will do with this code snippet.
 
 Burst is smarter than this though, and through a process of function cloning Burst will create a copy of `Bar` where the aliasing properties of `a` and `b` are known not to alias, and replace the original call to `Bar` with a call to the copy. This results in the following assembly:
 

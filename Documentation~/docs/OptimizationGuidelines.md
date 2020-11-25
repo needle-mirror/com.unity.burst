@@ -46,7 +46,7 @@ the compiler generates code that loops over multiple values at the same time, pr
     jne        .LBB1_4
 ```
 
-As can be seen, the loop has been unrolled and vectorized so that it is has 4 `vpaddd` instructions, each calculating 8 integer additions,
+As can be seen above, the loop has been unrolled and vectorized so that it is 4 `vpaddd` instructions, each calculating 8 integer additions,
 for a total of **32 integer additions per loop iteration**.
 
 This is great! However, loop vectorization is notoriously brittle. As an example, let's introduce a seemingly innocuous branch like this:
@@ -86,7 +86,7 @@ This loop is completely scalar and only has 1 integer addition per loop iteratio
 an experienced developer would probably spot that adding the branch will break auto-vectorization. But in more complex real-life code
 it can be difficult to spot.
 
-To help with this problem, Burst includes **experimental at present** intrinsics (`Loop.ExpectVectorized()` and `Loop.ExpectNotVectorized()`) to express loop vectorization
+To help with this problem, Burst includes, at present, **experimental** intrinsics (`Loop.ExpectVectorized()` and `Loop.ExpectNotVectorized()`) to express loop vectorization
 assumptions, and have them validated at compile-time. For example, we can change the original `Bar` implementation to:
 
 ``` c#
@@ -235,13 +235,13 @@ The compiler floating point math mode is defined by the following enumeration:
 
 - `FloatMode.Default` is defaulting to `FloatMode.Strict`
 - `FloatMode.Strict`: The compiler is not performing any re-arrangement of the calculation and will be careful at respecting special floating point values (denormals, NaN...). This is the **default value**.
-- `FloatMode.Fast`: The compiler can perform instructions re-arrangement and/or using dedicated/less precise hardware SIMD instructions.
+- `FloatMode.Fast`: The compiler can perform instruction re-arrangement and/or using dedicated/less precise hardware SIMD instructions.
 - `FloatMode.Deterministic`: Reserved for future, when Burst will provide support for deterministic mode
 
-Typically, some hardware can support Multiply and Add (e.g mad `a * b + c`) into a single instruction. Using the Fast calculation can allow these optimizations.
+Typically, some hardware can support Multiply and Add (e.g mad `a * b + c`) into a single instruction. These optimizations can be allowed by using the Fast calculation.
 The reordering of these instructions can lead to a lower accuracy.
 
-Using the `FloatMode.Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
+The `FloatMode.Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
 
 # Assume Intrinsics
 
@@ -275,7 +275,7 @@ static bool IsLengthNegative(NativeArray<float> na)
 }
 ```
 
-Lets assume you have your own container:
+Let's assume you have your own container:
 
 ```c#
 struct MyContainer
@@ -372,7 +372,7 @@ myJobSystem.Run();
 
 In both cases in a standalone-player build, the Burst compiler will be able to detect that it has to compile `MyGenericJob<int>` and `MyGenericJob<float>` because the generic jobs (or the type surrounding it for the nested job) are used with fully resolved generic arguments (`int` and `float`).
 
-But if these jobs are used indirectly through a generic parameter, the Burst compiler won't be able to detect the Jobs to compile at standalone-player build time:
+But if these jobs are used indirectly through a generic parameter, the Burst compiler won't be able to detect the Jobs it has to compile at standalone-player build time:
 
 ```c#
 public static void GenericJobSchedule<TData>() where TData: struct {
@@ -399,7 +399,7 @@ public class SuperJobSystem<TData>
 }
 ```
 
-> In summary, if you are using generic jobs, they need to be used directly with fully-resolved generic arguments (e.g `int`, `MyOtherStruct`) but can't be used with a generic parameter indirection (e.g `MyGenericJob<TContext>`).
+> In summary, if you are using generic jobs, they need to be used directly with fully-resolved generic arguments (e.g `int`, `MyOtherStruct`), but can't be used with a generic parameter indirection (e.g `MyGenericJob<TContext>`).
 
 Regarding function pointers, they are more restricted as you can't use a generic delegate through a function pointer with Burst:
 
@@ -412,3 +412,4 @@ var myGenericFunctionPointer = BurstCompiler.CompileFunctionPointer<MyGenericDel
 ```
 
 This limitation is due to a limitation of the .NET runtime to interop with such delegates.
+

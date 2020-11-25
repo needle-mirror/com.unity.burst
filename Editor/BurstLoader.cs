@@ -136,8 +136,10 @@ namespace Unity.Burst.Editor
             CompilationPipeline.compilationStarted += OnCompilationStarted;
 #endif
 
-            CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
-            CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
+#if !UNITY_2021_1_OR_NEWER
+            UnityEditor.Compilation.CompilationPipeline.assemblyCompilationStarted += OnAssemblyCompilationStarted;
+#endif
+            UnityEditor.Compilation.CompilationPipeline.assemblyCompilationFinished += OnAssemblyCompilationFinished;
             EditorApplication.playModeStateChanged += EditorApplicationOnPlayModeStateChanged;
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
 
@@ -345,6 +347,11 @@ namespace Unity.Burst.Editor
 #if UNITY_2019_1_OR_NEWER
         private static void OnCompilationStarted(object value)
         {
+            if (DebuggingLevel > 2)
+            {
+                UnityEngine.Debug.Log($"{DateTime.UtcNow} Burst - compilation started for '{value}'");
+            }
+
             CancelEagerCompilationPriorToAssemblyCompilation();
         }
 #endif
@@ -361,6 +368,8 @@ namespace Unity.Burst.Editor
         private static bool _hasCompilationStarted;
 #endif
 
+#if !UNITY_2021_1_OR_NEWER
+        // This callback has been deprecated on 2021_1 and above
         private static void OnAssemblyCompilationStarted(string obj)
         {
             if (DebuggingLevel > 2)
@@ -377,6 +386,7 @@ namespace Unity.Burst.Editor
             }
 #endif
         }
+#endif
 
         private static bool TryGetOptionsFromMember(MemberInfo member, out string flagsOut)
         {

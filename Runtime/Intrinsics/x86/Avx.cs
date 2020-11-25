@@ -1115,7 +1115,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v256 mm256_cvttps_epi32(v256 a)
             {
-                return new v256(Sse2.cvtps_epi32(a.Lo128), Sse2.cvtps_epi32(a.Hi128));
+                return new v256(Sse2.cvttps_epi32(a.Lo128), Sse2.cvttps_epi32(a.Hi128));
             }
 
             /*

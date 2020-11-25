@@ -5,10 +5,10 @@ Burst supports most of the expressions and statements:
 - Regular C# control flows:
   - `if`/`else`/`switch`/`case`/`for`/`while`/`break`/`continue`.
 - Extension methods.
-- Unsafe code, pointers manipulation...etc.
+- Unsafe code, pointer manipulation...etc.
 - Instance methods of structs.
 - By ref/out parameters.
-- [`DllImport` and internal calls](CSharpLanguageSupport_BurstIntrinsics#dllimport-and-internal-calls).
+- [`DllImport` and internal calls](CSharpLanguageSupport_BurstIntrinsics.md#dllimport-and-internal-calls).
 - Limited support for `throw` expressions, assuming simple throw patterns (e.g `throw new ArgumentException("Invalid argument")`). In that case, we will try to extract the static string exception message to include it in the generated code.
 - Some special IL opcodes like `cpblk`, `initblk`, `sizeof`.
 - Loading from static readonly fields.
@@ -17,7 +17,7 @@ Burst supports most of the expressions and statements:
   - Note that if an exception occurs, the behavior will differ from .NET. In .NET, if an exception occurs inside a `try` block, control flow would go to the `finally` block. In Burst, if an exception occurs whether inside or outside a `try` block, the currently running job or function pointer will terminate immediately.
   - [Partial support for strings and `Debug.Log`](#partial-support-for-strings-and-debuglog).
 
-Burst provides also alternatives for some C# constructions not directly accessible to HPC#:
+Burst also provides alternatives for some C# constructions not directly accessible to HPC#:
 
 - [Function pointers](AdvancedUsages.md#function-pointers) as an alternative to using delegates within HPC#
 - [Shared Static](AdvancedUsages.md#shared-static) to access static mutable data from both C# and HPC#
@@ -30,7 +30,7 @@ Burst does not support:
 
 ## Throw and Exceptions
 
-Burst supports `throw` expressions for exceptions in the Editor (`2019.3+` only), but crucially **not** in standalone player builds. Exceptions in Burst are to be used solely for _exceptional_ behavior. To ensure that code does not end up relying on exceptions for things like general control flow, Burst will produce the following warning on code that tries to `throw` within a method not attributed by `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]`:
+Burst supports `throw` expressions for exceptions in the Editor (`2019.3+` only), but crucially **does not** in Standalone Player builds. Exceptions in Burst are to be used solely for _exceptional_ behavior. To ensure that code does not end up relying on exceptions for things like general control flow, Burst will produce the following warning on code that tries to `throw` within a method not attributed by `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]`:
 
 > Burst warning BC1370: An exception was thrown from a function without the correct [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")] guard. Exceptions only work in the editor and so should be protected by this guard
 
@@ -77,7 +77,7 @@ MyCustomLog(text);
 // ...
 
 // String can be passed as an argument to a method using a FixedString, 
-// but not using directly a  managed `string`:
+// but not using directly a managed `string`:
 public static void MyCustomLog(in FixedString128 log)
 {
     Debug.Log(text);
@@ -117,7 +117,7 @@ What is supported currently:
     - `string.Format(string, object)`, `string.Format(string, object, object)`, `string.Format(string, object, object, object)` and more if the .NET API provides specializations with object arguments.
     - `string.Format(string, object[])`: which can happen for a string interpolation that would contain more than 3 arguments (e.g `$"{arg1} {arg2} {arg3} {arg4} {arg5}..."`). In that case, we expect the object[] array to be of a constant size and no arguments should involve control flows (e.g `$"This is a {(cond ? arg1 : arg2)}"`)
   - Only value types.
-  - Primitive types only arguments: `char`, `boolean`, `byte`, `sbyte`, `ushort`, `short`, `uint`, `int`, `ulong`, `long`, `float`, `double`.
+  - Only primitive type arguments: `char`, `boolean`, `byte`, `sbyte`, `ushort`, `short`, `uint`, `int`, `ulong`, `long`, `float`, `double`.
   - All vector types e.g `int2`, `float3` are supported, except `half` vector types.
     ```c#
     var value = new float3(1.0f, 2.0f, 3.0f);

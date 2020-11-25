@@ -69,9 +69,9 @@ The Burst package adds a few menu entries to the Jobs menu for controlling Burst
 
 - **Enable Compilation**: When checked, Burst compiles Jobs and Burst custom delegates that are tagged with the attribute `[BurstCompile]`. Default is checked.
 - **Enable Safety Checks**: Has three options in a sub-menu:
-  - Off - disable safety checks across all Burst jobs/function-pointers. This is a dangerous setting that should only be used when you want more realistic profiling results from in-editor captures. A reload of the Unity Editor will always reset this to On.
-  - On - Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. This is the default.
-  - Force On - Force safety checks on _even for jobs/function-pointers that have_ `DisableSafetyChecks = true`. Prior to reporting any Burst bug this option should be set to rule out any problems that safety checks could have caught.
+  - **Off** - disable safety checks across all Burst jobs/function-pointers. This is a dangerous setting that should only be used when you want more realistic profiling results from in-editor captures. A reload of the Unity Editor will always reset this to On.
+  - **On** - Burst enables safety checks on code that uses collection containers (e.g `NativeArray<T>`). Checks include job data dependency and container indexes out of bounds. This is the default.
+  - **Force On** - Force safety checks on _even for jobs/function-pointers that have_ `DisableSafetyChecks = true`. Prior to reporting any Burst bug this option should be set to rule out any problems that safety checks could have caught.
 - **Synchronous Compilation**: When checked, Burst will compile synchronously - See [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation). Default is unchecked.
 - **Native Debug Mode Compilation**: When checked, Burst will disable optimizations on all code compiled, in order to make it easier to debug via a native debugger - See [Native Debugging](DebuggingAndProfiling.md#native-debugging). Default is unchecked.
 - **Show Timings**: When checked, Burst logs the time it takes to JIT compile a Job in the Editor. Default is unchecked.
@@ -100,12 +100,12 @@ On the right pane, the window displays options for viewing the assembly and inte
    * **LLVM IR Optimization Diagnostics** provides detailed LLVM diagnostics of the optimizations (i.e if they succeeded or failed).
 4. You can also turn on different options:
    * There is a dropdown to specify what output to show. If you click the **Copy to Clipboard** button it'll copy the output that matches what you specify here (so if you have coloured output you'll get all the `<color=#444444>foo</color>` tags). In general its best to view the coloured output in the inspector, but copy the plain output if you want to move it into an external tool.
-   ** Plain (No debug information) - raw output.
-   ** Plain (With debug information) - same as above but with debug information included too.
-   ** Enhanced (Minimal debug information) - enhanced output has the line information interweaved with the assembly to guide you as to what line in your code matches what assembly output.
-   ** Enhanced (Full debug information) - same as above but with debug information included too.
-   ** Coloured (Minimal debug information) - same as the enhanced output but the assembly is colourised nicely to aid reading.
-   ** Coloured (Full debug information) - same as above but with debug information included too.
+      * **Plain (No debug information)** - raw output.
+      * **Plain (With debug information)** - same as above but with debug information included too.
+      * **Enhanced (Minimal debug information)** - enhanced output has the line information interweaved with the assembly to guide you as to what line in your code matches what assembly output.
+      * **Enhanced (Full debug information)** - same as above but with debug information included too.
+      * **Coloured (Minimal debug information)** - same as the enhanced output but the assembly is colourised nicely to aid reading.
+      * **Coloured (Full debug information)** - same as above but with debug information included too.
    * The **Safety Checks** option generates code that includes container access safety checks (e.g check if a job is writing to a native container that is readonly).
 
 # Command-line Options
@@ -117,9 +117,9 @@ You can pass the following options to the Unity Editor on the command line to co
 
 # Just-In-Time (JIT) vs Ahead-Of-Time (AOT) Compilation
 
-When working on your projects in the editor (play mode), burst works in a Just-In-Time (JIT) fashion. Burst will compile your code at the point that it is to be used. By default this is done asnychronously which means your code will be running under the default mono JIT until the compilation by burst has been completed.
+When working on your projects in the editor (Play Mode), Burst works in a Just-In-Time (JIT) fashion. Burst will compile your code at the point that it is to be used. By default this is done asnychronously which means your code will be running under the default mono JIT until the compilation by Burst has been completed.
 You can control this behaviour via [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation).
 
-However when you build your project into a Standalone Player, burst will instead compile all the supported code Ahead-Of-Time (AOT). AOT compilation at present, requires access to some linker tools for the respective platforms (similar to the requirements of IL2CPP). See [Burst AOT Requirements](StandalonePlayerSupport.md#burst-aot-requirements).
+However, when you build your project into a Standalone Player, Burst will instead compile all the supported code Ahead-Of-Time (AOT). AOT compilation at present, requires access to some linker tools for the respective platforms (similar to the requirements of IL2CPP). See [Burst AOT Requirements](StandalonePlayerSupport.md#burst-aot-requirements).
 
 See [Standalone Player Support](StandalonePlayerSupport.md).

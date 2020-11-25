@@ -14,7 +14,7 @@ Burst supports all methods of `System.IntPtr`/`System.UIntPtr`, including the st
 
 Burst supports atomic memory intrinsics for all methods provided by `System.Threading.Interlocked` (e.g `Interlocked.Increment`...etc.)
 
-Care must be taken when using the interlocked methods that the source location being atomically accessed is _naturally aligned_ - EG. the alignment of the pointer is a multiple of the pointed-to-type.
+Care must be taken when using the interlocked methods that the source location being atomically accessed is _naturally aligned_ - e.g. the alignment of the pointer is a multiple of the pointed-to-type.
 
 For example:
 
@@ -32,7 +32,7 @@ struct Foo
 }
 ```
 
-And lets assume that the pointer to the struct `Foo` has an alignment of 8 - the natural alignment of a `long` value. The `Interlocked.Read` of `a` would be successful because it lies on a _naturally aligned_ address, but `b` would not. Undefined behaviour will occur at the load of `b` as a result.
+Let's assume that the pointer to the struct `Foo` has an alignment of 8 - the natural alignment of a `long` value. The `Interlocked.Read` of `a` would be successful because it lies on a _naturally aligned_ address, but `b` would not. Undefined behaviour will occur at the load of `b` as a result.
 
 ## `System.Threading.Thread`
 

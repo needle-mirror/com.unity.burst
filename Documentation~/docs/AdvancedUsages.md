@@ -2,7 +2,7 @@
 
 # BurstDiscard attribute
 
-When running some code in the full C# (not inside a Burst compiled code), you may want to use some managed objects but you would like to not compile these portion of code when compiling within Burst.
+When running some code in the full C# (not inside Burst compiled code), you may want to use some managed objects, but you would like to not compile these portions of code when compiling within Burst.
 
 To mitigate this, you can use the `[BurstDiscard]` attribute on a method:
 
@@ -44,11 +44,11 @@ public struct MyJob : IJob
 
 When running a Burst job in the editor, the first attempt to call the job will cause the asynchronous compilation of the Burst job to be kicked off in the background, while running the managed C# job in the mean time. This minimizes any frame hitching and keeps the experience for you and your users responsive.
 
-When `CompileSynchronously = true` is set, no asynchronous compilation can occur. Burst is focused on providing highly performance oriented code-generation and as a result will take a little longer than a traditional JIT to compile. Crucially this pause for compilation _will affect the current running frame_, meaning that hitches can occur and it could provide an unresponsive experience for users. In general the only legitimate uses of `CompileSynchronously = true` are:
+When `CompileSynchronously = true` is set, no asynchronous compilation can occur. Burst is focused on providing highly performance oriented code-generation and as a result will take a little longer than a traditional JIT to compile. Crucially this pause for compilation _will affect the current running frame_, meaning that hitches can occur and it could provide an unresponsive experience for users. In general, the only legitimate uses of `CompileSynchronously = true` are:
 
 - If you have a long running job that will only run once, the performance of the compiled code could out-weigh the cost of doing the compilation.
 - If you are profiling a Burst job and thus want to be certain that the code that is being tested is from the Burst compiler. In this scenario you should perform a warmup to throw away any timing measurements from the first call to the job as that would include the compilation cost and skew the result.
-- If you suspect that there are some crucial differences between managed and Burst compiled code. This is really only as a debugging aid, as the Burst compiler strives to match any and all behaviour that managed code could produce.
+- If you suspect that there are some crucial differences between managed and Burst compiled code. This is really only used as a debugging aid, as the Burst compiler strives to match any and all behaviour that managed code could produce.
 
 # Disable Safety Checks
 
@@ -67,15 +67,15 @@ When set, Burst will remove all safety check code, resulting in code-generation 
 This option has some interactions with the global `Enable Safety Checks` option in the Burst menu:
 
 - If `Enable Safety Checks` is set to `On`, safety checks will be enabled for all Burst-compiled code except those marked explicitly with `DisableSafetyChecks = true`.
-- If `Enable Safety Checks` is set to `Force On`, all code _even that marked with_ `DisableSafetyChecks = true` will be compiled with safety checks. This option allows users to enable safety checks even in any downstream packages they depend on so that if they encounter some unexpected behaviour they can first check that the safety checks would not have caught it.
+- If `Enable Safety Checks` is set to `Force On`, all code _even that marked with_ `DisableSafetyChecks = true` will be compiled with safety checks. This option even allows users to enable safety checks in any downstream packages they depend on so that if they encounter some unexpected behaviour, they can first check that the safety checks would not have caught it.
 
 # Function Pointers
 
-It is often required to work with dynamic functions that can process data based on other data states. In that case, a user would expect to use C# delegates but in Burst, because these delegates are managed objects, we need to provide a HPC# compatible alternative. In that case you can use `FunctionPointer<T>`.
+It is often required to work with dynamic functions that can process data based on other data states. In that case, a user would expect to use C# delegates, but because in Burst these delegates are managed objects, we need to provide a HPC# compatible alternative. In that case you can use `FunctionPointer<T>`.
 
 First you need identify the static functions that will be compiled with Burst:
 - add a `[BurstCompile]` attribute to these functions
-- add a `[BurstCompile]` attribute to the containing type. This attribute is only here to help the Burst compiler to look for static methods with `[BurstCompile]` attribute
+- add a `[BurstCompile]` attribute to the containing type. This attribute is only here to help the Burst compiler look for static methods with `[BurstCompile]` attribute
 - create the "interface" of these functions by declaring a delegate
 - add a `[MonoPInvokeCallbackAttribute]` attribute to the functions, as it is required to work properly with IL2CPP:
 
@@ -99,10 +99,10 @@ class EnclosingType {
 Then you need to compile these function pointers from regular C# code:
 
 ```c#
-    // Contains a compiled version of MultiplyFloat with burst
+    // Contains a compiled version of MultiplyFloat with Burst
     FunctionPointer<Process2FloatsDelegate> mulFunctionPointer = BurstCompiler.CompileFunctionPointer<Process2FloatsDelegate>(MultiplyFloat);
 
-    // Contains a compiled version of AddFloat with burst
+    // Contains a compiled version of AddFloat with Burst
     FunctionPointer<Process2FloatsDelegate> addFunctionPointer = BurstCompiler.CompileFunctionPointer<Process2FloatsDelegate>(AddFloat);
 ```
 
@@ -125,15 +125,15 @@ Note that you can also use these function pointers from regular C# as well, but 
 
 > A few important additional notes:
 >
-> - Function pointers are compiled asynchronously by default as for jobs. You can still force a synchronous compilation of function pointers by specifying this via the `[BurstCompile(SynchronousCompilation = true)]`.
-> - Function pointers have limited support for exceptions. As is the case for jobs, exceptions only work in the editor (`2019.3+` only) and they will result in a crash if they are used within a standalone player. It is recommended not to rely on any logic related to exception handling when working with function pointers.
+> - Function pointers are compiled asynchronously for jobs by default. You can still force a synchronous compilation of function pointers by specifying this via the `[BurstCompile(SynchronousCompilation = true)]`.
+> - Function pointers have limited support for exceptions. As is the case for jobs, exceptions only work in the editor (`2019.3+` only) and they will result in a crash if they are used within a Standalone Player. It is recommended not to rely on any logic related to exception handling when working with function pointers.
 > - Using Burst-compiled function pointers from C# could be slower than their pure C# version counterparts if the function is too small compared to the cost of P/Invoke interop.
 > - Function pointers don't support generic delegates.
 > - Argument and return types are subject to the same restrictions as described for [`DllImport` and internal calls](CSharpLanguageSupport_BurstIntrinsics.md#dllimport-and-internal-calls).
 
 ## Performance Considerations
 
-If you are ever considering using Burst's function pointers, you should _always_ first consider whether a job would better. Jobs are the most optimal way to run code produced by the Burst compiler for a few reasons:
+If you are ever considering using Burst's function pointers, you should _always_ first consider whether a job would be better. Jobs are the most optimal way to run code produced by the Burst compiler for a few reasons:
 
 - The superior aliasing calculations that Burst can provide with a job because of the rules imposed by the job safety system allow for much more optimizations by default.
 - You cannot pass most of the `[NativeContainer]` structs like `NativeArray` directly to function pointers, only via Job structs. The native container structs contain managed objects for safety checks that the Burst compiler can work around when compiling jobs, but not for function pointers.
@@ -269,10 +269,10 @@ that can then be accessed from C# and HPC#:
 
 # Dynamic dispatch based on runtime CPU features 
 
-For all `x86`/`x64` CPU desktop platforms, Burst will dispatch jobs to different version compiled by taking into account CPU features available at runtime. 
+For all `x86`/`x64` CPU desktop platforms, Burst will dispatch jobs to different versions compiled by taking into account CPU features available at runtime. 
 
-Currently for for `x86` and `x64` CPU, Burst is supporting at runtime only `SSE2` and `SSE4` instruction sets. 
+Currently for `x86` and `x64` CPUs, Burst is supporting `SSE2` and `SSE4` instruction sets at runtime only. 
 
-For example, with dynamic CPU dispatch, if your CPU is supports `SSE3` and below, Burst will select `SSE2` automatically.
+For example, with dynamic CPU dispatch, if your CPU supports `SSE3` and below, Burst will select `SSE2` automatically.
 
 See the table in the section [Burst AOT Requirements](StandalonePlayerSupport.md#burst-aot-requirements) for more details about the supported CPU architectures.

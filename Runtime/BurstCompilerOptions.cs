@@ -228,7 +228,7 @@ namespace Unity.Burst
                     // to no longer use the cached functions
                     JobsUtility.JobCompilerEnabled = value;
 #if UNITY_EDITOR
-                    if (!IsInitializing && changed)
+                    if (changed)
                     {
                         // Send the command to the compiler service
                         if (value)
