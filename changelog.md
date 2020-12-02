@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.3] - 2020-12-03
+
+
+### Added
+
+### Removed
+
+### Changed
+- Preserve the frame pointer when debugging is enabled to aid debugging.
+
+### Fixed
+- Fixed a failure on linux builds where libdl.so cannot be found.
+- Fixed a bug in LLVM that it would incorrectly convert some memset -> memcpy if both pointers derived from the same memory address, and where one indexed into the 0th element of the pointer.
+- Fixed alignment issues associated with xxHash3 on ArmV7 (case 1288992)
+- Fixed managed implementation of sub_ss intrinsic
+- Made `math.shuffle` compile correctly when non-constant `ShuffleComponent`'s are used.
+
+### Known Issues
+
 ## [1.4.2] - 2020-11-26
 
 

@@ -147,7 +147,7 @@ namespace Unity.Burst.Intrinsics
             public static v128 sub_ss(v128 a, v128 b)
             {
                 v128 dst = a;
-                a.Float0 = a.Float0 - b.Float0;
+                dst.Float0 = a.Float0 - b.Float0;
                 return dst;
             }
 

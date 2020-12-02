@@ -458,7 +458,7 @@ namespace Burst.Compiler.IL.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static unsafe void OutOfBoundsGEPNoAlias(SomeData* someData)
         {
-            ExpectNotAliased(someData, someData + 1);
+            ExpectNotAliased(in someData[0], in someData[1]);
         }
 
         [TestCompiler]
@@ -467,7 +467,7 @@ namespace Burst.Compiler.IL.Tests
             var someData = stackalloc SomeData[2];
             someData[0].A = 42;
             someData[1].A = 13;
-            ExpectNotAliased(someData, someData + 1);
+            ExpectNotAliased(in someData[0], in someData[1]);
             OutOfBoundsGEPNoAlias(someData);
         }
     }
