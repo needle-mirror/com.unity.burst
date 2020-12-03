@@ -28,6 +28,58 @@ Burst does not support:
 - Storing to static fields except via [Shared Static](AdvancedUsages.md#shared-static)
 - Any methods related to managed objects (e.g string methods...etc.)
 
+## Directly Calling Burst Compiled Code
+
+Burst supports the ability to call out to Burst compiled methods directly from managed code (`2019.4+` only), the rules for this follow the same rules as [Function pointers](AdvancedUsages.md#function-pointers), however as a user you don't need to worry about the extra boiler plate needed for function pointers.
+
+As an example here is a utility class which is Burst compiled (notice because we are using structs we are passing by reference as per the Function Pointer rules).
+
+```c#
+[BurstCompile]
+public static class MyBurstUtilityClass
+{
+    [BurstCompile]
+    public static void BurstCompiled_MultiplyAdd(in float4 mula, in float4 mulb, in float4 add, out float4 result)
+    {
+        result = mula * mulb + add;
+    }
+}
+```
+
+Now we can utilise this method from our Managed code e.g. 
+
+```c#
+public class MyMonoBehaviour : MonoBehaviour
+{
+    void Start()
+    {
+        var mula = new float4(1, 2, 3, 4);
+        var mulb = new float4(-1,1,-1,1);
+        var add = new float4(99,0,0,0);
+        MyBurstUtilityClass.BurstCompiled_MultiplyAdd(mula, mulb, add, out var result);
+        Debug.Log(result);
+    }
+}
+```
+
+and if we were to run (with the managed script attached to an object), we should now see in the log `float4(98f, 2f, -3f, 4f)`.
+
+This is achieved by using IL Post Processing in order to automatically transform the code into a function pointer and call, which is why you must adhere to the rules of [Function pointers](AdvancedUsages.md#function-pointers).
+
+You can disable the direct call transformation by adding `DisableDirectCall = true` to the BurstCompile options, which will prevent the Post Processor from running on the code. E.g.
+
+```c#
+[BurstCompile]
+public static class MyBurstUtilityClass
+{
+    [BurstCompile(DisableDirectCall = true)]
+    public static void BurstCompiled_MultiplyAdd(in float4 mula, in float4 mulb, in float4 add, out float4 result)
+    {
+        result = mula * mulb + add;
+    }
+}
+```
+
 ## Throw and Exceptions
 
 Burst supports `throw` expressions for exceptions in the Editor (`2019.3+` only), but crucially **does not** in Standalone Player builds. Exceptions in Burst are to be used solely for _exceptional_ behavior. To ensure that code does not end up relying on exceptions for things like general control flow, Burst will produce the following warning on code that tries to `throw` within a method not attributed by `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]`:

@@ -180,14 +180,14 @@ namespace Burst.Compiler.IL.Tests
             return new IntPtr(a).ToInt64();
         }
 
-        [TestCompiler]
+        [TestCompiler(OverrideOn32BitNative = 4)]
         public static int IntPtrSize()
         {
             return IntPtr.Size;
         }
 
         // asserted in IntPtrProcessor
-        [TestCompiler]
+        [TestCompiler(OverrideOn32BitNative = true)]
         public static bool IntPtrSizeCompared()
         {
             return IntPtr.Size == 4;
@@ -543,7 +543,7 @@ namespace Burst.Compiler.IL.Tests
         }
 
 
-        [TestCompiler]
+        [TestCompiler(ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static void TestBlobAssetReferenceData()
         {
             var blob = new BlobAssetReferenceData(IntPtr.Zero);

@@ -1,86 +1,119 @@
 # Changelog
 
-## [1.4.2] - 2020-11-26
+## [1.5.0-pre.3] - 2020-12-04
 
 
 ### Fixed
-- Fixed a bug whereby if you had an assembly that was guarded by `UNITY_SERVER`, Burst would be unable to find the assembly when `Server Build` was ticked.
-- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now _actually_ fixed.
-- Fixed issues with Intel intrinsics mm256_inserti128_si256, mm256_bslli_epi128, mm256_bsrli_epi128
-- Debug information for instance methods is now correctly scoped. This means instance variables can now be inspected correctly.
-- Fixed managed (reference) implementation of mm256_cvttps_epi32 (case 1288563)
+- Fixed a bug in LLVM that it would incorrectly convert some memset -> memcpy if both pointers derived from the same memory address, and where one indexed into the 0th element of the pointer.
+- Fixed namespace issue triggering a warning in the editor.
+- Made `math.shuffle` compile correctly when non-constant `ShuffleComponent`'s are used.
+
+## [1.5.0-pre.2] - 2020-12-01
 
 ### Added
 
 ### Removed
 
 ### Changed
-- Improved the performance of in-compiler hashing by 1.2x.
-- Improved our hashing performance some more by re-using fixed-sized buffers in the compiler to improve eager-compilation / warm-cache costs by 1.25x.
-
-### Known Issues
-
-## [1.4.1] - 2020-10-27
-
-### Removed
-- Temporarily removed the Burst compiler warning about exception throws not in `[Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]` methods, to let us address user feedback. The next minor version of Burst will reincorporate this in a more friendly manner.
-
-## [1.4.1-pre.2] - 2020-10-21
-
 
 ### Fixed
-- Fixed a bug where if you used an enum argument to a function to index into a fixed array, a codegen error would occur.
+- Fixed a failure on linux builds where libdl.so cannot be found.
+
+### Known Issues
+## [1.5.0-pre.1] - 2020-11-26
+
+
+### Added
+- New intrinsics `Hint.Likely`, `Hint.Unlikely`, and `Hint.Assume` to let our users tell the compiler some additional information which could aid optimization.
+- New `Bmi1` and `Bmi2` x86 intrinsics. These are gated on `AVX2` being supported to keep the feature sets that Burst has to support small.
+- You can now select explicit x86/x64 architecture SIMD target for Universal Windows Platform.
+- Added Apple silicon and macOS universal binaries support to Burst.
+- An extra alloca hoisting step to ensure that allocas that occur deep within functions are correctly allocated in the function entry block (which LLVM requires for optimization purposes).
+- Added the missing `clflush` intrinsic to the SSE2 intrinsics.
+- An optimize-for-size option to bcl to let select users focus the optimization passes to create smaller executables.
+- Added a `Unity.Burst.CompilerServices.SkipLocalsInitAttribute` attribute that lets developers tell the compiler that stack-allocations do not need to be zero initialized for a given function.
+- Added a new attribute `[IgnoreWarnings]` that can be specified per method, for users that really want the compiler to be quiet.
+- Support for RDMA, crypto, dotprod Armv8.2-A Neon intrinsics
+- An error message if attempting to BurstCompiler.CompileFunctionPointer() on a multicast delegate, since this is not supported in Burst.
+- Burst detects removal of the burst package in 2020.2 editors and beyond, and displays a dialog asking the user to restart the editor.
+- Added a pass that will classify and remove dead loops for improved code generation.
+- Add support for using `ValueTuple` types like `(int, float)` from within Burst code, as long as the types do not enter or escape the Burst function boundaries.
+- Added a new intrinsic `Unity.Burst.CompilerServices.Constant.IsConstantExpression` that will return true if an expression is known to be a compile-time constant in Bursted code.
+- Added support for PlayMode / Desktop Standalone Players to load additional burst compiled libraries for use in Modding.
+- Add support for calling Burst code directly from C# without using function pointers.
+- In Unity 2020.2 and above, you can now call `new ProfilerMarker("MarkerName")` from Burst code
+- Add a compiler error if a `ldobj` tries to source its address to load from a non-pointer/non-reference. C# frontends should never generate this pattern, but we did see it with code generation.
+
+### Fixed
+- Fixed an issue where a function with a `[return: AssumeRange(13, 42)]` could lose this information during inlining.
+- Storing into `Lo64` or `Hi64` would cause a compiler exception.
+- Hitting a `ldobj` of a pointer-to-vector would incorrectly load the vector rather than the pointer.Burst only generates unaligned stores.
+- Fix that the parameter to mm256_set1_epi8 should be a byte instead of a char.
+- Fix sqrt_ss would fail because LLVM version later than 6 changed the encoding.
+- Fixed the comi*_ss intrinsics which would generate invalid code.
+- Pdb location for player builds is now linked relative to the final lib_burst_generated.dll, this allows the crashdump utility to access the symbols and provide better callstacks.
+- Support negative intrinsics features checks to enable usage like `if (!IsSse41Supported) return;`.
+- Clean up linker temp response files on successful build
+- Wasm ABI issue with pointers
+- Pause intrinsic in wasm (ignored)
+- fmod expansion to sleef for wasm
+- The AOT option for disabling optimizations now actually disables optimizations in player builds.
+- Fix a bug where a `static readonly` variable that was a `System.Guid` would result in an internal compiler error.
+- bitmask intrinsic was broken on non intel platforms
+- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now fixed.
+- Fixed a bug where a cloned function (say through no-aliasing propagation cloning) would re-create any global variables used rather than use the original variable.
+- If the only reference to an external function was discarded, don't attempt to add it to the burst initialisation block (which caused on ICE on prior versions).
+- Fixed a case where extracting a `FixedString4096` from a parent struct could cause very slow compile times.
 - Fixed a poor error message when a generic unsupported type (like a class or an auto-layout struct) combined with an unsupported managed array (like `(int, float)[]`) wouldn't give the user any context on where the code went wrong.
+- Fixed a bug where if you used an enum argument to a function to index into a fixed array, a codegen error would occur.
 - If targeting multiple iOS architectures, produce a combined burst library containing all architectures, this fixes "New Build System" on xcode version 12.
+- Static method parameters are now validated correctly during eager-compilation
 - Fixed permissions error when running lipo tool to combine libraries.
+- Fixed compiler error that could occur when calling a `[BurstDiscard]` method with an argument that is also used elsewhere in the method
+- Fixed an issue that could prevent the Editor from shutting down
 - Fixed an internal compiler error when nested managed static readonly arrays were used (produces a proper Burst error instead now).
 - Fixed a bug whereby for platforms that require us to write intermediate LLVM bitcode files, UTF paths would be incorrectly handled.
-
-### Changed
-- Open-generic static methods are not supported by Burst, but they were previously visible in Burst Inspector - they are now hidden
-- Eager-compilation is now cancelled when script compilation starts, to prevent spurious errors related to recompiled assemblies
-
-### Added
+- Correctly marked Neon intrinsics vmovn_high_* as ArmV7 and not ArmV8
+- On windows, the pdb location for burst cached dll's now points to the correct path. Native debuggers attached to the Editor should now locate the symbols without requiring adding the Library/Burst/JitCache folder to the symbol search.
+- Re-enabled `BC1370` exception warnings but only for player builds.
+- Fixed a bug whereby if you had an assembly that was guarded by `UNITY_SERVER`, Burst would be unable to find the assembly when `Server Build` was ticked.
+- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now _actually_ fixed.
+- `static readonly` array with enum elements would cause the compiler to crash.
+- Fixed managed (reference) implementation of mm256_cvttps_epi32 (case 1288563)
+- Debug information for instance methods is now correctly scoped. This means instance variables can now be inspected correctly.
 
 ### Removed
-
-### Known Issues
-
-## [1.4.1-pre.1] - 2020-10-14
-
-### Fixed
-- Fixed an issue that could prevent the Editor from shutting down
-
-## [1.4.0-pre.1] - 2020-10-01
+- Removed support for XCode SDKs less than version 11.0.0.
+- Removed support for platform SDKs that used the older LLVM 6 and 7 in the codebase to significantly simply our code and reduce the package size.
 
 ### Changed
-- Update package version to begin pre-release phase
-
-## [1.4.0-preview.5] - 2020-09-23
-
-
-### Added
-- You can now select explicit x86/x64 architecture SIMD target for Universal Windows Platform.
-- An error message if attempting to BurstCompiler.CompileFunctionPointer() on a multicast delegate, since this is not supported in Burst.
-
-### Changed
+- Minimum SDK version for iOS/tvOS increased to 13. See https://developer.apple.com/news/?id=03042020b for details.
 - When using "Executable Only" build type on Universal Windows Platform, Burst will now only generate code for a single CPU architecture that you're building for.
+- The inliner heuristics have been modified to inline less functions, but improve compile times and reduce executable size.
+- The minimum XCode SDK required to compile for iOS/iPadOS/tvOS is now 11.0.0.
 - We now copy the lib_burst_generated.pdb into the root of the player build (in addition to being alongside the lib_burst_generated.dll), this allows the unity crash handler to resolve the callstacks from burst code.
+- Made Arm Neon intrinsics fully supported (removed the guarding define)
 - Improved eager-compilation performance
 - Improved Burst Inspector loading time
 - Improved Burst initialization time
-
-### Removed
-
-### Fixed
-- Pdb location for player builds is now linked relative to the final lib_burst_generated.dll, this allows the crashdump utility to access the symbols and provide better callstacks.
-- bitmask intrinsic was broken on non intel platforms
-- Fix a bug where a `static readonly` variable that was a `System.Guid` would result in an internal compiler error.
-- Fixed a bug where `math.fmod` would be unable to find the correct SLEEF math function when compiling for double support on 32-bit platforms.
-- When "Enable Compilation" was unchecked in the Burst menu, Burst was incorrectly enabled after an Editor restart. This is now fixed.
-- Fixed a bug where a cloned function (say through no-aliasing propagation cloning) would re-create any global variables used rather than use the original variable.
+- If an argument to a BurstDiscard method is discarded, and that argument is a method call, then a warning is now generated to indicate the function call no longer happens.
+- Changed how struct-return and indirect arguments use stack allocations to significantly reduce stack usage and improve performance in these cases.
+- Improved the compilers ability to deduce dead memory operations (memcpy, memset, etc) to improve performance.
+- Improved error message seen when scheduling Burst compilation during domain reload
+- Open-generic static methods are not supported by Burst, but they were previously visible in Burst Inspector - they are now hidden
+- In Burst Inspector, the "Safety Checks" checkbox now defaults to unchecked
+- Burst Inspector no longer loses the search filter and "Safety Checks" option after domain reload
+- Changed exception throws to allow more vectorization chances surrounding them.
+- Upgraded Burst to use LLVM Version 11.0.0 by default, bringing the latest optimization improvements from the LLVM project.
+- Eager-compilation is now cancelled when script compilation starts, to prevent spurious errors related to recompiled assemblies
+- Strings can now be passed between methods within Burst code. Previously, string literals used for e.g. `Debug.Log` calls could only appear in the same method where they were used; now the string literal can be in one method, and passed to another method via a `string` parameter.
+- Transitioning from burst disabled to burst enabled in editor, will perform a re-initialise of some internal state in use by Direct Call methods.
+- Improved the performance of in-compiler hashing by 1.2x.
+- Improved our hashing performance some more by re-using fixed-sized buffers in the compiler to improve eager-compilation / warm-cache costs by 1.25x.
+- Improved compile time by ~37% on big projects by reworking some core compiler infrastructure.
 
 ### Known Issues
+- In player builds, exceptions can report the wrong job that they were thrown from.
 
 ## [1.4.0-preview.4] - 2020-08-17
 

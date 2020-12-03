@@ -1,4 +1,5 @@
 using Burst.Compiler.IL.Tests.Helpers;
+using Unity.Burst.CompilerServices;
 using Unity.Mathematics;
 
 namespace Burst.Compiler.IL.Tests
@@ -189,6 +190,12 @@ namespace Burst.Compiler.IL.Tests
         public static double DoublePowFromUInt(uint a)
         {
             return math.pow(2.0, a);
+        }
+
+        [TestCompiler(int.MaxValue)]
+        public static int AShrToLShr([AssumeRange(0, int.MaxValue)] int a)
+        {
+            return a >> 4;
         }
     }
 }

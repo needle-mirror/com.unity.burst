@@ -102,10 +102,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 alignr_epi8(v128 a, v128 b, int count)
             {
-                if (count < 0 || count > 16)
-                    throw new ArgumentException("align count out of range", nameof(count));
-
-                v128 dst = default(v128);
+                var dst = default(v128);
                 byte* dptr = &dst.Byte0;
                 byte* aptr = &a.Byte0 + count;
                 byte* bptr = &b.Byte0;

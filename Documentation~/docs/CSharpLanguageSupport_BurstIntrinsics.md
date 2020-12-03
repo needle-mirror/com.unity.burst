@@ -6,7 +6,7 @@ Burst provides low level close-to-the-metal intrinsics via the `Unity.Burst.Intr
 
 The `Unity.Burst.Intrinsics.Common` intrinsics are for functionality that is shared across the hardware targets that Burst supports.
 
-## Pause
+### Pause
 
 The `Unity.Burst.Intrinsics.Common.Pause` is an **experimental** intrinsic that provides a hint that the current thread should pause. It maps to `pause` on x86, and `yield` on ARM.
 
@@ -14,13 +14,13 @@ It is primarily used to stop spin locks over contending on an atomic access, red
 
 The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC` preprocessor define.
 
-## Prefetch
+### Prefetch
 
 The `Unity.Burst.Intrinsics.Common.Prefetch` is an **experimental** intrinsic that provides a hint that the memory location should be prefetched into the cache.
 
 The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC` preprocessor define.
 
-## umul128
+### umul128
 
 The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users to access 128-bit unsigned multiplication. These multiplies have become increasingly prevalent in hashing functions. It maps 1:1 with hardware instructions on x86 and ARM targets.
 
@@ -44,6 +44,8 @@ using static Unity.Burst.Intrinsics.X86.Avx;
 using static Unity.Burst.Intrinsics.X86.Avx2;
 using static Unity.Burst.Intrinsics.X86.Fma;
 using static Unity.Burst.Intrinsics.X86.F16C;
+using static Unity.Burst.Intrinsics.X86.Bmi1;
+using static Unity.Burst.Intrinsics.X86.Bmi2;
 using static Unity.Burst.Intrinsics.Arm.Neon;
 ```
 

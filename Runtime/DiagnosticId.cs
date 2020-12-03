@@ -143,6 +143,8 @@ namespace Unity.Burst
         ERR_CalliWithThisNotSupported = 1098,
         ERR_CalliNonCCallingConventionNotSupported = 1099,
 
+        ERR_StringLiteralTooBig = 1100,
+
         // CheckIntrinsicUsageTransform
         ERR_InstructionTargetCpuFeatureNotAllowedInThisBlock = 1200,
 
@@ -188,6 +190,9 @@ namespace Unity.Burst
         ERR_StringArrayInvalidArrayIndex = 1353,
         ERR_StringArrayInvalidArrayIndexOutOfRange = 1354,
 
+        ERR_UnmanagedStringMethodMissing = 1355,
+        ERR_UnmanagedStringMethodInvalid = 1356,
+
         // Static constructor
         ERR_ManagedStaticConstructor = 1360,
         ERR_StaticConstantArrayInStaticConstructor = 1361,
@@ -195,7 +200,13 @@ namespace Unity.Burst
         // Safety check warning
         WRN_ExceptionThrownInNonSafetyCheckGuardedFunction = 1370,
 
+        // Discarded method warning
+        WRN_ACallToMethodHasBeenDiscarded = 1371,
+
         // Accessing a nested managed array is not supported
         ERR_AccessingNestedManagedArrayNotSupported = 1380,
+
+        // Loading from a non-pointer / non-reference is not supported
+        ERR_LdobjFromANonPointerNonReference = 1381,
     }
 }

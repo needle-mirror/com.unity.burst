@@ -6,7 +6,7 @@ namespace Burst.Compiler.IL.Tests
 {
     internal partial class VectorsExceptions
     {
-        [TestCompiler(1.0f)]
+        [TestCompiler(1.0f, ExpectedDiagnosticId = DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
         public static float Float4WithException(float a)
         {
             return GetFloat4(a).x;

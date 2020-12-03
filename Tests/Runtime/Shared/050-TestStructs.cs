@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Burst.Compiler.IL.Tests.Helpers;
 using NUnit.Framework;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityBenchShared;
@@ -232,7 +231,7 @@ namespace Burst.Compiler.IL.Tests
             public CheckHoleInner c;
         }
 
-        [TestCompiler]
+        [TestCompiler(OverrideOn32BitNative = 20)]
         public static unsafe int TestCheckHoleSize()
         {
             return UnsafeUtility.SizeOf<CheckHoleOuter>();
@@ -256,7 +255,7 @@ namespace Burst.Compiler.IL.Tests
             return (int)((byte*)addressField - (byte*)addressStart);
         }
 
-        [TestCompiler]
+        [TestCompiler(OverrideOn32BitNative = 12)]
         public static unsafe int TestCheckHoleFieldOffsetC()
         {
             var value = new CheckHoleOuter();

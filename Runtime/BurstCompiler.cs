@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if ENABLE_IL2CPP
-using System.Linq;
-#endif
 using System.Reflection;
 using System.Runtime.InteropServices;
+#if !UNITY_DOTSPLAYER && !NET_DOTS
+using UnityEngine.Scripting;
+using System.Linq;
+#endif
 using System.Text;
 
 namespace Unity.Burst
@@ -15,6 +16,15 @@ namespace Unity.Burst
     /// </summary>
     public static class BurstCompiler
     {
+        /// <summary>
+        /// Check if the LoadAdditionalLibrary API is supported by the current version of Unity
+        /// </summary>
+        /// <returns>True if the LoadAdditionalLibrary API can be used by the current version of Unity</returns>
+        public static bool IsLoadAdditionalLibrarySupported()
+        {
+            return IsApiAvailable("LoadBurstLibrary");
+        }
+
 #if !UNITY_DOTSPLAYER && !NET_DOTS
 #if UNITY_EDITOR
         static unsafe BurstCompiler()
@@ -32,14 +42,16 @@ namespace Unity.Burst
             EagerCompileLogCallbackFunctionPointer = GetFunctionPointer<LogCallbackDelegate>(EagerCompileLogCallback);
 #if UNITY_2020_1_OR_NEWER
             ProgressCallbackFunctionPointer = GetFunctionPointer<ProgressCallbackDelegate>(ProgressCallback);
+            ProfileBeginCallbackFunctionPointer = GetFunctionPointer<ProfileBeginCallbackDelegate>(ProfileBeginCallback);
+            ProfileEndCallbackFunctionPointer = GetFunctionPointer<ProfileEndCallbackDelegate>(ProfileEndCallback);
 #endif
         }
 #endif
 
-        /// <summary>
-        /// Gets the global options for the burst compiler.
-        /// </summary>
-        public static readonly BurstCompilerOptions Options = new BurstCompilerOptions(true);
+#if BURST_INTERNAL
+        [ThreadStatic]
+        public static Func<object, IntPtr> InternalCompiler;
+#endif
 
         /// <summary>
         /// Internal variable setup by BurstCompilerOptions.
@@ -47,11 +59,12 @@ namespace Unity.Burst
 #if BURST_INTERNAL
 
         [ThreadStatic] // As we are changing this boolean via BurstCompilerOptions in btests and we are running multithread tests
-        // we would change a global and it would generate random errors, so specifically for btests, we are using a TLS.
-        public static bool _IsEnabled;
+                       // we would change a global and it would generate random errors, so specifically for btests, we are using a TLS.
+        public
 #else
-        internal static bool _IsEnabled;
+        internal
 #endif
+        static bool _IsEnabled;
 
         /// <summary>
         /// Gets a value indicating whether Burst is enabled.
@@ -62,6 +75,10 @@ namespace Unity.Burst
         public static bool IsEnabled => _IsEnabled && BurstCompilerHelper.IsBurstGenerated;
 #endif
 
+        /// <summary>
+        /// Gets the global options for the burst compiler.
+        /// </summary>
+        public static readonly BurstCompilerOptions Options = new BurstCompilerOptions(true);
 
 #if UNITY_2019_3_OR_NEWER
         /// <summary>
@@ -106,6 +123,26 @@ namespace Unity.Burst
                 throw new InvalidOperationException($"Burst does not support multicast delegates, please use a regular delegate for `{delegateMethod}'");
             }
         }
+
+        /// <summary>
+        /// Compiles a static method from a runtime method handle.
+        /// </summary>
+        /// <param name="handle">A runtime method handle.</param>
+        /// <returns>A raw pointer to the compiled method. Or null if burst is disabled.</returns>
+        public static unsafe void* CompileUnsafeStaticMethod(RuntimeMethodHandle handle)
+        {
+            if (!IsEnabled)
+                return null;
+
+            if (handle.Value == IntPtr.Zero)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
+            var method = (MethodInfo)MethodBase.GetMethodFromHandle(handle);
+            return Compile(new FakeDelegate(method), method, false);
+        }
+
         /// <summary>
         /// Compile the following delegate into a function pointer with burst, invokable from a Burst Job or from regular C#.
         /// </summary>
@@ -120,26 +157,43 @@ namespace Unity.Burst
             return new FunctionPointer<T>(new IntPtr(function));
         }
 
-        private static unsafe void* Compile<T>(T delegateObj, bool isFunctionPointer) where T : class
+        [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+        internal class StaticTypeReinitAttribute : Attribute
+        {
+            public readonly Type reinitType;
+
+            public StaticTypeReinitAttribute(Type toReinit)
+            {
+                reinitType = toReinit;
+            }
+        }
+
+        private static unsafe void* Compile(object delegateObj, bool isFunctionPointer)
+        {
+            if (!(delegateObj is Delegate)) throw new ArgumentException("object instance must be a System.Delegate", nameof(delegateObj));
+            var delegateMethod = (Delegate)delegateObj;
+            return Compile(delegateMethod, delegateMethod.Method, isFunctionPointer);
+        }
+
+        private static unsafe void* Compile(object delegateObj, MethodInfo methodInfo, bool isFunctionPointer)
         {
             if (delegateObj == null) throw new ArgumentNullException(nameof(delegateObj));
-            if (!(delegateObj is Delegate)) throw new ArgumentException("object instance must be a System.Delegate", nameof(delegateObj));
 
-            var delegateMethod = (Delegate)(object)delegateObj;
-            if (!delegateMethod.Method.IsStatic)
+
+            if (!methodInfo.IsStatic)
             {
-                throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be static. Instance methods are not supported");
+                throw new InvalidOperationException($"The method `{methodInfo}` must be static. Instance methods are not supported");
             }
-            if (delegateMethod.Method.IsGenericMethod)
+            if (methodInfo.IsGenericMethod)
             {
-                throw new InvalidOperationException($"The method `{delegateMethod.Method}` must be a non-generic method");
+                throw new InvalidOperationException($"The method `{methodInfo}` must be a non-generic method");
             }
 
 #if ENABLE_IL2CPP
             if (isFunctionPointer &&
-                delegateMethod.Method.GetCustomAttributes().All(s => s.GetType().Name != "MonoPInvokeCallbackAttribute"))
+                methodInfo.GetCustomAttributes().All(s => s.GetType().Name != "MonoPInvokeCallbackAttribute"))
             {
-                UnityEngine.Debug.Log($"The method `{delegateMethod.Method}` must have `MonoPInvokeCallback` attribute to be compatible with IL2CPP!");
+                UnityEngine.Debug.Log($"The method `{methodInfo}` must have `MonoPInvokeCallback` attribute to be compatible with IL2CPP!");
             }
 #endif
 
@@ -147,8 +201,9 @@ namespace Unity.Burst
 
 #if BURST_INTERNAL
             // Internally in Burst tests, we callback the C# method instead
-            function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+            function = (void*)InternalCompiler(delegateObj);
 #else
+            var delegateMethod = delegateObj as Delegate;
 
 #if UNITY_EDITOR
             string defaultOptions;
@@ -176,7 +231,7 @@ namespace Unity.Burst
 
             string extraOptions;
             // The attribute is directly on the method, so we recover the underlying method here
-            if (Options.TryGetOptions(delegateMethod.Method, true, out extraOptions))
+            if (Options.TryGetOptions(methodInfo, true, out extraOptions))
             {
                 if (!string.IsNullOrWhiteSpace(extraOptions))
                 {
@@ -188,7 +243,7 @@ namespace Unity.Burst
             }
 #else
             // The attribute is directly on the method, so we recover the underlying method here
-            if (BurstCompilerOptions.HasBurstCompileAttribute(delegateMethod.Method))
+            if (BurstCompilerOptions.HasBurstCompileAttribute(methodInfo))
             {
                 if (Options.EnableBurstCompilation && BurstCompilerHelper.IsBurstGenerated)
                 {
@@ -211,7 +266,7 @@ namespace Unity.Burst
 #endif
             else
             {
-                throw new InvalidOperationException($"Burst cannot compile the function pointer `{delegateMethod.Method}` because the `[BurstCompile]` attribute is missing");
+                throw new InvalidOperationException($"Burst cannot compile the function pointer `{methodInfo}` because the `[BurstCompile]` attribute is missing");
             }
 #endif
             // Should not happen but in that case, we are still trying to generated an error
@@ -219,7 +274,7 @@ namespace Unity.Burst
             // and the function was not compiled. In that case, we need to output an error
             if (function == null)
             {
-                throw new InvalidOperationException($"Burst failed to compile the function pointer `{delegateMethod.Method}`");
+                throw new InvalidOperationException($"Burst failed to compile the function pointer `{methodInfo}`");
             }
 
             // When burst compilation is disabled, we are still returning a valid stub function pointer (the a pointer to the managed function)
@@ -278,11 +333,38 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void TriggerUnsafeStaticMethodRecompilation()
+        {
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var reinitAttributes = asm.GetCustomAttributes().Where(
+                    x => x.GetType().FullName == "Unity.Burst.BurstCompiler+StaticTypeReinitAttribute"
+                    );
+                foreach (var attribute in reinitAttributes)
+                {
+                    var ourAttribute = attribute as StaticTypeReinitAttribute;
+                    var type = ourAttribute.reinitType;
+                    var method = type.GetMethod("Constructor",BindingFlags.Static|BindingFlags.Public);
+                    method.Invoke(null, new object[] { });
+                }
+            }
+        }
+
         internal static void TriggerRecompilation()
         {
 #if UNITY_EDITOR
             SendCommandToCompiler(BurstCompilerOptions.CompilerCommandTriggerRecompilation, Options.GetOptions(true));
 #endif
+        }
+
+        internal static void UnloadAdditionalLibraries()
+        {
+            SendCommandToCompiler(BurstCompilerOptions.CompilerCommandUnloadBurstNatives);
+        }
+
+        internal static bool IsApiAvailable(string apiName)
+        {
+            return SendCommandToCompiler(BurstCompilerOptions.CompilerCommandIsNativeApiAvailable, apiName) == "True";
         }
 
         internal static void EagerCompileMethods(List<EagerCompilationRequest> requests)
@@ -384,6 +466,29 @@ namespace Unity.Burst
 #endif
         }
 
+        internal static void SetProfilerCallbacks()
+        {
+#if UNITY_EDITOR && UNITY_2020_1_OR_NEWER
+            SendCommandToCompiler(
+                BurstCompilerOptions.CompilerCommandSetProfileCallbacks,
+                ProfileBeginCallbackFunctionPointer + ";" + ProfileEndCallbackFunctionPointer);
+#endif
+        }
+
+#if UNITY_EDITOR && UNITY_2020_1_OR_NEWER
+        internal delegate void ProfileBeginCallbackDelegate(string markerName, string metadataName, string metadataValue);
+        internal delegate void ProfileEndCallbackDelegate(string markerName);
+
+        private static readonly string ProfileBeginCallbackFunctionPointer;
+        private static readonly string ProfileEndCallbackFunctionPointer;
+
+        private static void ProfileBeginCallback(string markerName, string metadataName, string metadataValue) => OnProfileBegin?.Invoke(markerName, metadataName, metadataValue);
+        private static void ProfileEndCallback(string markerName) => OnProfileEnd?.Invoke(markerName);
+
+        internal static event ProfileBeginCallbackDelegate OnProfileBegin;
+        internal static event ProfileEndCallbackDelegate OnProfileEnd;
+#endif
+
         internal static void Reset()
         {
 #if UNITY_EDITOR
@@ -391,7 +496,6 @@ namespace Unity.Burst
 #endif
         }
 
-#if UNITY_EDITOR || BURST_INTERNAL
         private static string SendCommandToCompiler(string commandName, string commandArgs = null)
         {
             if (commandName == null) throw new ArgumentNullException(nameof(commandName));
@@ -414,7 +518,8 @@ namespace Unity.Burst
         /// Dummy empty method for being able to send a command to the compiler
         /// </summary>
         private static void DummyMethod() { }
-#else
+
+#if !UNITY_EDITOR && !BURST_INTERNAL
         /// <summary>
         /// Internal class to detect at standalone player time if AOT settings were enabling burst.
         /// </summary>
@@ -452,7 +557,24 @@ namespace Unity.Burst
             /// </summary>
             public static readonly bool IsBurstGenerated = IsCompiledByBurst(IsBurstEnabledImpl);
         }
-#endif
+#endif	// !UNITY_EDITOR && !BURST_INTERNAL
+
+        /// <summary>
+        /// Fake delegate class to make BurstCompilerService.CompileAsyncDelegateMethod happy
+        /// so that it can access the underlying static method via the property get_Method.
+        /// So this class is not a delegate.
+        /// </summary>
+        private class FakeDelegate
+        {
+            public FakeDelegate(MethodInfo method)
+            {
+                Method = method;
+            }
+
+            [Preserve]
+            public MethodInfo Method { get; }
+        }
+
 #else    // UNITY_DOTSPLAYER || NET_DOTS
 
         /// <summary>
@@ -465,8 +587,12 @@ namespace Unity.Burst
         {
             // Make sure that the delegate will never be collected
             GCHandle.Alloc(delegateMethod);
-
             return new FunctionPointer<T>(Marshal.GetFunctionPointerForDelegate(delegateMethod));
+        }
+
+        internal static bool IsApiAvailable(string apiName)
+        {
+            return false;
         }
 #endif
     }

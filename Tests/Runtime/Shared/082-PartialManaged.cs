@@ -67,7 +67,7 @@ namespace Burst.Compiler.IL.Tests
         }
 #endif
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_CallingManagedMethodNotSupported)]
         public static int GetIndexOfCharFomString()
         {
             return "abc".IndexOf('b');

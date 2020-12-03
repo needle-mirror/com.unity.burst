@@ -35,6 +35,16 @@ namespace Burst.Compiler.IL.Tests
         object FromIntPtr(IntPtr ptr);
     }
 
+    /// <summary>
+    /// Used to implement custom testing behaviour
+    /// </summary>
+    internal interface TestCompilerBaseExtensions
+    {
+        (bool shouldSkip, string skipReason) SkipTest(MethodInfo method);
+        Type FetchAlternateDelegate(out bool isInRegistry, out Func<object, object[], object> caller);
+        object[] ProcessNativeArgsForDelegateCaller(object[] nativeArgs, MethodInfo methodInfo);
+    }
+
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     internal abstract class TestCompilerAttributeBase : TestCaseAttribute, ITestBuilder, IWrapTestMethod
     {
@@ -86,6 +96,16 @@ namespace Burst.Compiler.IL.Tests
         /// </summary>
         public object OverrideManagedResult { get; set; }
 
+        /// <summary>
+        /// Use this when a pointer is used in a sizeof computation, since on a 32bit target the result will differ versus our 64bit managed results.
+        /// </summary>
+        public object OverrideOn32BitNative { get; set; }
+
+        /// <summary>
+        /// Use this and specify a TargetPlatform (Host) to have the test ignored when running on that host. Mostly used by WASM at present.
+        /// </summary>
+        public object IgnoreOnPlatform { get; set; }
+
         public bool? IsDeterministic { get; set; }
 
         protected virtual bool SupportException => true;
@@ -94,9 +114,7 @@ namespace Burst.Compiler.IL.Tests
         {
             // If the system doesn't support exceptions (Unity editor for delegates) we should not test with exceptions
             bool skipTest = (ExpectCompilerException || ExpectedException != null) && !SupportException;
-
             var expectResult = !method.ReturnType.IsType(typeof(void));
-            var name = method.Name;
             var arguments = new List<object>(this.Arguments);
 
             // Expand arguments with IntRangeAttributes if we have them
@@ -131,6 +149,10 @@ namespace Burst.Compiler.IL.Tests
                     if (OverrideManagedResult != null)
                     {
                         caseParameters.Properties.Set(nameof(OverrideManagedResult), OverrideManagedResult);
+                    }
+                    if (OverrideOn32BitNative != null)
+                    {
+                        caseParameters.Properties.Set(nameof(OverrideOn32BitNative), OverrideOn32BitNative);
                     }
                 }
 
@@ -245,6 +267,15 @@ namespace Burst.Compiler.IL.Tests
 
         protected virtual Type CreateNativeDelegateType(Type returnType, Type[] arguments, out bool isInRegistry, out Func<object, object[], object> caller)
         {
+            if (GetExtension() != null)
+            {
+                Type type = GetExtension().FetchAlternateDelegate(out isInRegistry, out caller);
+                if (type != null)
+                {
+                    return type;
+                }
+            }
+
             isInRegistry = false;
             StaticDelegateCallback staticDelegate;
             if (StaticDelegateRegistry.TryFind(returnType, arguments, out staticDelegate))
@@ -281,6 +312,21 @@ namespace Burst.Compiler.IL.Tests
             if (!RunningArmTestOnIntelCPU(methodInfo))
             {
                 var arguments = GetArgumentsArray(_originalMethod);
+
+                // We can't skip tests during BuildFrom that rely on specific options (e.g. current platform)
+                // So we handle the remaining cases here via extensions
+                if (GetExtension()!=null)
+                {
+                    var skip = GetExtension().SkipTest(methodInfo);
+                    if (skip.shouldSkip)
+                    {
+                        // For now, mark the tests as passed rather than skipped, to avoid the log spam
+                        //On wasm this log spam accounts for 33minutes of test execution time!!
+                        //context.CurrentResult.SetResult(ResultState.Skipped, skip.skipReason);
+                        context.CurrentResult.SetResult(ResultState.Success);
+                        return context.CurrentResult;
+                    }
+                }
 
                 // Special case for Compiler Exceptions when IL can't be translated
                 if (_expectCompilerException)
@@ -362,6 +408,10 @@ namespace Burst.Compiler.IL.Tests
                     // ------------------------------------------------------------------
                     if (!RunManagedBeforeNative)
                     {
+                        if (GetExtension()!=null)
+                        {
+                            nativeArgs = GetExtension().ProcessNativeArgsForDelegateCaller(nativeArgs, methodInfo);
+                        }
                         resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
                         if (returnBoxType != null)
                         {
@@ -395,6 +445,13 @@ namespace Burst.Compiler.IL.Tests
                     {
                         Console.WriteLine($"Using OverrideResultOnMono: `{overrideResultOnMono}` instead of `{resultClr}` compare to burst `{resultNative}`");
                         resultClr = overrideResultOnMono;
+                    }
+
+                    var overrideOn32BitNative = _originalMethod.Properties.Get("OverrideOn32BitNative");
+                    if (overrideOn32BitNative != null && TargetIs32Bit())
+                    {
+                        Console.WriteLine($"Using OverrideOn32BitNative: '{overrideOn32BitNative}' instead of '{resultClr}' compare to burst '{resultNative}' due to 32bit native runtime");
+                        resultClr = overrideOn32BitNative;
                     }
 
                     // ------------------------------------------------------------------
@@ -763,6 +820,10 @@ namespace Burst.Compiler.IL.Tests
         protected abstract void Setup();
 
         protected abstract TestResult HandleCompilerException(ExecutionContext context, MethodInfo methodInfo);
+
+        protected abstract TestCompilerBaseExtensions GetExtension();
+
+        protected abstract bool TargetIs32Bit();
     }
 
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]

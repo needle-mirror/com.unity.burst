@@ -758,7 +758,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 cmp_pd(v128 a, v128 b, int imm8)
             {
-                switch ((CMP)imm8)
+                switch ((CMP)(imm8 & 0x1F))
                 {
                     // The first variants map to SSE variants
                     case CMP.EQ_OQ: return Sse2.cmpeq_pd(a, b);
@@ -773,7 +773,7 @@ namespace Unity.Burst.Intrinsics
                     case CMP.EQ_UQ: return Sse2.or_pd(Sse2.cmpeq_pd(a, b), Sse2.cmpunord_pd(a, b));
                     case CMP.NGE_UQ: return Sse2.or_pd(Sse2.cmpnge_pd(a, b), Sse2.cmpunord_pd(a, b));
                     case CMP.NGT_US: return Sse2.or_pd(Sse2.cmpngt_pd(a, b), Sse2.cmpunord_pd(a, b));
-                    case CMP.FALSE_OQ: return default(v128);
+                    case CMP.FALSE_OQ: return default;
                     case CMP.NEQ_OQ: return Sse2.and_pd(Sse2.cmpneq_pd(a, b), Sse2.cmpord_pd(a, b));
                     case CMP.GE_OS: return Sse2.and_pd(Sse2.cmpge_pd(a, b), Sse2.cmpord_pd(a, b));
                     case CMP.GT_OS: return Sse2.and_pd(Sse2.cmpgt_pd(a, b), Sse2.cmpord_pd(a, b));
@@ -790,13 +790,12 @@ namespace Unity.Burst.Intrinsics
                     case CMP.EQ_US: return Sse2.or_pd(Sse2.cmpeq_pd(a, b), Sse2.cmpunord_pd(a, b));
                     case CMP.NGE_US: return Sse2.or_pd(Sse2.cmpnge_pd(a, b), Sse2.cmpunord_pd(a, b));
                     case CMP.NGT_UQ: return Sse2.or_pd(Sse2.cmpngt_pd(a, b), Sse2.cmpunord_pd(a, b));
-                    case CMP.FALSE_OS: return default(v128);
+                    case CMP.FALSE_OS: return default;
                     case CMP.NEQ_OS: return Sse2.and_pd(Sse2.cmpneq_pd(a, b), Sse2.cmpord_pd(a, b));
                     case CMP.GE_OQ: return Sse2.and_pd(Sse2.cmpge_pd(a, b), Sse2.cmpord_pd(a, b));
                     case CMP.GT_OQ: return Sse2.and_pd(Sse2.cmpgt_pd(a, b), Sse2.cmpord_pd(a, b));
-                    case CMP.TRUE_US: return new v128(-1);
                     default:
-                        throw new InvalidOperationException($"invalid imm8 value {imm8} for comparison");
+                        return new v128(-1);
                 }
             }
 
@@ -845,7 +844,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 cmp_ps(v128 a, v128 b, int imm8)
             {
-                switch ((CMP)imm8)
+                switch ((CMP)(imm8 & 0x1F))
                 {
                     // The first variants map to SSE variants
                     case CMP.EQ_OQ: return Sse.cmpeq_ps(a, b);
@@ -860,7 +859,7 @@ namespace Unity.Burst.Intrinsics
                     case CMP.EQ_UQ: return Sse.or_ps(Sse.cmpeq_ps(a, b), Sse.cmpunord_ps(a, b));
                     case CMP.NGE_UQ: return Sse.or_ps(Sse.cmpnge_ps(a, b), Sse.cmpunord_ps(a, b));
                     case CMP.NGT_US: return Sse.or_ps(Sse.cmpngt_ps(a, b), Sse.cmpunord_ps(a, b));
-                    case CMP.FALSE_OQ: return default(v128);
+                    case CMP.FALSE_OQ: return default;
                     case CMP.NEQ_OQ: return Sse.and_ps(Sse.cmpneq_ps(a, b), Sse.cmpord_ps(a, b));
                     case CMP.GE_OS: return Sse.and_ps(Sse.cmpge_ps(a, b), Sse.cmpord_ps(a, b));
                     case CMP.GT_OS: return Sse.and_ps(Sse.cmpgt_ps(a, b), Sse.cmpord_ps(a, b));
@@ -877,13 +876,12 @@ namespace Unity.Burst.Intrinsics
                     case CMP.EQ_US: return Sse.or_ps(Sse.cmpeq_ps(a, b), Sse.cmpunord_ps(a, b));
                     case CMP.NGE_US: return Sse.or_ps(Sse.cmpnge_ps(a, b), Sse.cmpunord_ps(a, b));
                     case CMP.NGT_UQ: return Sse.or_ps(Sse.cmpngt_ps(a, b), Sse.cmpunord_ps(a, b));
-                    case CMP.FALSE_OS: return default(v128);
+                    case CMP.FALSE_OS: return default;
                     case CMP.NEQ_OS: return Sse.and_ps(Sse.cmpneq_ps(a, b), Sse.cmpord_ps(a, b));
                     case CMP.GE_OQ: return Sse.and_ps(Sse.cmpge_ps(a, b), Sse.cmpord_ps(a, b));
                     case CMP.GT_OQ: return Sse.and_ps(Sse.cmpgt_ps(a, b), Sse.cmpord_ps(a, b));
-                    case CMP.TRUE_US: return new v128(-1);
                     default:
-                        throw new InvalidOperationException($"invalid imm8 value {imm8} for comparison");
+                        return new v128(-1);
                 }
             }
 
@@ -1390,10 +1388,7 @@ namespace Unity.Burst.Intrinsics
                     case 0: return src1.Lo128;
                     case 1: return src1.Hi128;
                     case 2: return src2.Lo128;
-                    case 3: return src2.Hi128;
-                    default:
-                        // Not possible
-                        throw new InvalidOperationException();
+                    default: return src2.Hi128;
                 }
             }
 
@@ -3196,7 +3191,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">8-bit integer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
-            public static v256 mm256_set1_epi8(char a)
+            public static v256 mm256_set1_epi8(byte a)
             {
                 return new v256(a);
             }

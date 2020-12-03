@@ -276,7 +276,7 @@ namespace Unity.Burst.Intrinsics
                                 else if (aInvalid && bInvalid)
                                     match = true;
                                 break;
-                            case 3:  // equal ordered
+                            default:  // equal ordered
                                 match = EqualityComparer<T>.Default.Equals(aCh, bCh);
                                 if (!aInvalid && bInvalid)
                                     match = false;
@@ -285,8 +285,6 @@ namespace Unity.Burst.Intrinsics
                                 else if (aInvalid && bInvalid)
                                     match = true;
                                 break;
-                            default:
-                                throw new InvalidOperationException("bad mode");
                         }
 
                         boolRes.SetBit(i, j, match);

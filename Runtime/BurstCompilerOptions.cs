@@ -52,8 +52,8 @@ namespace Unity.Burst
         internal const string OptionDisableOpt = "disable-opt";
         internal const string OptionFastMath = "fastmath";
         internal const string OptionTarget = "target=";
-        internal const string OptionIROpt = "ir-opt";
-        internal const string OptionCpuOpt = "cpu-opt=";
+        internal const string OptionOptLevel = "opt-level=";
+        internal const string OptionOptForSize = "opt-for-size";
         internal const string OptionFloatPrecision = "float-precision=";
         internal const string OptionFloatMode = "float-mode=";
         internal const string OptionDisableWarnings = "disable-warnings=";
@@ -116,6 +116,7 @@ namespace Unity.Burst
         internal const string OptionAotOnlyStaticMethods = "only-static-methods";
         internal const string OptionMethodPrefix = "method-prefix=";
         internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
+        internal const string OptionAotEmitLlvmObjects = "emit-llvm-objects";        
         internal const string OptionAotKeyFolder = "key-folder=";
         internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
@@ -142,6 +143,9 @@ namespace Unity.Burst
         internal const string CompilerCommandVersionNotification = "$version";
         internal const string CompilerCommandSetProgressCallback = "$set_progress_callback";
         internal const string CompilerCommandRequestClearJitCache = "$request_clear_jit_cache";
+        internal const string CompilerCommandSetProfileCallbacks = "$set_profile_callbacks";
+        internal const string CompilerCommandUnloadBurstNatives = "$unload_burst_natives";
+        internal const string CompilerCommandIsNativeApiAvailable = "$is_native_api_available";
 
         // All the following content is exposed to the public interface
 

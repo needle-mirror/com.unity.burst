@@ -276,3 +276,4 @@ Currently for `x86` and `x64` CPUs, Burst is supporting `SSE2` and `SSE4` instru
 For example, with dynamic CPU dispatch, if your CPU supports `SSE3` and below, Burst will select `SSE2` automatically.
 
 See the table in the section [Burst AOT Requirements](StandalonePlayerSupport.md#burst-aot-requirements) for more details about the supported CPU architectures.
+

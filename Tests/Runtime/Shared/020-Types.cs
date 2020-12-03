@@ -1,10 +1,8 @@
 using System;
-using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
-using NUnit.Framework;
 using Unity.Burst;
+using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -154,7 +152,7 @@ namespace Burst.Compiler.IL.Tests
             return UnsafeUtility.SizeOf<StructWithPack>();
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InstructionLdstrNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_CallingManagedMethodNotSupported)]
         public static int TestUsingReferenceType()
         {
             return "this is not supported by burst".Length;
@@ -245,6 +243,211 @@ namespace Burst.Compiler.IL.Tests
             Tada1 = 1,
 
             Tada2 = 2
+        }
+
+        private static ValueTuple<int> ReturnValueTuple1() => ValueTuple.Create(42);
+
+        [TestCompiler]
+        public static long TestValueTuple1Return()
+        {
+            var tuple = ReturnValueTuple1();
+
+            return tuple.Item1;
+        }
+
+        private static (int, uint) ReturnValueTuple2() => (42, 13);
+
+        [TestCompiler]
+        public static long TestValueTuple2Return()
+        {
+            var tuple = ReturnValueTuple2();
+
+            return tuple.Item1 + tuple.Item2;
+        }
+
+        private static (int, uint, byte) ReturnValueTuple3() => (42, 13, 13);
+
+        [TestCompiler]
+        public static long TestValueTuple3Return()
+        {
+            var tuple = ReturnValueTuple3();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3;
+        }
+
+        private static (int, uint, byte, sbyte) ReturnValueTuple4() => (42, 13, 13, -13);
+
+        [TestCompiler]
+        public static long TestValueTuple4Return()
+        {
+            var tuple = ReturnValueTuple4();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4;
+        }
+
+        private static (int, uint, byte, sbyte, long) ReturnValueTuple5() => (42, 13, 13, -13, 53);
+
+        [TestCompiler]
+        public static long TestValueTuple5Return()
+        {
+            var tuple = ReturnValueTuple5();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5;
+        }
+
+        private struct SomeStruct
+        {
+            public int X;
+        }
+
+        private static (int, uint, byte, sbyte, long, SomeStruct) ReturnValueTuple6() => (42, 13, 13, -13, 535353, new SomeStruct { X = 42 } );
+
+        [TestCompiler]
+        public static long TestValueTuple6Return()
+        {
+            var tuple = ReturnValueTuple6();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X;
+        }
+
+        private static (int, uint, byte, sbyte, long, SomeStruct, short) ReturnValueTuple7() => (42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400);
+
+        [TestCompiler]
+        public static long TestValueTuple7Return()
+        {
+            var tuple = ReturnValueTuple7();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7;
+        }
+
+        private static (int, uint, byte, sbyte, long, SomeStruct, short, int) ReturnValueTuple8() => (42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400, -400);
+
+        [TestCompiler]
+        public static long TestValueTuple8Return()
+        {
+            var tuple = ReturnValueTuple8();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7 + tuple.Item8;
+        }
+
+        private static (int, uint, byte, sbyte, long, SomeStruct, short, int, long) ReturnValueTuple9() => (42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400, -400, 48);
+
+        [TestCompiler]
+        public static long TestValueTuple9Return()
+        {
+            var tuple = ReturnValueTuple9();
+
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7 + tuple.Item8 + tuple.Item9;
+        }
+
+        private static long ValueTuple1Arg(ValueTuple<int> tuple)
+        {
+            return tuple.Item1;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple1Arg()
+        {
+            return ValueTuple1Arg(ValueTuple.Create(42));
+        }
+
+        private static long ValueTuple2Arg((int, uint) tuple)
+        {
+            return tuple.Item1 + tuple.Item2;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple2Arg()
+        {
+            return ValueTuple2Arg((42, 13));
+        }
+
+        private static long ValueTuple3Arg((int, uint, byte) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple3Arg()
+        {
+            return ValueTuple3Arg((42, 13, 13));
+        }
+
+        private static long ValueTuple4Arg((int, uint, byte, sbyte) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple4Arg()
+        {
+            return ValueTuple4Arg((42, 13, 13, -13));
+        }
+
+        private static long ValueTuple5Arg((int, uint, byte, sbyte, long) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple5Arg()
+        {
+            return ValueTuple5Arg((42, 13, 13, -13, 535353));
+        }
+
+        private static long ValueTuple6Arg((int, uint, byte, sbyte, long, SomeStruct) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple6Arg()
+        {
+            return ValueTuple6Arg((42, 13, 13, -13, 535353, new SomeStruct { X = 42 }));
+        }
+
+        private static long ValueTuple7Arg((int, uint, byte, sbyte, long, SomeStruct, short) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple7Arg()
+        {
+            return ValueTuple7Arg((42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400));
+        }
+
+        private static long ValueTuple8Arg((int, uint, byte, sbyte, long, SomeStruct, short, int) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7 + tuple.Item8;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple8Arg()
+        {
+            return ValueTuple8Arg((42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400, -400));
+        }
+
+        private static long ValueTuple9Arg((int, uint, byte, sbyte, long, SomeStruct, short, int, long) tuple)
+        {
+            return tuple.Item1 + tuple.Item2 + tuple.Item3 + tuple.Item4 + tuple.Item5 + tuple.Item6.X + tuple.Item7 + tuple.Item8 + tuple.Item9;
+        }
+
+        [TestCompiler]
+        public static long TestValueTuple9Arg()
+        {
+            return ValueTuple9Arg((42, 13, 13, -13, 535353, new SomeStruct { X = 42 }, 400, -400, 48));
+        }
+
+        // This needs to be here because the static delegate registry refers to it.
+        public struct SomeStructWithValueTuple
+        {
+            public ValueTuple<int, float> X;
+
+            public struct Provider : IArgumentProvider
+            {
+                public object Value => new SomeStructWithValueTuple { X = (42, 42.0f) };
+            }
         }
     }
 }

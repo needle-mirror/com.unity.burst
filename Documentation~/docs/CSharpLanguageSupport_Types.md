@@ -94,3 +94,15 @@ Accessing a static readonly managed array has with the following restrictions:
 - You cannot use explicitly laid out structs in static readonly array types.
 
 Burst will produce the error `BC1361` for any of these static constructors that we cannot support.
+
+## ValueTuple type
+
+Burst supports the `ValueTuple` type for any use where the type cannot enter or exit an entry-point boundary. Developers can use it from code that Burst compiles both the call site and calling function:
+
+```c#
+(int, float) ReturnAGreatTuple() => (42, 13.0f);
+
+int DoSomething() => ReturnAGreatTuple().Item1;
+```
+
+The `ValueTuple` type has these restrictions because even though it is an unmanaged type, it has a `LayoutKind.Auto` layout, and so the actual in-memory layout of the struct is not something that can be consistently relied upon across a managed boundary.

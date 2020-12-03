@@ -89,9 +89,10 @@ namespace Unity.Burst.Editor
         [NonSerialized]
         private int _previousTargetIndex = -1;
 
-        [SerializeField] private bool _safetyChecks;
+        [SerializeField] private bool _safetyChecks = false;
         [SerializeField] private bool _enhancedDisassembly = true;
         [SerializeField] private int _assemblyKind = -1;
+        [SerializeField] private string _searchFilter;
 
         private int _assemblyKindPrior = -1;
         private bool _sameTargetButDifferentAssemblyKind = false;
@@ -128,8 +129,7 @@ namespace Unity.Burst.Editor
 
         public void OnEnable()
         {
-            if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState());
-            _safetyChecks = BurstCompiler.Options.EnableBurstSafetyChecks;
+            if (_treeView == null) _treeView = new BurstMethodTreeView(new TreeViewState(), () => _searchFilter);
 
             var assemblyList = BurstReflection.EditorAssembliesThatCanPossiblyContainJobs;
 
@@ -332,11 +332,11 @@ namespace Unity.Burst.Editor
 
             GUILayout.Label("Compile Targets", EditorStyles.boldLabel);
 
-            var newFilter = _searchField.OnGUI(_treeView.Filter);
+            var newFilter = _searchField.OnGUI(_searchFilter);
 
-            if (newFilter != _treeView.Filter)
+            if (newFilter != _searchFilter)
             {
-                _treeView.Filter = newFilter;
+                _searchFilter = newFilter;
                 _treeView.Reload();
             }
 
@@ -559,18 +559,15 @@ namespace Unity.Burst.Editor
 
     internal class BurstMethodTreeView : TreeView
     {
-        public BurstMethodTreeView(TreeViewState state) : base(state)
-        {
-            showBorder = true;
-        }
+        private readonly Func<string> _getFilter;
 
-        public BurstMethodTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader)
+        public BurstMethodTreeView(TreeViewState state, Func<string> getFilter) : base(state)
         {
+            _getFilter = getFilter;
             showBorder = true;
         }
 
         public List<BurstCompileTarget> Targets { get; set; }
-        public string Filter { get; set; }
 
         protected override TreeViewItem BuildRoot()
         {
@@ -581,7 +578,7 @@ namespace Unity.Burst.Editor
             {
                 allItems.Capacity = Targets.Count;
                 var id = 1;
-                var filter = Filter;
+                var filter = _getFilter();
                 foreach (var t in Targets)
                 {
                     var displayName = t.GetDisplayName();

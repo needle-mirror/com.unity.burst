@@ -6,8 +6,17 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Burst.LowLevel;
+#if UNITY_2020_1_OR_NEWER
+using Unity.Profiling;
+using Unity.Profiling.LowLevel;
+using Unity.Profiling.LowLevel.Unsafe;
+#endif
 using UnityEditor;
 using UnityEditor.Compilation;
+
+#if UNITY_2020_2_OR_NEWER
+using UnityEditor.PackageManager;
+#endif
 
 namespace Unity.Burst.Editor
 {
@@ -91,6 +100,10 @@ namespace Unity.Burst.Editor
 
         static BurstLoader()
         {
+#if UNITY_2020_2_OR_NEWER
+            Events.registeringPackages += PackageRegistrationEvent;
+#endif
+
             if (BurstCompilerOptions.ForceDisableBurstCompilation)
             {
                 UnityEngine.Debug.LogWarning("[com.unity.burst] Burst is disabled entirely from the command line");
@@ -199,6 +212,10 @@ namespace Unity.Burst.Editor
 #if UNITY_2020_1_OR_NEWER
             BurstCompiler.OnProgress += OnProgress;
             BurstCompiler.SetProgressCallback();
+
+            BurstCompiler.OnProfileBegin += OnProfileBegin;
+            BurstCompiler.OnProfileEnd += OnProfileEnd;
+            BurstCompiler.SetProfilerCallbacks();
 #endif
 
 #if !BURST_INTERNAL && !UNITY_DOTSPLAYER
@@ -236,6 +253,20 @@ namespace Unity.Burst.Editor
             BurstCompiler.Shutdown();
         }
 
+#if UNITY_2020_2_OR_NEWER
+        private static void PackageRegistrationEvent(PackageRegistrationEventArgs obj)
+        {
+            foreach (var removed in obj.removed)
+            {
+                if (removed.name.Contains("com.unity.burst"))
+                {
+                    EditorUtility.DisplayDialog("Burst Package Has Been Removed", "Please restart the Editor to continue.", "OK");
+                    BurstCompiler.Shutdown();
+                }
+            }
+        }
+#endif
+
 #if UNITY_2020_1_OR_NEWER
         // Don't initialize to 0 because that could be a valid progress ID.
         private static int BurstProgressId = -1;
@@ -272,6 +303,66 @@ namespace Unity.Burst.Editor
                         $"Compiled {current} / {total} methods");
                 }
             });
+        }
+
+        [ThreadStatic]
+        private static Dictionary<string, IntPtr> ProfilerMarkers;
+
+        private static unsafe void OnProfileBegin(string markerName, string metadataName, string metadataValue)
+        {
+            if (ProfilerMarkers == null)
+            {
+                // Initialize thread-static dictionary.
+                ProfilerMarkers = new Dictionary<string, IntPtr>();
+            }
+
+            if (!ProfilerMarkers.TryGetValue(markerName, out var markerPtr))
+            {
+                ProfilerMarkers.Add(markerName, markerPtr = ProfilerUnsafeUtility.CreateMarker(
+                    markerName,
+                    ProfilerUnsafeUtility.CategoryScripts,
+                    MarkerFlags.Script,
+                    metadataName != null ? 1 : 0));
+
+                // metadataName is assumed to be consistent for a given markerName.
+                if (metadataName != null)
+                {
+                    ProfilerUnsafeUtility.SetMarkerMetadata(
+                        markerPtr,
+                        0,
+                        metadataName,
+                        (byte)ProfilerMarkerDataType.String16,
+                        (byte)ProfilerMarkerDataUnit.Undefined);
+                }
+            }
+
+            if (metadataName != null && metadataValue != null)
+            {
+                fixed (char* methodNamePtr = metadataValue)
+                {
+                    var metadata = new ProfilerMarkerData
+                    {
+                        Type = (byte)ProfilerMarkerDataType.String16,
+                        Size = ((uint)metadataValue.Length + 1) * 2,
+                        Ptr = methodNamePtr
+                    };
+                    ProfilerUnsafeUtility.BeginSampleWithMetadata(markerPtr, 1, &metadata);
+                }
+            }
+            else
+            {
+                ProfilerUnsafeUtility.BeginSample(markerPtr);
+            }
+        }
+
+        private static void OnProfileEnd(string markerName)
+        {
+            if (!ProfilerMarkers.TryGetValue(markerName, out var markerPtr))
+            {
+                return;
+            }
+
+            ProfilerUnsafeUtility.EndSample(markerPtr);
         }
 #endif
 
@@ -330,6 +421,9 @@ namespace Unity.Burst.Editor
 
                         MaybeTriggerEagerCompilation();
                     }
+
+                    // Cleanup any loaded burst natives so users have a clean point to update the libraries.
+                    BurstCompiler.UnloadAdditionalLibraries();
                     break;
             }
         }
@@ -507,6 +601,11 @@ namespace Unity.Burst.Editor
 
                     if (compileTarget.Options.TryGetOptions(member, true, out var optionsString, isForEagerCompilation: true))
                     {
+                        if (compileTarget.IsStaticMethod)
+                        {
+                            optionsString += "\n--" + BurstCompilerOptions.OptionJitIsForFunctionPointer;
+                        }
+
                         var encodedMethod = BurstCompilerService.GetMethodSignature(compileTarget.Method);
                         methodsToCompile.Add(new EagerCompilationRequest(encodedMethod, optionsString));
                     }

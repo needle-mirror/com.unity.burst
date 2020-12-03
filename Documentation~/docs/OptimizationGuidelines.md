@@ -243,7 +243,7 @@ The reordering of these instructions can lead to a lower accuracy.
 
 The `FloatMode.Fast` compiler floating point math mode can be used for many scenarios where the exact order of the calculation and the uniform handling of NaN values are not strictly required.
 
-# Assume Intrinsics
+# AssumeRange Attribute
 
 Being able to tell the compiler that an integer lies within a certain range can open up optimization opportunities. The `AssumeRange` attribute allows users to tell the compiler that a given scalar-integer lies within a certain constrained range:
 
@@ -308,6 +308,100 @@ struct MyContainer
     // Some other data...
 }
 ```
+
+# Hint Intrinsics
+
+Burst has some `Hint` intrinsics that provide a way for developers to tell the optimizer additional information that could aid in optimizations:
+
+- `Unity.Burst.CompilerServices.Hint.Likely` lets developers tell Burst that a boolean condition is likely to be true.
+- `Unity.Burst.CompilerServices.Hint.Unlikely` lets developers tell Burst that a boolean condition is unlikely to be true.
+- `Unity.Burst.CompilerServices.Hint.Assume` lets developers tell Burst that a boolean condition can be assumed to be true.
+
+The likely intrinsic is most useful to tell Burst which branch condition has a high probability of being taken, and thus the optimizer can focus on the branch in question for optimization purposes:
+
+```c#
+if (Unity.Burst.CompilerServices.Hint.Likely(b))
+{
+    // Any code in here will be optimized by Burst with the assumption that we'll probably get here!
+}
+else
+{
+    // Whereas the code in here will be kept out of the way of the optimizer.
+}
+```
+
+Conversely, the unlikely intrinsic tells the compiler the opposite - the condition is very unlikely to be true, and it should optimize against it:
+
+```c#
+if (Unity.Burst.CompilerServices.Hint.Unlikely(b))
+{
+    // Whereas the code in here will be kept out of the way of the optimizer.
+}
+else
+{
+    // Any code in here will be optimized by Burst with the assumption that we'll probably get here!
+}
+```
+
+These two intrinsics ensure that the code most likely to be hit will be placed after the branching condition in the binary, meaning that it will have a very high probability of being in the instruction cache. Also, the compiler can hoist code out of the likely branch if profitable, spend extra time optimizing the likely branch, and also not spend as much time looking at the unlikely code - since the developer has told the compiler it probably won't be hit.
+
+A classic example of an unlikely branch is to check if result of an allocation is valid - the allocation will be valid nearly _all the time_, and so you want the code to be fast with that assumption, but you do need some sort of error case to fall back to.
+
+The assume intrinsic is powerful and dangerous - telling the compiler that a condition **is always** true:
+
+```c#
+Unity.Burst.CompilerServices.Hint.Assume(b);
+
+if (b)
+{
+    // The compiler has been told that b is always true, so this branch will always be taken.
+}
+else
+{
+    // Any code in here will be removed from the program because b is always true!
+}
+```
+
+The power of the assume intrinsic is that it allows you to arbitrarily tell the compiler that something is true. A developer could tell the compiler to assume that a loop end is always a multiple of 16, meaning that it can provide perfect vectorization without any scalar spilling for that loop. A developer could tell the compiler that a value isn't `NaN`, is negative, etc - the sky is really the limit here.
+
+The danger with the intrinsic though is that the compiler will assume the value is true **without checking that it really was true** - you as the developer have promised to the compiler that it must be true, and Burst is a trusting compiler - it entrusts that the promise is kept! As a result, this intrinsic should be one of the last tools left on the shelf - it is useful and powerful, but care must be taken.
+
+# Constant Intrinsic
+
+Burst has an intrinsic `Unity.Burst.CompilerServices.Constant.IsConstantExpression` that will return true if a given expression is known to be constant at compile-time:
+
+```c#
+using static Unity.Burst.CompilerServices.Constant;
+
+var somethingWhichWillBeConstantFolded = math.pow(42.0f, 42.0f);
+
+if (IsConstantExpression(somethingWhichWillBeConstantFolded))
+{
+    // The compiler knows that somethingWhichWillBeConstantFolded is a compile-time constant!
+}
+```
+
+This can be useful to check that some complex expression that you want to be _certain_ is constant folded away with Burst is always constant folded. You could even use this to have some special case optimizations for a known constant value, for example, let's say we wanted to implement our own `pow`-like function for integer powers:
+
+```c#
+using static Unity.Burst.CompilerServices.Constant;
+
+public static float MyAwesomePow(float f, int i)
+{
+    if (IsConstantExpression(i) && (2 == i))
+    {
+        return f * f;
+    }
+    else
+    {
+        return math.pow(f, (float)i);
+    }
+}
+```
+
+Using the `IsConstantExpression` check above will mean that the branch will always be removed by the compiler if `i` is not constant, because the if condition would be false. This means that if `i` is constant and is equal to 2, we'd use a more optimal simple multiply instead.
+
+> Note that constant folding will _only_ take place during optimizations, so if you have disabled optimizations the intrinsic will return false.
 
 # `Unity.Mathematics`
 
@@ -413,3 +507,189 @@ var myGenericFunctionPointer = BurstCompiler.CompileFunctionPointer<MyGenericDel
 
 This limitation is due to a limitation of the .NET runtime to interop with such delegates.
 
+# SkipLocalsInit Attribute
+
+In C# all local variables are initialized to zero by default. This is a great feature because it means an entire class of bugs surrounding undefined data disappears. But this can come at some cost to runtime performance, because initializing this data to zero is not free:
+
+```c#
+static unsafe int DoSomethingWithLUT(int* data);
+
+static unsafe int DoSomething(int size)
+{
+    int* data = stackalloc int[size];
+
+    // Initialize every field of data to be an incrementing set of values.
+    for (int i = 0; i < size; i++)
+    {
+        data[i] = i;
+    }
+
+    // Use the data elsewhere.
+    return DoSomethingWithLUT(data);
+}
+```
+
+The X86 assembly for this is:
+
+```C
+        push    rbp
+        .seh_pushreg rbp
+        push    rsi
+        .seh_pushreg rsi
+        push    rdi
+        .seh_pushreg rdi
+        mov     rbp, rsp
+        .seh_setframe rbp, 0
+        .seh_endprologue
+        mov     edi, ecx
+        lea     r8d, [4*rdi]
+        lea     rax, [r8 + 15]
+        and     rax, -16
+        movabs  r11, offset __chkstk
+        call    r11
+        sub     rsp, rax
+        mov     rsi, rsp
+        sub     rsp, 32
+        movabs  rax, offset burst.memset.inline.X64_SSE4.i32@@32
+        mov     rcx, rsi
+        xor     edx, edx
+        xor     r9d, r9d
+        call    rax
+        add     rsp, 32
+        test    edi, edi
+        jle     .LBB0_7
+        mov     eax, edi
+        cmp     edi, 8
+        jae     .LBB0_3
+        xor     ecx, ecx
+        jmp     .LBB0_6
+.LBB0_3:
+        mov     ecx, eax
+        and     ecx, -8
+        movabs  rdx, offset __xmm@00000003000000020000000100000000
+        movdqa  xmm0, xmmword ptr [rdx]
+        mov     rdx, rsi
+        add     rdx, 16
+        movabs  rdi, offset __xmm@00000004000000040000000400000004
+        movdqa  xmm1, xmmword ptr [rdi]
+        movabs  rdi, offset __xmm@00000008000000080000000800000008
+        movdqa  xmm2, xmmword ptr [rdi]
+        mov     rdi, rcx
+        .p2align        4, 0x90
+.LBB0_4:
+        movdqa  xmm3, xmm0
+        paddd   xmm3, xmm1
+        movdqu  xmmword ptr [rdx - 16], xmm0
+        movdqu  xmmword ptr [rdx], xmm3
+        paddd   xmm0, xmm2
+        add     rdx, 32
+        add     rdi, -8
+        jne     .LBB0_4
+        cmp     rcx, rax
+        je      .LBB0_7
+        .p2align        4, 0x90
+.LBB0_6:
+        mov     dword ptr [rsi + 4*rcx], ecx
+        inc     rcx
+        cmp     rax, rcx
+        jne     .LBB0_6
+.LBB0_7:
+        sub     rsp, 32
+        movabs  rax, offset "DoSomethingWithLUT"
+        mov     rcx, rsi
+        call    rax
+        nop
+        mov     rsp, rbp
+        pop     rdi
+        pop     rsi
+        pop     rbp
+        ret
+```
+
+But the important bit to note is the `movabs  rax, offset burst.memset.inline.X64_SSE4.i32@@32` line - we've had to inject a memset to zero out the data. In the above example the developer _knows_ that the array will be entirely initialized in the following loop, but the compiler doesn't know that. To fix this exact sort of problem, there is a Burst attribute `Unity.Burst.CompilerServices.SkipLocalsInitAttribute` that can be placed on methods to tell the compiler that any stack allocations within do not have to be initialized to zero. Let's see that in action:
+
+```c#
+using Unity.Burst.CompilerServices;
+
+static unsafe int DoSomethingWithLUT(int* data);
+
+[SkipLocalsInit]
+static unsafe int DoSomething(int size)
+{
+    int* data = stackalloc int[size];
+
+    // Initialize every field of data to be an incrementing set of values.
+    for (int i = 0; i < size; i++)
+    {
+        data[i] = i;
+    }
+
+    // Use the data elsewhere.
+    return DoSomethingWithLUT(data);
+}
+```
+
+And the assembly after adding the `[SkipLocalsInit]` on the method is:
+
+```c
+        push    rbp
+        .seh_pushreg rbp
+        mov     rbp, rsp
+        .seh_setframe rbp, 0
+        .seh_endprologue
+        mov     edx, ecx
+        lea     eax, [4*rdx]
+        add     rax, 15
+        and     rax, -16
+        movabs  r11, offset __chkstk
+        call    r11
+        sub     rsp, rax
+        mov     rcx, rsp
+        test    edx, edx
+        jle     .LBB0_7
+        mov     r8d, edx
+        cmp     edx, 8
+        jae     .LBB0_3
+        xor     r10d, r10d
+        jmp     .LBB0_6
+.LBB0_3:
+        mov     r10d, r8d
+        and     r10d, -8
+        movabs  rax, offset __xmm@00000003000000020000000100000000
+        movdqa  xmm0, xmmword ptr [rax]
+        mov     rax, rcx
+        add     rax, 16
+        movabs  rdx, offset __xmm@00000004000000040000000400000004
+        movdqa  xmm1, xmmword ptr [rdx]
+        movabs  rdx, offset __xmm@00000008000000080000000800000008
+        movdqa  xmm2, xmmword ptr [rdx]
+        mov     r9, r10
+        .p2align        4, 0x90
+.LBB0_4:
+        movdqa  xmm3, xmm0
+        paddd   xmm3, xmm1
+        movdqu  xmmword ptr [rax - 16], xmm0
+        movdqu  xmmword ptr [rax], xmm3
+        paddd   xmm0, xmm2
+        add     rax, 32
+        add     r9, -8
+        jne     .LBB0_4
+        cmp     r10, r8
+        je      .LBB0_7
+        .p2align        4, 0x90
+.LBB0_6:
+        mov     dword ptr [rcx + 4*r10], r10d
+        inc     r10
+        cmp     r8, r10
+        jne     .LBB0_6
+.LBB0_7:
+        sub     rsp, 32
+        movabs  rax, offset "DoSomethingWithLUT"
+        call    rax
+        nop
+        mov     rsp, rbp
+        pop     rbp
+        ret
+```
+
+And note the call to memset is gone - because the developer has promised the compiler that it is fine. Note that this is a power user feature for experienced developers - developers that are _certain_ they won't run into undefined behaviour bugs as a result of this change.

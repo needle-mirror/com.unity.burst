@@ -286,7 +286,6 @@ namespace Unity.Burst.Intrinsics
 		/// </summary>
         [FieldOffset(8)] public double Double1;
 
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 		/// <summary>
 		/// Get the low half of the vector
 		/// </summary>
@@ -295,7 +294,6 @@ namespace Unity.Burst.Intrinsics
 		/// Get the high half of the vector
 		/// </summary>
         [FieldOffset(8)] public v64 Hi64;
-#endif
 
         /// <summary>
         /// Splat a single byte across the v128
@@ -617,7 +615,6 @@ namespace Unity.Burst.Intrinsics
             ULong1 = b;
         }
 
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
         /// <summary>
         /// Initialize the v128 with 2 v64's
         /// </summary>
@@ -629,6 +626,5 @@ namespace Unity.Burst.Intrinsics
             Lo64 = lo;
             Hi64 = hi;
         }
-#endif
     }
 }

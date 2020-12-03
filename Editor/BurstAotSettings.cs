@@ -41,6 +41,12 @@ namespace Unity.Burst.Editor
         AVX2 = 1 << AvailX64Targets.AVX2,
     }
 
+    [AttributeUsage(AttributeTargets.Field)]
+    internal class BurstMetadataSettingAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    internal class BurstCommonSettingAttribute : Attribute {}
+
     class BurstPlatformLegacySettings : ScriptableObject
     {
         [SerializeField]
@@ -72,6 +78,7 @@ namespace Unity.Burst.Editor
     class BurstPlatformAotSettings : ScriptableObject
     {
         [SerializeField]
+        [BurstMetadataSetting] // We always need version to be in our saved settings!
         internal int Version;
         [SerializeField]
         internal bool EnableBurstCompilation;
@@ -95,6 +102,9 @@ namespace Unity.Burst.Editor
         internal BitsetX86Targets CpuTargetsX32;
         [SerializeField]
         internal BitsetX64Targets CpuTargetsX64;
+        [SerializeField]
+        [BurstCommonSetting]
+        internal string DisabledWarnings;
 
         internal static readonly string EnableDebugInAllBuilds_DisplayName = "Force Debug Information";
         internal static readonly string EnableDebugInAllBuilds_ToolTip = "Generates debug information for the Burst-compiled code, irrespective of if Development Mode is ticked. This can be used to generate symbols for release builds for platforms that need it.";
@@ -108,8 +118,12 @@ namespace Unity.Burst.Editor
         internal static readonly string EnableBurstCompilation_DisplayName = "Enable Burst Compilation";
         internal static readonly string EnableBurstCompilation_ToolTip = "Enables burst compilation for the selected platform.";
 
+        internal static readonly string DisabledWarnings_DisplayName = "Disabled Warnings*";
+        internal static readonly string DisabledWarnings_ToolTip = "Burst warnings to disable (separated by ;)";
+
         internal static readonly string UsePlatformSDKLinker_DisplayName = "Use Platform SDK Linker";
         internal static readonly string UsePlatformSDKLinker_ToolTip = "Enabling this option will disable cross compilation support for desktops, and will require platform specific tools for Windows/Linux/Mac - use only if you encounter problems with the burst builtin solution.";
+
         internal static bool UsePlatformSDKLinker_Display(BuildTarget selectedTarget)
         {
             return IsStandalone(selectedTarget);
@@ -165,15 +179,28 @@ namespace Unity.Burst.Editor
             CpuMaxTargetX64 = 0;
             CpuTargetsX32 = BitsetX86Targets.SSE2 | BitsetX86Targets.SSE4;
             CpuTargetsX64 = BitsetX64Targets.SSE2 | BitsetX64Targets.AVX2;
+            DisabledWarnings = "";
         }
 
-        internal static string GetPath(BuildTarget target)
+        internal static string GetPath(BuildTarget? target)
         {
-            return "ProjectSettings/BurstAotSettings_" + target.ToString() + ".json";
+            if (target.HasValue)
+            {
+                return "ProjectSettings/BurstAotSettings_" + target.ToString() + ".json";
+            }
+            else
+            {
+                return "ProjectSettings/CommonBurstAotSettings.json";
+            }
         }
 
-        internal static BuildTarget ResolveTarget(BuildTarget target)
+        internal static BuildTarget? ResolveTarget(BuildTarget? target)
         {
+            if (!target.HasValue)
+            {
+                return target;
+            }
+
             // Treat the 32/64 platforms the same from the point of view of burst settings
             // since there is no real way to distinguish from the platforms selector
             if (target == BuildTarget.StandaloneWindows64 || target == BuildTarget.StandaloneWindows)
@@ -191,7 +218,7 @@ namespace Unity.Burst.Editor
             return target;
         }
 
-        internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget target)
+        internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget? target)
         {
             target = ResolveTarget(target);
             var settings = CreateInstance<BurstPlatformAotSettings>();
@@ -208,12 +235,28 @@ namespace Unity.Burst.Editor
                 settings.Save(target);
             }
 
+            // Overwrite the settings with any that are common and shared between all settings.
+            if (target.HasValue)
+            {
+                var commonSettings = GetOrCreateSettings(null);
+
+                var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                foreach (var field in platformFields)
+                {
+                    if (null != field.GetCustomAttribute<BurstCommonSettingAttribute>())
+                    {
+                        field.SetValue(settings, field.GetValue(commonSettings));
+                    }
+                }
+            }
+
             return settings;
         }
 
         delegate bool SerialiseItem(BuildTarget selectedPlatform);
 
-        internal static BurstPlatformAotSettings SerialiseIn(BuildTarget target, string json)
+        internal static BurstPlatformAotSettings SerialiseIn(BuildTarget? target, string json)
         {
             var versioned = (BurstPlatformAotSettings)ScriptableObject.CreateInstance<BurstPlatformAotSettings>();
             EditorJsonUtility.FromJsonOverwrite(json, versioned);
@@ -285,7 +328,36 @@ namespace Unity.Burst.Editor
             return versioned;
         }
 
-        internal string SerialiseOut(BuildTarget target)
+        private static bool ShouldSerialiseOut(BuildTarget? target, FieldInfo field)
+        {
+            var method = typeof(BurstPlatformAotSettings).GetMethod(field.Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
+            if (method != null)
+            {
+                var shouldSerialise = (SerialiseItem)Delegate.CreateDelegate(typeof(SerialiseItem), method);
+                if (!target.HasValue || !shouldSerialise(target.Value))
+                {
+                    return false;
+                }
+            }
+
+            // If we always need to write out the attribute, return now.
+            if (null != field.GetCustomAttribute<BurstMetadataSettingAttribute>())
+            {
+                return true;
+            }
+
+            var isCommon = !target.HasValue;
+            var hasCommonAttribute = null != field.GetCustomAttribute<BurstCommonSettingAttribute>();
+
+            if ((isCommon && hasCommonAttribute) || (!isCommon && !hasCommonAttribute))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        internal string SerialiseOut(BuildTarget? target)
         {
             // Version 2 and onwards serialise a custom object in order to avoid serialising all the settings.
             StringBuilder s = new StringBuilder();
@@ -295,40 +367,30 @@ namespace Unity.Burst.Editor
             int total = 0;
             for (int i = 0; i < platformFields.Length; i++)
             {
-                var method = typeof(BurstPlatformAotSettings).GetMethod(platformFields[i].Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
-                if (method != null)
+                if (ShouldSerialiseOut(target, platformFields[i]))
                 {
-                    var shouldSerialise = (SerialiseItem)Delegate.CreateDelegate(typeof(SerialiseItem), method);
-                    if (!shouldSerialise(target))
-                        continue;
+                    total++;
                 }
-
-                total++;
             }
             for (int i = 0; i < platformFields.Length; i++)
             {
-                var method = typeof(BurstPlatformAotSettings).GetMethod(platformFields[i].Name + "_Display", BindingFlags.Static | BindingFlags.NonPublic);
-                if (method != null)
+                if (ShouldSerialiseOut(target, platformFields[i]))
                 {
-                    var shouldSerialise = (SerialiseItem)Delegate.CreateDelegate(typeof(SerialiseItem), method);
-                    if (!shouldSerialise(target))
-                        continue;
+                    s.Append($"    \"{platformFields[i].Name}\": ");
+                    if (platformFields[i].FieldType.IsEnum)
+                        s.Append((int)platformFields[i].GetValue(this));
+                    else if (platformFields[i].FieldType == typeof(string))
+                        s.Append($"\"{platformFields[i].GetValue(this)}\"");
+                    else if (platformFields[i].FieldType == typeof(bool))
+                        s.Append(((bool)platformFields[i].GetValue(this)) ? "true" : "false");
+                    else
+                        s.Append((int)platformFields[i].GetValue(this));
+
+                    total--;
+                    if (total != 0)
+                        s.Append(",");
+                    s.Append("\n");
                 }
-
-                s.Append($"    \"{platformFields[i].Name}\": ");
-                if (platformFields[i].FieldType.IsEnum)
-                    s.Append((int)platformFields[i].GetValue(this));
-                else if (platformFields[i].FieldType == typeof(string))
-                    s.Append($"\"{platformFields[i].GetValue(this)}\"");
-                else if (platformFields[i].FieldType == typeof(bool))
-                    s.Append(((bool)platformFields[i].GetValue(this)) ? "true" : "false");
-                else
-                    s.Append((int)platformFields[i].GetValue(this));
-
-                total--;
-                if (total != 0)
-                    s.Append(",");
-                s.Append("\n");
             }
             s.Append("  }\n");
             s.Append("}\n");
@@ -336,10 +398,15 @@ namespace Unity.Burst.Editor
             return s.ToString();
         }
 
-        internal void Save(BuildTarget target)
+        internal void Save(BuildTarget? target)
         {
-            target = ResolveTarget(target);
+            if (target.HasValue)
+            {
+                target = ResolveTarget(target);
+            }
+
             var path = GetPath(target);
+
 #if UNITY_2019_3_OR_NEWER
             if (!AssetDatabase.IsOpenForEdit(path))
             {
@@ -352,6 +419,11 @@ namespace Unity.Burst.Editor
 #endif
 
             File.WriteAllText(path, SerialiseOut(target));
+        }
+
+        internal static SerializedObject GetCommonSerializedSettings()
+        {
+            return new SerializedObject(GetOrCreateSettings(null));
         }
 
         internal static SerializedObject GetSerializedSettings(BuildTarget target)
@@ -443,8 +515,8 @@ namespace Unity.Burst.Editor
             SerializedProperty[][] m_PlatformProperties;
             DisplayItem[][] m_PlatformVisibility;
             GUIContent[][] m_PlatformToolTips;
-
-            BuildPlatform[] validPlatforms;
+            BuildPlatform[] m_ValidPlatforms;
+            SerializedObject m_CommonPlatformSettings;
 
             delegate bool DisplayItem(BuildTarget selectedTarget);
 
@@ -462,7 +534,7 @@ namespace Unity.Burst.Editor
             {
                 int a;
 
-                validPlatforms = BuildPlatforms.instance.GetValidPlatforms(true).ToArray();
+                m_ValidPlatforms = BuildPlatforms.instance.GetValidPlatforms(true).ToArray();
 
                 var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
                 int numPlatformFields = platformFields.Length;
@@ -476,27 +548,35 @@ namespace Unity.Burst.Editor
 
                 keywords = new HashSet<string>(tempKeywords);
 
-                m_PlatformSettings = new SerializedObject[validPlatforms.Length];
-                m_PlatformProperties = new SerializedProperty[validPlatforms.Length][];
-                m_PlatformVisibility = new DisplayItem[validPlatforms.Length][];
-                m_PlatformToolTips=new GUIContent[validPlatforms.Length][];
+                m_PlatformSettings = new SerializedObject[m_ValidPlatforms.Length];
+                m_PlatformProperties = new SerializedProperty[m_ValidPlatforms.Length][];
+                m_PlatformVisibility = new DisplayItem[m_ValidPlatforms.Length][];
+                m_PlatformToolTips = new GUIContent[m_ValidPlatforms.Length][];
+
+                m_CommonPlatformSettings = null;
             }
 
             public override void OnActivate(string searchContext, VisualElement rootElement)
             {
                 var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-                for (int p = 0; p < validPlatforms.Length; p++)
+                for (int p = 0; p < m_ValidPlatforms.Length; p++)
                 {
-                    InitialiseSettingsForPlatform(p,platformFields);
+                    InitialiseSettingsForCommon(platformFields);
+                    InitialiseSettingsForPlatform(p, platformFields);
                 }
+            }
+
+            private void InitialiseSettingsForCommon(FieldInfo[] commonFields)
+            {
+                m_CommonPlatformSettings = BurstPlatformAotSettings.GetCommonSerializedSettings();
             }
 
             private void InitialiseSettingsForPlatform(int platform, FieldInfo[] platformFields)
             {
-                if (validPlatforms[platform].targetGroup == BuildTargetGroup.Standalone)
+                if (m_ValidPlatforms[platform].targetGroup == BuildTargetGroup.Standalone)
                     m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(EditorUserBuildSettings.selectedStandaloneTarget);
                 else
-                    m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(validPlatforms[platform].defaultTarget);
+                    m_PlatformSettings[platform] = BurstPlatformAotSettings.GetSerializedSettings(m_ValidPlatforms[platform].defaultTarget);
 
                 m_PlatformProperties[platform] = new SerializedProperty[platformFields.Length];
                 m_PlatformToolTips[platform] = new GUIContent[platformFields.Length];
@@ -547,21 +627,22 @@ namespace Unity.Burst.Editor
 
                 EditorGUIUtility.labelWidth = rect.width / 2;
 
-                int selectedPlatform = EditorGUILayout.BeginPlatformGrouping(validPlatforms, null);
+                int selectedPlatform = EditorGUILayout.BeginPlatformGrouping(m_ValidPlatforms, null);
 
                 // During a build and other cases, the settings object can become invalid, if it does, we re-build it for the current platform
                 // this fixes the settings failing to save if modified after a build has finished, and the settings were still open
                 if (!m_PlatformSettings[selectedPlatform].isValid)
                 {
                     var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+                    InitialiseSettingsForCommon(platformFields);
                     InitialiseSettingsForPlatform(selectedPlatform, platformFields);
                 }
 
-                var selectedTarget = validPlatforms[selectedPlatform].defaultTarget;
-                if (validPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
+                var selectedTarget = m_ValidPlatforms[selectedPlatform].defaultTarget;
+                if (m_ValidPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
                     selectedTarget = EditorUserBuildSettings.selectedStandaloneTarget;
 
-                if (validPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
+                if (m_ValidPlatforms[selectedPlatform].targetGroup == BuildTargetGroup.Standalone)
                 {
                     // Note burst treats Windows and Windows32 as the same target from a settings point of view (same for linux)
                     // So we only display the standalone platform
@@ -580,10 +661,32 @@ namespace Unity.Burst.Editor
 
                 EditorGUILayout.EndVertical();
 
+                EditorGUILayout.LabelField("* Shared setting common across all platforms");
+
                 if (m_PlatformSettings[selectedPlatform].hasModifiedProperties)
                 {
                     m_PlatformSettings[selectedPlatform].ApplyModifiedPropertiesWithoutUndo();
-                    ((BurstPlatformAotSettings)m_PlatformSettings[selectedPlatform].targetObject).Save(selectedTarget);
+
+                    var commonAotSettings = ((BurstPlatformAotSettings)m_CommonPlatformSettings.targetObject);
+                    var platformAotSettings = ((BurstPlatformAotSettings)m_PlatformSettings[selectedPlatform].targetObject);
+
+                    var platformFields = typeof(BurstPlatformAotSettings).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    foreach (var field in platformFields)
+                    {
+                        if (null != field.GetCustomAttribute<BurstCommonSettingAttribute>())
+                        {
+                            field.SetValue(commonAotSettings, field.GetValue(platformAotSettings));
+
+                            foreach (var platformSetting in m_PlatformSettings)
+                            {
+                                field.SetValue(platformSetting.targetObject, field.GetValue(commonAotSettings));
+                            }
+                        }
+                    }
+
+                    commonAotSettings.Save(null);
+                    platformAotSettings.Save(selectedTarget);
                 }
             }
         }
@@ -606,6 +709,7 @@ namespace Unity.Burst.Editor
         internal bool EnableBurstCompilation;
         internal bool EnableDebugInAllBuilds;
         internal bool UsePlatformSDKLinker;
+        internal string DisabledWarnings;
 
         internal static BurstPlatformAotSettings GetOrCreateSettings(BuildTarget target)
         {
@@ -616,6 +720,7 @@ namespace Unity.Burst.Editor
             settings.EnableBurstCompilation = BurstEditorOptions.EnableBurstCompilation;
             settings.UsePlatformSDKLinker = false;
             settings.EnableDebugInAllBuilds = false;
+            settings.DisabledWarnings = "";
 
             return settings;
         }

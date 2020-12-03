@@ -26,6 +26,7 @@ When a project uses AOT compilation, you can control Burst behavior using the **
 - **Use Platform SDK Linker**: Disables cross compilation support (Only applicable to Windows/macOS/Linux Standalone Players) (see [Burst AOT Requirements](#burst-aot-requirements)).
 - **Target 32Bit CPU Architectures**: Allows you to specify the CPU architectures supported for 32 bit builds (shown when supported). The default is SSE2 and SSE4 selected.
 - **Target 64Bit CPU Architectures**: Allows you to specify the CPU architectures supported for 64-bit builds (shown when supported). The default is SSE2 and AVX2 selected.
+- **Disabled Warnings**: Allows you to specify a list of Burst warnings that should be disabled for a player build. Passed as a semi-colon seperated list.
 
 CPU Architecture is currently only supported for Windows, macOS, and Linux. Burst will generate a Standalone Player that supports the CPU architectures you have selected. A special dispatch is generated into the module, so that the code generated will detect the CPU being used and select the appropriate CPU architecture at runtime.
 
@@ -139,4 +140,4 @@ When Burst compiles for multiple targets during an AOT build, it has to do seper
 To keep the combinations of targets to a minimum, we make certain Burst targets require multiple processor instruction sets underneath:
 
 - `SSE4.2` is gated on having `SSE4.2` and `POPCNT` instruction sets.
-- `AVX2` is gated on having `AVX2`, `FMA`, and `F16C` instruction sets.
+- `AVX2` is gated on having `AVX2`, `FMA`, `F16C`, `BMI1`, and `BMI2` instruction sets.

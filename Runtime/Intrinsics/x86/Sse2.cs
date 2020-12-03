@@ -58,7 +58,6 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static void stream_pd(void* mem_addr, v128 a)
             {
-                CheckPointerAlignment16(mem_addr);
                 GenericCSharpStore(mem_addr, a);
             }
 
@@ -70,7 +69,6 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static void stream_si128(void* mem_addr, v128 a)
             {
-                CheckPointerAlignment16(mem_addr);
                 GenericCSharpStore(mem_addr, a);
             }
 
@@ -1364,7 +1362,7 @@ namespace Unity.Burst.Intrinsics
             public static v128 cvtsi64_si128(long a)
             {
                 // This doesn't need an intrinsic implementation, the Burst IR is fine.
-                v128 dst = default(v128);
+                var dst = default(v128);
                 dst.SLong0 = a;
                 return dst;
             }
@@ -1376,7 +1374,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 cvtsi64x_si128(long a)
             {
-                return cvtsi64x_si128(a);
+                return cvtsi64_si128(a);
             }
 
             // _mm_cvtsi128_si32
@@ -2406,7 +2404,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 cmpeq_pd(v128 a, v128 b)
             {
-                v128 dst = default(v128);
+                var dst = default(v128);
                 dst.ULong0 = (a.Double0 == b.Double0) ? ~0ul : 0;
                 dst.ULong1 = (a.Double1 == b.Double1) ? ~0ul : 0;
                 return dst;
@@ -2420,7 +2418,7 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 cmplt_pd(v128 a, v128 b)
             {
-                v128 dst = default(v128);
+                var dst = default(v128);
                 dst.ULong0 = (a.Double0 < b.Double0) ? ~0ul : 0;
                 dst.ULong1 = (a.Double1 < b.Double1) ? ~0ul : 0;
                 return dst;
@@ -3103,6 +3101,17 @@ namespace Unity.Burst.Intrinsics
                 GenericCSharpStore(ptr, val);
             }
 
+            /// <summary>
+            /// Invalidate and flush the cache line that contains p from all levels of the cache hierarchy.
+            /// </summary>
+            /// <remarks>
+            /// **** clflush m8
+            /// </remarks>
+            /// <param name="ptr">Pointer to the cache line to be flushed.</param>
+            [DebuggerStepThrough]
+            public static void clflush(void* ptr)
+            {
+            }
         }
     }
 }

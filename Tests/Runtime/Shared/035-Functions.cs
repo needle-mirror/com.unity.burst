@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Unity.Burst;
+using Unity.Burst.CompilerServices;
 using UnityBenchShared;
 
 namespace Burst.Compiler.IL.Tests
@@ -117,6 +118,27 @@ namespace Burst.Compiler.IL.Tests
             }
 
             return total;
+        }
+
+        [TestCompiler(42)]
+        [IgnoreWarning((int)DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        public static void NoWarningsWithSingle(int i)
+        {
+            if ((6 * 8) == i)
+            {
+                throw new System.Exception("Not the meaning of life!");
+            }
+        }
+
+        [TestCompiler(42)]
+        [IgnoreWarning((int)DiagnosticId.WRN_LoopIntrinsicCalledButLoopOptimizedAway)]
+        [IgnoreWarning((int)DiagnosticId.WRN_ExceptionThrownInNonSafetyCheckGuardedFunction)]
+        public static void NoWarningsWithMultiple(int i)
+        {
+            if ((6 * 8) == i)
+            {
+                throw new System.Exception("Not the meaning of life!");
+            }
         }
     }
 }

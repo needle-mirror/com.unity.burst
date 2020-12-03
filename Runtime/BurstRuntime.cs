@@ -116,10 +116,33 @@ namespace Unity.Burst
             public static readonly long Value = HashStringWithFNV1A64(typeof(T).AssemblyQualifiedName);
         }
 
-
 #if !BURST_COMPILER_SHARED
 
-#if UNITY_2020_1_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+        /// <summary>
+        /// Allows for loading additional Burst native libraries
+        /// Important: Designed for Play mode / Desktop Standalone Players ONLY
+        /// In Editor, any libraries that have been loaded will be unloaded on exit of playmode
+        /// Only supported from 2020.1 and later. You can use BurstCompiler.IsLoadAdditionalLibrarySupported() to confirm it is available.
+        /// </summary>
+        /// <param name="pathToLibBurstGenerated">Absolute filesystem location of bursted library to load</param>
+        /// <returns>true if the library was loaded successfully</returns>
+        public static bool LoadAdditionalLibrary(string pathToLibBurstGenerated)
+        {
+            if (BurstCompiler.IsLoadAdditionalLibrarySupported())
+            {
+                return LoadAdditionalLibraryInternal(pathToLibBurstGenerated);
+            }
+            return false;
+        }
+
+#if !UNITY_DOTSPLAYER && !NET_DOTS
+
+        internal static bool LoadAdditionalLibraryInternal(string pathToLibBurstGenerated)
+        {
+            return (bool)typeof(BurstCompilerService).GetMethod("LoadBurstLibrary").Invoke(null, new object[] { pathToLibBurstGenerated });
+        }
+
+#if UNITY_2020_1_OR_NEWER
         internal static void Initialize()
         {
         }
@@ -128,7 +151,7 @@ namespace Unity.Burst
         {
             BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
         }
-#elif UNITY_2019_4_OR_NEWER && !UNITY_DOTSPLAYER && !NET_DOTS
+#elif UNITY_2019_4_OR_NEWER
         // Because we can't back-port the new API BurstCompilerService.Log introduced in 2020.1
         // we are still trying to allow to log on earlier version of Unity by going back to managed
         // code when we are using Debug.Log. It is not great in terms of performance but it should not
@@ -192,6 +215,23 @@ namespace Unity.Burst
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
         }
+#endif
+
+#else // !UNITY_DOTSPLAYER && !NET_DOTS
+
+        internal static bool LoadAdditionalLibraryInternal(string pathToLibBurstGenerated)
+        {
+            return false;
+        }
+
+        internal static void Initialize()
+        {
+        }
+
+        internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
+        {
+        }
+
 #endif // !UNITY_2020_1_OR_NEWER
 
 #endif // !BURST_COMPILER_SHARED

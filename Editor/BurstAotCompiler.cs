@@ -117,6 +117,7 @@ namespace Unity.Burst.Editor
             {
                 return;
             }
+
             if(report.summary.platform == BuildTarget.Switch)
             {
                 // add the static lib, and the c++ shim
@@ -412,14 +413,27 @@ extern ""C""
                 try
                 {
                     string extraGlobalOptions = "";
+
+                    if (!string.IsNullOrWhiteSpace(aotSettingsForTarget.DisabledWarnings))
+                    {
+                        extraGlobalOptions += GetOption(OptionDisableWarnings, aotSettingsForTarget.DisabledWarnings) + " ";
+                    }
+
                     bool isDevelopmentBuild = (report.summary.options & BuildOptions.Development) != 0;
+
                     if (isDevelopmentBuild || aotSettingsForTarget.EnableDebugInAllBuilds)
                     {
                         if (!isDevelopmentBuild)
                         {
                             Debug.LogWarning("Symbols are being generated for burst compiled code, please ensure you intended this - see Burst AOT settings.");
                         }
+
                         extraGlobalOptions += GetOption(OptionDebug,"Full") + " ";
+                    }
+
+                    if (!aotSettingsForTarget.EnableOptimisations)
+                    {
+                        extraGlobalOptions += GetOption(OptionDisableOpt) + " ";
                     }
 
                     if (aotSettingsForTarget.UsePlatformSDKLinker)
@@ -448,6 +462,8 @@ extern ""C""
                     throw new BuildFailedException(e);
                 }
             }
+
+            PostProcessCombinations(targetPlatform, combinations, report);
         }
 
         /// <summary>
@@ -467,9 +483,30 @@ extern ""C""
                 // Declared in GetStagingAreaPluginsFolder
                 // PlatformDependent\OSXPlayer\Extensions\Managed\OSXDesktopStandalonePostProcessor.cs
 #if UNITY_2019_3_OR_NEWER
-                combinations.Add(new BurstOutputCombination(Path.Combine(Path.GetFileName(report.summary.outputPath), "Contents", "Plugins"), targetCpus));
+                var outputPath = Path.Combine(Path.GetFileName(report.summary.outputPath), "Contents", "Plugins");
 #else
-                combinations.Add(new BurstOutputCombination("UnityPlayer.app/Contents/Plugins", targetCpus));
+                var outputPath = "UnityPlayer.app/Contents/Plugins";
+#endif
+
+#if UNITY_2020_2_OR_NEWER
+                // Based on : PlatformDependent/OSXPlayer/Extension/OSXStandaloneBuildWindowExtension.cs
+                var aotSettings = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.StandaloneOSX);
+                var buildTargetName = BuildPipeline.GetBuildTargetName(BuildTarget.StandaloneOSX);
+                switch (EditorUserBuildSettings.GetPlatformSettings(buildTargetName, "Architecture"))
+                {
+                    case "x64":
+                        combinations.Add(new BurstOutputCombination(outputPath, aotSettings.GetDesktopCpu64Bit()));
+                        break;
+                    case "arm64":
+                        combinations.Add(new BurstOutputCombination(outputPath, new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                        break;
+                    default:
+                        combinations.Add(new BurstOutputCombination(Path.Combine(outputPath, "x64"), aotSettings.GetDesktopCpu64Bit()));
+                        combinations.Add(new BurstOutputCombination(Path.Combine(outputPath, "arm64"), new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                        break;
+                }
+#else
+                combinations.Add(new BurstOutputCombination(outputPath, targetCpus));
 #endif
             }
             else if (targetPlatform == TargetPlatform.iOS || targetPlatform == TargetPlatform.tvOS)
@@ -623,6 +660,58 @@ extern ""C""
             return combinations;
         }
 
+        private void PostProcessCombinations(TargetPlatform targetPlatform, List<BurstOutputCombination> combinations, BuildReport report)
+        {
+#if UNITY_2020_2_OR_NEWER
+            if (targetPlatform == TargetPlatform.macOS && combinations.Count > 1)
+            {
+                // Figure out which files we need to lipo
+                string outputSymbolsDir = null;
+                var outputDir = Path.Combine(TempStaging, Path.GetFileName(report.summary.outputPath), "Contents", "Plugins");
+
+                var sliceCount = combinations.Count;
+                var binarySlices = new string[sliceCount];
+                var debugSymbolSlices = new string[sliceCount];
+
+                for (int i = 0; i < sliceCount; i++)
+                {
+                    var slice = combinations[i];
+
+                    var binaryFileName = slice.LibraryName + ".bundle";
+                    var binaryPath = Path.Combine(TempStaging, slice.OutputPath, binaryFileName);
+                    binarySlices[i] = binaryPath;
+
+                    // Only attempt to lipo symbols if they actually exist
+                    var dsymPath = binaryPath + ".dsym";
+                    var debugSymbolsPath = Path.Combine(dsymPath, "Contents", "Resources", "DWARF", binaryFileName);
+                    if (File.Exists(debugSymbolsPath))
+                    {
+                        if (string.IsNullOrWhiteSpace(outputSymbolsDir))
+                        {
+                            // Copy over the symbols from the first combination for metadata files which we aren't merging, like Info.plist
+                            var outputDsymPath = Path.Combine(outputDir, binaryFileName + ".dsym");
+                            FileUtil.CopyFileOrDirectory(dsymPath, outputDsymPath);
+
+                            outputSymbolsDir = Path.Combine(outputDsymPath, "Contents", "Resources", "DWARF");
+                        }
+
+                        debugSymbolSlices[i] = debugSymbolsPath;
+                    }
+                }
+
+                // lipo combinations together
+                var outBinaryFileName = combinations[0].LibraryName + ".bundle";
+                RunLipo(binarySlices, Path.Combine(outputDir, outBinaryFileName));
+
+                if (!string.IsNullOrWhiteSpace(outputSymbolsDir))
+                    RunLipo(debugSymbolSlices, Path.Combine(outputSymbolsDir, outBinaryFileName));
+
+                // Remove single-slice binary so they don't end up in the build
+                for (int i = 0; i < sliceCount; i++)
+                    FileUtil.DeleteFileOrDirectory(Path.GetDirectoryName(binarySlices[i]));
+            }
+#endif
+        }
 
         private static void RunLipo(string[] inputFiles, string outputFile)
         {
@@ -976,16 +1065,36 @@ extern ""C""
                     }
 
                     var errorMessageBuilder = new StringBuilder();
-                    if (p.ExitCode != 0)
+
+                    if (compilerMessages != null)
                     {
-                        if (compilerMessages != null)
+                        foreach (UnityEditor.Scripting.Compilers.CompilerMessage compilerMessage in compilerMessages)
                         {
-                            foreach (UnityEditor.Scripting.Compilers.CompilerMessage compilerMessage in compilerMessages)
+                            switch (compilerMessage.type)
                             {
-                                Debug.LogPlayerBuildError(compilerMessage.message, compilerMessage.file, compilerMessage.line, compilerMessage.column);
+                                case CompilerMessageType.Warning:
+#if UNITY_2020_2_OR_NEWER
+                                    Debug.LogWarning(compilerMessage.message, compilerMessage.file, compilerMessage.line, compilerMessage.column);
+#else
+                                    if (compilerMessage.file != "unknown")
+                                    {
+                                        Debug.LogWarning($"{compilerMessage.file}({compilerMessage.line},{compilerMessage.column}): {compilerMessage.message}");
+                                    }
+                                    else
+                                    {
+                                        Debug.LogWarning($"{compilerMessage.message}");
+                                    }
+#endif
+                                    break;
+                                case CompilerMessageType.Error:
+                                    Debug.LogPlayerBuildError(compilerMessage.message, compilerMessage.file, compilerMessage.line, compilerMessage.column);
+                                    break;
                             }
                         }
+                    }
 
+                    if (p.ExitCode != 0)
+                    {
                         // We try to output the version in the heading error if we can
                         var matchVersion = MatchVersion.Match(exe);
                         errorMessageBuilder.Append(matchVersion.Success ?
@@ -1028,7 +1137,7 @@ extern ""C""
             //
             //                                                                [1]    [2]         [3]        [4]         [5]
             //                                                                path   line        col        type        message
-            private static readonly Regex MatchLocation = new Regex(@"^(.*?)\((\d+)\s*,\s*(\d+)\):\s*(\w+)\s*:\s*(.*)");
+            private static readonly Regex MatchLocation = new Regex(@"^(.*?)\((\d+)\s*,\s*(\d+)\):\s*([\w\s]+)\s*:\s*(.*)");
 
             // Matches " at "
             private static readonly Regex MatchAt = new Regex(@"^\s+at\s+");
@@ -1056,7 +1165,7 @@ extern ""C""
                         var path = match.Groups[1].Value;
                         int.TryParse(match.Groups[2].Value, out message.line);
                         int.TryParse(match.Groups[3].Value, out message.column);
-                        if (match.Groups[4].Value == "error")
+                        if (match.Groups[4].Value.Contains("error"))
                         {
                             message.type = CompilerMessageType.Error;
                         }
@@ -1103,6 +1212,14 @@ extern ""C""
                     for (int j = i + 1; j < errorOutput.Length; j++)
                     {
                         var nextLine = errorOutput[j];
+
+                        // Empty lines are ignored by the stack trace parser.
+                        if (string.IsNullOrWhiteSpace(nextLine))
+                        {
+                            i++;
+                            continue;
+                        }
+
                         if (MatchAt.Match(nextLine).Success)
                         {
                             i++;

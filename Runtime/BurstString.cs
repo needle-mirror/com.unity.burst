@@ -1,4 +1,3 @@
-#if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -15,6 +14,30 @@ namespace Unity.Burst
     internal static partial class BurstString
 #endif
     {
+        /// <summary>
+        /// Copies a Burst managed UTF8 string prefixed by a ushort length to a FixedString with the specified maximum length.
+        /// </summary>
+        /// <param name="dest">Pointer to the fixed string.</param>
+        /// <param name="destLength">Maximum number of UTF8 the fixed string supports without including the zero character.</param>
+        /// <param name="src">The UTF8 Burst managed string prefixed by a ushort length and zero terminated.
+        /// <param name="srcLength">Number of UTF8 the fixed string supports without including the zero character.</param>
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void CopyFixedString(byte* dest, int destLength, byte* src, int srcLength)
+        {
+            // TODO: should we throw an exception instead if the string doesn't fit?
+            var finalLength = srcLength > destLength ? destLength : srcLength;
+            // Write the length and zero null terminated
+            *((ushort*)dest - 1) = (ushort)finalLength;
+            dest[finalLength] = 0;
+#if BURST_COMPILER_SHARED
+            Unsafe.CopyBlock(dest, src, (uint)finalLength);
+#else
+            UnsafeUtility.MemCpy(dest, src, finalLength);
+#endif
+        }
+
+#if !UNITY_DOTSPLAYER && !NET_DOTS
         /// <summary>
         /// Format a UTF-8 string (with a specified source length) to a destination buffer.
         /// </summary>
@@ -957,6 +980,6 @@ namespace Unity.Burst
                 return $"{nameof(Kind)}: {Kind}, {nameof(AlignAndSize)}: {AlignAndSize}, {nameof(Specifier)}: {Specifier}, {nameof(Uppercase)}: {Uppercase}";
             }
         }
+#endif
     }
 }
-#endif

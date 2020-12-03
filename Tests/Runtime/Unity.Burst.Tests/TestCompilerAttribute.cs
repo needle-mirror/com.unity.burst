@@ -159,6 +159,18 @@ namespace Burst.Compiler.IL.Tests
             {
                 return false;
             }
+
+
+            protected override TestCompilerBaseExtensions GetExtension()
+            {
+                return null;
+            }
+
+            protected override bool TargetIs32Bit()
+            {
+                return false;
+            }
+
         }
     }
 }

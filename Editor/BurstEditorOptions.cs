@@ -31,7 +31,16 @@ namespace Unity.Burst.Editor
         public static bool EnableBurstCompilation
         {
             get => GetGlobalOptions().EnableBurstCompilation;
-            set => GetGlobalOptions().EnableBurstCompilation = value;
+            set
+            {
+                var enabled = GetGlobalOptions().EnableBurstCompilation;
+                GetGlobalOptions().EnableBurstCompilation = value;
+                if (!enabled && value)
+                {
+                    // Must be called AFTER we actually enable compilation
+                    BurstCompiler.TriggerUnsafeStaticMethodRecompilation();
+                }
+            }
         }
 
         public static bool EnableBurstSafetyChecks

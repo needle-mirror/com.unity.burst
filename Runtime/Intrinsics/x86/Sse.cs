@@ -79,7 +79,6 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static void stream_ps(void* mem_addr, v128 a)
             {
-                CheckPointerAlignment16(mem_addr);
                 GenericCSharpStore(mem_addr, a);
             }
 

@@ -14,7 +14,6 @@ Some of these issues may be resolved in a future release of Burst.
 
 ## Known issues with `DllImport`
 
-- `DllImport` is not available on 32-bit or Arm platforms, with the exception that `DllImport("__Internal")` *is* supported on statically linked platforms (iOS).
 - `DllImport` is only supported for [native plugins](https://docs.unity3d.com/Manual/NativePlugins.html), not platform-dependent libraries like `kernel32.dll`.
 
 ## Known issues with debugging/profiling

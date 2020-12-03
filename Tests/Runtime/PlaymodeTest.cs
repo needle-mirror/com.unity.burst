@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine.TestTools;
 using System;
+using Unity.Jobs;
 
 [TestFixture]
 public class PlaymodeTest
@@ -42,6 +43,34 @@ public class PlaymodeTest
         {
             var result = jobTester.Calculate();
             Assert.AreEqual(0.0f, result);
+        }
+    }
+
+
+    [BurstCompile(CompileSynchronously = true)]
+    private struct ThrowingJob : IJob
+    {
+        public int I;
+
+        public void Execute()
+        {
+            if (I < 0)
+            {
+                throw new System.Exception("Some Exception!");
+            }
+        }
+    }
+
+    [Test]
+    public void NoSafetyCheckExceptionWarningInEditor()
+    {
+        var job = new ThrowingJob { I = 42 };
+        job.Schedule().Complete();
+
+        // UNITY_BURST_DEBUG enables additional logging which messes with our check.
+        if (null == System.Environment.GetEnvironmentVariable("UNITY_BURST_DEBUG"))
+        {
+            LogAssert.NoUnexpectedReceived();
         }
     }
 }

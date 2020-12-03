@@ -24,7 +24,6 @@ namespace Unity.Burst.Intrinsics
             [DebuggerStepThrough]
             public static v128 stream_load_si128(void* mem_addr)
             {
-                CheckPointerAlignment16(mem_addr);
                 return GenericCSharpLoad(mem_addr);
             }
 
@@ -877,17 +876,15 @@ namespace Unity.Burst.Intrinsics
                             }
                         }
                     case 3: return Math.Truncate(d);
-                    case 4:
+                    default:
                         switch (MXCSR & MXCSRBits.RoundingControlMask)
                         {
                             case MXCSRBits.RoundToNearest: return Math.Round(d);
                             case MXCSRBits.RoundDown: return Math.Floor(d);
                             case MXCSRBits.RoundUp: return Math.Ceiling(d);
-                            case MXCSRBits.RoundTowardZero: return Math.Truncate(d);
+                            default: return Math.Truncate(d);
                         }
-                        break;
                 }
-                return 0.0;
             }
 
             // _mm_round_pd

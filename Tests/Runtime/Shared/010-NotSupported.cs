@@ -207,18 +207,6 @@ namespace Burst.Compiler.IL.Tests
             return MixedStaticInits.BS.Foo;
         }
 
-        public struct MixedStaticInitsWithString
-        {
-            public static readonly string AC = "Heyo, gaia?";
-            public static readonly BetterStruct BS = new BetterStruct { Foo = 42 };
-        }
-
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_InstructionLdstrNotSupported, DiagnosticId.ERR_ManagedStaticConstructor })]
-        public static int TestMixedStaticInitsWithString()
-        {
-            return MixedStaticInitsWithString.BS.Foo;
-        }
-
         public struct StaticArrayWrapper
         {
             private const int ArrayLength = 4;

@@ -67,6 +67,8 @@ public abstract class BurstCompiler
     public virtual bool EnableDirectExternalLinking { get; set; } = false;
     public virtual string DisableWarnings { get; set; } = "";  // ; seperated list of ids, e.g. BC1370;BC1322
 
+    public virtual bool EmitLlvmObjects { get; set; } = false;  // Added because burst now compiles/links wasm code as native objects by default
+
     static string[] GetBurstCommandLineArgs(
         BurstCompiler compiler,
         NPath outputPrefixForObjectFile,
@@ -85,6 +87,7 @@ public abstract class BurstCompiler
             compiler.Link ? "" : "--nolink",
             $"--float-precision={compiler.FloatPrecision}",
             $"--keep-intermediate-files",
+            compiler.EmitLlvmObjects?"--emit-llvm-objects":"",
             compiler.Verbose ? "--verbose" : "",
             $"--patch-assemblies-into={outputDirForPatchedAssemblies}",
             $"--output={outputPrefixForObjectFile}",
@@ -238,6 +241,7 @@ public class BurstCompilerForEmscripten : BurstCompiler
     public override bool EnableStaticLinkage { get; set; } = true;
     public override bool EnableJobMarshalling { get; set; } = false;
     public override bool EnableDirectExternalLinking { get; set; } = true;
+    public override bool EmitLlvmObjects { get; set; } = true;  // Added because burst now compiles/links wasm code as native objects by default
 }
 
 public class BurstCompilerForWindows : BurstCompiler

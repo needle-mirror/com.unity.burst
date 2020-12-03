@@ -32,9 +32,6 @@ namespace UnityBenchShared
         }
     }
 
-    /// <summary>
-    /// TODO: Rename to SphereCollision instead? (as the code is more an intersection than a culling)
-    /// </summary>
     internal static class SphereCulling
     {
         public static int BenchCount = 128 * 1024 + 3;
