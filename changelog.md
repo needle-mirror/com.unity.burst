@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.4-preview.1] - 2020-12-07
+
+
+### Fixed
+- Fixes DOTS Runtime JobProducer Bursting code to support JobProducers with multiple generic arguments, complex job wrapper and generic jobs.
+
 ## [1.4.3] - 2020-12-03
 
 
