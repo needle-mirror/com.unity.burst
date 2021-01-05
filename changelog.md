@@ -1,10 +1,19 @@
 # Changelog
 
+## [1.4.4-preview.2] - 2021-01-06
+
+
+### Fixed
+- Fixed a bug where explicitly casting from an int to `IntPtr` would not sign extend the value.
+- Fixed managed implementations of blend_epi32 and mm256_blend_epi32 intrinsics on Mono
+- Fixed an issue where Burst would erroneously error on `BurstCompile.CompileFunctionPointer ` calls when building for the DOTS Runtime.
+
 ## [1.4.4-preview.1] - 2020-12-07
 
 
 ### Fixed
 - Fixes DOTS Runtime JobProducer Bursting code to support JobProducers with multiple generic arguments, complex job wrapper and generic jobs.
+- Fixed a bug that occurred when an explicitly laid out struct was used by a `dup` instruction, which caused an internal compiler error.
 
 ## [1.4.3] - 2020-12-03
 

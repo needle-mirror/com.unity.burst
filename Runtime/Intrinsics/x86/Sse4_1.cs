@@ -67,9 +67,13 @@ namespace Unity.Burst.Intrinsics
             {
                 int j;
                 v128 dst = default(v128);
-                float* dptr = &dst.Float0;
-                float* aptr = &a.Float0;
-                float* bptr = &b.Float0;
+                // This implementation is used also for blend_epi32
+                // When casting the vectors to float*, NaNs works incorrectly (if the input was actually integer which bitcasts into a NaN)
+                // It seems to happen on Mono only, IL2CPP or .NET are working fine
+                // Hence cast to int here, and shuffle the ints
+                int* dptr = &dst.SInt0;
+                int* aptr = &a.SInt0;
+                int* bptr = &b.SInt0;
                 for (j = 0; j <= 3; j++)
                 {
                     if (0 != (imm8 & (1 << j)))
