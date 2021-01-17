@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.4] - 2021-01-18
+
+
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+- clang segmentation fault on iOS when member function debug information was emitted, it is disabled for this platform now.
+- Intrinsics: Neon - fixed vget_low and vget_high producing suboptimal code
+
+### Known Issues
+
 ## [1.4.4-preview.2] - 2021-01-06
 
 

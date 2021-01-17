@@ -10,7 +10,7 @@ LLVM License
 University of Illinois/NCSA
 Open Source License
 
-Copyright (c) 2003-2020 University of Illinois at Urbana-Champaign.
+Copyright (c) 2003-2021 University of Illinois at Urbana-Champaign.
 All rights reserved.
 
 Developed by:
@@ -108,7 +108,7 @@ License Type: Open Source License
 
 Smash License
 
-Copyright (c) 2020, Alexandre Mutel
+Copyright (c) 2021, Alexandre Mutel
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification
@@ -138,7 +138,7 @@ Component Name: xxHash Library
 License Type: Open Source License
 
 xxHash Library
-Copyright (c) 2012-2020, Yann Collet
+Copyright (c) 2012-2021, Yann Collet
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
