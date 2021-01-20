@@ -1458,5 +1458,62 @@ namespace Burst.Compiler.IL.Tests
             var r = x - new float2(1.40129846432481707092e-45f, -1.40129846432481707092e-45f);
             return r.x * r.y;
         }
+
+        private struct SomeStructWithCasts
+        {
+            public int I;
+
+            public static implicit operator int(SomeStructWithCasts s)
+            {
+                return s.I;
+            }
+
+            public static implicit operator int4x4(SomeStructWithCasts s)
+            {
+                return s.I;
+            }
+
+            public static explicit operator double(SomeStructWithCasts s)
+            {
+                return s.I;
+            }
+
+            public static explicit operator double4x4(SomeStructWithCasts s)
+            {
+                return s.I;
+            }
+        }
+
+        [TestCompiler(0)]
+        public static int ImplicitCastsWork(int i)
+        {
+            var something = new SomeStructWithCasts { I = i };
+
+            if (i < 0)
+            {
+                return something;
+            }
+            else
+            {
+                int4x4 s = something;
+                return s.c0.x;
+            }
+        }
+
+        [TestCompiler(0)]
+        public static double ExplicitCastsWork(int i)
+        {
+            var something = new SomeStructWithCasts { I = i };
+
+            if (i < 0)
+            {
+                return (double)something;
+            }
+            else
+            {
+                var s = (double4x4)something;
+                return s.c0.x;
+            }
+        }
     }
 }

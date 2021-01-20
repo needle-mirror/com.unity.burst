@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.5.0-pre.4] - 2021-01-21
+
+
+### Changed
+- Exception strings no longer contain the entry-point name of the job/function-pointer that caused the throw. This change was required because the Burst compiler has to produce deterministic results from any given compile, which is fundamentally opposed to per-entry-point function derivations.
+- Changed how exceptions throw types and messages are stored in our Burst binaries to reduce binary size.
+- Upgraded Burst to use LLVM Version 11.0.1 by default, bringing the latest optimization improvements from the LLVM project.
+
+### Fixed
+- Fixed alignment issues associated with xxHash3 on ArmV7 (case 1288992)
+- Fixed managed implementation of sub_ss intrinsic
+- Fixes DOTS Runtime JobProducer Bursting code to support JobProducers with multiple generic arguments, complex job wrapper and generic jobs.
+- Fixed a bug that occurred when an explicitly laid out struct was used by a `dup` instruction, which caused an internal compiler error.
+- Fixed a bug where if a user had defined multiple implicit or explicit casts, the compiler could resolve to the wrong cast.
+- Fixed a bug where explicitly casting from an int to `IntPtr` would not sign extend the value.
+- Fixed a bug where loading from a vector within a struct, that was got from a `NativeArray` using an indexer, would cause the compiler to crash.
+- Fixed managed implementations of blend_epi32 and mm256_blend_epi32 intrinsics on Mono
+- Fixed an issue where Burst would erroneously error on `BurstCompile.CompileFunctionPointer ` calls when building for the DOTS Runtime.
+- clang segmentation fault on iOS when member function debug information was emitted, it is disabled for this platform now.
+- Intrinsics: Neon - fixed vget_low and vget_high producing suboptimal code
+- Private `[BurstCompile]` methods no longer throw `MethodAccessException`
+
+### Added
+- Intrinsics: Neon - Added support for basic vld1 APIs
+
+### Removed
+
+### Known Issues
+
 ## [1.5.0-pre.3] - 2020-12-04
 
 

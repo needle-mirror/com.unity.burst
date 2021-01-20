@@ -726,16 +726,6 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a0">128-bit vector a0</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
-            public static v64 vget_high_f16(v128 a0)
-            {
-                return a0.Hi64;
-            }
-
-            /// <summary>Duplicate vector element to vector or scalar. This instruction duplicates the vector element at the specified element index in the source SIMD&amp;FP register into a scalar or each element in a vector, and writes the result to the destination SIMD&amp;FP register.Depending on the settings in the CPACR_EL1, CPTR_EL2, and CPTR_EL3 registers, and the current Security state and Exception level, an attempt to execute the instruction might be trapped.
-            /// <br/>Equivalent instruction: <c>DUP Vd.1D,Vn.D[1]</c></summary>
-            /// <param name="a0">128-bit vector a0</param>
-            /// <returns>64-bit vector</returns>
-            [DebuggerStepThrough]
             public static v64 vget_high_f32(v128 a0)
             {
                 return a0.Hi64;
@@ -836,16 +826,6 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a0">128-bit vector a0</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
-            public static v64 vget_low_f16(v128 a0)
-            {
-                return a0.Lo64;
-            }
-
-            /// <summary>Duplicate vector element to vector or scalar. This instruction duplicates the vector element at the specified element index in the source SIMD&amp;FP register into a scalar or each element in a vector, and writes the result to the destination SIMD&amp;FP register.Depending on the settings in the CPACR_EL1, CPTR_EL2, and CPTR_EL3 registers, and the current Security state and Exception level, an attempt to execute the instruction might be trapped.
-            /// <br/>Equivalent instruction: <c>DUP Vd.1D,Vn.D[0]</c></summary>
-            /// <param name="a0">128-bit vector a0</param>
-            /// <returns>64-bit vector</returns>
-            [DebuggerStepThrough]
             public static v64 vget_low_f32(v128 a0)
             {
                 return a0.Lo64;
@@ -859,6 +839,206 @@ namespace Unity.Burst.Intrinsics
             public static v64 vget_low_f64(v128 a0)
             {
                 return a0.Lo64;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.8B},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_s8(SByte* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.16B},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_s8(SByte* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_s16(Int16* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.8H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_s16(Int16* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_s32(Int32* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_s32(Int32* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.1D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_s64(Int64* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_s64(Int64* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.8B},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_u8(Byte* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.16B},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_u8(Byte* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_u16(UInt16* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.8H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_u16(UInt16* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_u32(UInt32* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_u32(UInt32* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.1D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_u64(UInt64* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_u64(UInt64* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_f32(Single* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4S},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_f32(Single* a0)
+            {
+                return *(v128*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.1D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_f64(Double* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.2D},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_f64(Double* a0)
+            {
+                return *(v128*)a0;
             }
 
 #if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
@@ -902,6 +1082,46 @@ namespace Unity.Burst.Intrinsics
             public static v128 vdupq_n_f16(Int16 a0)
             {
                 return new v128(a0);
+            }
+
+            /// <summary>Duplicate vector element to vector or scalar. This instruction duplicates the vector element at the specified element index in the source SIMD&amp;FP register into a scalar or each element in a vector, and writes the result to the destination SIMD&amp;FP register.Depending on the settings in the CPACR_EL1, CPTR_EL2, and CPTR_EL3 registers, and the current Security state and Exception level, an attempt to execute the instruction might be trapped.
+            /// <br/>Equivalent instruction: <c>DUP Vd.1D,Vn.D[0]</c></summary>
+            /// <param name="a0">128-bit vector a0</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vget_low_f16(v128 a0)
+            {
+                return a0.Lo64;
+            }
+
+            /// <summary>Duplicate vector element to vector or scalar. This instruction duplicates the vector element at the specified element index in the source SIMD&amp;FP register into a scalar or each element in a vector, and writes the result to the destination SIMD&amp;FP register.Depending on the settings in the CPACR_EL1, CPTR_EL2, and CPTR_EL3 registers, and the current Security state and Exception level, an attempt to execute the instruction might be trapped.
+            /// <br/>Equivalent instruction: <c>DUP Vd.1D,Vn.D[1]</c></summary>
+            /// <param name="a0">128-bit vector a0</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vget_high_f16(v128 a0)
+            {
+                return a0.Hi64;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.4H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>64-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v64 vld1_f16(void* a0)
+            {
+                return *(v64*)a0;
+            }
+
+            /// <summary>Load multiple single-element structures to a register. This instruction loads multiple single-element structures from memory and writes the result to a SIMD&amp;FP register.
+            /// <br/>Equivalent instruction: <c>LD1 {Vt.8H},[Xn]</c></summary>
+            /// <param name="a0">Pointer to the address to load from</param>
+            /// <returns>128-bit vector</returns>
+            [DebuggerStepThrough]
+            public static v128 vld1q_f16(void* a0)
+            {
+                return *(v128*)a0;
             }
 #endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
         }

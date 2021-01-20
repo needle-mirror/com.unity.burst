@@ -337,7 +337,10 @@ namespace zzzUnity.Burst.CodeGen
             //    }
             //    return OriginalMethod(...args);
             // }
-            var invoke = new MethodDefinition(InvokeName, newManaged.Attributes, managed.ReturnType)
+            var invokeAttributes = newManaged.Attributes;
+            invokeAttributes &= ~MethodAttributes.Private;
+            invokeAttributes |= MethodAttributes.Public;
+            var invoke = new MethodDefinition(InvokeName, invokeAttributes, managed.ReturnType)
             {
                 ImplAttributes = MethodImplAttributes.IL | MethodImplAttributes.Managed,
                 DeclaringType = cls
