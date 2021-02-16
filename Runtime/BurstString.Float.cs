@@ -1,7 +1,10 @@
-#if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#if UNITY_DOTSRUNTIME
+using Unity.Collections.LowLevel.Unsafe;
+#endif
 
 namespace Unity.Burst
 {
@@ -13,7 +16,7 @@ namespace Unity.Burst
     {
         // This file provides an implementation for formatting floating point numbers that is compatible
         // with Burst
-        
+
         // ------------------------------------------------------------------------------
         // Part of code translated to C# from http://www.ryanjuckett.com/programming/printing-floating-point-numbers
         // with the following license:
@@ -116,7 +119,7 @@ namespace Unity.Burst
             // Data accessors
             public int GetLength()        { return m_length; }
             public uint GetBlock(int idx) { return m_blocks[idx]; }
- 
+
             // Zero helper functions
             public void SetZero() { m_length = 0; }
             public bool IsZero()  { return m_length == 0; }
@@ -155,22 +158,22 @@ namespace Unity.Burst
             }
 
             public uint GetU32() { return (m_length == 0) ? 0 : m_blocks[0]; }
- 
+
             // Member data
             public int m_length;
             public fixed uint m_blocks[c_BigInt_MaxBlocks];
         }
 
-        //******************************************************************************        
+        //******************************************************************************
         // Returns 0 if (lhs = rhs), negative if (lhs < rhs), positive if (lhs > rhs)
-        //******************************************************************************        
+        //******************************************************************************
         private static unsafe int BigInt_Compare(in tBigInt lhs, in tBigInt  rhs)
         {
             // A bigger length implies a bigger number.
             int lengthDiff = lhs.m_length - rhs.m_length;
             if (lengthDiff != 0)
                 return lengthDiff;
-     
+
             // Compare blocks one by one from high to low.
             for (int i = (int)lhs.m_length - 1; i >= 0; --i)
             {
@@ -181,7 +184,7 @@ namespace Unity.Burst
                 else
                     return -1;
             }
- 
+
             // no blocks differed
             return 0;
         }
@@ -191,21 +194,23 @@ namespace Unity.Burst
         //******************************************************************************
         private static unsafe void BigInt_Add(out tBigInt pResult, in tBigInt lhs, in tBigInt rhs)
         {
-            // determine which operand has the smaller length
-            ref tBigInt pLarge = ref Unsafe.AsRef(lhs);
-            ref tBigInt pSmall = ref Unsafe.AsRef(rhs); ;
             if (lhs.m_length < rhs.m_length)
             {
-                pSmall = ref Unsafe.AsRef(lhs);
-                pLarge = ref Unsafe.AsRef(rhs);
-            } 
-         
+                BigInt_Add_internal(out pResult, rhs, lhs);
+            }
+            else
+            {
+                BigInt_Add_internal(out pResult, lhs, rhs);
+            }
+        }
+        private static unsafe void BigInt_Add_internal(out tBigInt pResult, in tBigInt pLarge, in tBigInt pSmall)
+        {
             int largeLen = pLarge.m_length;
             int smallLen = pSmall.m_length;
-         
+
             // The output will be at least as long as the largest input
             pResult.m_length = largeLen;
-         
+
             // Add each block and add carry the overflow to the next block
             ulong carry = 0;
             fixed (uint * pLargeCur1  = pLarge.m_blocks)
@@ -258,15 +263,18 @@ namespace Unity.Burst
         //******************************************************************************
         private static unsafe void BigInt_Multiply(out tBigInt pResult, in tBigInt lhs, in tBigInt rhs)
         {
-            // determine which operand has the smaller length
-            ref tBigInt pLarge = ref Unsafe.AsRef(lhs);
-            ref tBigInt pSmall = ref Unsafe.AsRef(rhs); ;
             if (lhs.m_length < rhs.m_length)
             {
-                pSmall = ref Unsafe.AsRef(lhs);
-                pLarge = ref Unsafe.AsRef(rhs);
+                BigInt_Multiply_internal(out pResult, rhs, lhs);
             }
+            else
+            {
+                BigInt_Multiply_internal(out pResult, lhs, rhs);
+            }
+        }
 
+        private static unsafe void BigInt_Multiply_internal(out tBigInt pResult, in tBigInt pLarge, in tBigInt pSmall)
+        {
             // set the maximum possible result length
             int maxResultLen = pLarge.m_length + pSmall.m_length;
             // RJ_ASSERT( maxResultLen <= c_BigInt_MaxBlocks );
@@ -275,7 +283,7 @@ namespace Unity.Burst
             // uint * pCur = pResult.m_blocks, *pEnd = pCur + maxResultLen; pCur != pEnd; ++pCur
             for (int i = 0; i < maxResultLen; i++)
                 pResult.m_blocks[i] = 0;
-        
+
             // perform standard long multiplication
             fixed (uint *pLargeBeg1 = pLarge.m_blocks)
             {
@@ -625,7 +633,7 @@ namespace Unity.Burst
             pResult = pCurTemp;
         }
 
-                
+
         //******************************************************************************
         // result = in * 10^exponent
         //******************************************************************************
@@ -633,13 +641,13 @@ namespace Unity.Burst
         {
             // make sure the exponent is within the bounds of the lookup table data
             // RJ_ASSERT(exponent < 512);
-                        
+
             // create two temporary values to reduce large integer copy operations
             tBigInt temp1 = default;
             tBigInt temp2 = default;
             ref tBigInt pCurTemp = ref temp1;
             ref tBigInt pNextTemp = ref temp2;
-        
+
             // initialize the result by looking up a 32-bit power of 10 corresponding to the first 3 bits
             uint smallExponent = exponent & 0x7;
             if (smallExponent != 0)
@@ -650,38 +658,38 @@ namespace Unity.Burst
             {
                 pCurTemp = input;
             }
-            
+
             // remove the low bits that we used for the 32-bit lookup table
             exponent >>= 3;
             int tableIdx = 0;
-        
+
             // while there are remaining bits in the exponent to be processed
             while (exponent != 0)
             {
                 // if the current bit is set, multiply it with the corresponding power of 10
                 if((exponent & 1) != 0)
-                {                   
+                {
                     // multiply into the next temporary
                     BigInt_Multiply( out pNextTemp, pCurTemp, g_PowerOf10_Big(tableIdx) );
-                    
+
                     // swap to the next temporary
                     ref tBigInt pSwap = ref pCurTemp;
                     pCurTemp = pNextTemp;
                     pNextTemp = pSwap;
                 }
-                
+
                 // advance to the next bit
                 ++tableIdx;
                 exponent >>= 1;
             }
-        
+
             // output the result
             pResult = pCurTemp;
         }
 
-        //******************************************************************************    
+        //******************************************************************************
         // result = 2^exponent
-        //******************************************************************************        
+        //******************************************************************************
         private static unsafe void BigInt_Pow2(out tBigInt pResult, uint exponent)
         {
             int blockIdx = (int)exponent / 32;
@@ -720,7 +728,7 @@ namespace Unity.Burst
             //            divisor.m_blocks[divisor.m_length-1] >= 8 &&
             //            divisor.m_blocks[divisor.m_length-1] < 0xFFFFFFFF &&
             //            pDividend->m_length <= divisor.m_length );
-        
+
             // If the dividend is smaller than the divisor, the quotient is zero and the divisor is already
             // the remainder.
             int length = divisor.m_length;
@@ -808,13 +816,13 @@ namespace Unity.Burst
         private static unsafe void BigInt_ShiftLeft(ref tBigInt pResult, uint shift)
         {
             // RJ_ASSERT( shift != 0 );
-        
+
             int shiftBlocks = (int)shift / 32;
             int shiftBits = (int)shift % 32;
 
             int inLength    = pResult.m_length;
             // RJ_ASSERT( inLength + shiftBlocks <= c_BigInt_MaxBlocks );
-        
+
             // check if the shift is block aligned
             if (shiftBits == 0)
             {
@@ -835,7 +843,7 @@ namespace Unity.Burst
                 // zero the remaining low blocks
                 for ( uint i = 0; i < shiftBlocks; ++i)
                     pResult.m_blocks[i] = 0;
-        
+
                 pResult.m_length += shiftBlocks;
             }
             // else we need to shift partial blocks
@@ -843,37 +851,37 @@ namespace Unity.Burst
             {
                 int inBlockIdx  = inLength - 1;
                 int outBlockIdx = inLength + shiftBlocks;
-            
+
                 // set the length to hold the shifted blocks
                 //RJ_ASSERT( outBlockIdx < c_BigInt_MaxBlocks );
                 pResult.m_length = outBlockIdx + 1;
-            
+
                 // output the initial blocks
                 int lowBitsShift = (32 - shiftBits);
                 uint highBits = 0;
-                uint block = pResult.m_blocks[inBlockIdx];              
+                uint block = pResult.m_blocks[inBlockIdx];
                 uint lowBits = block >> lowBitsShift;
                 while ( inBlockIdx > 0 )
                 {
                     pResult.m_blocks[outBlockIdx] = highBits | lowBits;
                     highBits = block << shiftBits;
-        
+
                     --inBlockIdx;
                     --outBlockIdx;
-        
+
                     block = pResult.m_blocks[inBlockIdx];
                     lowBits = block >> lowBitsShift;
                 }
-        
+
                 // output the final blocks
                 // RJ_ASSERT( outBlockIdx == shiftBlocks + 1 );
                 pResult.m_blocks[outBlockIdx] = highBits | lowBits;
                 pResult.m_blocks[outBlockIdx-1] = block << shiftBits;
-            
+
                 // zero the remaining low blocks
                 for ( uint i = 0; i < shiftBlocks; ++i)
                     pResult.m_blocks[i] = 0;
-            
+
                 // check if the terminating block has no set bits
                 if (pResult.m_blocks[pResult.m_length - 1] == 0)
                     --pResult.m_length;
@@ -920,9 +928,9 @@ namespace Unity.Burst
         )
         {
             byte* pCurDigit = pOutBuffer;
-        
+
             // RJ_ASSERT( bufferSize > 0 );
-        
+
             // if the mantissa is zero, the value is zero regardless of the exponent
             if (mantissa == 0)
             {
@@ -930,8 +938,8 @@ namespace Unity.Burst
                 pOutExponent = 0;
                 return 1;
             }
-        
-            // compute the initial state in integral form such that 
+
+            // compute the initial state in integral form such that
             //  value     = scaledValue / scale
             //  marginLow = scaledMarginLow / scale
             tBigInt scale = default;              // positive scale applied to value and margin such that they can be
@@ -939,13 +947,13 @@ namespace Unity.Burst
             tBigInt scaledValue = default;        // scale * mantissa
             tBigInt scaledMarginLow = default;    // scale * 0.5 * (distance between this floating-point number and its
                                         //  immediate lower value)
-        
+
             // For normalized IEEE floating point values, each time the exponent is incremented the margin also
             // doubles. That creates a subset of transition numbers where the high margin is twice the size of
             // the low margin.
             tBigInt * pScaledMarginHigh;
             tBigInt optionalMarginHigh = default;
-        
+
             if ( hasUnequalMargins )
             {
                 // if we have no fractional component
@@ -956,17 +964,17 @@ namespace Unity.Burst
                     // 2) Apply an additional scale of 2 such that later comparisons against the margin values
                     //    are simplified.
                     // 3) Set the margin value to the lowest mantissa bit's scale.
-                    
+
                     // scaledValue      = 2 * 2 * mantissa*2^exponent
                     scaledValue.SetU64( 4 * mantissa );
                     BigInt_ShiftLeft(ref scaledValue, (uint)exponent);
-                    
+
                     // scale            = 2 * 2 * 1
                     scale.SetU32( 4 );
-                    
+
                     // scaledMarginLow  = 2 * 2^(exponent-1)
                     BigInt_Pow2( out scaledMarginLow, (uint)exponent );
-        
+
                     // scaledMarginHigh = 2 * 2 * 2^(exponent-1)
                     BigInt_Pow2( out optionalMarginHigh, (uint)(exponent + 1));
                 }
@@ -974,20 +982,20 @@ namespace Unity.Burst
                 else
                 {
                     // In order to track the mantissa data as an integer, we store it as is with a large scale
-                    
+
                     // scaledValue      = 2 * 2 * mantissa
-                    scaledValue.SetU64( 4 * mantissa ); 
-                    
+                    scaledValue.SetU64( 4 * mantissa );
+
                     // scale            = 2 * 2 * 2^(-exponent)
                     BigInt_Pow2(out scale, (uint)(-exponent + 2));
-                    
+
                     // scaledMarginLow  = 2 * 2^(-1)
                     scaledMarginLow.SetU32( 1 );
-                    
+
                     // scaledMarginHigh = 2 * 2 * 2^(-1)
                     optionalMarginHigh.SetU32( 2 );
                 }
-        
+
                 // the high and low margins are different
                 pScaledMarginHigh = &optionalMarginHigh;
             }
@@ -1001,14 +1009,14 @@ namespace Unity.Burst
                     // 2) Apply an additional scale of 2 such that later comparisons against the margin values
                     //    are simplified.
                     // 3) Set the margin value to the lowest mantissa bit's scale.
-                    
+
                     // scaledValue     = 2 * mantissa*2^exponent
                     scaledValue.SetU64( 2 * mantissa );
                     BigInt_ShiftLeft(ref scaledValue, (uint)exponent);
-                    
+
                     // scale           = 2 * 1
                     scale.SetU32( 2 );
-        
+
                     // scaledMarginLow = 2 * 2^(exponent-1)
                     BigInt_Pow2(out scaledMarginLow, (uint)exponent );
                 }
@@ -1016,21 +1024,21 @@ namespace Unity.Burst
                 else
                 {
                     // In order to track the mantissa data as an integer, we store it as is with a large scale
-        
+
                     // scaledValue     = 2 * mantissa
                     scaledValue.SetU64( 2 * mantissa );
-                    
+
                     // scale           = 2 * 2^(-exponent)
                     BigInt_Pow2(out scale, (uint)(-exponent + 1));
-        
+
                     // scaledMarginLow = 2 * 2^(-1)
                     scaledMarginLow.SetU32( 1 );
                 }
-            
+
                 // the high and low margins are equal
                 pScaledMarginHigh = &scaledMarginLow;
             }
-        
+
             // Compute an estimate for digitExponent that will be correct or undershoot by one.
             // This optimization is based on the paper "Printing Floating-Point Numbers Quickly and Accurately"
             // by Burger and Dybvig http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.72.4656&rep=rep1&type=pdf
@@ -1050,7 +1058,7 @@ namespace Unity.Burst
             var digitExponentDoubleValue = (double) ((int) mantissaHighBitIdx + exponent) * log10_2 - 0.69;
             digitExponentDoubleValue = Math.Ceiling(digitExponentDoubleValue);
             int digitExponent = (int)digitExponentDoubleValue;
-        
+
             // if the digit exponent is smaller than the smallest desired digit for fractional cutoff,
             // pull the digit back into legal range at which point we will round to the appropriate value.
             // Note that while our value for digitExponent is still an estimate, this is safe because it
@@ -1060,8 +1068,8 @@ namespace Unity.Burst
             {
                 digitExponent = -(int)cutoffNumber + 1;
             }
-        
-            // Divide value by 10^digitExponent. 
+
+            // Divide value by 10^digitExponent.
             if (digitExponent > 0)
             {
                 // The exponent is positive creating a division so we multiply up the scale.
@@ -1075,18 +1083,18 @@ namespace Unity.Burst
                 // scaledMarginLow and scaledMarginHigh.
                 tBigInt pow10;
                 BigInt_Pow10(out pow10, (uint)(-digitExponent));
-        
+
                 tBigInt temp;
                 BigInt_Multiply( out temp, scaledValue, pow10);
                 scaledValue = temp;
-        
+
                 BigInt_Multiply( out temp, scaledMarginLow, pow10);
                 scaledMarginLow = temp;
-                
+
                 if (pScaledMarginHigh != &scaledMarginLow)
                     BigInt_Multiply2( out *pScaledMarginHigh, scaledMarginLow );
             }
-        
+
             // If (value >= 1), our estimate for digitExponent was too low
             if( BigInt_Compare(scaledValue,scale) >= 0 )
             {
@@ -1104,7 +1112,7 @@ namespace Unity.Burst
                 if (pScaledMarginHigh != &scaledMarginLow)
                     BigInt_Multiply2( out *pScaledMarginHigh, scaledMarginLow );
             }
-            
+
             // Compute the cutoff exponent (the exponent of the final digit to print).
             // Default to the maximum size of the output buffer.
             int cutoffExponent = digitExponent - (int)bufferSize;
@@ -1135,8 +1143,8 @@ namespace Unity.Burst
 
             // Output the exponent of the first digit we will print
             pOutExponent = digitExponent-1;
-        
-            // In preparation for calling BigInt_DivideWithRemainder_MaxQuotient9(), 
+
+            // In preparation for calling BigInt_DivideWithRemainder_MaxQuotient9(),
             // we need to scale up our values such that the highest block of the denominator
             // is greater than or equal to 8. We also need to guarantee that the numerator
             // can never have a length greater than the denominator after each loop iteration.
@@ -1152,24 +1160,24 @@ namespace Unity.Burst
                 // in BigInt_DivideWithRemainder_MaxQuotient9() with higher denominator values so
                 // we shift the denominator to place the highest bit at index 27 of the highest block.
                 // This is safe because (2^28 - 1) = 268435455 which is less than 429496729. This means
-                // that all values with a highest bit at index 27 are within range.         
+                // that all values with a highest bit at index 27 are within range.
                 uint hiBlockLog2 = LogBase2(hiBlock);
                 // RJ_ASSERT(hiBlockLog2 < 3 || hiBlockLog2 > 27);
                 uint shift = (32 + 27 - hiBlockLog2) % 32;
-        
+
                 BigInt_ShiftLeft( ref scale, shift );
                 BigInt_ShiftLeft( ref scaledValue, shift);
                 BigInt_ShiftLeft( ref scaledMarginLow, shift);
                 if (pScaledMarginHigh != &scaledMarginLow)
                     BigInt_Multiply2( out *pScaledMarginHigh, scaledMarginLow );
             }
-        
+
             // These values are used to inspect why the print loop terminated so we can properly
             // round the final digit.
             bool      low;            // did the value get within marginLow distance from zero
             bool      high;           // did the value get within marginHigh distance from one
             uint    outputDigit;    // current digit being output
-            
+
             if (cutoffMode == CutoffMode.Unique)
             {
                 // For the unique cutoff mode, we will try to print until we have reached a level of
@@ -1178,31 +1186,31 @@ namespace Unity.Burst
                 for (;;)
                 {
                     digitExponent = digitExponent-1;
-        
+
                     // divide out the scale to extract the digit
                     outputDigit = BigInt_DivideWithRemainder_MaxQuotient9(ref scaledValue, scale);
                     //RJ_ASSERT( outputDigit < 10 );
-        
+
                     // update the high end of the value
                     tBigInt scaledValueHigh;
                     BigInt_Add( out scaledValueHigh, scaledValue, *pScaledMarginHigh );
-        
+
                     // stop looping if we are far enough away from our neighboring values
                     // or if we have reached the cutoff digit
                     low = BigInt_Compare(scaledValue, scaledMarginLow) < 0;
                     high = BigInt_Compare(scaledValueHigh, scale) > 0;
                     if (low | high | (digitExponent == cutoffExponent))
                         break;
-                    
+
                     // store the output digit
                     *pCurDigit = (byte)('0' + outputDigit);
                     ++pCurDigit;
-        
+
                     // multiply larger by the output base
                     BigInt_Multiply10( ref scaledValue );
                     BigInt_Multiply10( ref scaledMarginLow );
                     if (pScaledMarginHigh != &scaledMarginLow)
-                        BigInt_Multiply2( out *pScaledMarginHigh, scaledMarginLow );                 
+                        BigInt_Multiply2( out *pScaledMarginHigh, scaledMarginLow );
                 }
             }
             else
@@ -1212,31 +1220,31 @@ namespace Unity.Burst
                 // until we reach the desired cutoff digit.
                 low = false;
                 high = false;
-        
+
                 for (;;)
                 {
                     digitExponent = digitExponent-1;
-        
+
                     // divide out the scale to extract the digit
                     outputDigit = BigInt_DivideWithRemainder_MaxQuotient9(ref scaledValue, scale);
                     //RJ_ASSERT( outputDigit < 10 );
-        
+
                     if ( scaledValue.IsZero() | (digitExponent == cutoffExponent) )
                         break;
-        
+
                     // store the output digit
                     *pCurDigit = (byte)('0' + outputDigit);
                     ++pCurDigit;
-        
+
                     // multiply larger by the output base
                     BigInt_Multiply10(ref scaledValue);
                 }
             }
-        
+
             // round off the final digit
             // default to rounding down if value got too close to 0
             bool roundDown = low;
-            
+
             // if it is legal to round up and down
             if (low == high)
             {
@@ -1248,12 +1256,12 @@ namespace Unity.Burst
                 BigInt_Multiply2(ref scaledValue);
                 int compare = BigInt_Compare(scaledValue, scale);
                 roundDown = compare < 0;
-                
+
                 // if we are directly in the middle, round towards the even digit (i.e. IEEE rouding rules)
                 if (compare == 0)
-                    roundDown = (outputDigit & 1) == 0;             
+                    roundDown = (outputDigit & 1) == 0;
             }
-        
+
             // print the rounded digit
             if (roundDown)
             {
@@ -1295,7 +1303,7 @@ namespace Unity.Burst
                     ++pCurDigit;
                 }
             }
-        
+
             // return the number of digits output
             uint outputLen = (uint)(pCurDigit - pOutBuffer);
             // RJ_ASSERT(outputLen <= bufferSize);
@@ -1430,7 +1438,11 @@ namespace Unity.Burst
                     if (numFractionDigits > maxFractionDigits)
                         numFractionDigits = maxFractionDigits;
 
+#if !UNITY_DOTSRUNTIME && !NET_DOTS
                     Unsafe.CopyBlock(pOutBuffer + numWholeDigits + 1, pOutBuffer + numWholeDigits, numFractionDigits);
+#else
+                    UnsafeUtility.MemCpy(pOutBuffer + numWholeDigits + 1, pOutBuffer + numWholeDigits, numFractionDigits);
+#endif
                     pOutBuffer[numWholeDigits] = (byte)'.';
                     numPrintDigits = numWholeDigits + 1 + numFractionDigits;
                 }
@@ -1453,7 +1465,11 @@ namespace Unity.Burst
                     if (numFractionDigits > maxFractionDigits)
                         numFractionDigits = maxFractionDigits;
 
+#if !UNITY_DOTSRUNTIME && !NET_DOTS
                     Unsafe.CopyBlock(pOutBuffer + digitsStartIdx, pOutBuffer, numFractionDigits);
+#else
+                    UnsafeUtility.MemCpy(pOutBuffer + digitsStartIdx, pOutBuffer, numFractionDigits);
+#endif
 
                     // insert the leading zeros
                     for (uint i = 2; i < digitsStartIdx; ++i)
@@ -1574,7 +1590,11 @@ namespace Unity.Burst
                 if (numFractionDigits > maxFractionDigits)
                     numFractionDigits = maxFractionDigits;
 
+#if !UNITY_DOTSRUNTIME && !NET_DOTS
                 Unsafe.CopyBlock(pCurOut + 1, pCurOut, numFractionDigits);
+#else
+                UnsafeUtility.MemCpy(pCurOut + 1, pCurOut, numFractionDigits);
+#endif
                 pCurOut[0] = (byte)'.';
                 pCurOut += (1 + numFractionDigits);
                 bufferSize -= (1 + numFractionDigits);
@@ -1627,8 +1647,11 @@ namespace Unity.Burst
                 // copy the exponent buffer into the output
                 uint maxExponentSize = bufferSize - 1;
                 uint exponentSize = (5 < maxExponentSize) ? 5 : maxExponentSize;
+#if !UNITY_DOTSRUNTIME && !NET_DOTS
                 Unsafe.CopyBlock(pCurOut, exponentBuffer, exponentSize);
-
+#else
+                UnsafeUtility.MemCpy(pCurOut, exponentBuffer, exponentSize);
+#endif
                 pCurOut += exponentSize;
                 bufferSize -= exponentSize;
             }
@@ -1716,7 +1739,7 @@ namespace Unity.Burst
 
         internal const int SingleNumberBufferLength = SinglePrecision + 1; // + zero
         internal const int DoubleNumberBufferLength = DoublePrecision + 1; // + zero
-        
+
         // SinglePrecisionCustomFormat and DoublePrecisionCustomFormat are used to ensure that
         // custom format strings return the same string as in previous releases when the format
         // would return x digits or less (where x is the value of the corresponding constant).
@@ -1895,7 +1918,7 @@ namespace Unity.Burst
                 {
                     precision = DoublePrecisionCustomFormat;
                 }
-                
+
                 int printExponent;
                 uint numPrintDigits = Dragon4(mantissa,
                     exponent,
@@ -1922,4 +1945,3 @@ namespace Unity.Burst
         }
     }
 }
-#endif

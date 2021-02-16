@@ -103,7 +103,7 @@ namespace Unity.Burst.Editor
         internal static readonly string EnableOptimisations_ToolTip = "Enables all optimisations for the currently selected platform.";
 
         internal static readonly string EnableSafetyChecks_DisplayName = "Enable Safety Checks";
-        internal static readonly string EnableSafetyChecks_ToolTip = "Enables safety checks, results in faster runtime, but Out Of Bounds checks etc are not validated.";
+        internal static readonly string EnableSafetyChecks_ToolTip = "Enables safety checks, results in slower runtime, but Out Of Bounds checks are validated.";
 
         internal static readonly string EnableBurstCompilation_DisplayName = "Enable Burst Compilation";
         internal static readonly string EnableBurstCompilation_ToolTip = "Enables burst compilation for the selected platform.";

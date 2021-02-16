@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.5] - 2021-02-17
+
+
+### Added
+
+### Removed
+
+### Changed
+- DOTS Runtime shares the logging code path with the general case
+
+### Fixed
+- Corrected 'Enable safety checks tooltip`.
+- String interpolation issues when using Dots / Tiny runtime.
+- Fixed a very obscure bug where if you had a function-pointer that was called from another function-pointer of job, and that function-pointer happened to be compiled in a player build in the same bucket as the caller, and the no-alias cloning analysis identified that it could clone the original function-pointer to enable more aliasing optimizations, it could create a duplicate symbol error.
+- String support for DOTS Runtime required removing conditional compilation from BurstString.cs
+- Added PreserveAttribute to prevent the internal log from being stripped in il2cpp builds.
+
+### Known Issues
+
 ## [1.4.4] - 2021-01-18
 
 
