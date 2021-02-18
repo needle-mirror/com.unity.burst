@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.6] - 2021-02-19
+
+### Fixed
+- Fixed a bug where eager-compilation could pick up out-of-date global Burst menu options for compiling.
+
 ## [1.4.5] - 2021-02-17
 
 
