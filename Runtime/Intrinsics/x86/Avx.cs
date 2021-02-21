@@ -1087,6 +1087,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v128 mm256_cvtpd_epi32(v256 a)
             {
                 v128 q = Sse2.cvtpd_epi32(new v128(a.Double0, a.Double1));
@@ -2251,6 +2252,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="val">Value</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_ceil_pd(v256 val)
             {
                 return mm256_round_pd(val, (int)RoundingMode.FROUND_CEIL);
@@ -2264,6 +2266,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="val">Value</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_floor_pd(v256 val)
             {
                 return mm256_round_pd(val, (int)RoundingMode.FROUND_FLOOR);
@@ -2302,6 +2305,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="val">Value</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_ceil_ps(v256 val)
             {
                 return mm256_round_ps(val, (int)RoundingMode.FROUND_CEIL);
@@ -2315,6 +2319,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="val">Value</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_floor_ps(v256 val)
             {
                 return mm256_round_ps(val, (int)RoundingMode.FROUND_FLOOR);
@@ -2366,6 +2371,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_unpackhi_ps(v256 a, v256 b)
             {
                 return new v256(Sse.unpackhi_ps(a.Lo128, b.Lo128), Sse.unpackhi_ps(a.Hi128, b.Hi128));
@@ -2383,6 +2389,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_unpacklo_ps(v256 a, v256 b)
             {
                 return new v256(Sse.unpacklo_ps(a.Lo128, b.Lo128), Sse.unpacklo_ps(a.Hi128, b.Hi128));
@@ -3301,6 +3308,7 @@ namespace Unity.Burst.Intrinsics
             /// <summary>Return a 128-bit vector with undefined contents.</summary>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v128 undefined_pd()
             {
                 return undefined_ps();
@@ -3309,6 +3317,7 @@ namespace Unity.Burst.Intrinsics
             /// <summary>Return a 128-bit vector with undefined contents.</summary>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v128 undefined_si128()
             {
                 return undefined_ps();
@@ -3325,6 +3334,7 @@ namespace Unity.Burst.Intrinsics
             /// <summary>Return a 256-bit vector with undefined contents.</summary>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_undefined_pd()
             {
                 return mm256_undefined_ps();
@@ -3333,6 +3343,7 @@ namespace Unity.Burst.Intrinsics
             /// <summary>Return a 256-bit vector with undefined contents.</summary>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_undefined_si256()
             {
                 return mm256_undefined_ps();
@@ -3358,6 +3369,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_zextpd128_pd256(v128 a) { return mm256_zextps128_ps256(a); }
 
             /// <summary>
@@ -3368,6 +3380,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_zextsi128_si256(v128 a) { return mm256_zextps128_ps256(a); }
 
 

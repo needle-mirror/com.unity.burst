@@ -25,32 +25,35 @@ namespace zzzUnity.Burst.CodeGen
         private MethodReference _burstCompilerCompileUnsafeStaticMethodReinitialiseAttributeCtor;
         private TypeSystem _typeSystem;
         private TypeReference _systemType;
+        private TypeReference _systemDelegateType;
+        private TypeReference _systemASyncCallbackType;
+        private TypeReference _systemIASyncResultType;
         private TypeReference _typeReferenceRuntimeMethodHandle;
         private AssemblyDefinition _assemblyDefinition;
         private bool _modified;
-        private bool _isForEditor;
 
         private readonly Dictionary<MethodDefinition, MethodDefinition> _mapping;
         private readonly HashSet<TypeDefinition> _invokers;
 
         private const string PostfixBurstDirectCall = "$BurstDirectCall";
+        private const string PostfixBurstDelegate = "$PostfixBurstDelegate";
         private const string PostfixManaged = "$BurstManaged";
         private const string GetMethodHandleName = "GetMethodHandle";
         private const string InvokeName = "Invoke";
 
         private FunctionPointerInvokeTransform _functionPointerInvokeTransform;
 
-        public ILPostProcessing(AssemblyLoader loader, bool isForEditor, LogDelegate log=null, int logLevel=0)
+        public ILPostProcessing(AssemblyLoader loader, bool isForEditor, LogDelegate log = null, int logLevel = 0)
         {
             Loader = loader;
-            _isForEditor = isForEditor;
+            IsForEditor = isForEditor;
             _invokers = new HashSet<TypeDefinition>();
             _mapping = new Dictionary<MethodDefinition, MethodDefinition>();
 
             _functionPointerInvokeTransform = new FunctionPointerInvokeTransform(log, logLevel);
         }
 
-        public bool IsForEditor => _isForEditor;
+        public bool IsForEditor { get; private set; }
 
         public AssemblyLoader Loader { get; }
 
@@ -70,9 +73,14 @@ namespace zzzUnity.Burst.CodeGen
         /// <param name="typeDefinition">Declaring type of a direct call</param>
         public static MethodReference RecoverManagedMethodFromDirectCall(TypeDefinition typeDefinition)
         {
-            var method = typeDefinition.Methods.FirstOrDefault(x => x.Name == GetMethodHandleName);
+            var method = typeDefinition.Methods.FirstOrDefault(x => x.Name == InvokeName);
             Debug.Assert(method != null);
-            return (MethodReference) method.Body.Instructions[0].Operand;
+
+            // There are two calls in the invoke method -> we want the one that isn't get_IsEnabled.
+            var call = method.Body.Instructions.Where(inst => (inst.OpCode == OpCodes.Call) && ((MethodReference)inst.Operand).Name != "get_IsEnabled").Single();
+            Debug.Assert(call != null);
+
+            return (MethodReference)call.Operand;
         }
 
         public unsafe bool Run(IntPtr peData, int peSize, IntPtr pdbData, int pdbSize, out AssemblyDefinition assemblyDefinition)
@@ -83,6 +91,7 @@ namespace zzzUnity.Burst.CodeGen
 
             var peStream = new UnmanagedMemoryStream((byte*)peData, peSize);
             Stream pdbStream = null;
+
             if (pdbData != IntPtr.Zero)
             {
                 pdbStream = new UnmanagedMemoryStream((byte*)pdbData, pdbSize);
@@ -185,11 +194,114 @@ namespace zzzUnity.Burst.CodeGen
             }
         }
 
+        private void InjectDelegate(TypeDefinition declaringType, string originalName, MethodDefinition managed)
+        {
+            var injectedDelegateType = new TypeDefinition(declaringType.Namespace, $"{originalName}{PostfixBurstDelegate}",
+                TypeAttributes.NestedPublic |
+                TypeAttributes.AutoLayout |
+                TypeAttributes.AnsiClass |
+                TypeAttributes.Sealed
+            )
+            {
+                DeclaringType = declaringType,
+                BaseType = _systemDelegateType
+            };
+
+            declaringType.NestedTypes.Add(injectedDelegateType);
+
+            {
+                var constructor = new MethodDefinition(".ctor",
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.SpecialName |
+                    MethodAttributes.RTSpecialName,
+                    _typeSystem.Void)
+                {
+                    HasThis = true,
+                    IsManaged = true,
+                    IsRuntime = true,
+                    DeclaringType = injectedDelegateType
+                };
+
+                constructor.Parameters.Add(new ParameterDefinition(_typeSystem.Object));
+                constructor.Parameters.Add(new ParameterDefinition(_typeSystem.IntPtr));
+                injectedDelegateType.Methods.Add(constructor);
+            }
+
+            {
+                var invoke = new MethodDefinition("Invoke",
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.NewSlot |
+                    MethodAttributes.Virtual,
+                    managed.ReturnType)
+                {
+                    HasThis = true,
+                    IsManaged = true,
+                    IsRuntime = true,
+                    DeclaringType = injectedDelegateType
+                };
+
+                foreach (var parameter in managed.Parameters)
+                {
+                    invoke.Parameters.Add(parameter);
+                }
+
+                injectedDelegateType.Methods.Add(invoke);
+            }
+
+            {
+                var beginInvoke = new MethodDefinition("BeginInvoke",
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.NewSlot |
+                    MethodAttributes.Virtual,
+                    _systemIASyncResultType)
+                {
+                    HasThis = true,
+                    IsManaged = true,
+                    IsRuntime = true,
+                    DeclaringType = injectedDelegateType
+                };
+
+                foreach (var parameter in managed.Parameters)
+                {
+                    beginInvoke.Parameters.Add(parameter);
+                }
+
+                beginInvoke.Parameters.Add(new ParameterDefinition(_systemASyncCallbackType));
+                beginInvoke.Parameters.Add(new ParameterDefinition(_typeSystem.Object));
+
+                injectedDelegateType.Methods.Add(beginInvoke);
+            }
+
+            {
+                var endInvoke = new MethodDefinition("EndInvoke",
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.NewSlot |
+                    MethodAttributes.Virtual,
+                    managed.ReturnType)
+                {
+                    HasThis = true,
+                    IsManaged = true,
+                    IsRuntime = true,
+                    DeclaringType = injectedDelegateType
+                };
+
+                endInvoke.Parameters.Add(new ParameterDefinition(_systemIASyncResultType));
+
+                injectedDelegateType.Methods.Add(endInvoke);
+            }
+        }
+
         private void ProcessMethodForDirectCall(MethodDefinition managed)
         {
             var declaringType = managed.DeclaringType;
-
             var originalName = managed.Name;
+
+            InjectDelegate(declaringType, originalName, managed);
+
             managed.Name = $"{managed.Name}{PostfixManaged}";
 
             // Create a copy of the original method that will be the actual managed method
@@ -201,8 +313,9 @@ namespace zzzUnity.Burst.CodeGen
                 ImplAttributes = managed.ImplAttributes,
                 MetadataToken = managed.MetadataToken,
             };
-            managed.Attributes &= ~MethodAttributes.Public;
-            managed.Attributes |= MethodAttributes.Private;
+
+            managed.Attributes &= ~MethodAttributes.Private;
+            managed.Attributes |= MethodAttributes.Public;
 
             declaringType.Methods.Add(newManaged);
             foreach (var parameter in managed.Parameters)
@@ -214,6 +327,16 @@ namespace zzzUnity.Burst.CodeGen
             {
                 newManaged.CustomAttributes.Add(customAttr);
             }
+
+            // Now remove the [BurstCompile] attribute on the original function.
+            if (TryGetBurstCompilerAttribute(managed, out var managedBurstCompileAttribute))
+            {
+                managed.CustomAttributes.Remove(managedBurstCompileAttribute);
+            }
+
+            managed.ImplAttributes &= MethodImplAttributes.NoInlining;
+            // 0x0100 is AggressiveInlining
+            managed.ImplAttributes |= (MethodImplAttributes)0x0100;
 
             // private static class (Name_RID.$Postfix)
             var cls = new TypeDefinition(declaringType.Namespace, $"{originalName}_{managed.MetadataToken.RID:X8}{PostfixBurstDirectCall}",
@@ -228,6 +351,7 @@ namespace zzzUnity.Burst.CodeGen
                 DeclaringType = declaringType,
                 BaseType = _typeSystem.Object
             };
+
             declaringType.NestedTypes.Add(cls);
             _invokers.Add(cls);
 
@@ -244,7 +368,7 @@ namespace zzzUnity.Burst.CodeGen
             };
 
             var processor = getMethodHandleMethod.Body.GetILProcessor();
-            processor.Emit(OpCodes.Ldtoken, managed);
+            processor.Emit(OpCodes.Ldtoken, newManaged);
             processor.Emit(OpCodes.Ret);
             cls.Methods.Add(FixDebugInformation(getMethodHandleMethod));
 
@@ -332,8 +456,7 @@ namespace zzzUnity.Burst.CodeGen
             // public static XXX Invoke(...args) {
             //    if (BurstCompiler.IsEnabled)
             //    {
-            //        calli(...args)
-            //        ret;
+            //        return calli(...args);
             //    }
             //    return OriginalMethod(...args);
             // }
@@ -345,8 +468,9 @@ namespace zzzUnity.Burst.CodeGen
                 ImplAttributes = MethodImplAttributes.IL | MethodImplAttributes.Managed,
                 DeclaringType = cls
             };
-            ;
+
             var signature = new CallSite(managed.ReturnType);
+
             foreach (var parameter in managed.Parameters)
             {
                 invoke.Parameters.Add(parameter);
@@ -356,19 +480,20 @@ namespace zzzUnity.Burst.CodeGen
             processor = invoke.Body.GetILProcessor();
 
             processor.Emit(OpCodes.Call, _burstCompilerIsEnabledMethodDefinition);
+            var branchPosition = processor.Body.Instructions[processor.Body.Instructions.Count - 1];
 
             EmitArguments(processor, invoke);
             processor.Emit(OpCodes.Ldsfld, pointerField);
             processor.Emit(OpCodes.Calli, signature);
             processor.Emit(OpCodes.Ret);
-
             var previousRet = processor.Body.Instructions[processor.Body.Instructions.Count - 1];
+
             EmitArguments(processor, invoke);
             processor.Emit(OpCodes.Call, managed);
             processor.Emit(OpCodes.Ret);
 
             // Insert the branch once we have emitted the instructions
-            processor.InsertAfter(processor.Body.Instructions[0], Instruction.Create(OpCodes.Brfalse, previousRet.Next));
+            processor.InsertAfter(branchPosition, Instruction.Create(OpCodes.Brfalse, previousRet.Next));
             cls.Methods.Add(FixDebugInformation(invoke));
 
             // Final patching of the original method
@@ -377,7 +502,7 @@ namespace zzzUnity.Burst.CodeGen
             //      ret;
             // }
             processor = newManaged.Body.GetILProcessor();
-            EmitArguments(processor, newManaged);
+            EmitArguments(processor, managed);
             processor.Emit(OpCodes.Call, invoke);
             processor.Emit(OpCodes.Ret);
 
@@ -420,6 +545,9 @@ namespace zzzUnity.Burst.CodeGen
 
             var corLibrary =  Loader.Resolve((AssemblyNameReference)_typeSystem.CoreLibrary);
             _systemType = _assemblyDefinition.MainModule.ImportReference(corLibrary.MainModule.GetType("System.Type"));
+            _systemDelegateType = _assemblyDefinition.MainModule.ImportReference(corLibrary.MainModule.GetType("System.MulticastDelegate"));
+            _systemASyncCallbackType = _assemblyDefinition.MainModule.ImportReference(corLibrary.MainModule.GetType("System.AsyncCallback"));
+            _systemIASyncResultType = _assemblyDefinition.MainModule.ImportReference(corLibrary.MainModule.GetType("System.IAsyncResult"));
             _typeReferenceRuntimeMethodHandle = _assemblyDefinition.MainModule.ImportReference((corLibrary.MainModule.GetType(typeof(RuntimeMethodHandle).Namespace, typeof(RuntimeMethodHandle).Name)));
 
             var asmDef = GetAsmDefinitionFromFile(Loader, "UnityEngine.CoreModule.dll");
@@ -446,7 +574,6 @@ namespace zzzUnity.Burst.CodeGen
         {
             for (var i = 0; i < method.Parameters.Count; i++)
             {
-                var parameter = method.Parameters[i];
                 switch (i)
                 {
                     case 0:

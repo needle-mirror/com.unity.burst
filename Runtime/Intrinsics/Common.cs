@@ -81,4 +81,15 @@ namespace Unity.Burst.Intrinsics
             return x * y;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+    internal sealed class BurstTargetCpuAttribute : Attribute
+    {
+        public BurstTargetCpuAttribute(BurstTargetCpu TargetCpu)
+        {
+            this.TargetCpu = TargetCpu;
+        }
+
+        public readonly BurstTargetCpu TargetCpu;
+    }
 }

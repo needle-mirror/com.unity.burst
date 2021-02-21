@@ -833,6 +833,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="mask">Mask</param>
 			/// <returns>Boolean result</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static int test_all_zeros(v128 a, v128 mask)
             {
                 return testz_si128(a, mask);
@@ -844,6 +845,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="mask">Mask</param>
 			/// <returns>Boolean result</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static int test_mix_ones_zeroes(v128 a, v128 mask)
             {
                 return testnzc_si128(a, mask);
@@ -854,6 +856,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Boolean result</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static int test_all_ones(v128 a)
             {
                 return testc_si128(a, Sse2.cmpeq_epi32(a, a));
@@ -910,6 +913,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 floor_pd(v128 a)
             {
                 return round_pd(a, (int)RoundingMode.FROUND_FLOOR);
@@ -920,6 +924,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 ceil_pd(v128 a)
             {
                 return round_pd(a, (int)RoundingMode.FROUND_CEIL);
@@ -946,6 +951,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 floor_ps(v128 a)
             {
                 return round_ps(a, (int)RoundingMode.FROUND_FLOOR);
@@ -956,6 +962,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 ceil_ps(v128 a)
             {
                 return round_ps(a, (int)RoundingMode.FROUND_CEIL);
@@ -982,6 +989,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 floor_sd(v128 a, v128 b)
             {
                 return round_sd(a, b, (int)RoundingMode.FROUND_FLOOR);
@@ -993,6 +1001,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 ceil_sd(v128 a, v128 b)
             {
                 return round_sd(a, b, (int)RoundingMode.FROUND_CEIL);
@@ -1018,6 +1027,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 floor_ss(v128 a, v128 b)
             {
                 return round_ss(a, b, (int)RoundingMode.FROUND_FLOOR);
@@ -1029,6 +1039,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE4)]
             public static v128 ceil_ss(v128 a, v128 b)
             {
                 return round_ss(a, b, (int)RoundingMode.FROUND_CEIL);

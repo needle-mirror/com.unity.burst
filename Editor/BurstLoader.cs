@@ -599,7 +599,7 @@ namespace Unity.Burst.Editor
                         ? (MemberInfo)compileTarget.Method
                         : compileTarget.JobType;
 
-                    if (compileTarget.Options.TryGetOptions(member, true, out var optionsString, isForEagerCompilation: true))
+                    if (BurstCompiler.Options.TryGetOptions(member, true, out var optionsString, isForEagerCompilation: true))
                     {
                         if (compileTarget.IsStaticMethod)
                         {

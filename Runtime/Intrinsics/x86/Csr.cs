@@ -284,10 +284,12 @@ namespace Unity.Burst.Intrinsics
         /// </summary>
         public static MXCSRBits MXCSR
         {
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             get
             {
                 return (MXCSRBits)getcsr_raw();
             }
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             set
             {
                 setcsr_raw((int)value);

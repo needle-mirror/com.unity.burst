@@ -37,7 +37,6 @@ namespace Unity.Burst
 #endif
         }
 
-#if !UNITY_DOTSPLAYER && !NET_DOTS
         /// <summary>
         /// Format a UTF-8 string (with a specified source length) to a destination buffer.
         /// </summary>
@@ -381,7 +380,7 @@ namespace Unity.Burst
             var numberBuffer = new NumberBuffer(NumberBufferKind.Integer, tmpBuffer, length, length, false);
             FormatNumber(dest, ref destIndex, destLength, ref numberBuffer, options.Specifier, options);
         }
-        
+
         private static int GetLengthIntegerToString(long value, int basis, int zeroPadding)
         {
             int length = 0;
@@ -538,7 +537,85 @@ namespace Unity.Burst
         }
 
         private static readonly char[] SplitByColon = new char[] { ':'};
-        
+
+#if !NET_DOTS
+        private static void OptsSplit(string fullFormat, out string padding, out string format)
+        {
+            var split = fullFormat.Split(SplitByColon, StringSplitOptions.RemoveEmptyEntries);
+            format = split[0];
+            padding = null;
+            if (split.Length == 2)
+            {
+                padding = format;
+                format = split[1];
+            }
+            else if (split.Length == 1)
+            {
+                if (format[0]==',')
+                {
+                    padding = format;
+                    format = null;
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Format `{format}` not supported. Invalid number {split.Length} of :. Expecting no more than one.");
+            }
+        }
+#else
+        // Tiny BCL is missing StringSplitOptions
+        private static void OptsSplit(string fullFormat, out string padding, out string format)
+        {
+            var idx0 = 0;
+            var idx1 = 1;
+            var length = 0;
+            var split = fullFormat.Split(SplitByColon);
+            for (int chk=0;chk<split.Length;chk++)
+            {
+                if (split[chk].Length>0)
+                    length++;
+            }
+            while (idx0<split.Length)
+            {
+                if (split[idx0].Length>0)
+                {
+                    idx1=idx0+1;
+                    break;
+                }
+
+                idx0++;
+            }
+            while (idx1<split.Length)
+            {
+                if (split[idx1].Length>0)
+                {
+                    break;
+                }
+
+                idx1++;
+            }
+            format = split[idx0];
+            padding = null;
+            if (length == 2)
+            {
+                padding = format;
+                format=split[idx1];
+            }
+            else if (length == 1)
+            {
+                if (format[0]==',')
+                {
+                    padding = format;
+                    format = null;
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Format `{format}` not supported. Invalid number {length} of :. Expecting no more than one.");
+            }
+        }
+#endif
+
         /// <summary>
         /// Parse a format string as specified .NET string.Format https://docs.microsoft.com/en-us/dotnet/api/system.string.format?view=netframework-4.8
         /// - Supports only Left/Right Padding (e.g {0,-20} {0, 8})
@@ -552,30 +629,11 @@ namespace Unity.Burst
         {
             if (string.IsNullOrWhiteSpace(fullFormat)) return new FormatOptions();
 
-            var split = fullFormat.Split(SplitByColon, StringSplitOptions.RemoveEmptyEntries);
-            string format = split[0];
-            string padding = null;
-            if (split.Length == 2)
-            {
-                padding = split[0];
-                format = split[1];
-            }
-            else if (split.Length == 1)
-            {
-                if (format.StartsWith(","))
-                {
-                    padding = format;
-                    format = null;
-                }
-            }
-            else
-            {
-                throw new ArgumentException($"Format `{format}` not supported. Invalid number {split.Length} of :. Expecting no more than one.");
-            }
+            OptsSplit(fullFormat, out var padding, out var format);
 
             format = format?.Trim();
             padding = padding?.Trim();
-            
+
             int alignAndSize = 0;
             var formatKind = NumberFormatKind.General;
             bool lowercase = false;
@@ -613,7 +671,12 @@ namespace Unity.Burst
                 if (format.Length > 1)
                 {
                     var specifierString = format.Substring(1);
+#if !NET_DOTS
                     if (!uint.TryParse(specifierString, out var unsignedSpecifier))
+#else
+                    // Tiny BCL is missing string->uint
+                    if (!ParseUnsigned(specifierString, out var unsignedSpecifier))
+#endif
                     {
                         throw new ArgumentException($"Expecting an unsigned integer for specifier `{format}` instead of {specifierString}.");
                     }
@@ -623,13 +686,18 @@ namespace Unity.Burst
 
             if (!string.IsNullOrEmpty(padding))
             {
-                if (!padding.StartsWith(","))
+                if (padding[0]!=',')
                 {
                     throw new ArgumentException($"Invalid padding `{padding}`, expecting to start with a leading `,` comma.");
                 }
 
                 var numberStr = padding.Substring(1);
+#if !NET_DOTS
                 if (!int.TryParse(numberStr, out alignAndSize))
+#else
+                // Tiny BCL is missing string->int
+                if (!ParseSigned(numberStr, out alignAndSize))
+#endif
                 {
                     throw new ArgumentException($"Expecting an integer for align/size padding `{numberStr}`.");
                 }
@@ -638,6 +706,64 @@ namespace Unity.Burst
             return new FormatOptions(formatKind, (sbyte)alignAndSize, (byte)specifier, lowercase);
         }
 
+#if NET_DOTS
+        // Won't handle anything but simple ascii unsigned integers
+        private static bool ParseUnsigned(string inputString, out uint unsignedValue, int startIdx = 0)
+        {
+            var length = inputString.Length;
+            unsignedValue = 0;
+            for (int i = startIdx; i < inputString.Length; i++)
+            {
+                var c = inputString[i];
+                if (c>='0' && c<='9')
+                {
+                    if (unsignedValue>=0x19999999)    // overflow
+                        return false;
+                    unsignedValue*=10;
+                    unsignedValue+=(uint)(c-'0');
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Won't handle anything but simple ascii signed integers
+        private static bool ParseSigned(string inputString, out int signedValue)
+        {
+            signedValue = 0;
+            int startIdx = 0;
+            bool negative = false;
+            if (inputString[0] == '-' || inputString[0] == '+')
+            {
+                negative = inputString[0] == '-';
+                startIdx++;
+            }
+
+            if (!ParseUnsigned(inputString, out var unsignedValue, startIdx))
+            {
+                return false;
+            }
+
+            if (negative)
+            {
+                if (unsignedValue > 0x80000000)
+                    return false;
+                signedValue = (int) ((~unsignedValue) + 1);
+            }
+            else
+            {
+                if (unsignedValue > 0x7FFFFFFF)
+                    return false;
+                signedValue = (int) unsignedValue;
+            }
+
+            return true;
+        }
+#endif
         private static unsafe bool AlignRight(byte* dest, ref int destIndex, int destLength, int align, int length)
         {
             // right align
@@ -875,7 +1001,7 @@ namespace Unity.Burst
             Integer,
             Float,
         }
-        
+
         /// <summary>
         /// Information about a number: pointer to digit buffer, scale and if negative.
         /// </summary>
@@ -943,7 +1069,7 @@ namespace Unity.Burst
             }
 
             public NumberFormatKind Kind;
-            public sbyte AlignAndSize; 
+            public sbyte AlignAndSize;
             public byte Specifier;
             public bool Lowercase;
 
@@ -955,7 +1081,9 @@ namespace Unity.Burst
             /// <returns></returns>
             public unsafe int EncodeToRaw()
             {
+#if !NET_DOTS
                 Debug.Assert(sizeof(FormatOptions) == sizeof(int));
+#endif
                 var value = this;
                 return *(int*)&value;
             }
@@ -980,6 +1108,5 @@ namespace Unity.Burst
                 return $"{nameof(Kind)}: {Kind}, {nameof(AlignAndSize)}: {AlignAndSize}, {nameof(Specifier)}: {Specifier}, {nameof(Uppercase)}: {Uppercase}";
             }
         }
-#endif
     }
 }

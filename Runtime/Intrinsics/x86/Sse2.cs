@@ -1248,6 +1248,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmplt_epi8(v128 a, v128 b)
             {
                 return cmpgt_epi8(b, a);
@@ -1259,6 +1260,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmplt_epi16(v128 a, v128 b)
             {
                 return cmpgt_epi16(b, a);
@@ -1270,6 +1272,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmplt_epi32(v128 a, v128 b)
             {
                 return cmpgt_epi32(b, a);
@@ -1320,6 +1323,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">64-bit integer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cvtsi64x_sd(v128 a, long b)
             {
                 return cvtsi64_sd(a, b);
@@ -2288,6 +2292,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmpgt_sd(v128 a, v128 b)
             {
                 return cmple_sd(b, a);
@@ -2299,6 +2304,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmpge_sd(v128 a, v128 b)
             {
                 return cmplt_sd(b, a);
@@ -2380,6 +2386,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmpngt_sd(v128 a, v128 b)
             {
                 return cmpnlt_sd(b, a);
@@ -2391,6 +2398,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="b">Vector b</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 cmpnge_sd(v128 a, v128 b)
             {
                 return cmpnle_sd(b, a);
@@ -2763,6 +2771,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>64-bit integer</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static long cvtsd_si64x(v128 a)
             {
                 return cvtsd_si64(a);
@@ -2845,6 +2854,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Vector a</param>
 			/// <returns>64-bit integer</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static long cvttsd_si64x(v128 a)
             {
                 return cvttsd_si64(a);
@@ -2912,6 +2922,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="a">Double-precision floating-point element</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 set_pd1(double a)
             {
                 // Burst IR is fine.
@@ -3054,6 +3065,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="ptr">Pointer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 load_si128(void* ptr)
             {
                 return GenericCSharpLoad(ptr);
@@ -3068,6 +3080,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="ptr">Pointer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static v128 loadu_si128(void* ptr)
             {
                 return GenericCSharpLoad(ptr);
@@ -3082,6 +3095,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="ptr">Pointer</param>
 			/// <param name="val">Value</param>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static void store_si128(void* ptr, v128 val)
             {
                 GenericCSharpStore(ptr, val);
@@ -3096,6 +3110,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="ptr">Pointer</param>
 			/// <param name="val">Value</param>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.X64_SSE2)]
             public static void storeu_si128(void* ptr, v128 val)
             {
                 GenericCSharpStore(ptr, val);

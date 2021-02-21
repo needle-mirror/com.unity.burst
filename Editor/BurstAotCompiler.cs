@@ -30,16 +30,16 @@ namespace Unity.Burst.Editor
 
     internal class TargetCpus
     {
-        public List<TargetCpu> Cpus;
+        public List<BurstTargetCpu> Cpus;
 
         public TargetCpus()
         {
-            Cpus = new List<TargetCpu>();
+            Cpus = new List<BurstTargetCpu>();
         }
 
-        public TargetCpus(TargetCpu single)
+        public TargetCpus(BurstTargetCpu single)
         {
-            Cpus = new List<TargetCpu>(1)
+            Cpus = new List<BurstTargetCpu>(1)
             {
                 single
             };
@@ -51,8 +51,8 @@ namespace Unity.Burst.Editor
             {
                 switch (cpu)
                 {
-                    case TargetCpu.X86_SSE2:
-                    case TargetCpu.X86_SSE4:
+                    case BurstTargetCpu.X86_SSE2:
+                    case BurstTargetCpu.X86_SSE4:
                         return true;
                 }
             }
@@ -86,7 +86,7 @@ namespace Unity.Burst.Editor
         {
             var copy = new TargetCpus
             {
-                Cpus = new List<TargetCpu>(Cpus.Count)
+                Cpus = new List<BurstTargetCpu>(Cpus.Count)
             };
 
             foreach (var cpu in Cpus)
@@ -498,11 +498,11 @@ extern ""C""
                         combinations.Add(new BurstOutputCombination(outputPath, aotSettings.GetDesktopCpu64Bit()));
                         break;
                     case "arm64":
-                        combinations.Add(new BurstOutputCombination(outputPath, new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                        combinations.Add(new BurstOutputCombination(outputPath, new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
                         break;
                     default:
                         combinations.Add(new BurstOutputCombination(Path.Combine(outputPath, "x64"), aotSettings.GetDesktopCpu64Bit()));
-                        combinations.Add(new BurstOutputCombination(Path.Combine(outputPath, "arm64"), new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                        combinations.Add(new BurstOutputCombination(Path.Combine(outputPath, "arm64"), new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
                         break;
                 }
 #else
@@ -521,13 +521,13 @@ extern ""C""
                     if (targetArchitecture == IOSArchitecture.ARMv7 || targetArchitecture == IOSArchitecture.Universal)
                     {
                         // PlatformDependent\iPhonePlayer\Extensions\Common\BuildPostProcessor.cs
-                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(TargetCpu.ARMV7A_NEON32), DefaultLibraryName + "32"));
+                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(BurstTargetCpu.ARMV7A_NEON32), DefaultLibraryName + "32"));
                     }
 
                     if (targetArchitecture == IOSArchitecture.ARM64 || targetArchitecture == IOSArchitecture.Universal)
                     {
                         // PlatformDependent\iPhonePlayer\Extensions\Common\BuildPostProcessor.cs
-                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(TargetCpu.ARMV8A_AARCH64), DefaultLibraryName + "64"));
+                        combinations.Add(new BurstOutputCombination("StaticLibraries", new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64), DefaultLibraryName + "64"));
                     }
                 }
             }
@@ -579,17 +579,17 @@ extern ""C""
                 var androidTargetArch = UnityEditor.PlayerSettings.Android.targetArchitectures;
                 if ((androidTargetArch & AndroidArchitecture.ARMv7) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/armeabi-v7a", new TargetCpus(TargetCpu.ARMV7A_NEON32)));
+                    combinations.Add(new BurstOutputCombination("libs/armeabi-v7a", new TargetCpus(BurstTargetCpu.ARMV7A_NEON32)));
                 }
 
                 if ((androidTargetArch & AndroidArchitecture.ARM64) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/arm64-v8a", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                    combinations.Add(new BurstOutputCombination("libs/arm64-v8a", new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
                 }
 #if !UNITY_2019_2_OR_NEWER
                 if ((androidTargetArch & AndroidArchitecture.X86) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/x86", new TargetCpus(TargetCpu.X86_SSE2)));
+                    combinations.Add(new BurstOutputCombination("libs/x86", new TargetCpus(BurstTargetCpu.X86_SSE2)));
                 }
 #endif
             }
@@ -607,8 +607,8 @@ extern ""C""
                 {
                     combinations.Add(new BurstOutputCombination("Plugins/x64", aotSettingsForTarget.GetDesktopCpu64Bit()));
                     combinations.Add(new BurstOutputCombination("Plugins/x86", aotSettingsForTarget.GetDesktopCpu32Bit()));
-                    combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(TargetCpu.THUMB2_NEON32)));
-                    combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(TargetCpu.ARMV8A_AARCH64)));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM", new TargetCpus(BurstTargetCpu.THUMB2_NEON32)));
+                    combinations.Add(new BurstOutputCombination("Plugins/ARM64", new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
                 }
             }
             else if (targetPlatform == TargetPlatform.Lumin)
@@ -889,11 +889,11 @@ extern ""C""
                         }
                         else if (string.Equals(uwpArchitecture, "ARM", StringComparison.OrdinalIgnoreCase))
                         {
-                            targetCpus = new TargetCpus(TargetCpu.THUMB2_NEON32);
+                            targetCpus = new TargetCpus(BurstTargetCpu.THUMB2_NEON32);
                         }
                         else if (string.Equals(uwpArchitecture, "ARM64", StringComparison.OrdinalIgnoreCase))
                         {
-                            targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                            targetCpus = new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64);
                         }
                         else
                         {
@@ -903,34 +903,34 @@ extern ""C""
                         return TargetPlatform.UWP;
                     }
                 case BuildTarget.XboxOne:
-                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
+                    targetCpus = new TargetCpus(BurstTargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
                 case BuildTarget.PS4:
-                    targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
+                    targetCpus = new TargetCpus(BurstTargetCpu.X64_SSE4);
                     return TargetPlatform.PS4;
                 case BuildTarget.Android:
-                    targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.Android;
                 case BuildTarget.iOS:
-                    targetCpus = new TargetCpus(TargetCpu.ARMV7A_NEON32);
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV7A_NEON32);
                     return TargetPlatform.iOS;
                 case BuildTarget.tvOS:
-                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.tvOS;
                 case BuildTarget.Lumin:
-                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Lumin;
                 case BuildTarget.Switch:
-                    targetCpus = new TargetCpus(TargetCpu.ARMV8A_AARCH64);
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64);
                     return TargetPlatform.Switch;
 #if UNITY_2019_3_OR_NEWER
                 case BuildTarget.Stadia:
-                    targetCpus = new TargetCpus(TargetCpu.AVX2);
+                    targetCpus = new TargetCpus(BurstTargetCpu.AVX2);
                     return TargetPlatform.Stadia;
 #endif
             }
 
-            targetCpus = new TargetCpus(TargetCpu.Auto);
+            targetCpus = new TargetCpus(BurstTargetCpu.Auto);
             return null;
         }
 

@@ -430,7 +430,10 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestStructs.AnsiStructWithMarshalAs).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestStructs_AnsiStructWithMarshalAs_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.TestTestInfrastructure.SomeStruct*) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_TestTestInfrastructure_SomeStruct_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.Vectorization.NativeArrayWrapper).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_Vectorization_NativeArrayWrapper_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_Vectorization_NativeArrayWrapper_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair*), typeof(int) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult*), typeof(float), typeof(float), typeof(float), typeof(float) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate);
@@ -5723,6 +5726,18 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair* arg0, int arg1);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_V128Pair_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
@@ -5732,6 +5747,30 @@ namespace Burst.Compiler.IL.Tests
             var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.V128Pair*)(IntPtr)p[0];
             var arg1 = (int)p[1];
             d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_InMemoryValues_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.InMemoryValues)p[0];
+            d(ref arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate void R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate(ref Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues)p[0];
+            d(ref arg0);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

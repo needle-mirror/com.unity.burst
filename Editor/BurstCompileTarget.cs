@@ -18,7 +18,7 @@ namespace Unity.Burst.Editor
             Options.EnableBurstCompilation = true;
             // Enable safety checks by default to match inspector default behavior
             Options.EnableBurstSafetyChecks = true;
-            TargetCpu = TargetCpu.Auto;
+            TargetCpu = BurstTargetCpu.Auto;
             // The BurstCompilerAttribute can be either on the type or on the method
             IsStaticMethod = isStaticMethod;
         }
@@ -48,7 +48,7 @@ namespace Unity.Burst.Editor
         /// </summary>
         public readonly BurstCompilerOptions Options;
 
-        public TargetCpu TargetCpu { get; set; }
+        public BurstTargetCpu TargetCpu { get; set; }
 
         /// <summary>
         /// Set to true if burst compilation is actually requested via proper `[BurstCompile]` attribute:

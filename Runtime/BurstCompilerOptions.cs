@@ -1,4 +1,4 @@
-// As BurstCompiler.Compile is not supported on Tiny/ZeroPlayer, we can ifdef the entire file
+// BurstCompiler.Compile is not supported on Tiny/ZeroPlayer
 #if !UNITY_DOTSPLAYER && !NET_DOTS
 using System;
 using System.ComponentModel;
@@ -16,8 +16,10 @@ using Unity.Jobs.LowLevel.Unsafe;
 // NOTE: This file is shared via a csproj cs link in Burst.Compiler.IL
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#endif //!UNITY_DOTSPLAYER && !NET_DOTS
 namespace Unity.Burst
 {
+#if !UNITY_DOTSPLAYER && !NET_DOTS
     /// <summary>
     /// Options available at Editor time and partially at runtime to control the behavior of the compilation and to enable/disable burst jobs.
     /// </summary>
@@ -484,7 +486,7 @@ namespace Unity.Burst
         /// Gets the options for the specified member. Returns <c>false</c> if the `[BurstCompile]` attribute was not found
         /// </summary>
         /// <returns><c>false</c> if the `[BurstCompile]` attribute was not found; otherwise <c>true</c></returns>
-        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, bool isForEagerCompilation = false)
+        internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, bool isForEagerCompilation = false, bool isForILPostProcessing = false)
         {
             flagsOut = null;
             BurstCompileAttribute attr;
@@ -493,11 +495,11 @@ namespace Unity.Burst
                 return false;
             }
 
-            flagsOut = GetOptions(isJit, attr, isForEagerCompilation);
+            flagsOut = GetOptions(isJit, attr, isForEagerCompilation, isForILPostProcessing);
             return true;
         }
 
-        internal string GetOptions(bool isJit, BurstCompileAttribute attr = null, bool isForEagerCompilation = false)
+        internal string GetOptions(bool isJit, BurstCompileAttribute attr = null, bool isForEagerCompilation = false, bool isForILPostProcessing = false)
         {
             // Add debug to Jit options instead of passing it here
             // attr.Debug
@@ -510,17 +512,24 @@ namespace Unity.Burst
             }
 
             var shouldEnableSafetyChecks = EnableBurstSafetyChecks;
-            
-            if (isJit && isForEagerCompilation)
+
+            if (isForILPostProcessing)
+            {
+                // IL Post Processing compiles are the only thing set to low priority.
+                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, CompilationPriority.LowPriority));
+            }
+            else if (isJit && isForEagerCompilation)
             {
                 // Eager compilation must always be asynchronous.
                 // - For synchronous jobs, we set the compilation priority to HighPriority.
                 //   This has two effects:
                 //   - These synchronous jobs will be compiled before asynchronous jobs.
                 //   - We will block on these compilations when entering PlayMode.
-                // - For asynchronous jobs, we set the compilation priority to LowPriority.
+                // - For asynchronous jobs, we set the compilation priority to LowestPriority.
                 //   These jobs will be compiled after "normal" compilation requests
-                //   for asynchronous jobs.
+                //   for asynchronous jobs, and crucially after all LowPriority ILPostProcessing
+                //   jobs (which can map to the same function pointer to-be-compiled underneath
+                //   and cause compilation thrads to stall).
                 // Note that we ignore the global "compile synchronously" option here because:
                 // - If it's set when entering play mode, then we'll wait for all
                 //   methods to be compiled anyway.
@@ -528,7 +537,7 @@ namespace Unity.Burst
                 //   for methods that explicitly have CompileSynchronously=true on their attributes.
                 var priority = (attr?.CompileSynchronously ?? false)
                     ? CompilationPriority.HighPriority
-                    : CompilationPriority.LowPriority;
+                    : CompilationPriority.LowestPriority;
                 AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, priority));
 
                 // Don't call `burst.initialize` when we're eager-compiling.
@@ -675,11 +684,11 @@ namespace Unity.Burst
         }
 #endif
 #endif // !BURST_COMPILER_SHARED
-                }
+    }
 
 #if UNITY_EDITOR
-                // NOTE: This must be synchronized with Backend.TargetPlatform
-        internal enum TargetPlatform
+    // NOTE: This must be synchronized with Backend.TargetPlatform
+    internal enum TargetPlatform
     {
         Windows = 0,
         macOS = 1,
@@ -695,9 +704,12 @@ namespace Unity.Burst
         Stadia = 11,
         tvOS = 12,
     }
+#endif
 
+#endif //!UNITY_DOTSPLAYER && !NET_DOTS
     // NOTE: This must be synchronized with Backend.TargetCpu
-    internal enum TargetCpu
+    // Need this enum for CPU intrinsics to work, so exposing it to Tiny too
+    internal enum BurstTargetCpu
     {
         Auto = 0,
         X86_SSE2 = 1,
@@ -712,7 +724,7 @@ namespace Unity.Burst
         THUMB2_NEON32 = 10,
         ARMV8A_AARCH64_HALFFP = 11,
     }
-#endif
+#if !UNITY_DOTSPLAYER && !NET_DOTS
 
     /// <summary>
     /// Flags used by <see cref="NativeCompiler.CompileMethod"/> to dump intermediate compiler results.
@@ -789,6 +801,7 @@ namespace Unity.Burst
         HighPriority     = 0,
         StandardPriority = 1,
         LowPriority      = 2,
+        LowestPriority   = 3,
     }
 
 #if UNITY_EDITOR
@@ -818,5 +831,5 @@ namespace Unity.Burst
         public readonly string EncodedMethod;
         public readonly string Options;
     }
+#endif //!UNITY_DOTSPLAYER && !NET_DOTS
 }
-#endif

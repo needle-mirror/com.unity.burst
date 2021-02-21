@@ -23,7 +23,7 @@ namespace Unity.Burst
         /// <returns>The 32-bit hashcode.</returns>
         public static int GetHashCode32<T>()
         {
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSRUNTIME_IL2CPP
             return HashCode32<T>.Value;
 #else
             // DOTS Runtime IL2CPP Builds do not use C#'s lazy static initialization order (it uses a C like order, aka random)
@@ -51,7 +51,7 @@ namespace Unity.Burst
         /// <returns>The 64-bit hashcode.</returns>
         public static long GetHashCode64<T>()
         {
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSRUNTIME_IL2CPP
             return HashCode64<T>.Value;
 #else
             // DOTS Runtime IL2CPP Builds do not use C#'s lazy static initialization order (it uses a C like order, aka random)
@@ -135,18 +135,24 @@ namespace Unity.Burst
             return false;
         }
 
-#if !UNITY_DOTSPLAYER && !NET_DOTS
-
         internal static bool LoadAdditionalLibraryInternal(string pathToLibBurstGenerated)
         {
+#if !UNITY_DOTSRUNTIME
             return (bool)typeof(BurstCompilerService).GetMethod("LoadBurstLibrary").Invoke(null, new object[] { pathToLibBurstGenerated });
+#else
+            return false;
+#endif
         }
+
 
 #if UNITY_2020_1_OR_NEWER
         internal static void Initialize()
         {
         }
 
+	internal class PreserveAttribute : System.Attribute {}
+
+	[Preserve]
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
             BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
@@ -216,23 +222,6 @@ namespace Unity.Burst
         {
         }
 #endif
-
-#else // !UNITY_DOTSPLAYER && !NET_DOTS
-
-        internal static bool LoadAdditionalLibraryInternal(string pathToLibBurstGenerated)
-        {
-            return false;
-        }
-
-        internal static void Initialize()
-        {
-        }
-
-        internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
-        {
-        }
-
-#endif // !UNITY_2020_1_OR_NEWER
 
 #endif // !BURST_COMPILER_SHARED
 

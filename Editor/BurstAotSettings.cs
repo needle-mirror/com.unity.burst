@@ -13,8 +13,8 @@ namespace Unity.Burst.Editor
 {
     internal enum AvailX86Targets
     {
-        SSE2 = (int)TargetCpu.X86_SSE2,
-        SSE4 = (int)TargetCpu.X86_SSE4,
+        SSE2 = (int)BurstTargetCpu.X86_SSE2,
+        SSE4 = (int)BurstTargetCpu.X86_SSE4,
     }
 
     [Flags]
@@ -26,10 +26,10 @@ namespace Unity.Burst.Editor
 
     internal enum AvailX64Targets
     {
-        SSE2 = (int)TargetCpu.X64_SSE2,
-        SSE4 = (int)TargetCpu.X64_SSE4,
-        AVX = (int)TargetCpu.AVX,
-        AVX2 = (int)TargetCpu.AVX2,
+        SSE2 = (int)BurstTargetCpu.X64_SSE2,
+        SSE4 = (int)BurstTargetCpu.X64_SSE4,
+        AVX = (int)BurstTargetCpu.AVX,
+        AVX2 = (int)BurstTargetCpu.AVX2,
     }
 
     [Flags]
@@ -113,7 +113,7 @@ namespace Unity.Burst.Editor
         internal static readonly string EnableOptimisations_ToolTip = "Enables all optimisations for the currently selected platform.";
 
         internal static readonly string EnableSafetyChecks_DisplayName = "Enable Safety Checks";
-        internal static readonly string EnableSafetyChecks_ToolTip = "Enables safety checks, results in faster runtime, but Out Of Bounds checks etc are not validated.";
+        internal static readonly string EnableSafetyChecks_ToolTip = "Enables safety checks, results in slower runtime, but Out Of Bounds checks are validated.";
 
         internal static readonly string EnableBurstCompilation_DisplayName = "Enable Burst Compilation";
         internal static readonly string EnableBurstCompilation_ToolTip = "Enables burst compilation for the selected platform.";
@@ -448,7 +448,7 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static TargetCpu GetCpu(int v)
+        private static BurstTargetCpu GetCpu(int v)
         {
             // https://graphics.stanford.edu/~seander/bithacks.html#IntegerLog
             var r = ((v > 0xFFFF) ? 1 : 0) << 4; v >>= r;
@@ -456,7 +456,7 @@ namespace Unity.Burst.Editor
             shift = ((v > 0xF) ? 1 : 0) << 2; v >>= shift; r |= shift;
             shift = ((v > 0x3) ? 1 : 0) << 1; v >>= shift; r |= shift;
             r |= (v >> 1);
-            return (TargetCpu)r;
+            return (BurstTargetCpu)r;
         }
 
         private static IEnumerable<Enum> GetFlags(Enum input)
@@ -482,7 +482,7 @@ namespace Unity.Burst.Editor
             // If no targets were specified just default to the oldest CPU supported.
             if (cpus.Cpus.Count == 0)
             {
-                cpus.Cpus.Add(TargetCpu.X86_SSE2);
+                cpus.Cpus.Add(BurstTargetCpu.X86_SSE2);
             }
 
             return cpus;
@@ -500,7 +500,7 @@ namespace Unity.Burst.Editor
             // If no targets were specified just default to the oldest CPU supported.
             if (cpus.Cpus.Count == 0)
             {
-                cpus.Cpus.Add(TargetCpu.X64_SSE2);
+                cpus.Cpus.Add(BurstTargetCpu.X64_SSE2);
             }
 
             return cpus;
@@ -729,8 +729,8 @@ namespace Unity.Burst.Editor
         {
             var cpus = new TargetCpus();
 
-            cpus.Cpus.Add(TargetCpu.X86_SSE2);
-            cpus.Cpus.Add(TargetCpu.X86_SSE4);
+            cpus.Cpus.Add(BurstTargetCpu.X86_SSE2);
+            cpus.Cpus.Add(BurstTargetCpu.X86_SSE4);
 
             return cpus;
         }
@@ -739,8 +739,8 @@ namespace Unity.Burst.Editor
         {
             var cpus = new TargetCpus();
 
-            cpus.Cpus.Add(TargetCpu.X64_SSE2);
-            cpus.Cpus.Add(TargetCpu.X64_SSE4);
+            cpus.Cpus.Add(BurstTargetCpu.X64_SSE2);
+            cpus.Cpus.Add(BurstTargetCpu.X64_SSE4);
 
             return cpus;
         }

@@ -82,8 +82,8 @@ namespace zzzUnity.Burst.CodeGen
 
 #if UNITY_DOTSPLAYER
                 var asmDef = assemblyDefinition;
-                if (asmDef.Name.Name != "Unity.ZeroJobs")
-                    asmDef = GetAsmDefinitionFromFile(loader, "Unity.ZeroJobs.dll");
+                if (asmDef.Name.Name != "Unity.Runtime")
+                    asmDef = GetAsmDefinitionFromFile(loader, "Unity.Runtime.dll");
 
                 if (asmDef == null)
                     return;
@@ -163,6 +163,8 @@ namespace zzzUnity.Burst.CodeGen
                 var latePatchMethod = capturedData.Key;
                 var capturedList = capturedData.Value;
 
+                latePatchMethod.Body.SimplifyMacros();  // De-optimise short branches, since we will end up inserting instructions
+
                 foreach(var capturedInfo in capturedList)
                 {
                     var captured = capturedInfo.Captured;
@@ -195,8 +197,15 @@ namespace zzzUnity.Burst.CodeGen
                         numToMove = 3;
                     for (int rr = 0; rr < numToMove; rr++)
                     {
-                        processor.Remove(captured[rr]);
-                        processor.InsertBefore(calli, captured[rr]);
+                        // We do it this way so that if one of the instructions we are moving happens to be a branch target, the target continues to
+                        //point to the correct place, without having to search out the branch instructions and repoint them to the next instruction
+                        var replacementNop = processor.Create(OpCodes.Nop);
+                        var newInstruction = processor.Create(OpCodes.Nop);
+                        newInstruction.OpCode = captured[rr].OpCode;
+                        newInstruction.Operand = captured[rr].Operand;
+                        processor.InsertBefore(calli, newInstruction);
+
+                        processor.Replace(captured[rr], replacementNop);
                     }
 
                     var originalGetInvoke = calli.Previous;
@@ -245,6 +254,8 @@ namespace zzzUnity.Burst.CodeGen
                         madeChange = true;
                     }
                 }
+
+                latePatchMethod.Body.OptimizeMacros();  // Re-optimise branches
             }
             return madeChange;
         }
@@ -387,31 +398,39 @@ namespace zzzUnity.Burst.CodeGen
                 {
                     captured.Add(inst);
 
-                    if (inst.OpCode == OpCodes.Callvirt)
+                    if (!(inst.OpCode.FlowControl == FlowControl.Next || inst.OpCode.FlowControl == FlowControl.Call))
                     {
-                        if (inst.Operand is MethodReference mref)
+                        // Don't perform transform across blocks
+                        hitGetInvoke = false;
+                    }
+                    else
+                    {
+                        if (inst.OpCode == OpCodes.Callvirt)
                         {
-                            var method = mref.Resolve();
+                            if (inst.Operand is MethodReference mref)
+                            {
+                                var method = mref.Resolve();
 
-                            if (method.DeclaringType == delegateType)
+                                if (method.DeclaringType == delegateType)
+                                {
+                                    hitGetInvoke = false;
+
+                                    List<CaptureInformation> storage = null;
+                                    if (!_capturedSets.TryGetValue(m, out storage))
+                                    {
+                                        storage = new List<CaptureInformation>();
+                                        _capturedSets.Add(m, storage);
+                                    }
+
+                                    var captureInfo = new CaptureInformation { Captured = captured, Operand = mref };
+                                    if (_logLevel > 1) _debugLog?.Invoke($"FunctionPtrInvoke.CollectDelegateInvokes: captureInfo:{captureInfo}{Environment.NewLine}capture0{captured[0]}");
+                                    storage.Add(captureInfo);
+                                }
+                            }
+                            else
                             {
                                 hitGetInvoke = false;
-
-                                List<CaptureInformation> storage = null;
-                                if (!_capturedSets.TryGetValue(m, out storage))
-                                {
-                                    storage = new List<CaptureInformation>();
-                                    _capturedSets.Add(m, storage);
-                                }
-
-                                var captureInfo = new CaptureInformation {Captured = captured, Operand = mref};
-                                if (_logLevel > 1) _debugLog?.Invoke($"FunctionPtrInvoke.CollectDelegateInvokes: captureInfo:{captureInfo}{Environment.NewLine}capture0{captured[0]}");
-                                storage.Add(captureInfo);
                             }
-                        }
-                        else
-                        {
-                            hitGetInvoke = false;
                         }
                     }
                 }

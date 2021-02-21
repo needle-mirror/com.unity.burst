@@ -28,7 +28,7 @@ The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users t
 
 Burst exposes all Intel SIMD intrinsics from SSE up to and including AVX2
 by means of the `Unity.Burst.Intrinsics.X86` family of nested classes, 
-and **experimental** Arm Neon intrinsics for Armv7 and Armv8 by means of the `Unity.Burst.Intrinsics.Arm.Neon` class. 
+Arm Neon intrinsics for Armv7 and Armv8, and **experimental** Armv8.2 Neon intrinsics (RDMA, crypto, dotprod) by means of the `Unity.Burst.Intrinsics.Arm.Neon` class.
 These are intended to be statically imported as they contain plain static functions:
 
 ```c#
@@ -118,7 +118,7 @@ with the following differences:
 * reinterpret* functions are not supported (they are not needed because of the usage of `v64` and `v128` vector types).
 * Intrinsic usage is only supported on Armv8 (64-bit) hardware.
 
-The Arm Neon intrinsics are **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS` preprocessor define.
+The Armv8.2 Neon intrinsics are **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS` preprocessor define.
 
 # `DllImport` and internal calls
 

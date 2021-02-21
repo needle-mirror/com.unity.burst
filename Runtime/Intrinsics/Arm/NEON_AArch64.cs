@@ -1215,6 +1215,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a3">Lane index to a2. Must be an immediate in the range of [0..0]</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV8A_AARCH64)]
             public static v64 vfma_lane_f64(v64 a0, v64 a1, v64 a2, Int32 a3)
             {
                 return vfma_f64(a0, a1, a2);
@@ -1254,6 +1255,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a3">Lane index to a2. Must be an immediate in the range of [0..0]</param>
             /// <returns>Double</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV8A_AARCH64)]
             public static Double vfmad_lane_f64(Double a0, Double a1, v64 a2, Int32 a3)
             {
                 return vfma_f64(new v64(a0), new v64(a1), a2).Double0;
@@ -1395,6 +1397,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a3">Lane index to a2. Must be an immediate in the range of [0..0]</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV8A_AARCH64)]
             public static v64 vfms_lane_f64(v64 a0, v64 a1, v64 a2, Int32 a3)
             {
                 return vfms_f64(a0, a1, a2);
@@ -1434,6 +1437,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a3">Lane index to a2. Must be an immediate in the range of [0..0]</param>
             /// <returns>Double</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV8A_AARCH64)]
             public static Double vfmsd_lane_f64(Double a0, Double a1, v64 a2, Int32 a3)
             {
                 return vfms_f64(new v64(a0), new v64(a1), a2).Double0;
@@ -7547,6 +7551,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Lane index to a1. Must be an immediate in the range of [0..0]</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV8A_AARCH64)]
             public static v64 vmul_lane_f64(v64 a0, v64 a1, Int32 a2)
             {
                 return vmul_f64(a0, a1);

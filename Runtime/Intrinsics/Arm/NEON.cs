@@ -5392,6 +5392,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_s8(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5404,6 +5405,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_s8(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5416,6 +5418,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_s16(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5428,6 +5431,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_s16(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5440,6 +5444,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_s32(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5452,6 +5457,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_s32(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5464,6 +5470,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_s64(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5476,6 +5483,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_s64(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5488,6 +5496,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_u8(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5500,6 +5509,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_u8(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5512,6 +5522,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_u16(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5524,6 +5535,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_u16(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5536,6 +5548,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_u32(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5548,6 +5561,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_u32(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5560,6 +5574,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrshr_n_u64(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5572,6 +5587,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrshrq_n_u64(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this is a shl hence the negation
@@ -5777,6 +5793,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_s8(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5790,6 +5807,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_s8(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5803,6 +5821,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_s16(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5816,6 +5835,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_s16(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5829,6 +5849,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_s32(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5842,6 +5863,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_s32(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5855,6 +5877,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_s64(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5868,6 +5891,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_s64(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to srshl + add, so doing the same
@@ -5881,6 +5905,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_u8(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5894,6 +5919,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_u8(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5907,6 +5933,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_u16(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5920,6 +5947,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_u16(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5933,6 +5961,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_u32(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5946,6 +5975,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_u32(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5959,6 +5989,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vrsra_n_u64(v64 a0, v64 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5972,6 +6003,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a2">Int32 a2</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vrsraq_n_u64(v128 a0, v128 a1, Int32 a2)
             {
                 // clang generates a call to urshl + add, so doing the same
@@ -5984,6 +6016,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_s8(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -5997,6 +6030,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_s8(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6010,6 +6044,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_s16(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6023,6 +6058,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_s16(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6036,6 +6072,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_s32(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6049,6 +6086,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_s32(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6062,6 +6100,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_s64(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6075,6 +6114,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_s64(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6088,6 +6128,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_u8(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6101,6 +6142,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_u8(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6114,6 +6156,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_u16(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6127,6 +6170,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_u16(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6140,6 +6184,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_u32(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6153,6 +6198,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_u32(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6166,6 +6212,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>64-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v64 vqshl_n_u64(v64 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,
@@ -6179,6 +6226,7 @@ namespace Unity.Burst.Intrinsics
             /// <param name="a1">Int32 a1</param>
             /// <returns>128-bit vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.ARMV7A_NEON32)]
             public static v128 vqshlq_n_u64(v128 a0, Int32 a1)
             {
                 // The LLVM intrinsic behind this API actually requires a vector and not an immediate,

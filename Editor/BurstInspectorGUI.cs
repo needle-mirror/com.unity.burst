@@ -64,7 +64,7 @@ namespace Unity.Burst.Editor
 
         private static readonly SplitterState TreeViewSplitterState = new SplitterState(new float[] { 30, 70 }, new int[] { 128, 128 }, null);
 
-        private static readonly string[] TargetCpuNames = Enum.GetNames(typeof(TargetCpu));
+        private static readonly string[] TargetCpuNames = Enum.GetNames(typeof(BurstTargetCpu));
 
         private static readonly int[] FontSizes =
         {
@@ -76,7 +76,7 @@ namespace Unity.Burst.Editor
         [NonSerialized]
         private readonly BurstDisassembler _burstDisassembler;
 
-        [SerializeField] private TargetCpu _targetCpu = TargetCpu.Auto;
+        [SerializeField] private BurstTargetCpu _targetCpu = BurstTargetCpu.Auto;
 
         [SerializeField] private DisassemblyKind _disasmKind = DisassemblyKind.Asm;
 
@@ -254,7 +254,7 @@ namespace Unity.Burst.Editor
 
             EditorGUI.BeginDisabledGroup(!target.HasRequiredBurstCompileAttributes);
 
-            _targetCpu = (TargetCpu)EditorGUILayout.Popup((int)_targetCpu, TargetCpuNames, EditorStyles.popup);
+            _targetCpu = (BurstTargetCpu)EditorGUILayout.Popup((int)_targetCpu, TargetCpuNames, EditorStyles.popup);
             FlowToNewLine(ref remainingWidth, width, EditorStyles.popup, contentCodeGenOptions);
 
             GUILayout.Label("Font Size", EditorStyles.label);
@@ -534,18 +534,18 @@ namespace Unity.Burst.Editor
             }
         }
 
-        private static BurstDisassembler.AsmKind FetchAsmKind(TargetCpu cpu, DisassemblyKind kind)
+        private static BurstDisassembler.AsmKind FetchAsmKind(BurstTargetCpu cpu, DisassemblyKind kind)
         {
             if (kind == DisassemblyKind.Asm)
             {
                 switch (cpu)
                 {
-                    case TargetCpu.ARMV7A_NEON32:
-                    case TargetCpu.ARMV8A_AARCH64:
-                    case TargetCpu.ARMV8A_AARCH64_HALFFP:
-                    case TargetCpu.THUMB2_NEON32:
+                    case BurstTargetCpu.ARMV7A_NEON32:
+                    case BurstTargetCpu.ARMV8A_AARCH64:
+                    case BurstTargetCpu.ARMV8A_AARCH64_HALFFP:
+                    case BurstTargetCpu.THUMB2_NEON32:
                         return BurstDisassembler.AsmKind.ARM;
-                    case TargetCpu.WASM32:
+                    case BurstTargetCpu.WASM32:
                         return BurstDisassembler.AsmKind.Wasm;
                 }
                 return BurstDisassembler.AsmKind.Intel;

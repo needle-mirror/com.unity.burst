@@ -124,23 +124,97 @@ namespace Unity.Burst
             }
         }
 
+        private static bool IsMatchingMethod(MethodInfo burstMethod, MethodInfo otherMethod)
+        {
+            if (burstMethod.ReturnType != otherMethod.ReturnType)
+            {
+                return false;
+            }
+
+            var burstParameters = burstMethod.GetParameters();
+            var otherParameters = otherMethod.GetParameters();
+
+            if (burstParameters.Length != otherParameters.Length)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < burstParameters.Length; i++)
+            {
+                if (burstParameters[i].ParameterType != otherParameters[i].ParameterType)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Compiles a static method from a runtime method handle.
         /// </summary>
         /// <param name="handle">A runtime method handle.</param>
-        /// <returns>A raw pointer to the compiled method. Or null if burst is disabled.</returns>
+        /// <returns>A raw pointer to the compiled method, or null if burst is disabled.</returns>
         public static unsafe void* CompileUnsafeStaticMethod(RuntimeMethodHandle handle)
         {
             if (!IsEnabled)
+            {
                 return null;
+            }
 
             if (handle.Value == IntPtr.Zero)
             {
                 throw new ArgumentNullException(nameof(handle));
             }
 
-            var method = (MethodInfo)MethodBase.GetMethodFromHandle(handle);
-            return Compile(new FakeDelegate(method), method, false);
+            var burstMethod = (MethodInfo)MethodBase.GetMethodFromHandle(handle);
+
+            MethodInfo managedMethod = null;
+
+            foreach (var method in burstMethod.DeclaringType.GetMethods())
+            {
+                // Only check methods with the correct name.
+                if (method.Name != (burstMethod.Name + "$BurstManaged"))
+                {
+                    continue;
+                }
+
+                if (IsMatchingMethod(burstMethod, method))
+                {
+                    managedMethod = method;
+                    break;
+                }
+            }
+
+            if (managedMethod == null)
+            {
+                throw new NullReferenceException($"Could not find matching method for '{burstMethod}'");
+            }
+
+            Type delegateType = null;
+
+            foreach (var nestedType in burstMethod.DeclaringType.GetNestedTypes())
+            {
+                // Only check for the injected Burst delegates
+                if (nestedType.Name != (burstMethod.Name + "$PostfixBurstDelegate"))
+                {
+                    continue;
+                }
+
+                // Check that the signature of the invoke matches the signature of our method.
+                if (IsMatchingMethod(burstMethod, nestedType.GetMethod("Invoke")))
+                {
+                    delegateType = nestedType;
+                    break;
+                }
+            }
+
+            if (delegateType == null)
+            {
+                throw new NullReferenceException($"Could not find the delegate type '{delegateType}'");
+            }
+
+            return Compile(new FakeDelegate(burstMethod), burstMethod, isFunctionPointer: true, managedFallbackDelegateObj: Delegate.CreateDelegate(delegateType, managedMethod));
         }
 
         /// <summary>
@@ -175,10 +249,9 @@ namespace Unity.Burst
             return Compile(delegateMethod, delegateMethod.Method, isFunctionPointer);
         }
 
-        private static unsafe void* Compile(object delegateObj, MethodInfo methodInfo, bool isFunctionPointer)
+        private static unsafe void* Compile(object delegateObj, MethodInfo methodInfo, bool isFunctionPointer, object managedFallbackDelegateObj = null)
         {
             if (delegateObj == null) throw new ArgumentNullException(nameof(delegateObj));
-
 
             if (!methodInfo.IsStatic)
             {
@@ -203,7 +276,15 @@ namespace Unity.Burst
             // Internally in Burst tests, we callback the C# method instead
             function = (void*)InternalCompiler(delegateObj);
 #else
+            var isILPostProcessing = managedFallbackDelegateObj != null;
+
+            if (!isILPostProcessing)
+            {
+                managedFallbackDelegateObj = delegateObj;
+            }
+
             var delegateMethod = delegateObj as Delegate;
+            var managedFallbackDelegateMethod = managedFallbackDelegateObj as Delegate;
 
 #if UNITY_EDITOR
             string defaultOptions;
@@ -211,8 +292,8 @@ namespace Unity.Burst
             // In case Burst is disabled entirely from the command line
             if (BurstCompilerOptions.ForceDisableBurstCompilation)
             {
-                GCHandle.Alloc(delegateMethod);
-                function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                GCHandle.Alloc(managedFallbackDelegateMethod);
+                function = (void*)Marshal.GetFunctionPointerForDelegate(managedFallbackDelegateMethod);
                 return function;
             }
 
@@ -220,8 +301,8 @@ namespace Unity.Burst
             {
                 defaultOptions = "--" + BurstCompilerOptions.OptionJitIsForFunctionPointer + "\n";
                 // Make sure that the delegate will never be collected
-                GCHandle.Alloc(delegateMethod);
-                var managedFunctionPointer = Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                GCHandle.Alloc(managedFallbackDelegateMethod);
+                var managedFunctionPointer = Marshal.GetFunctionPointerForDelegate(managedFallbackDelegateMethod);
                 defaultOptions += "--" + BurstCompilerOptions.OptionJitManagedFunctionPointer + "0x" + managedFunctionPointer.ToInt64().ToString("X16");
             }
             else
@@ -231,7 +312,7 @@ namespace Unity.Burst
 
             string extraOptions;
             // The attribute is directly on the method, so we recover the underlying method here
-            if (Options.TryGetOptions(methodInfo, true, out extraOptions))
+            if (Options.TryGetOptions(methodInfo, true, out extraOptions, isForILPostProcessing: isILPostProcessing))
             {
                 if (!string.IsNullOrWhiteSpace(extraOptions))
                 {
@@ -253,14 +334,14 @@ namespace Unity.Burst
                 else
                 {
                     // Make sure that the delegate will never be collected
-                    GCHandle.Alloc(delegateMethod);
+                    GCHandle.Alloc(managedFallbackDelegateMethod);
                     // If we are in a standalone player, and burst is disabled and we are actually
                     // trying to load a function pointer, in that case we need to support it
                     // so we are then going to use the managed function directly
                     // NOTE: When running under IL2CPP, this could lead to a `System.NotSupportedException : To marshal a managed method, please add an attribute named 'MonoPInvokeCallback' to the method definition.`
                     // so in that case, the method needs to have `MonoPInvokeCallback`
                     // but that's a requirement for IL2CPP, not an issue with burst
-                    function = (void*)Marshal.GetFunctionPointerForDelegate(delegateMethod);
+                    function = (void*)Marshal.GetFunctionPointerForDelegate(managedFallbackDelegateMethod);
                 }
             }
 #endif

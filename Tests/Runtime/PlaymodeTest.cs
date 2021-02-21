@@ -73,4 +73,92 @@ public class PlaymodeTest
             LogAssert.NoUnexpectedReceived();
         }
     }
+
+#if UNITY_2019_3_OR_NEWER
+    [BurstCompile]
+    public struct SomeFunctionPointers
+    {
+        [BurstDiscard]
+        private static void MessWith(ref int a) => a += 13;
+
+        [BurstCompile]
+        public static int A(int a, int b)
+        {
+            MessWith(ref a);
+            return a + b;
+        }
+
+        [BurstCompile(DisableDirectCall = true)]
+        public static int B(int a, int b)
+        {
+            MessWith(ref a);
+            return a - b;
+        }
+
+        [BurstCompile(CompileSynchronously = true)]
+        public static int C(int a, int b)
+        {
+            MessWith(ref a);
+            return a * b;
+        }
+
+        [BurstCompile(CompileSynchronously = true, DisableDirectCall = true)]
+        public static int D(int a, int b)
+        {
+            MessWith(ref a);
+            return a / b;
+        }
+
+        public delegate int Delegate(int a, int b);
+    }
+
+    [Test]
+    public void TestDirectCalls()
+    {
+        Assert.IsTrue(BurstCompiler.IsEnabled);
+
+        // a can either be (42 + 13) + 53 or 42 + 53 (depending on whether it was burst compiled).
+        var a = SomeFunctionPointers.A(42, 53);
+        Assert.IsTrue((a == ((42 + 13) + 53)) || (a == (42 + 53)));
+
+        // b can only be (42 + 13) - 53, because direct call is disabled and so we always call the managed method.
+        var b = SomeFunctionPointers.B(42, 53);
+        Assert.AreEqual((42 + 13) - 53, b);
+
+        // c can only be 42 * 53, because synchronous compilation is enabled.
+        var c = SomeFunctionPointers.C(42, 53);
+        Assert.AreEqual(42 * 53, c);
+
+        // d can only be (42 + 13) / 53, because even though synchronous compilation is enabled, direct call is disabled.
+        var d = SomeFunctionPointers.D(42, 53);
+        Assert.AreEqual((42 + 13) / 53, d);
+    }
+
+    [Test]
+    public void TestFunctionPointers()
+    {
+        Assert.IsTrue(BurstCompiler.IsEnabled);
+
+        var A = BurstCompiler.CompileFunctionPointer<SomeFunctionPointers.Delegate>(SomeFunctionPointers.A);
+        var B = BurstCompiler.CompileFunctionPointer<SomeFunctionPointers.Delegate>(SomeFunctionPointers.B);
+        var C = BurstCompiler.CompileFunctionPointer<SomeFunctionPointers.Delegate>(SomeFunctionPointers.C);
+        var D = BurstCompiler.CompileFunctionPointer<SomeFunctionPointers.Delegate>(SomeFunctionPointers.D);
+
+        // a can either be (42 + 13) + 53 or 42 + 53 (depending on whether it was burst compiled).
+        var a = A.Invoke(42, 53);
+        Assert.IsTrue((a == ((42 + 13) + 53)) || (a == (42 + 53)));
+
+        // b can either be (42 + 13) - 53 or 42 - 53 (depending on whether it was burst compiled).
+        var b = B.Invoke(42, 53);
+        Assert.IsTrue((b == ((42 + 13) - 53)) || (b == (42 - 53)));
+
+        // c can only be 42 * 53, because synchronous compilation is enabled.
+        var c = C.Invoke(42, 53);
+        Assert.AreEqual(42 * 53, c);
+
+        // d can only be 42 / 53, because synchronous compilation is enabled.
+        var d = D.Invoke(42, 53);
+        Assert.AreEqual(42 / 53, d);
+    }
+#endif
 }

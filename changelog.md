@@ -1,6 +1,31 @@
 # Changelog
 
-## [1.5.0-pre.4] - 2021-01-21
+## [1.5.0-pre.5] - 2021-02-22
+
+
+### Fixed
+- Fixed a bug where the Burst post-processing for direct call would cause duplicate function pointers to be compiled, wasting compile time in the editor and caused an Editor launch stall.
+- Corrected 'Enable safety checks tooltip`.
+- String interpolation issues when using Dots / Tiny runtime.
+- Fixed a very obscure bug where if you had a function-pointer that was called from another function-pointer of job, and that function-pointer happened to be compiled in a player build in the same bucket as the caller, and the no-alias cloning analysis identified that it could clone the original function-pointer to enable more aliasing optimizations, it could create a duplicate symbol error.
+- Fixed compilation errors when targeting Arm CPUs and using some of the Intel intrinsics
+- Added PreserveAttribute to prevent the internal log from being stripped in il2cpp builds.
+- IL Function Pointer Invoke Transformation updated to handle transforms that affect instructions that are the destination of a branch.
+- IL Function Pointer Invoke Transformation now uses correct runtime library for dots runtime.
+- Fixed compilation errors when targeting Intel CPUs and using some of the Arm Neon intrinsics
+- Fixed a bug where eager-compilation could pick up out-of-date global Burst menu options for compiling.
+- Fixed a bug where the progress bar would report double the amount of pending compile jobs if a user changed the Burst options while background compilation was going on.
+
+### Added
+
+### Removed
+
+### Changed
+- DOTS Runtime shares the logging code path with the general case
+
+### Known Issues
+
+## [1.5.0-pre.4] - 2021-01-27
 
 
 ### Changed
@@ -24,6 +49,7 @@
 
 ### Added
 - Intrinsics: Neon - Added support for basic vld1 APIs
+- Add support for the C# 8.0 construct `default(T) is null` to Burst by transforming the generated `Box` + 'is the box non-null?' at compile time.
 
 ### Removed
 
