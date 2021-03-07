@@ -706,10 +706,18 @@ namespace Unity.Burst
     }
 #endif
 
+// Need this enum for CPU intrinsics to work, so exposing it to Tiny too
 #endif //!UNITY_DOTSPLAYER && !NET_DOTS
+// Don't expose the enum in Burst.Compiler.IL, need only in Unity.Burst.dll which is referenced by Burst.Compiler.IL.Tests
+#if !BURST_COMPILER_SHARED
+// Make the enum public for btests via Unity.Burst.dll; leave it internal in the package
+#if BURST_INTERNAL
+    public
+#else
+    internal
+#endif
     // NOTE: This must be synchronized with Backend.TargetCpu
-    // Need this enum for CPU intrinsics to work, so exposing it to Tiny too
-    internal enum BurstTargetCpu
+    enum BurstTargetCpu
     {
         Auto = 0,
         X86_SSE2 = 1,
@@ -724,6 +732,7 @@ namespace Unity.Burst
         THUMB2_NEON32 = 10,
         ARMV8A_AARCH64_HALFFP = 11,
     }
+#endif
 #if !UNITY_DOTSPLAYER && !NET_DOTS
 
     /// <summary>

@@ -83,7 +83,13 @@ namespace Unity.Burst.Intrinsics
     }
 
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    internal sealed class BurstTargetCpuAttribute : Attribute
+// expose the type to btests via Unity.Burst.dll
+#if BURST_INTERNAL
+    public
+#else
+    internal
+#endif
+    sealed class BurstTargetCpuAttribute : Attribute
     {
         public BurstTargetCpuAttribute(BurstTargetCpu TargetCpu)
         {

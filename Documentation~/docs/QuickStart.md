@@ -112,8 +112,8 @@ On the right pane, the window displays options for viewing the assembly and inte
 
 You can pass the following options to the Unity Editor on the command line to control Burst:
 
-- `-burst-disable-compilation` — turns Burst off.
-- `-burst-force-sync-compilation` — Burst always compiles synchronously. See [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation).
+- `--burst-disable-compilation` — turns Burst off.
+- `--burst-force-sync-compilation` — Burst always compiles synchronously. See [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation).
 
 # Just-In-Time (JIT) vs Ahead-Of-Time (AOT) Compilation
 

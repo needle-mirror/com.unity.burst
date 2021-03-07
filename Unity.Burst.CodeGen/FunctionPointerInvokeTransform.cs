@@ -23,7 +23,6 @@ namespace zzzUnity.Burst.CodeGen
 
         private Dictionary<MethodDefinition, TypeReference> _needsIl2cppInvoke;
         private Dictionary<MethodDefinition, List<CaptureInformation>> _capturedSets;
-        private HashSet<(MethodDefinition, Instruction)> _ftnMap;
         private MethodDefinition _monoPInvokeAttributeCtorDef;
         private MethodDefinition _nativePInvokeAttributeCtorDef;
 
@@ -44,7 +43,6 @@ namespace zzzUnity.Burst.CodeGen
         {
             _needsIl2cppInvoke = new Dictionary<MethodDefinition, TypeReference>();
             _capturedSets = new Dictionary<MethodDefinition, List<CaptureInformation>>();
-            _ftnMap = new HashSet<(MethodDefinition, Instruction)>();
             _monoPInvokeAttributeCtorDef = null;
             _nativePInvokeAttributeCtorDef = null;  // Only present on DOTS_PLAYER
             _burstFunctionPointerType = null;
@@ -342,14 +340,13 @@ namespace zzzUnity.Burst.CodeGen
                 {
                     _needsIl2cppInvoke.Add(implementationMethod, declaringType);
                 }
-
-                _ftnMap.Add((m, ldFtn));
             }
         }
 
+        [Obsolete("Will be removed in a future Burst verison")]
         public bool IsInstructionForFunctionPointerInvoke(MethodDefinition m, Instruction i)
         {
-            return _ftnMap.Contains((m, i));
+            throw new NotImplementedException();
         }
 
         private void CollectDelegateInvokes(MethodDefinition m)

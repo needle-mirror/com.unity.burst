@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.5.0] - 2021-03-08
+
+
+### Fixed
+- Fixed some intrinsics not checking target CPU against required CPU, so it was possible to use some intrinsics without an IsXXXSupported check
+- Fixed a bug where having any `[DllImport]` in a class that used the Direct Call mechanism could result in an illegal `CompileFunctionPointer` call being produced by our post processor.
+- PDB debug information for instance methods that also used struct return were incorrect.
+- When generating Line Table only debug information, an unreachable could occur due to a missing check.
+- Internal Compiler Error if a call was discarded (via BurstDiscard for example), but the callsites required an ABI transform e.g. struct return.
+- Broken link restored for known issues with debugging and profiling.
+
+### Changed
+- Tweaked how the IL Post Processed 'direct call' Burst function pointers are compiled so that the compilation is deferred until they are needed (previously we'd enqueue them all for compilation on a domain reload).
+
+### Known Issues
+- Direct Call methods only execute using Burst after an initial execution of them on the main-thread.
+
+### Added
+- Known issue with Windows Native Debuggers and Dll numbers + workarounds.
+
+### Removed
+
 ## [1.5.0-pre.5] - 2021-02-22
 
 

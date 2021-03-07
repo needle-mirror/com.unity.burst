@@ -14,6 +14,7 @@ namespace Unity.Burst
     /// <summary>
     /// The burst compiler runtime frontend.
     /// </summary>
+    ///
     public static class BurstCompiler
     {
         /// <summary>
@@ -214,7 +215,24 @@ namespace Unity.Burst
                 throw new NullReferenceException($"Could not find the delegate type '{delegateType}'");
             }
 
-            return Compile(new FakeDelegate(burstMethod), burstMethod, isFunctionPointer: true, managedFallbackDelegateObj: Delegate.CreateDelegate(delegateType, managedMethod));
+            var managedFallbackDelegate = Delegate.CreateDelegate(delegateType, managedMethod);
+
+            try
+            {
+                return Compile(new FakeDelegate(burstMethod), burstMethod, isFunctionPointer: true, managedFallbackDelegateObj: managedFallbackDelegate);
+            }
+            catch (UnityEngine.UnityException exception)
+            {
+                if (exception.Message.Contains("CompileAsyncDelegateMethod can only be called from the main thread"))
+                {
+                    GCHandle.Alloc(managedFallbackDelegate);
+                    return (void*)Marshal.GetFunctionPointerForDelegate(managedFallbackDelegate);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         /// <summary>
@@ -638,7 +656,7 @@ namespace Unity.Burst
             /// </summary>
             public static readonly bool IsBurstGenerated = IsCompiledByBurst(IsBurstEnabledImpl);
         }
-#endif	// !UNITY_EDITOR && !BURST_INTERNAL
+#endif // !UNITY_EDITOR && !BURST_INTERNAL
 
         /// <summary>
         /// Fake delegate class to make BurstCompilerService.CompileAsyncDelegateMethod happy

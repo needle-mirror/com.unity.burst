@@ -1777,6 +1777,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_loadu2_m128(void* hiaddr, void* loaddr)
             {
                 return mm256_set_m128(Sse.loadu_ps(hiaddr), Sse.loadu_ps(loaddr));
@@ -1795,6 +1796,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_loadu2_m128d(void* hiaddr, void* loaddr)
             {
                 return mm256_loadu2_m128(hiaddr, loaddr);
@@ -1812,6 +1814,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <returns>Vector</returns>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static v256 mm256_loadu2_m128i(void* hiaddr, void* loaddr)
             {
                 return mm256_loadu2_m128(hiaddr, loaddr);
@@ -1845,6 +1848,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <param name="val">Value</param>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static void mm256_storeu2_m128(void* hiaddr, void* loaddr, v256 val)
             {
                 Sse.storeu_ps(hiaddr, val.Hi128);
@@ -1864,6 +1868,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <param name="val">Value</param>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static void mm256_storeu2_m128d(void* hiaddr, void* loaddr, v256 val)
             {
                 Sse.storeu_ps(hiaddr, val.Hi128);
@@ -1882,6 +1887,7 @@ namespace Unity.Burst.Intrinsics
 			/// <param name="loaddr">Low address pointer</param>
 			/// <param name="val">Value</param>
             [DebuggerStepThrough]
+            [BurstTargetCpu(BurstTargetCpu.AVX)]
             public static void mm256_storeu2_m128i(void* hiaddr, void* loaddr, v256 val)
             {
                 Sse.storeu_ps(hiaddr, val.Hi128);
