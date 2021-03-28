@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.1] - 2021-03-29
+
+
+### Added
+- Automatically add [UnmanagedFunctionPointer(CallingConvention.Cdecl)] to any delegates that are used for BurstCompiler.CompileFunctionPointer<>() or error if the delegate has the attribute and it is not Cdecl.
+
+### Removed
+
+### Changed
+
+### Fixed
+- Dots runtime function pointer transform has been simplified, making it less brittle and fixing some bad IL generation.
+- Fixed crashes on 32 bit windows when calling function pointers from managed code and using IL2CPP.
+- Fixed a bug where the multi-CPU dispatcher (used for player builds targetting multiple CPU architectures) could end up generating invalid instructions.
+
+### Known Issues
+
 ## [1.5.0] - 2021-03-08
 
 

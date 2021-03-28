@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Mono.Cecil;
@@ -9,6 +7,7 @@ using Mono.Cecil.Cil;
 namespace zzzUnity.Burst.CodeGen
 {
     internal delegate void LogDelegate(string message);
+    internal delegate void ErrorDiagnosticDelegate(MethodDefinition method, Instruction instruction, string message);
 
     /// <summary>
     /// Main class for post processing assemblies. The post processing is currently performing:
@@ -39,14 +38,10 @@ namespace zzzUnity.Burst.CodeGen
         private const string GetFunctionPointerDiscardName = "GetFunctionPointerDiscard";
         private const string InvokeName = "Invoke";
 
-        private FunctionPointerInvokeTransform _functionPointerInvokeTransform;
-
-        public ILPostProcessing(AssemblyLoader loader, bool isForEditor, LogDelegate log = null, int logLevel = 0)
+        public ILPostProcessing(AssemblyLoader loader, bool isForEditor, ErrorDiagnosticDelegate error, LogDelegate log = null, int logLevel = 0)
         {
             Loader = loader;
             IsForEditor = isForEditor;
-
-            _functionPointerInvokeTransform = new FunctionPointerInvokeTransform(log, logLevel);
         }
 
         /// <summary>
@@ -91,17 +86,13 @@ namespace zzzUnity.Burst.CodeGen
         {
             _assemblyDefinition = assemblyDefinition;
             _typeSystem = assemblyDefinition.MainModule.TypeSystem;
-            _functionPointerInvokeTransform.Initialize(Loader, assemblyDefinition, _typeSystem);
 
             _modified = false;
             var types = assemblyDefinition.MainModule.GetTypes().ToArray();
             foreach (var type in types)
             {
-                _functionPointerInvokeTransform.CollectDelegateInvokesFromType(type);
                 ProcessType(type);
             }
-
-            _modified |= _functionPointerInvokeTransform.Finish();
 
             return _modified;
         }

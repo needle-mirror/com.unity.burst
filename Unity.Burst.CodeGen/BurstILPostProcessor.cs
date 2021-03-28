@@ -36,6 +36,36 @@ namespace zzzUnity.Burst.CodeGen
             }
         }
 
+        private static SequencePoint FindBestSequencePointFor(MethodDefinition method, Instruction instruction)
+        {
+            var sequencePoints = method.DebugInformation?.GetSequencePointMapping().Values.OrderBy(s => s.Offset).ToList();
+            if (sequencePoints == null || !sequencePoints.Any())
+                return null;
+
+            for (int i = 0; i != sequencePoints.Count-1; i++)
+            {
+                if (sequencePoints[i].Offset < instruction.Offset &&
+                    sequencePoints[i + 1].Offset > instruction.Offset)
+                    return sequencePoints[i];
+            }
+
+            return sequencePoints.FirstOrDefault();
+        }
+
+        private static DiagnosticMessage MakeDiagnosticError(MethodDefinition method, Instruction errorLocation, string message)
+        {
+            var m = new DiagnosticMessage { DiagnosticType = DiagnosticType.Error };
+            var sPoint = errorLocation != null ? FindBestSequencePointFor(method, errorLocation) : null;
+            if (sPoint!=null)
+            {
+                m.Column = sPoint.StartColumn;
+                m.Line = sPoint.StartLine;
+                m.File = sPoint.Document.Url;
+            }
+            m.MessageData = message;
+            return m;
+        }
+
         public override unsafe ILPostProcessResult Process(ICompiledAssembly compiledAssembly)
         {
             var diagnostics = new List<DiagnosticMessage>();
@@ -72,12 +102,18 @@ namespace zzzUnity.Burst.CodeGen
                 Log($"Start processing assembly {compiledAssembly.Name}, IsForEditor: {isForEditor}, Folders: {string.Join("\n", folderList)}");
             }
 
-            var ilPostProcessing = new ILPostProcessing(loader, isForEditor, IsDebugging ? Log : (LogDelegate)null, DebuggingLevel);
+            var ilPostProcessing = new ILPostProcessing(loader, isForEditor,
+                (m,i,s) => { diagnostics.Add(MakeDiagnosticError(m, i, s)); },
+                IsDebugging ? Log : (LogDelegate)null, DebuggingLevel);
+            var functionPointerProcessing = new FunctionPointerInvokeTransform(loader, 
+                (m,i,s) => { diagnostics.Add(MakeDiagnosticError(m, i, s)); },
+                IsDebugging ? Log : (LogDelegate)null, DebuggingLevel);
             try
             {
                 // For IL Post Processing, use the builtin symbol reader provider
                 var assemblyDefinition = loader.LoadFromStream(new MemoryStream(peData), new MemoryStream(pdbData), new PortablePdbReaderProvider() );
-                wasModified = ilPostProcessing.Run(assemblyDefinition);
+                wasModified |= ilPostProcessing.Run(assemblyDefinition);
+                wasModified |= functionPointerProcessing.Run(assemblyDefinition);
                 if (wasModified)
                 {
                     var peStream = new MemoryStream();
@@ -99,7 +135,7 @@ namespace zzzUnity.Burst.CodeGen
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Internal compiler error for Burst ILPostProcessor. Exception: {ex}");
+                throw new InvalidOperationException($"Internal compiler error for Burst ILPostProcessor on {compiledAssembly.Name}. Exception: {ex}");
             }
 
             if (debugging)
