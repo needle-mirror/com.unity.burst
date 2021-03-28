@@ -28,4 +28,4 @@ Burst also supports code-based breakpoints via `System.Diagnostics.Debugger.Brea
 
 Burst adds information to track local variables, function parameters and breakpoints. If your debugger supports conditional breakpoints, these are preferable to inserting breakpoints in code, since they will only fire when a debugger is attached.
 
-[Known issues with debugging/profiling](KnownIssues.md#known-issues-with-dllimport)
+[Known issues with debugging/profiling](KnownIssues.md#known-issues-with-debuggingprofiling)

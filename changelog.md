@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.4.7] - 2021-03-29
+
+
+### Added
+- Known issue with Windows Native Debuggers and Dll numbers + workarounds.
+
+### Removed
+
+### Changed
+
+### Fixed
+- PDB debug information for instance methods that also used struct return were incorrect.
+- When generating Line Table only debug information, an unreachable could occur due to a missing check.
+- Broken link restored for known issues with debugging and profiling.
+- Fixed a bug where the multi-CPU dispatcher (used for player builds targetting multiple CPU architectures) could end up generating invalid instructions.
+
+### Known Issues
+
 ## [1.4.6] - 2021-02-19
 
 ### Fixed
