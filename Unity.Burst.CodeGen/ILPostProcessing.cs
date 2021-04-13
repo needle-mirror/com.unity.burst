@@ -28,6 +28,7 @@ namespace zzzUnity.Burst.CodeGen
         private TypeReference _systemDelegateType;
         private TypeReference _systemASyncCallbackType;
         private TypeReference _systemIASyncResultType;
+        private MethodReference _preserveAttributeConstructor;
         private AssemblyDefinition _assemblyDefinition;
         private bool _modified;
 
@@ -138,9 +139,9 @@ namespace zzzUnity.Burst.CodeGen
             }
         }
 
-        private TypeDefinition InjectDelegate(TypeDefinition declaringType, string originalName, MethodDefinition managed)
+        private TypeDefinition InjectDelegate(TypeDefinition declaringType, string originalName, MethodDefinition managed, string uniqueSuffix)
         {
-            var injectedDelegateType = new TypeDefinition(declaringType.Namespace, $"{originalName}{PostfixBurstDelegate}",
+            var injectedDelegateType = new TypeDefinition(declaringType.Namespace, $"{originalName}{uniqueSuffix}{PostfixBurstDelegate}",
                 TypeAttributes.NestedPublic |
                 TypeAttributes.AutoLayout |
                 TypeAttributes.AnsiClass |
@@ -150,6 +151,8 @@ namespace zzzUnity.Burst.CodeGen
                 DeclaringType = declaringType,
                 BaseType = _systemDelegateType
             };
+
+            injectedDelegateType.CustomAttributes.Add(new CustomAttribute(_preserveAttributeConstructor));
 
             declaringType.NestedTypes.Add(injectedDelegateType);
 
@@ -319,7 +322,9 @@ namespace zzzUnity.Burst.CodeGen
         {
             var declaringType = burstCompileMethod.DeclaringType;
 
-            var injectedDelegate = InjectDelegate(declaringType, burstCompileMethod.Name, burstCompileMethod);
+            var uniqueSuffix = $"_{burstCompileMethod.MetadataToken.RID:X8}";
+
+            var injectedDelegate = InjectDelegate(declaringType, burstCompileMethod.Name, burstCompileMethod, uniqueSuffix);
 
             // Create a copy of the original method that will be the actual managed method
             // The original method is patched at the end of this method to call
@@ -379,7 +384,7 @@ namespace zzzUnity.Burst.CodeGen
             managedFallbackMethod.Attributes |= MethodAttributes.Public;
 
             // private static class (Name_RID.$Postfix)
-            var cls = new TypeDefinition(declaringType.Namespace, $"{burstCompileMethod.Name}_{burstCompileMethod.MetadataToken.RID:X8}{PostfixBurstDirectCall}",
+            var cls = new TypeDefinition(declaringType.Namespace, $"{burstCompileMethod.Name}{uniqueSuffix}{PostfixBurstDirectCall}",
                 TypeAttributes.NestedPrivate |
                 TypeAttributes.AutoLayout |
                 TypeAttributes.AnsiClass |
@@ -599,6 +604,8 @@ namespace zzzUnity.Burst.CodeGen
             var asmDef = GetAsmDefinitionFromFile(Loader, "UnityEngine.CoreModule.dll");
             var runtimeInitializeOnLoadMethodAttribute =  asmDef.MainModule.GetType("UnityEngine", "RuntimeInitializeOnLoadMethodAttribute");
             var runtimeInitializeLoadType = asmDef.MainModule.GetType("UnityEngine", "RuntimeInitializeLoadType");
+            var preserveType = asmDef.MainModule.GetType("UnityEngine.Scripting", "PreserveAttribute");
+            _preserveAttributeConstructor = _assemblyDefinition.MainModule.ImportReference(preserveType.Methods.First(method => method.Name == ".ctor"));
 
             var burstDiscardType = asmDef.MainModule.GetType("Unity.Burst", "BurstDiscardAttribute");
             _burstDiscardAttributeConstructor = _assemblyDefinition.MainModule.ImportReference(burstDiscardType.Methods.First(method => method.Name == ".ctor"));

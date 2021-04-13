@@ -681,6 +681,38 @@ namespace Unity.Burst
                         break;
                 }
             }
+
+            if (IsSecondaryUnityProcess())
+            {
+                ForceDisableBurstCompilation = true;
+            }
+        }
+
+        private static bool IsSecondaryUnityProcess()
+        {
+#if UNITY_EDITOR
+#if UNITY_2021_1_OR_NEWER
+            if (UnityEditor.MPE.ProcessService.level == UnityEditor.MPE.ProcessLevel.Secondary
+                || UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#elif UNITY_2020_2_OR_NEWER
+            if (UnityEditor.MPE.ProcessService.level == UnityEditor.MPE.ProcessLevel.Slave
+                || UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#elif UNITY_2019_4_OR_NEWER
+            if (Unity.MPE.ProcessService.level == Unity.MPE.ProcessLevel.UMP_SLAVE
+                || UnityEditor.Experimental.AssetDatabaseExperimental.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#endif
+#endif
+
+            return false;
         }
 #endif
 #endif // !BURST_COMPILER_SHARED

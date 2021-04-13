@@ -196,8 +196,15 @@ namespace Unity.Burst
 
             foreach (var nestedType in burstMethod.DeclaringType.GetNestedTypes())
             {
-                // Only check for the injected Burst delegates
-                if (nestedType.Name != (burstMethod.Name + "$PostfixBurstDelegate"))
+                // We are looking for a signature like $"{burstMethod.Name}_(8 hex digits)$$PostfixBurstDelegate".
+                // It is enough to just check the prefix and the suffix are there, because we check the signature
+                // just after anyway.
+                if (!nestedType.Name.StartsWith(burstMethod.Name + "_"))
+                {
+                    continue;
+                }
+
+                if (!nestedType.Name.EndsWith("$PostfixBurstDelegate"))
                 {
                     continue;
                 }

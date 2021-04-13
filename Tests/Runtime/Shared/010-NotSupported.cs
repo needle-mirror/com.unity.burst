@@ -62,10 +62,10 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnReturnTypeNotSupported)]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static bool TestMethodWithMarshalAsReturnType()
+        [return: MarshalAs(UnmanagedType.I8)]
+        public static int TestMethodWithMarshalAsReturnType()
         {
-            return true;
+            return 42;
         }
 
         private static float3 a = new float3(1, 2, 3);

@@ -355,13 +355,22 @@ namespace zzzUnity.Burst.CodeGen
 
             var typeDefinition = typeReference.StrictResolve();
 
-            var methods = new List<MethodDefinition>();
+            // Initial capacity 1 because that is overwhelmingly the likely outcome.
+            var methods = new List<MethodDefinition>(1);
+
             foreach (var m in typeDefinition.Methods)
             {
-                if (m.Name == methodReferenceString.Name && m.Parameters.Count == methodReferenceString.ParameterTypes.Count)
+                if (m.Name != methodReferenceString.Name)
                 {
-                    methods.Add(m);
+                    continue;
                 }
+
+                if (m.Parameters.Count != methodReferenceString.ParameterTypes.Count)
+                {
+                    continue;
+                }
+
+                methods.Add(m);
             }
 
             // We expect to match at least one method
@@ -370,18 +379,52 @@ namespace zzzUnity.Burst.CodeGen
                 throw new InvalidOperationException($"Unable to find the method `{methodReferenceString}` from type `{typeReference}`");
             }
 
-            // We only support single override for now
+            // If we have more than one match we need to do a more expensive re-evaluation of the methods to figure out which types they use match.
             if (methods.Count > 1)
             {
-                throw new NotSupportedException($"Cannot resolve to the method `{methodReferenceString}` with {methods.Count} overloads from type `{typeReference}`. Expecting only 1");
+                MethodDefinition methodToUse = null;
+
+                foreach (var m in methods)
+                {
+                    var count = m.Parameters.Count;
+
+                    var match = true;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        var parameterTypeFullName = methodReferenceString.ParameterTypes[i].ToString(ReferenceStringFormatOptions.None).Replace("+", "/").Replace("[[", "<").Replace("]]", ">");
+
+                        if (m.Parameters[i].ParameterType.FullName != parameterTypeFullName)
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    if (match)
+                    {
+                        methodToUse = m;
+                        break;
+                    }
+                }
+
+                if (methodToUse == null)
+                {
+                    throw new Exception($"Unable to resolve the method `{methodReferenceString}` from type `{typeReference}` to a single method from set of {methods.Count} methods");
+                }
+
+                methods.Clear();
+                methods.Add(methodToUse);
             }
 
             var method = methods[0];
             var methodReference = new MethodReference(method.Name, method.ReturnType, typeReference);
+
             foreach (var param in method.Parameters)
             {
                 methodReference.Parameters.Add(new ParameterDefinition(param.Name, param.Attributes, param.ParameterType));
             }
+
             return methodReference;
         }
 
@@ -431,7 +474,12 @@ namespace zzzUnity.Burst.CodeGen
                 var genericType = new GenericInstanceType(typeReference);
                 foreach (var genericArgType in generic.GenericArguments)
                 {
-                    genericType.GenericArguments.Add(Resolve(genericArgType));
+                    var simpleGenericArgType = genericArgType as SimpleTypeReferenceString;
+                    if (simpleGenericArgType == null)
+                    {
+                        throw new InvalidOperationException($"Unable to resolve generic argument `{genericArgType}`");
+                    }
+                    genericType.GenericArguments.Add(Resolve(simpleGenericArgType));
                 }
                 typeReference = genericType;
             }

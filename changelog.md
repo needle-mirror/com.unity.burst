@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.5.2] - 2021-04-14
+
+
+### Added
+- Added support for having `[return: MarshalAs(UnmanagedType.U1)]` or `[return: MarshalAs(UnmanagedType.I1)]` on a `bool` return external function.
+
+### Removed
+
+### Changed
+- In order to prevent conflicts with the main Unity process, Burst is now inactive in secondary Unity processes, including the asset import worker and out-of-process profiler. This means that in those secondary processes, code that would normally be Burst-compiled will now run under Mono. In a future release of Burst, we hope to lift this restriction and allow Burst-compiled code to run in secondary Unity processes.
+
+### Fixed
+- Gracefully handle failing to find a particular assembly in the ILPP to prevent an ICE.
+- Fixed a bug where if a user had `Managed Stripping` mode set to `High`, our injected Direct Call delegate would be accidentally stripped out.
+- function calls using in modifiers on blittable structs where being treated as non blittable.
+- Crash when extracting sequence point information for error reporting/debug information generation.
+- The Direct Call injected delegate now has a unique suffix to avoid type-name clashes.
+- Direct Call extension methods that only differ on argument types are now supported (previously Burst's `AssemblyLoader` would complain about multiple matches).
+
+### Known Issues
+
 ## [1.5.1] - 2021-03-29
 
 

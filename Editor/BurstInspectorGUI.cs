@@ -53,14 +53,26 @@ namespace Unity.Burst.Editor
             "Coloured (Full debug information)"
         };
 
-        private static readonly string[] DisasmOptions =
+        private static string[] DisasmOptions;
+
+        private static string[] GetDisasmOptions()
         {
-            "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.Asm),
-            "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IL),
-            "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IR),
-            "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IROptimized),
-            "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IRPassAnalysis)
-        };
+            if (DisasmOptions == null)
+            {
+                // We can't initialize this in BurstInspectorGUI.cctor because BurstCompilerOptions may not yet
+                // have been initialized by BurstLoader. So we initialize on-demand here. This method doesn't need to
+                // be thread-safe because it's only called from the UI thread.
+                DisasmOptions = new[]
+                {
+                    "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.Asm),
+                    "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IL),
+                    "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IR),
+                    "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IROptimized),
+                    "\n" + BurstCompilerOptions.GetOption(BurstCompilerOptions.OptionDump, NativeDumpFlags.IRPassAnalysis)
+                };
+            }
+            return DisasmOptions;
+        }
 
         private static readonly SplitterState TreeViewSplitterState = new SplitterState(new float[] { 30, 70 }, new int[] { 128, 128 }, null);
 
@@ -460,7 +472,7 @@ namespace Unity.Burst.Editor
 
                         var baseOptions = options.ToString().Trim('\n', ' ');
 
-                        target.RawDisassembly = GetDisassembly(target.Method, baseOptions + DisasmOptions[(int)_disasmKind]);
+                        target.RawDisassembly = GetDisassembly(target.Method, baseOptions + GetDisasmOptions()[(int)_disasmKind]);
 
                         if (isTextFormatted)
                         {

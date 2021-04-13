@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Burst;
 using UnityBenchShared;
+using System.Runtime.CompilerServices;
 
 namespace Burst.Compiler.IL.Tests
 {
@@ -34,6 +35,38 @@ namespace Burst.Compiler.IL.Tests
         public static bool BoolArgAndReturnCall(bool value)
         {
             return BoolArgAndReturnSubFunction(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static bool BoolMarshalAsU1(bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsU1Call(bool value)
+        {
+            return BoolMarshalAsU1(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        private static bool BoolMarshalAsI1(bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsI1Call(bool value)
+        {
+            return BoolMarshalAsI1(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [return: MarshalAs(UnmanagedType.R4)]
+        private static bool BoolMarshalAsR4(bool b) => b;
+
+        [TestCompiler(true, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsNativeTypeOnReturnTypeNotSupported)]
+        public static bool BoolMarshalAsR4Call(bool value)
+        {
+            return BoolMarshalAsR4(value);
         }
 
         [TestCompiler]

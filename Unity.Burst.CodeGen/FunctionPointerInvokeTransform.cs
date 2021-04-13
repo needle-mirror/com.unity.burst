@@ -111,6 +111,9 @@ namespace zzzUnity.Burst.CodeGen
                 _nativePInvokeAttributeCtorDef = nativePInvokeAttribute.GetConstructors().First();
 #else
                 var asmDef = GetAsmDefinitionFromFile(loader, "UnityEngine.CoreModule.dll");
+                // bail if we can't find a reference, handled gracefully later
+                if (asmDef == null)
+                    return;
 
                 var monoPInvokeAttribute = asmDef.MainModule.GetType("AOT.MonoPInvokeCallbackAttribute");
                 _monoPInvokeAttributeCtorDef = monoPInvokeAttribute.GetConstructors().First();

@@ -42,6 +42,8 @@ namespace Unity.Burst.Editor
 
         public static int DebuggingLevel { get; private set; }
 
+        public static bool SafeShutdown { get; private set; }
+
         private static void VersionUpdateCheck()
         {
             var seek = "com.unity.burst@";
@@ -67,7 +69,7 @@ namespace Unity.Burst.Editor
                 {
                     UnityEngine.Debug.LogWarning($"[com.unity.burst] - '{result}' != '{version}'");
                 }
-                OnVersionChangeDetected(); 
+                OnVersionChangeDetected();
             }
         }
 
@@ -100,13 +102,9 @@ namespace Unity.Burst.Editor
 
         static BurstLoader()
         {
-#if UNITY_2020_2_OR_NEWER
-            Events.registeringPackages += PackageRegistrationEvent;
-#endif
-
             if (BurstCompilerOptions.ForceDisableBurstCompilation)
             {
-                UnityEngine.Debug.LogWarning("[com.unity.burst] Burst is disabled entirely from the command line");
+                UnityEngine.Debug.LogWarning("[com.unity.burst] Burst is disabled entirely, either from the command line or because this is not the main Unity process");
                 return;
             }
 
@@ -156,9 +154,18 @@ namespace Unity.Burst.Editor
             EditorApplication.playModeStateChanged += EditorApplicationOnPlayModeStateChanged;
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
 
-            VersionUpdateCheck();
+            SafeShutdown = false;
+#if UNITY_2020_2_OR_NEWER
+            Events.registeringPackages += PackageRegistrationEvent;
+            SafeShutdown = BurstCompiler.IsApiAvailable("SafeShutdown");
+#endif
 
-            BurstReflection.EnsureInitialized();  
+            if (!SafeShutdown)
+            {
+                VersionUpdateCheck();
+            }
+
+            BurstReflection.EnsureInitialized();
 
 #if !UNITY_2019_3_OR_NEWER
             // Workaround to update the list of assembly folders as soon as possible
@@ -192,7 +199,7 @@ namespace Unity.Burst.Editor
                 {
                     UnityEngine.Debug.Log($"Burst - Change of list of assembly folders:\n{string.Join("\n", assemblyFolderList)}");
                 }
-                BurstCompiler.UpdateAssemblerFolders(assemblyFolderList); 
+                BurstCompiler.UpdateAssemblerFolders(assemblyFolderList);
             }
             catch
             {
@@ -225,7 +232,7 @@ namespace Unity.Burst.Editor
 
             // Make sure BurstRuntime is initialized
             BurstRuntime.Initialize();
-            
+
             // Schedule upfront compilation of all methods in all assemblies,
             // with the goal of having as many methods as possible Burst-compiled
             // by the time the user enters PlayMode.
@@ -249,20 +256,44 @@ namespace Unity.Burst.Editor
 #if UNITY_2020_1_OR_NEWER
             _isQuitting = true;
 #endif
-
             BurstCompiler.Shutdown();
         }
 
 #if UNITY_2020_2_OR_NEWER
         private static void PackageRegistrationEvent(PackageRegistrationEventArgs obj)
         {
+            bool requireCleanup = false;
+            if (SafeShutdown)
+            {
+                foreach (var changed in obj.changedFrom)
+                {
+                    if (changed.name.Contains("com.unity.burst"))
+                    {
+                        requireCleanup = true;
+                        break;
+                    }
+                }
+            }
             foreach (var removed in obj.removed)
             {
                 if (removed.name.Contains("com.unity.burst"))
                 {
-                    EditorUtility.DisplayDialog("Burst Package Has Been Removed", "Please restart the Editor to continue.", "OK");
-                    BurstCompiler.Shutdown();
+                    requireCleanup = true;
                 }
+            }
+
+            if (requireCleanup)
+            {
+                if (EditorWindow.HasOpenInstances<BurstInspectorGUI>())
+                {
+                    var window = EditorWindow.GetWindow<BurstInspectorGUI>("Burst Inspector");
+                    window.Close();
+                }
+                if (!SafeShutdown)
+                {
+                    EditorUtility.DisplayDialog("Burst Package Has Been Removed", "Please restart the Editor to continue.", "OK");
+                }
+                BurstCompiler.Shutdown();
             }
         }
 #endif
@@ -511,7 +542,7 @@ namespace Unity.Burst.Editor
             var shouldTriggerEagerCompilation = true;
             var loggingEnabled = true;
 #else
-            var isCodegenCompleteMethod = typeof(CompilationPipeline).GetMethod("IsCodegenComplete", BindingFlags.NonPublic | BindingFlags.Static); 
+            var isCodegenCompleteMethod = typeof(CompilationPipeline).GetMethod("IsCodegenComplete", BindingFlags.NonPublic | BindingFlags.Static);
             var hasValidCodegenCompleteMethod =
                 isCodegenCompleteMethod != null &&
                 isCodegenCompleteMethod.GetParameters().Length == 0 &&
@@ -648,7 +679,7 @@ namespace Unity.Burst.Editor
             }
 #endif
         }
-        
+
 #if UNITY_2020_1_OR_NEWER
         private static void CreateDynamicMenuItems()
         {

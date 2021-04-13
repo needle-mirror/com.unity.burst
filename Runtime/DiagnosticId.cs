@@ -96,6 +96,9 @@ namespace Unity.Burst
         // JitCompiler
         ERR_MissingExternBindings = 1068,
 
+        // More ExternalFunctionParameterChecks
+        ERR_MarshalAsNativeTypeOnReturnTypeNotSupported = 1069,
+
         // AssertProcessor
         ERR_AssertTypeNotSupported = 1071,
 
