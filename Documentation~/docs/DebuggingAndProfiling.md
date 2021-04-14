@@ -12,10 +12,10 @@ Burst compiled code can be debugged using a native debugger by simply attaching 
 
 You can do this either via the [Jobs Menu](QuickStart.md#jobs-burst-menu) which will compile the code with native debugging enabled globally (this disables optimizations, so it will impact performance of Burst code).
 
-Alternatively, you can use the `Debug=true` option in the `[BurstCompile]` attribute for your job e.g.
+Alternatively, you can use the `Debug = true` option in the `[BurstCompile]` attribute for your job e.g.
 
 ```c#
-[BurstCompile(Debug=true)]
+[BurstCompile(Debug = true)]
 public struct MyJob : IJob
 {
     // ...

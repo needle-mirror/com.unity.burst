@@ -11,6 +11,38 @@ using System.Runtime.CompilerServices;
 
 namespace Unity.Burst
 {
+    /// <summary>
+    /// How the code should be optimized.
+    /// </summary>
+    public enum OptimizeFor
+    {
+        /// <summary>
+        /// The default optimization mode - uses <see cref="OptimizeFor.Balanced"/>.
+        /// </summary>
+        Default = 0,
+
+        /// <summary>
+        /// Optimize for performance - the compiler should make the most optimal binary possible.
+        /// </summary>
+        Performance = 1,
+
+        /// <summary>
+        /// Optimize for size - the compiler should make the smallest binary possible.
+        /// </summary>
+        Size = 2,
+
+        /// <summary>
+        /// Optimize for fast compilation - the compiler should perform some optimization, but take as little time as possible to do it.
+        /// </summary>
+        FastCompilation = 3,
+
+        /// <summary>
+        /// Optimize for balanced compilation - ensuring that good performance is obtained while keeping compile time as low as possible.
+        /// </summary>
+        Balanced = 4,
+    }
+
+#if !BURST_COMPILER_SHARED
     // FloatMode and FloatPrecision must be kept in sync with burst.h / Burst.Backend
 
     /// <summary>
@@ -22,14 +54,17 @@ namespace Unity.Burst
         /// Use the default target floating point mode - <see cref="FloatMode.Strict"/>.
         /// </summary>
         Default = 0,
+
         /// <summary>
         /// No floating point optimizations are performed.
         /// </summary>
         Strict = 1,
+
         /// <summary>
         /// Reserved for future.
         /// </summary>
         Deterministic = 2,
+
         /// <summary>
         /// Allows algebraically equivalent optimizations (which can alter the results of calculations), it implies :
         /// <para/> optimizations can assume results and arguments contain no NaNs or +/- Infinity and treat sign of zero as insignificant.
@@ -48,14 +83,17 @@ namespace Unity.Burst
         /// Use the default target floating point precision - <see cref="FloatPrecision.Medium"/>.
         /// </summary>
         Standard = 0,
+
         /// <summary>
         /// Compute with an accuracy of 1 ULP - highly accurate, but increased runtime as a result, should not be required for most purposes.
         /// </summary>
         High = 1,
+
         /// <summary>
         /// Compute with an accuracy of 3.5 ULP - considered acceptable accuracy for most tasks.
         /// </summary>
         Medium = 2,
+
         /// <summary>
         /// Compute with an accuracy lower than or equal to <see cref="FloatPrecision.Medium"/>, with some range restrictions (defined per function).
         /// </summary>
@@ -63,13 +101,13 @@ namespace Unity.Burst
     }
 
     /// <summary>
-    /// This attribute can be used to tag jobs as being Burst Compiled, and optionally set some compilation parameters.
+    /// This attribute is used to tag jobs or function-pointers as being Burst compiled, and optionally set compilation parameters.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Struct|AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Assembly)]
     public class BurstCompileAttribute : System.Attribute
     {
         /// <summary>
-        /// Gets or sets the float mode of operation for this burst compilation.
+        /// Gets or sets the float mode of operation for this Burst compilation.
         /// </summary>
         /// <value>
         /// The default is <see cref="FloatMode.Default"/>.
@@ -77,7 +115,7 @@ namespace Unity.Burst
         public FloatMode FloatMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the floating point precision to use for this burst compilation.
+        /// Gets or sets the floating point precision to use for this Burst compilation.
         /// Allows you to trade accuracy for speed of computation, useful when you don't require much precision.
         /// </summary>
         /// <value>
@@ -85,11 +123,19 @@ namespace Unity.Burst
         /// </value>
         public FloatPrecision FloatPrecision { get; set; }
 
+        internal bool? _compileSynchronously;
+
         /// <summary>
-        /// Gets or sets whether or not to burst compile the code immediately on first use, or in the background over time.
+        /// Gets or sets whether or not to Burst compile the code immediately on first use, or in the background over time.
         /// </summary>
-        /// <value>The default is false, true will force this code to be compiled synchronously on first invocation.</value>
-        public bool CompileSynchronously { get; set; }
+        /// <value>The default is <c>false</c>, <c>true</c> will force this code to be compiled synchronously on first invocation.</value>
+        public bool CompileSynchronously
+        {
+            get => _compileSynchronously.HasValue ? _compileSynchronously.Value : false;
+            set => _compileSynchronously = value;
+        }
+
+        internal bool? _debug;
 
         /// <summary>
         /// Gets or sets whether to compile the code in a way that allows it to be debugged.
@@ -99,7 +145,13 @@ namespace Unity.Burst
         /// <value>
         /// The default is <c>false</c>.
         /// </value>
-        public bool Debug { get; set; }
+        public bool Debug
+        {
+            get => _debug.HasValue ? _debug.Value : false;
+            set => _debug = value;
+        }
+
+        internal bool? _disableSafetyChecks;
 
         /// <summary>
         /// Gets or sets whether to disable safety checks for the current job or function pointer.
@@ -109,22 +161,43 @@ namespace Unity.Burst
         /// <value>
         /// The default is <c>false</c>.
         /// </value>
-        public bool DisableSafetyChecks { get; set; }
+        public bool DisableSafetyChecks
+        {
+            get => _disableSafetyChecks.HasValue ? _disableSafetyChecks.Value : false;
+            set => _disableSafetyChecks = value;
+        }
 
 #if UNITY_2019_3_OR_NEWER
+        internal bool? _disableDirectCall;
+
         /// <summary>
         /// Gets or sets a boolean to disable the translation of a static method call as direct call to
         /// the generated native method. By default, when compiling static methods with Burst and calling
         /// them from C#, they will be translated to a direct call to the Burst generated method.
         /// code. 
         /// </summary>
-        public bool DisableDirectCall { get; set; }
+        /// <value>
+        /// The default is <c>false</c>.
+        /// </value>
+        public bool DisableDirectCall
+        {
+            get => _disableDirectCall.HasValue ? _disableDirectCall.Value : false;
+            set => _disableDirectCall = value;
+        }
 #endif
+
+        /// <summary>
+        /// How should this entry-point be optimized.
+        /// </summary>
+        /// <value>
+        /// The default is <see cref="OptimizeFor.Default"/>.
+        /// </value>
+        public OptimizeFor OptimizeFor { get; set; }
 
         internal string[] Options { get; set; }
 
         /// <summary>
-        /// Tags a struct/method/class as being burst compiled, with the default <see cref="FloatPrecision"/>, <see cref="FloatMode"/> and <see cref="CompileSynchronously"/>.
+        /// Tags a struct/method/class as being Burst compiled, with the default <see cref="FloatPrecision"/>, <see cref="FloatMode"/> and <see cref="CompileSynchronously"/>.
         /// </summary>
         /// <example>
         /// <code>
@@ -140,11 +213,11 @@ namespace Unity.Burst
         }
 
         /// <summary>
-        /// Tags a struct/method/class as being burst compiled, with the specified <see cref="FloatPrecision"/>, <see cref="FloatMode"/> and the default <see cref="CompileSynchronously"/>.
+        /// Tags a struct/method/class as being Burst compiled, with the specified <see cref="FloatPrecision"/> and <see cref="FloatMode"/>.
         /// </summary>
         /// <example>
         /// <code>
-        /// [BurstCompile(FloatPrecision.Low,FloatMode.Fast)]
+        /// [BurstCompile(FloatPrecision.Low, FloatMode.Fast)]
         /// struct MyMethodsAreCompiledByBurstWithLowPrecisionAndFastFloatingPointMode
         /// {
         ///     //....
@@ -164,4 +237,5 @@ namespace Unity.Burst
             Options = options;
         }
     }
+#endif
 }

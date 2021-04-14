@@ -208,9 +208,44 @@ namespace Unity.Burst.Intrinsics
 		/// </summary>
         [FieldOffset(14)] public short SShort7;
 
-		/// <summary>
-		/// Get the 0th UInt of the vector
-		/// </summary>
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Get the 0th f16 of the vector
+        /// </summary>
+        [FieldOffset(0)] public f16 Half0;
+        /// <summary>
+        /// Get the 1st f16 of the vector
+        /// </summary>
+        [FieldOffset(2)] public f16 Half1;
+        /// <summary>
+        /// Get the 2nd f16 of the vector
+        /// </summary>
+        [FieldOffset(4)] public f16 Half2;
+        /// <summary>
+        /// Get the 3rd f16 of the vector
+        /// </summary>
+        [FieldOffset(6)] public f16 Half3;
+        /// <summary>
+        /// Get the 4th f16 of the vector
+        /// </summary>
+        [FieldOffset(8)] public f16 Half4;
+        /// <summary>
+        /// Get the 5th f16 of the vector
+        /// </summary>
+        [FieldOffset(10)] public f16 Half5;
+        /// <summary>
+        /// Get the 6th f16 of the vector
+        /// </summary>
+        [FieldOffset(12)] public f16 Half6;
+        /// <summary>
+        /// Get the 7th f16 of the vector
+        /// </summary>
+        [FieldOffset(14)] public f16 Half7;
+#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+
+        /// <summary>
+        /// Get the 0th UInt of the vector
+        /// </summary>
         [FieldOffset(0)] public uint UInt0;
 		/// <summary>
 		/// Get the 1st UInt of the vector
@@ -470,6 +505,42 @@ namespace Unity.Burst.Intrinsics
             UShort6 = g;
             UShort7 = h;
         }
+
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Splat a single f16 across the v128
+        /// </summary>
+        /// <param name="v">Splatted f16.</param>
+        public v128(f16 v)
+        {
+            this = default(v128);
+            Half0 = Half1 = Half2 = Half3 = Half4 = Half5 = Half6 = Half7 = v;
+        }
+
+        /// <summary>
+        /// Initialize the v128 with 8 half's
+        /// </summary>
+        /// <param name="a">f16 a.</param>
+        /// <param name="b">f16 b.</param>
+        /// <param name="c">f16 c.</param>
+        /// <param name="d">f16 d.</param>
+        /// <param name="e">f16 e.</param>
+        /// <param name="f">f16 f.</param>
+        /// <param name="g">f16 g.</param>
+        /// <param name="h">f16 h.</param>
+        public v128(f16 a, f16 b, f16 c, f16 d, f16 e, f16 f, f16 g, f16 h)
+        {
+            this = default(v128);
+            Half0 = a;
+            Half1 = b;
+            Half2 = c;
+            Half3 = d;
+            Half4 = e;
+            Half5 = f;
+            Half6 = g;
+            Half7 = h;
+        }
+#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 
         /// <summary>
         /// Splat a single int across the v128

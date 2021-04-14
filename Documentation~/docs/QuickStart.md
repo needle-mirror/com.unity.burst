@@ -58,7 +58,7 @@ public class MyBurst2Behavior : MonoBehaviour
 }
 ```
 
-By default (only within the Editor - See [AOT vs JIT](#just-in-time-jit-vs-ahead-of-time-aot-compilation)), Burst JIT compiles jobs asynchronously, but  the example above uses the option `CompileSynchronously = true` to make sure that the method is compiled on the first schedule. In general, you should use asynchronous compilation. See [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation)
+By default (only within the Editor - See [AOT vs JIT](#just-in-time-jit-vs-ahead-of-time-aot-compilation)), Burst JIT compiles jobs asynchronously, but the example above uses the option `CompileSynchronously = true` to make sure that the method is compiled on the first schedule. In general, you should use asynchronous compilation. See [`[BurstCompile]` options](AdvancedUsages.md#synchronous-compilation)
 
 <a name="jobs-burst-menu"></a>
 # Jobs/Burst Menu

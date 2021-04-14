@@ -1,4 +1,3 @@
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 using System;
 using System.Diagnostics;
 
@@ -445,4 +444,3 @@ namespace Unity.Burst.Intrinsics
         }
     }
 }
-#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS

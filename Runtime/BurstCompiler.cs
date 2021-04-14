@@ -125,114 +125,81 @@ namespace Unity.Burst
             }
         }
 
-        private static bool IsMatchingMethod(MethodInfo burstMethod, MethodInfo otherMethod)
+        [Conditional("ENABLE_UNITY_COLLECTIONS_CHECKS")]
+        private static void VerifyDelegateHasCorrectUnmanagedFunctionPointerAttribute<T>(T delegateMethod) where T : class
         {
-            if (burstMethod.ReturnType != otherMethod.ReturnType)
+            var attrib = delegateMethod.GetType().GetCustomAttribute<System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute>();
+            if (attrib == null || attrib.CallingConvention != CallingConvention.Cdecl)
             {
-                return false;
+#if !BURST_INTERNAL
+                UnityEngine.Debug.LogWarning($"The delegate type {delegateMethod.GetType().FullName} should be decorated with [UnmanagedFunctionPointer(CallingConvention.Cdecl)] to ensure runtime interoperabilty between managed code and Burst-compiled code.");
+#endif
+            }
+        }
+        /// <summary>
+        /// Compile an IL Post-Processed method.
+        /// </summary>
+        /// <param name="burstMethodHandle">The Burst method to compile.</param>
+        /// <param name="managedMethodHandle">The fallback managed method to use.</param>
+        /// <param name="delegateTypeHandle">The type of the delegate used to execute these methods.</param>
+        /// <returns>A token that must be passed to <see cref="GetILPPMethodFunctionPointer"/> to get an actual executable function pointer.</returns>
+        public static unsafe IntPtr CompileILPPMethod(RuntimeMethodHandle burstMethodHandle, RuntimeMethodHandle managedMethodHandle, RuntimeTypeHandle delegateTypeHandle)
+        {
+            if (burstMethodHandle.Value == IntPtr.Zero)
+            {
+                throw new ArgumentNullException(nameof(burstMethodHandle));
             }
 
-            var burstParameters = burstMethod.GetParameters();
-            var otherParameters = otherMethod.GetParameters();
-
-            if (burstParameters.Length != otherParameters.Length)
+            if (managedMethodHandle.Value == IntPtr.Zero)
             {
-                return false;
+                throw new ArgumentNullException(nameof(managedMethodHandle));
             }
 
-            for (var i = 0; i < burstParameters.Length; i++)
+            if (delegateTypeHandle.Value == IntPtr.Zero)
             {
-                if (burstParameters[i].ParameterType != otherParameters[i].ParameterType)
-                {
-                    return false;
-                }
+                throw new ArgumentNullException(nameof(delegateTypeHandle));
             }
 
-            return true;
+            var burstMethod = (MethodInfo)MethodBase.GetMethodFromHandle(burstMethodHandle);
+            var managedMethod = (MethodInfo)MethodBase.GetMethodFromHandle(managedMethodHandle);
+            var delegateType = Type.GetTypeFromHandle(delegateTypeHandle);
+            var managedFallbackDelegate = Delegate.CreateDelegate(delegateType, managedMethod);
+
+            return (IntPtr)Compile(new FakeDelegate(burstMethod), burstMethod, isFunctionPointer: true, managedFallbackDelegateObj: managedFallbackDelegate);
         }
 
         /// <summary>
-        /// Compiles a static method from a runtime method handle.
+        /// For a previous call to <see cref="CompileILPPMethod"/>, get the actual executable function pointer.
+        /// </summary>
+        /// <param name="ilppMethod">The result of a previous call to <see cref="CompileILPPMethod"/>.</param>
+        /// <returns>A pointer into an executable region, for running the function pointer.</returns>
+        public static unsafe void* GetILPPMethodFunctionPointer(IntPtr ilppMethod)
+        {
+            if (ilppMethod == IntPtr.Zero)
+            {
+                throw new ArgumentNullException(nameof(ilppMethod));
+            }
+
+            // If we are in the editor, we need to route a command to the compiler to start compiling the deferred ILPP compilation.
+            // Otherwise if we're in Burst's internal testing, or in a player build, we already actually have the actual executable
+            // pointer address, and we just return that.
+#if UNITY_EDITOR
+            var result = SendCommandToCompiler(BurstCompilerOptions.CompilerCommandILPPCompilation, "0x" + ilppMethod.ToInt64().ToString("X16"));
+            return new IntPtr(Convert.ToInt64(result, 16)).ToPointer();
+#else
+            return ilppMethod.ToPointer();
+#endif
+        }
+
+        /// <summary>
+        /// DO NOT USE - deprecated.
         /// </summary>
         /// <param name="handle">A runtime method handle.</param>
-        /// <returns>A raw pointer to the compiled method, or null if burst is disabled.</returns>
+        /// <returns>Nothing.</returns>
+        [Obsolete("This method will be removed in a future version of Burst")]
         public static unsafe void* CompileUnsafeStaticMethod(RuntimeMethodHandle handle)
         {
-            if (!IsEnabled)
-            {
-                return null;
-            }
-
-            if (handle.Value == IntPtr.Zero)
-            {
-                throw new ArgumentNullException(nameof(handle));
-            }
-
-            var burstMethod = (MethodInfo)MethodBase.GetMethodFromHandle(handle);
-
-            MethodInfo managedMethod = null;
-
-            foreach (var method in burstMethod.DeclaringType.GetMethods())
-            {
-                // Only check methods with the correct name.
-                if (method.Name != (burstMethod.Name + "$BurstManaged"))
-                {
-                    continue;
-                }
-
-                if (IsMatchingMethod(burstMethod, method))
-                {
-                    managedMethod = method;
-                    break;
-                }
-            }
-
-            if (managedMethod == null)
-            {
-                throw new NullReferenceException($"Could not find matching method for '{burstMethod}'");
-            }
-
-            Type delegateType = null;
-
-            foreach (var nestedType in burstMethod.DeclaringType.GetNestedTypes())
-            {
-                // Only check for the injected Burst delegates
-                if (nestedType.Name != (burstMethod.Name + "$PostfixBurstDelegate"))
-                {
-                    continue;
-                }
-
-                // Check that the signature of the invoke matches the signature of our method.
-                if (IsMatchingMethod(burstMethod, nestedType.GetMethod("Invoke")))
-                {
-                    delegateType = nestedType;
-                    break;
-                }
-            }
-
-            if (delegateType == null)
-            {
-                throw new NullReferenceException($"Could not find the delegate type '{delegateType}'");
-            }
-
-            var managedFallbackDelegate = Delegate.CreateDelegate(delegateType, managedMethod);
-
-            try
-            {
-                return Compile(new FakeDelegate(burstMethod), burstMethod, isFunctionPointer: true, managedFallbackDelegateObj: managedFallbackDelegate);
-            }
-            catch (UnityEngine.UnityException exception)
-            {
-                if (exception.Message.Contains("CompileAsyncDelegateMethod can only be called from the main thread"))
-                {
-                    GCHandle.Alloc(managedFallbackDelegate);
-                    return (void*)Marshal.GetFunctionPointerForDelegate(managedFallbackDelegate);
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -244,6 +211,7 @@ namespace Unity.Burst
         public static unsafe FunctionPointer<T> CompileFunctionPointer<T>(T delegateMethod) where T : class
         {
             VerifyDelegateIsNotMulticast<T>(delegateMethod);
+            VerifyDelegateHasCorrectUnmanagedFunctionPointerAttribute<T>(delegateMethod);
             // We have added support for runtime CompileDelegate in 2018.2+
             void* function = Compile(delegateMethod, true);
             return new FunctionPointer<T>(new IntPtr(function));
@@ -694,5 +662,5 @@ namespace Unity.Burst
             return false;
         }
 #endif
-    }
+        }
 }

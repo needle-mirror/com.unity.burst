@@ -82,7 +82,7 @@ public abstract class BurstCompiler
             $"--target={compiler.TargetArchitecture}",
             $"--format={compiler.ObjectFormat}",
             compiler.SafetyChecks ? "--safety-checks" : "",
-            $"--dump=\"None\"",
+            $"--dump=None",
             compiler.DisableVectors ? "--disable-vectors" : "",
             compiler.Link ? "" : "--nolink",
             $"--float-precision={compiler.FloatPrecision}",
@@ -129,6 +129,26 @@ public abstract class BurstCompiler
             });
     }
 
+    static string[] ArgumentsToResponseFile(bool usesMono, NPath targetDir, string[] commandLineArgs, out NPath responseFile)
+    {
+        var remainingArgs = usesMono? commandLineArgs.Skip(1) : commandLineArgs;
+        var joinedArgs = String.Join(Environment.NewLine, remainingArgs.Where(s => !String.IsNullOrEmpty(s)));
+        KnuthHash hash = new KnuthHash();
+        hash.Add(joinedArgs);
+        responseFile  = targetDir.Combine($"{hash.Value}.rsp");
+
+        Backend.Current.AddWriteTextAction(
+                responseFile,
+                joinedArgs,
+                "BurstResponseFile");
+
+        if (usesMono)
+        {
+            return new [] { commandLineArgs[0], $"@{responseFile}"};
+        }
+        return new [] {$"@{responseFile}"};
+    }
+
     public static BagOfObjectFilesLibrary SetupBurstCompilationForAssemblies(
         BurstCompiler compiler,
         DotNetAssembly unpatchedInputAssembly,
@@ -148,7 +168,8 @@ public abstract class BurstCompiler
             outputDirForPatchedAssemblies,
             (inputAssemblies, targetDir) =>
             {
-                var executableStringFor = HostPlatform.IsWindows ? BurstExecutable.ToString(SlashMode.Native) : "mono";
+                var usesMono = HostPlatform.IsWindows ? false : true;
+                var executableStringFor = !usesMono ? BurstExecutable.ToString(SlashMode.Native) : "mono";
                 var commandLineArgs = GetBurstCommandLineArgs(
                     compiler,
                     outputDirForObjectFile.Combine(pinvokeName),
@@ -159,13 +180,15 @@ public abstract class BurstCompiler
                 var inputPaths = AddDebugSymbolPaths(inputAssemblies);
                 var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName));
 
+                var finalArguments = ArgumentsToResponseFile(usesMono, targetDir, commandLineArgs, out var responseFile);
+
                 Backend.Current.AddAction(
                     "Burst",
                     //todo: make burst process pdbs
                     targetFiles.ToArray(),
-                    inputPaths.Concat(new[] {BurstExecutable}).ToArray(),
+                    inputPaths.Concat(new[] {BurstExecutable, responseFile}).ToArray(),
                     executableStringFor,
-                    commandLineArgs,
+                    finalArguments,
                     targetDirectories: new[] {outputDirForObjectFile}
                 );
             });
@@ -198,7 +221,8 @@ public abstract class BurstCompiler
             outputDirForPatchedAssemblies,
             (inputAssemblies, targetDir) =>
             {
-                var executableStringFor = HostPlatform.IsWindows ? BurstExecutable.ToString(SlashMode.Native) : "mono";
+                var usesMono = HostPlatform.IsWindows ? false : true;
+                var executableStringFor = !usesMono ? BurstExecutable.ToString(SlashMode.Native) : "mono";
 
                 var pinvokeName = HostPlatform.IsWindows
                     ? targetNativeLibrary.FileNameWithoutExtension
@@ -214,13 +238,16 @@ public abstract class BurstCompiler
                 var targetFiles = inputPaths.Select(p => targetDir.Combine(p.FileName))
                     .Concat(new[] {targetNativeLibrary});
 
+                var finalArguments = ArgumentsToResponseFile(usesMono, targetDir, commandLineArgs, out var responseFile);
+
                 Backend.Current.AddAction(
                     "Burst",
                     //todo: make burst process pdbs
                     targetFiles.ToArray(),
-                    inputPaths.Concat(new[] {BurstExecutable}).ToArray(),
+                    inputPaths.Concat(new[] {BurstExecutable, responseFile}).ToArray(),
                     executableStringFor,
-                    commandLineArgs);
+                    finalArguments
+                    );
             });
 
         return new DynamicLibrary(targetNativeLibrary, symbolFiles: null);

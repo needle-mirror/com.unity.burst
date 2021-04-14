@@ -1,6 +1,6 @@
 # Advanced Usages
 
-# BurstDiscard attribute
+# BurstDiscard Attribute
 
 When running some code in the full C# (not inside Burst compiled code), you may want to use some managed objects, but you would like to not compile these portions of code when compiling within Burst.
 
@@ -68,6 +68,27 @@ This option has some interactions with the global `Enable Safety Checks` option 
 
 - If `Enable Safety Checks` is set to `On`, safety checks will be enabled for all Burst-compiled code except those marked explicitly with `DisableSafetyChecks = true`.
 - If `Enable Safety Checks` is set to `Force On`, all code _even that marked with_ `DisableSafetyChecks = true` will be compiled with safety checks. This option even allows users to enable safety checks in any downstream packages they depend on so that if they encounter some unexpected behaviour, they can first check that the safety checks would not have caught it.
+
+# Optimization Choices
+
+Burst supports an `OptimizeFor` field on `BurstCompile` that lets users tell the compiler what should be the primary aim when optimizing a specific job or function-pointer:
+
+```c#
+[BurstCompile(OptimizeFor = OptimizeFor.FastCompilation)]
+public struct MyJob : IJob
+{
+    // ...
+}
+```
+
+There are a few options:
+
+- `Balanced` - the default, the compiler should optimize for code that runs fast, but still keeping compile time as low as possible.
+- `Performance` - the compiler should optimize the job focusing on making the resulting code run as fast as possible.
+- `Size` - the compiler should focus on making the code generated as small as possible.
+- `FastCompilation` - the compiler should do some optimizations, but focus on compiling the code as fast as possible.
+
+Note that when running with `FastCompilation` no vectorization, inlining, or loop optimizations will be performed.
 
 # Function Pointers
 
@@ -266,6 +287,48 @@ that can then be accessed from C# and HPC#:
 > - The type of the data is defined by the `T` in `SharedStatic<T>`.
 > - In order to identify a static field, you need to provide a context for it: the common way to solve this is to create a key for both the containing type (e.g `MutableStaticTest` in our example above) and to identify the field (e.g `IntFieldKey` class in our example) and by passing these classes as generic arguments of `SharedStatic<int>.GetOrCreate<MutableStaticTest, IntFieldKey>()`.
 > - It is recommended to always initialize the shared static field in C# from a static constructor before accessing it from HPC#. Not initializing the data before accessing it can lead to an undefined initialization state.
+
+# Assembly-Level BurstCompile
+
+Burst also supports an **assembly** level `BurstCompile` attribute:
+
+```c#
+[assembly: BurstCompile(CompileSynchronously = true)]
+```
+
+Applying a `BurstCompile` attribute to the assembly means that you can set options for all Burst jobs and function-pointers within an assembly, using a single attribute. For example, let's say you've got an assembly that contains just gameplay code, and this gameplay code needs to run fast (you are using Burst after all!), but you are more interested in quicker iterations using Burst. For this assembly you can put:
+
+```c#
+[assembly: BurstCompile(OptimizeFor = OptimizeFor.FastCompilation)]
+```
+
+Which will mean Burst will compile the code as fast as it possibly can, allowing users to iterate on gameplay code much more quickly. Crucially, this means that other assemblies will compile as they did before, allowing users much more control on how Burst is working with your code.
+
+Assembly-level `BurstCompile` attributes iterate with any job or function-pointer attribute, and also with any globally set options from the Burst editor menu:
+
+1. Any editor-menu setting takes precedence. For instance, if you set `Native Debug Compilation` on from the editor-menu, you'll always get code that is ready to be debugged.
+2. Any `BurstCompile` attribute on a job or function-pointer then is checked next. If you had `CompileSynchronously = true` in the `BurstCompile`, then you'll get synchronous compilation.
+3. Otherwise, any remaining settings are sourced from any assembly-level attribute.
+
+Here's an example:
+
+```c#
+[assembly: BurstCompile(OptimizeFor = OptimizeFor.FastCompilation)]
+
+// This job will be optimized for fast-compilation, because the per-assembly BurstCompile asked for it!
+[BurstCompile]
+struct AJob : IJob
+{
+    // ...
+}
+
+// This job will be optimized for size, because the per-job BurstCompile asked for it!
+[BurstCompile(OptimizeFor = OptimizeFor.Size)]
+struct BJob : IJob
+{
+    // ...
+}
+```
 
 # Dynamic dispatch based on runtime CPU features 
 

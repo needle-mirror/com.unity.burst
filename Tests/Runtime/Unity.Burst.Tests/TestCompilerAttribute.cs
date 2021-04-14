@@ -77,9 +77,16 @@ namespace Burst.Compiler.IL.Tests
                 return method.parms.Arguments.ToArray();
             }
 
+            protected unsafe Delegate CompileDelegate(ITestExecutionContext context, MethodInfo methodInfo,
+                                                               Type delegateType, byte* returnBox, out Type returnBoxType) {
+                return CompileDelegate(context, methodInfo, delegateType, returnBox, out returnBoxType, out _);
+            }
+
             protected unsafe override Delegate CompileDelegate(ITestExecutionContext context, MethodInfo methodInfo,
-                Type delegateType, byte* returnBox, out Type returnBoxType)
+                                                               Type delegateType, byte* returnBox, out Type returnBoxType,
+                                                               out Delegate interpretDelegate)
             {
+                interpretDelegate = null;
                 returnBoxType = null;
 
                 var functionDelegate = Delegate.CreateDelegate(delegateType, methodInfo);
@@ -96,6 +103,12 @@ namespace Burst.Compiler.IL.Tests
             protected override object CompileFunctionPointer(MethodInfo methodInfo, Type functionType)
             {
                 throw new NotImplementedException();
+            }
+
+            protected override bool InterpretMethod(Delegate interpretDelegate, MethodInfo methodInfo, object[] args, Type returnType, out string reason, out object result) {
+                reason = null;
+                result = null;
+                return false;
             }
 
             protected override void Setup()

@@ -8,3 +8,11 @@ Conference presentations given by the Burst team:
 * [Deep Dive into the Burst Compiler - Unite LA 2018](https://www.youtube.com/watch?v=QkM6zEGFhDY)
 * [C# to Machine Code - GDC 2018](https://www.youtube.com/watch?v=NF6kcNS6U80)
 * [Using the native debugger for Burst Compiled Code](https://www.youtube.com/watch?v=nou6AIHKJz0)
+
+# Blogs
+
+Blog posts written by members of the Burst team posted on [blogs.unity3d.com](http://blogs.unity3d.com):
+
+* [Optimize your projects with Burst Compiler 1.3](https://blogs.unity3d.com/2020/05/27/optimize-your-projects-with-burst-compiler-1-3/)
+* [Enhanced Aliasing with Burst](https://blogs.unity3d.com/2020/09/07/enhanced-aliasing-with-burst/)
+* [In parameters in Burst](https://blogs.unity3d.com/2020/11/25/in-parameters-in-burst/)

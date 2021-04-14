@@ -19,6 +19,13 @@ using Unity.Jobs.LowLevel.Unsafe;
 #endif //!UNITY_DOTSPLAYER && !NET_DOTS
 namespace Unity.Burst
 {
+    internal enum GlobalSafetyChecksSettingKind
+    {
+        Off = 0,
+        On = 1,
+        ForceOn = 2,
+    }
+
 #if !UNITY_DOTSPLAYER && !NET_DOTS
     /// <summary>
     /// Options available at Editor time and partially at runtime to control the behavior of the compilation and to enable/disable burst jobs.
@@ -49,7 +56,7 @@ namespace Unity.Burst
         internal const string OptionGroup = "group";
         internal const string OptionPlatform = "platform=";
         internal const string OptionBackend = "backend=";
-        internal const string OptionSafetyChecks = "safety-checks";
+        internal const string OptionGlobalSafetyChecksSetting = "global-safety-checks-setting=";
         internal const string OptionDisableSafetyChecks = "disable-safety-checks";
         internal const string OptionDisableOpt = "disable-opt";
         internal const string OptionFastMath = "fastmath";
@@ -80,7 +87,6 @@ namespace Unity.Burst
         // -------------------------------------------------------
         // Options used by the Jit compiler
         // -------------------------------------------------------
-
         internal const string OptionJitDisableFunctionCaching = "disable-function-caching";
         internal const string OptionJitDisableAssemblyCaching = "disable-assembly-caching";
         internal const string OptionJitEnableAssemblyCachingLogs = "enable-assembly-caching-logs";
@@ -97,6 +103,8 @@ namespace Unity.Burst
         internal const string OptionJitProvider = "jit-provider=";
         internal const string OptionJitSkipCheckDiskCache = "skip-check-disk-cache";
         internal const string OptionJitSkipBurstInitialize = "skip-burst-initialize";
+
+        internal const string OptionEnableInterpreter = "enable-interpreter";
 
         // -------------------------------------------------------
         // Options used by the Aot compiler
@@ -117,8 +125,8 @@ namespace Unity.Burst
         internal const string OptionAotUsePlatformSDKLinkers = "use-platform-sdk-linkers";
         internal const string OptionAotOnlyStaticMethods = "only-static-methods";
         internal const string OptionMethodPrefix = "method-prefix=";
-        internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
-        internal const string OptionAotEmitLlvmObjects = "emit-llvm-objects";        
+        internal const string OptionAotNoNativeToolchain = "no-native-toolchain";
+        internal const string OptionAotEmitLlvmObjects = "emit-llvm-objects";
         internal const string OptionAotKeyFolder = "key-folder=";
         internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
@@ -129,6 +137,7 @@ namespace Unity.Burst
         internal const string OptionOutputMode = "output-mode=";
         internal const string OptionAlwaysCreateOutput = "always-create-output=";
         internal const string OptionAotPdbSearchPaths = "pdb-search-paths=";
+        internal const string OptionSafetyChecks = "safety-checks";
 
         internal const string CompilerCommandShutdown = "$shutdown";
         internal const string CompilerCommandCancel = "$cancel";
@@ -148,6 +157,7 @@ namespace Unity.Burst
         internal const string CompilerCommandSetProfileCallbacks = "$set_profile_callbacks";
         internal const string CompilerCommandUnloadBurstNatives = "$unload_burst_natives";
         internal const string CompilerCommandIsNativeApiAvailable = "$is_native_api_available";
+        internal const string CompilerCommandILPPCompilation = "$ilpp_compilation";
 
         // All the following content is exposed to the public interface
 
@@ -333,7 +343,7 @@ namespace Unity.Burst
                 }
             }
         }
-		/// <summary> 
+		/// <summary>
 		/// Enable debugging mode
 		/// </summary>
         public bool EnableBurstDebug
@@ -439,6 +449,21 @@ namespace Unity.Burst
             return true;
         }
 
+        private static bool TryGetAttribute(Assembly assembly, out BurstCompileAttribute attribute)
+        {
+            // We don't fail if assembly == null as this method is being called by native code and doesn't expect to crash
+            if (assembly == null)
+            {
+                attribute = null;
+                return false;
+            }
+
+            // Fetch options from attribute
+            attribute = assembly.GetCustomAttribute<BurstCompileAttribute>();
+
+            return attribute != null;
+        }
+
         private static BurstCompileAttribute GetBurstCompileAttribute(MemberInfo memberInfo)
         {
             var result = memberInfo.GetCustomAttribute<BurstCompileAttribute>();
@@ -483,19 +508,65 @@ namespace Unity.Burst
         }
 
         /// <summary>
-        /// Gets the options for the specified member. Returns <c>false</c> if the `[BurstCompile]` attribute was not found
+        /// Merges the attributes from the assembly into the member attribute, such that if any field of the member attribute
+        /// was not specifically set by the user (or is a default), the assembly level setting is used for the Burst compilation.
+        /// </summary>
+        internal static void MergeAttributes(ref BurstCompileAttribute memberAttribute, in BurstCompileAttribute assemblyAttribute)
+        {
+            if (memberAttribute.FloatMode == FloatMode.Default)
+            {
+                memberAttribute.FloatMode = assemblyAttribute.FloatMode;
+            }
+
+            if (memberAttribute.FloatPrecision == FloatPrecision.Standard)
+            {
+                memberAttribute.FloatPrecision = assemblyAttribute.FloatPrecision;
+            }
+
+            if (memberAttribute.OptimizeFor == OptimizeFor.Default)
+            {
+                memberAttribute.OptimizeFor = assemblyAttribute.OptimizeFor;
+            }
+
+            if (!memberAttribute._compileSynchronously.HasValue && assemblyAttribute._compileSynchronously.HasValue)
+            {
+                memberAttribute._compileSynchronously = assemblyAttribute._compileSynchronously;
+            }
+
+            if (!memberAttribute._debug.HasValue && assemblyAttribute._debug.HasValue)
+            {
+                memberAttribute._debug = assemblyAttribute._debug;
+            }
+
+            if (!memberAttribute._disableDirectCall.HasValue && assemblyAttribute._disableDirectCall.HasValue)
+            {
+                memberAttribute._disableDirectCall = assemblyAttribute._disableDirectCall;
+            }
+
+            if (!memberAttribute._disableSafetyChecks.HasValue && assemblyAttribute._disableSafetyChecks.HasValue)
+            {
+                memberAttribute._disableSafetyChecks = assemblyAttribute._disableSafetyChecks;
+            }
+        }
+
+        /// <summary>
+        /// Gets the options for the specified member. Returns <c>false</c> if the `[BurstCompile]` attribute was not found.
         /// </summary>
         /// <returns><c>false</c> if the `[BurstCompile]` attribute was not found; otherwise <c>true</c></returns>
         internal bool TryGetOptions(MemberInfo member, bool isJit, out string flagsOut, bool isForEagerCompilation = false, bool isForILPostProcessing = false)
         {
             flagsOut = null;
-            BurstCompileAttribute attr;
-            if (!TryGetAttribute(member, out attr, isForEagerCompilation))
+            if (!TryGetAttribute(member, out var memberAttribute, isForEagerCompilation))
             {
                 return false;
             }
 
-            flagsOut = GetOptions(isJit, attr, isForEagerCompilation, isForILPostProcessing);
+            if (TryGetAttribute(member.Module.Assembly, out var assemblyAttribute))
+            {
+                MergeAttributes(ref memberAttribute, in assemblyAttribute);
+            }
+
+            flagsOut = GetOptions(isJit, memberAttribute, isForEagerCompilation, isForILPostProcessing);
             return true;
         }
 
@@ -511,12 +582,10 @@ namespace Unity.Burst
                 AddOption(flagsBuilderOut, GetOption(OptionJitEnableSynchronousCompilation));
             }
 
-            var shouldEnableSafetyChecks = EnableBurstSafetyChecks;
-
             if (isForILPostProcessing)
             {
                 // IL Post Processing compiles are the only thing set to low priority.
-                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, CompilationPriority.LowPriority));
+                AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, CompilationPriority.ILPP));
             }
             else if (isJit && isForEagerCompilation)
             {
@@ -536,8 +605,8 @@ namespace Unity.Burst
                 // - If it's not set when entering play mode, then we only want to wait
                 //   for methods that explicitly have CompileSynchronously=true on their attributes.
                 var priority = (attr?.CompileSynchronously ?? false)
-                    ? CompilationPriority.HighPriority
-                    : CompilationPriority.LowestPriority;
+                    ? CompilationPriority.EagerCompilationSynchronous
+                    : CompilationPriority.EagerCompilationAsynchronous;
                 AddOption(flagsBuilderOut, GetOption(OptionJitCompilationPriority, priority));
 
                 // Don't call `burst.initialize` when we're eager-compiling.
@@ -556,38 +625,53 @@ namespace Unity.Burst
                     AddOption(flagsBuilderOut, GetOption(OptionFloatPrecision, attr.FloatPrecision));
                 }
 
-                // [BurstCompile(DisableSafetyChecks = true)] takes precedence over EnableBurstSafetyChecks
+                // We disable safety checks for jobs with `[BurstCompile(DisableSafetyChecks = true)]`.
                 if (attr.DisableSafetyChecks)
                 {
-                    shouldEnableSafetyChecks = false;
+                    AddOption(flagsBuilderOut, GetOption(OptionDisableSafetyChecks));
                 }
 
                 if (attr.Options != null)
                 {
                     foreach (var option in attr.Options)
                     {
-                        if (!String.IsNullOrEmpty(option))
+                        if (!string.IsNullOrEmpty(option))
                         {
                             AddOption(flagsBuilderOut, option);
                         }
                     }
                 }
+
+                switch (attr.OptimizeFor)
+                {
+                    case OptimizeFor.Default:
+                    case OptimizeFor.Balanced:
+                        AddOption(flagsBuilderOut, GetOption(OptionOptLevel, 2));
+                        break;
+                    case OptimizeFor.Performance:
+                        AddOption(flagsBuilderOut, GetOption(OptionOptLevel, 3));
+                        break;
+                    case OptimizeFor.Size:
+                        AddOption(flagsBuilderOut, GetOption(OptionOptForSize));
+                        AddOption(flagsBuilderOut, GetOption(OptionOptLevel, 3));
+                        break;
+                    case OptimizeFor.FastCompilation:
+                        AddOption(flagsBuilderOut, GetOption(OptionOptLevel, 1));
+                        break;
+                }
             }
 
-            // ForceEnableBurstSafetyChecks takes precedence over any other setting.
             if (ForceEnableBurstSafetyChecks)
             {
-                shouldEnableSafetyChecks = true;
+                AddOption(flagsBuilderOut, GetOption(OptionGlobalSafetyChecksSetting, GlobalSafetyChecksSettingKind.ForceOn));
             }
-
-            // Fetch options from attribute
-            if (shouldEnableSafetyChecks)
+            else if (EnableBurstSafetyChecks)
             {
-                AddOption(flagsBuilderOut, GetOption(OptionSafetyChecks));
+                AddOption(flagsBuilderOut, GetOption(OptionGlobalSafetyChecksSetting, GlobalSafetyChecksSettingKind.On));
             }
             else
             {
-                AddOption(flagsBuilderOut, GetOption(OptionDisableSafetyChecks));
+                AddOption(flagsBuilderOut, GetOption(OptionGlobalSafetyChecksSetting, GlobalSafetyChecksSettingKind.Off));
             }
 
             if (isJit && EnableBurstTimings)
@@ -681,6 +765,38 @@ namespace Unity.Burst
                         break;
                 }
             }
+
+            if (IsSecondaryUnityProcess())
+            {
+                ForceDisableBurstCompilation = true;
+            }
+        }
+
+        private static bool IsSecondaryUnityProcess()
+        {
+#if UNITY_EDITOR
+#if UNITY_2021_1_OR_NEWER
+            if (UnityEditor.MPE.ProcessService.level == UnityEditor.MPE.ProcessLevel.Secondary
+                || UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#elif UNITY_2020_2_OR_NEWER
+            if (UnityEditor.MPE.ProcessService.level == UnityEditor.MPE.ProcessLevel.Slave
+                || UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#elif UNITY_2019_4_OR_NEWER
+            if (Unity.MPE.ProcessService.level == Unity.MPE.ProcessLevel.UMP_SLAVE
+                || UnityEditor.Experimental.AssetDatabaseExperimental.IsAssetImportWorkerProcess())
+            {
+                return true;
+            }
+#endif
+#endif
+
+            return false;
         }
 #endif
 #endif // !BURST_COMPILER_SHARED
@@ -703,12 +819,13 @@ namespace Unity.Burst
         Switch = 10,
         Stadia = 11,
         tvOS = 12,
+        EmbeddedLinux = 13,
     }
 #endif
 
-// Need this enum for CPU intrinsics to work, so exposing it to Tiny too
+    // Need this enum for CPU intrinsics to work, so exposing it to Tiny too
 #endif //!UNITY_DOTSPLAYER && !NET_DOTS
-// Don't expose the enum in Burst.Compiler.IL, need only in Unity.Burst.dll which is referenced by Burst.Compiler.IL.Tests
+    // Don't expose the enum in Burst.Compiler.IL, need only in Unity.Burst.dll which is referenced by Burst.Compiler.IL.Tests
 #if !BURST_COMPILER_SHARED
 // Make the enum public for btests via Unity.Burst.dll; leave it internal in the package
 #if BURST_INTERNAL
@@ -807,10 +924,10 @@ namespace Unity.Burst
     internal enum CompilationPriority
 #endif
     {
-        HighPriority     = 0,
-        StandardPriority = 1,
-        LowPriority      = 2,
-        LowestPriority   = 3,
+        EagerCompilationSynchronous  = 0,
+        Asynchronous                 = 1,
+        ILPP                         = 2,
+        EagerCompilationAsynchronous = 3,
     }
 
 #if UNITY_EDITOR

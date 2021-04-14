@@ -1,9 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-#if !BURST_COMPILER_SHARED
-using Unity.Burst.LowLevel;
-#endif
 
 namespace Unity.Burst
 {
@@ -138,7 +135,7 @@ namespace Unity.Burst
         internal static bool LoadAdditionalLibraryInternal(string pathToLibBurstGenerated)
         {
 #if !UNITY_DOTSRUNTIME
-            return (bool)typeof(BurstCompilerService).GetMethod("LoadBurstLibrary").Invoke(null, new object[] { pathToLibBurstGenerated });
+            return (bool)typeof(Unity.Burst.LowLevel.BurstCompilerService).GetMethod("LoadBurstLibrary").Invoke(null, new object[] { pathToLibBurstGenerated });
 #else
             return false;
 #endif
@@ -150,12 +147,15 @@ namespace Unity.Burst
         {
         }
 
-	internal class PreserveAttribute : System.Attribute {}
+        // Prevent BurstCompilerService.Log from being stripped, introduce PreserveAttribute to avoid
+        //requiring a unityengine using directive, il2cpp will see the attribute and know to not strip
+        //the Log method and its BurstCompilerService.Log dependency
+        internal class PreserveAttribute : System.Attribute {}
 
-	[Preserve]
+        [Preserve]
         internal static unsafe void Log(byte* message, int logType, byte* fileName, int lineNumber)
         {
-            BurstCompilerService.Log((byte*) 0, (BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
+            Unity.Burst.LowLevel.BurstCompilerService.Log((byte*) 0, (Unity.Burst.LowLevel.BurstCompilerService.BurstLogType)logType, message, fileName, lineNumber);
         }
 #elif UNITY_2019_4_OR_NEWER
         // Because we can't back-port the new API BurstCompilerService.Log introduced in 2020.1
@@ -225,6 +225,17 @@ namespace Unity.Burst
 
 #endif // !BURST_COMPILER_SHARED
 
+
+        /// <summary>
+        /// Return a pointer to read-only memory consisting of the literal UTF-8 bytes of a string constant.
+        /// </summary>
+        /// <param name="str">A string which must a string literal</param>
+        /// <param name="byteCount">Receives the number of UTF-8 encoded bytes the constant contains (excluding null terminator)</param>
+        /// <returns>A pointer to constant data representing the UTF-8 encoded bytes of the string literal, terminated with a null terminator</returns>
+        public unsafe static byte* GetUTF8LiteralPointer(string str, out int byteCount)
+        {
+            throw new NotImplementedException("This function only works from Burst");
+        }
 
     }
 }

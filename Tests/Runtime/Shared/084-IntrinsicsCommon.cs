@@ -16,13 +16,11 @@ namespace Burst.Compiler.IL.Tests
             return BurstCompiler.IsEnabled ? 1 : 0;
         }
 
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC
         [TestCompiler]
         public static void CheckPause()
         {
             Pause();
         }
-#endif
 
         public unsafe struct Buffer : IDisposable
         {

@@ -96,6 +96,9 @@ namespace Unity.Burst
         // JitCompiler
         ERR_MissingExternBindings = 1068,
 
+        // More ExternalFunctionParameterChecks
+        ERR_MarshalAsNativeTypeOnReturnTypeNotSupported = 1069,
+
         // AssertProcessor
         ERR_AssertTypeNotSupported = 1071,
 
@@ -208,5 +211,7 @@ namespace Unity.Burst
 
         // Loading from a non-pointer / non-reference is not supported
         ERR_LdobjFromANonPointerNonReference = 1381,
+
+        ERR_StringLiteralRequired = 1382,
     }
 }

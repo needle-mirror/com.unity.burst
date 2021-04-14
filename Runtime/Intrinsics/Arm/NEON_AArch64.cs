@@ -10,12 +10,10 @@ namespace Unity.Burst.Intrinsics
         /// </summary>
         public unsafe partial class Neon
         {
-#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
             /// <summary>
             /// Evaluates to true at compile time if Armv8.2 extension feature intrinsics are supported. These include DotProd, Crypto, RDMA
             /// </summary>
             public static bool IsNeonArmv82FeaturesSupported { get { return false; } }
-#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 
             /// <summary>Floating-point Add (vector). This instruction adds corresponding vector elements in the two source SIMD&amp;FP registers, writes the result into a vector, and writes the vector to the destination SIMD&amp;FP register. All the values in this instruction are floating-point values.This instruction can generate a floating-point exception. Depending on the settings in FPCR, the exception results in either a flag being set in FPSR or a synchronous exception being generated. For more information, see Floating-point exception traps.Depending on the settings in the CPACR_EL1, CPTR_EL2, and CPTR_EL3 registers, and the current Security state and Exception level, an attempt to execute the instruction might be trapped.
             /// <br/>Equivalent instruction: <c>FADD Dd,Dn,Dm</c></summary>

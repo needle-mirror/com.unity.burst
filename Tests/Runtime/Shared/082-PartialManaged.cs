@@ -3,6 +3,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Burst;
+using Burst.Compiler.IL.Tests.Helpers;
 #if BURST_TESTS_ONLY
 using Burst.Compiler.IL.DebugInfo;
 using Burst.Compiler.IL.Jit;
@@ -62,7 +63,7 @@ namespace Burst.Compiler.IL.Tests
         public void TestThrowExceptionOnNonExistingMethod()
         {
             MethodInfo info = typeof(PartialManaged).GetMethod("NonExistingMethod");
-            JitCompiler compiler = new JitCompiler(new PortablePdbCache());
+            JitCompiler compiler = JitCompilerHelper.CreateJitCompiler("NonExistingMethod");
             Assert.Throws<ArgumentNullException>(() => compiler.CompileMethod(info));
         }
 #endif
@@ -140,6 +141,57 @@ namespace Burst.Compiler.IL.Tests
         private class MyClass
         {
             public int value;
+        }
+
+        private class SomeClassWithMixedStatics
+        {
+            public static int SomeInt = 42;
+
+            public static readonly SharedStatic<int> SomeSharedStatic = SharedStatic<int>.GetOrCreate<int>();
+
+            [BurstDiscard]
+            private static void DoSomethingWithStaticInt(ref int x) => x = SomeInt;
+
+            public static int DoSomething()
+            {
+                ref var data = ref SomeSharedStatic.Data;
+                DoSomethingWithStaticInt(ref data);
+                return SomeSharedStatic.Data;
+            }
+        }
+
+        [TestCompiler(OverrideManagedResult = 0)]
+        public static int DoSomethingThatUsesMixedStatics()
+        {
+            return SomeClassWithMixedStatics.DoSomething();
+        }
+
+        private class SomeClassWithMixedStaticsWithExplicitStaticConstructor
+        {
+            public static int SomeInt = 42;
+
+            public static readonly SharedStatic<int> SomeSharedStatic = SharedStatic<int>.GetOrCreate<int>();
+
+            static SomeClassWithMixedStaticsWithExplicitStaticConstructor()
+            {
+                SomeInt = 1;
+            }
+
+            [BurstDiscard]
+            private static void DoSomethingWithStaticInt(ref int x) => x = SomeInt;
+
+            public static int DoSomething()
+            {
+                ref var data = ref SomeSharedStatic.Data;
+                DoSomethingWithStaticInt(ref data);
+                return SomeSharedStatic.Data;
+            }
+        }
+
+        [TestCompiler(OverrideManagedResult = 0)]
+        public static int DoSomethingThatUsesMixedStaticsWithExplicitStaticConstructor()
+        {
+            return SomeClassWithMixedStaticsWithExplicitStaticConstructor.DoSomething();
         }
     }
 }

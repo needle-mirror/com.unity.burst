@@ -117,13 +117,13 @@ namespace Unity.Burst
             if (value)
             {
                 if (destIndex >= destLength) return;
-                dest[destIndex++] = (byte) 'T';
+                dest[destIndex++] = (byte)'T';
                 if (destIndex >= destLength) return;
-                dest[destIndex++] = (byte) 'r';
+                dest[destIndex++] = (byte)'r';
                 if (destIndex >= destLength) return;
-                dest[destIndex++] = (byte) 'u';
+                dest[destIndex++] = (byte)'u';
                 if (destIndex >= destLength) return;
-                dest[destIndex++] = (byte) 'e';
+                dest[destIndex++] = (byte)'e';
             }
             else
             {
@@ -536,7 +536,7 @@ namespace Unity.Burst
             return (byte)'?';
         }
 
-        private static readonly char[] SplitByColon = new char[] { ':'};
+        private static readonly char[] SplitByColon = new char[] { ':' };
 
 #if !NET_DOTS
         private static void OptsSplit(string fullFormat, out string padding, out string format)
@@ -551,7 +551,7 @@ namespace Unity.Burst
             }
             else if (split.Length == 1)
             {
-                if (format[0]==',')
+                if (format[0] == ',')
                 {
                     padding = format;
                     format = null;
@@ -686,7 +686,7 @@ namespace Unity.Burst
 
             if (!string.IsNullOrEmpty(padding))
             {
-                if (padding[0]!=',')
+                if (padding[0] != ',')
                 {
                     throw new ArgumentException($"Invalid padding `{padding}`, expecting to start with a leading `,` comma.");
                 }

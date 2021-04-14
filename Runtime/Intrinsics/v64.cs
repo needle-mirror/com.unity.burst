@@ -110,9 +110,28 @@ namespace Unity.Burst.Intrinsics
 		/// </summary>
         [FieldOffset(6)] public short SShort3;
 
-		/// <summary>
-		/// Get the 0th UInt of the vector
-		/// </summary>
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Get the 0th f16 of the vector
+        /// </summary>
+        [FieldOffset(0)] public f16 Half0;
+        /// <summary>
+        /// Get the 1st f16 of the vector
+        /// </summary>
+        [FieldOffset(2)] public f16 Half1;
+        /// <summary>
+        /// Get the 2nd f16 of the vector
+        /// </summary>
+        [FieldOffset(4)] public f16 Half2;
+        /// <summary>
+        /// Get the 3rd f16 of the vector
+        /// </summary>
+        [FieldOffset(6)] public f16 Half3;
+#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+
+        /// <summary>
+        /// Get the 0th UInt of the vector
+        /// </summary>
         [FieldOffset(0)] public uint UInt0;
 		/// <summary>
 		/// Get the 1st UInt of the vector
@@ -276,6 +295,34 @@ namespace Unity.Burst.Intrinsics
             UShort2 = c;
             UShort3 = d;
         }
+
+#if BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
+        /// <summary>
+        /// Splat a single f16 across the v64
+        /// </summary>
+        /// <param name="v">Splatted f16</param>
+        public v64(f16 v)
+        {
+            this = default(v64);
+            Half0 = Half1 = Half2 = Half3 = v;
+        }
+
+        /// <summary>
+        /// Initialize the v64 with 4 half's
+        /// </summary>
+        /// <param name="a">f16 a</param>
+        /// <param name="b">f16 b</param>
+        /// <param name="c">f16 c</param>
+        /// <param name="d">f16 d</param>
+        public v64(f16 a, f16 b, f16 c, f16 d)
+        {
+            this = default(v64);
+            Half0 = a;
+            Half1 = b;
+            Half2 = c;
+            Half3 = d;
+        }
+#endif // BURST_INTERNAL || UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS
 
         /// <summary>
         /// Splat a single int across the v64

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -242,6 +243,8 @@ namespace Burst.Compiler.IL.Tests
         protected readonly bool _expectCompilerException;
         protected readonly DiagnosticId[] _expectedDiagnosticIds;
 
+        protected virtual bool TestInterpreter => false;
+
         protected TestCompilerCommandBase(TestCompilerAttributeBase attribute, Test test, TestMethod originalMethod) : base(test)
         {
             _originalMethod = originalMethod;
@@ -303,6 +306,16 @@ namespace Burst.Compiler.IL.Tests
 
         protected bool RunManagedBeforeNative { get; set; }
 
+        protected static readonly Dictionary<string, string> BailedTests = new Dictionary<string, string>();
+
+        private unsafe void ZeroMemory(byte* ptr, int size)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                *(ptr + i) = 0;
+            }
+        }
+
         private unsafe TestResult ExecuteMethod(ExecutionContext context)
         {
             byte* returnBox = stackalloc byte[MaxReturnBoxSize];
@@ -361,9 +374,10 @@ namespace Burst.Compiler.IL.Tests
                 }
 
                 Delegate compiledFunction;
+                Delegate interpretDelegate;
                 try
                 {
-                    compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _);
+                    compiledFunction = CompileDelegate(context, methodInfo, delegateType, returnBox, out _, out interpretDelegate);
                 }
                 catch (Exception ex) when (_expectedException != null && ex.GetType() == _expectedException)
                 {
@@ -406,7 +420,7 @@ namespace Burst.Compiler.IL.Tests
                     // ------------------------------------------------------------------
                     // Run Native (Before)
                     // ------------------------------------------------------------------
-                    if (!RunManagedBeforeNative)
+                    if (!RunManagedBeforeNative && !TestInterpreter)
                     {
                         if (GetExtension()!=null)
                         {
@@ -418,6 +432,33 @@ namespace Burst.Compiler.IL.Tests
                             resultNative = Marshal.PtrToStructure((IntPtr)returnBox, returnBoxType);
                         }
                     }
+
+                    // ------------------------------------------------------------------
+                    // Run Interpreter
+                    // ------------------------------------------------------------------
+                    object resultInterpreter = null;
+
+                    if (TestInterpreter)
+                    {
+                        ZeroMemory(returnBox, MaxReturnBoxSize);
+                        var name = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
+                        if (!InterpretMethod(interpretDelegate, methodInfo, nativeArgs, methodInfo.ReturnType,
+                            out var reason, out resultInterpreter))
+                        {
+                            lock (BailedTests)
+                            {
+                                BailedTests[name] = reason;
+                            }
+                        }
+                        else
+                        {
+                            if (returnBoxType != null)
+                            {
+                                resultInterpreter = Marshal.PtrToStructure((IntPtr) returnBox, returnBoxType);
+                            }
+                        }
+                    }
+
 
                     // ------------------------------------------------------------------
                     // Run Managed
@@ -432,6 +473,7 @@ namespace Burst.Compiler.IL.Tests
                     }
                     else
                     {
+                        ZeroMemory(returnBox, MaxReturnBoxSize);
                         resultClr = _originalMethod.Method.Invoke(context.TestObject, arguments);
 
                         if (returnBoxType != null)
@@ -457,8 +499,9 @@ namespace Burst.Compiler.IL.Tests
                     // ------------------------------------------------------------------
                     // Run Native (After)
                     // ------------------------------------------------------------------
-                    if (RunManagedBeforeNative)
+                    if (RunManagedBeforeNative && !TestInterpreter)
                     {
+                        ZeroMemory(returnBox, MaxReturnBoxSize);
                         resultNative = nativeDelegateCaller(compiledFunction, nativeArgs);
                         if (returnBoxType != null)
                         {
@@ -466,8 +509,15 @@ namespace Burst.Compiler.IL.Tests
                         }
                     }
 
-                    // Use our own version (for handling correctly float precision)
-                    AssertHelper.AreEqual(resultClr, resultNative, GetULP());
+                    if (!TestInterpreter)
+                    {
+                        // Use our own version (for handling correctly float precision)
+                        AssertHelper.AreEqual(resultClr, resultNative, GetULP());
+                    }
+                    else if (resultInterpreter != null)
+                    {
+                        AssertHelper.AreEqual(resultClr, resultInterpreter, GetULP());
+                    }
 
                     // Validate deterministic outputs - Disabled for now
                     //RunDeterminismValidation(_originalMethod, resultNative);
@@ -732,6 +782,18 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
+        public static void ReportBailedTests(TextWriter writer = null)
+        {
+            writer = writer ?? Console.Out;
+            lock (BailedTests)
+            {
+                foreach (var bailedTest in BailedTests.OrderBy(kv => kv.Key))
+                {
+                    writer.WriteLine($"{bailedTest.Key}: {bailedTest.Value}");
+                }
+            }
+        }
+
         protected bool CheckExpectedDiagnostics(ExecutionContext context, string contextName)
         {
             var loggedDiagnosticIds = GetLoggedDiagnosticIds().OrderBy(x => x);
@@ -809,7 +871,9 @@ namespace Burst.Compiler.IL.Tests
 
         protected abstract object[] GetArgumentsArray(TestMethod method);
 
-        protected abstract unsafe Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType, byte* returnBox, out Type returnBoxType);
+        protected abstract unsafe Delegate CompileDelegate(ExecutionContext context, MethodInfo methodInfo, Type delegateType, byte* returnBox, out Type returnBoxType, out Delegate interpretDelegate);
+
+        protected abstract bool InterpretMethod(Delegate interpretDelegate, MethodInfo methodInfo, object[] args, Type returnType, out string reason, out object result);
 
         protected abstract void CompileDelegateForArm(MethodInfo methodInfo);
 

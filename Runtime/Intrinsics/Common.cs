@@ -7,7 +7,6 @@ namespace Unity.Burst.Intrinsics
     /// </summary>
     public static class Common
     {
-#if UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC
         /// <summary>
         /// Hint that the current thread should pause.
         ///
@@ -18,15 +17,14 @@ namespace Unity.Burst.Intrinsics
         /// tight loops (like spin-locks) can benefit from use of this
         /// intrinsic.
         ///
-        /// On x86 systems this maps to the `pause` instruction.
-        /// On ARM systems this maps to the `yield` instruction.
+        /// - On x86 systems this maps to the `pause` instruction.
+        /// - On ARM systems this maps to the `yield` instruction.
         ///
         /// Note that this is not an operating system level thread yield,
         /// it only provides a hint to the CPU that the current thread can
         /// afford to pause its execution temporarily.
         /// </summary>
         public static void Pause() { }
-#endif
 
 #if UNITY_BURST_EXPERIMENTAL_PREFETCH_INTRINSIC
         public enum ReadWrite : int

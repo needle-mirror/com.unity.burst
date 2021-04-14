@@ -353,6 +353,58 @@ namespace Burst.Compiler.IL.Tests.Helpers
                             throw new NotSupportedException($"Unsupported DataRange type `{type}`");
                     }
                 }
+                else if (type.Name.StartsWith("half"))
+                {
+                    var size = (uint)(type.Name["half".Length] - '0');
+                    var floats = ExpandRange(dataRange & ~(DataRange.NaN | DataRange.Inf), typeof(float), seed).OfType<float>().ToList();
+                    var originalIndices = Enumerable.Range(0, floats.Count).ToList();
+                    var indices = new List<int>(originalIndices);
+                    // We only put NaN and Inf in the first set of values
+                    if ((dataRange & DataRange.NaN) != 0)
+                    {
+                        indices.Add(floats.Count);
+                        floats.Add(float.NaN);
+                    }
+                    if ((dataRange & DataRange.Inf) != 0)
+                    {
+                        indices.Add(floats.Count);
+                        floats.Add(float.PositiveInfinity);
+                    }
+
+                    var random = new System.Random(seed);
+                    switch (size)
+                    {
+                        case 2:
+                            for (int i = 0; i < VectorsCount; i++)
+                            {
+                                var x = floats[NextIndex(random, indices, originalIndices)];
+                                var y = floats[NextIndex(random, indices, originalIndices)];
+                                yield return new half2(new float2(x, y));
+                            }
+                            break;
+                        case 3:
+                            for (int i = 0; i < VectorsCount; i++)
+                            {
+                                var x = floats[NextIndex(random, indices, originalIndices)];
+                                var y = floats[NextIndex(random, indices, originalIndices)];
+                                var z = floats[NextIndex(random, indices, originalIndices)];
+                                yield return new half3(new float3(x, y, z));
+                            }
+                            break;
+                        case 4:
+                            for (int i = 0; i < VectorsCount; i++)
+                            {
+                                var x = floats[NextIndex(random, indices, originalIndices)];
+                                var y = floats[NextIndex(random, indices, originalIndices)];
+                                var z = floats[NextIndex(random, indices, originalIndices)];
+                                var w = floats[NextIndex(random, indices, originalIndices)];
+                                yield return new half4(new float4(x, y, z, w));
+                            }
+                            break;
+                        default:
+                            throw new NotSupportedException($"Unsupported DataRange type `{type}`");
+                    }
+                }
                 else if (type.Name.StartsWith("float"))
                 {
                     var size = (uint) (type.Name["float".Length] - '0');

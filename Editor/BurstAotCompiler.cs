@@ -930,6 +930,32 @@ extern ""C""
 #endif
             }
 
+            if (/*BuildTarget.EmbeddedLinux*/ 45 == (int)target)
+            {
+                //EmbeddedLinux is supported on 2019.4 (shadow branch), 2020.3 (shadow branch) and 2021.2+ (official).
+                var embeddedLinuxArchitecture = GetEmbeddedLinuxTargetArchitecture();
+                if ("Arm64" == embeddedLinuxArchitecture)
+                {
+                    targetCpus = new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64);
+                }
+                else if ("X64" == embeddedLinuxArchitecture)
+                {
+                    targetCpus = new TargetCpus(BurstTargetCpu.X64_SSE2); //lowest supported for now
+                }
+                else if (("X86" == embeddedLinuxArchitecture) || ("Arm32" == embeddedLinuxArchitecture))
+                {
+                    //32bit platforms cannot be support with the current SDK/Toolchain combination.
+                    //i686-embedded-linux-gnu/8.3.0\libgcc.a(_moddi3.o + _divdi3.o): contains a compressed section, but zlib is not available
+                    //_moddi3.o + _divdi3.o are required by LLVM for 64bit operations on 32bit platforms.
+                    throw new InvalidOperationException($"No EmbeddedLinux Burst Support on {embeddedLinuxArchitecture} architecture.");
+                }
+                else
+                {
+                    throw new InvalidOperationException("Unknown EmbeddedLinux CPU architecture: " + embeddedLinuxArchitecture);
+                }
+                return TargetPlatform.EmbeddedLinux;
+            }
+
             targetCpus = new TargetCpus(BurstTargetCpu.Auto);
             return null;
         }
@@ -959,6 +985,27 @@ extern ""C""
 
             // Default to x64 if editor user build setting is garbage
             return "x64";
+        }
+
+        private static string GetEmbeddedLinuxTargetArchitecture()
+        {
+            var flags = System.Reflection.BindingFlags.Public |
+                        System.Reflection.BindingFlags.Static |
+                        System.Reflection.BindingFlags.FlattenHierarchy;
+            var property = typeof(EditorUserBuildSettings).GetProperty("selectedEmbeddedLinuxArchitecture", flags);
+            if (null == property)
+            {
+                return "NOT_FOUND";
+            }
+            var value = (int)property.GetValue(null, null);
+            switch (value)
+            {
+                case /*UnityEditor.EmbeddedLinuxArchitecture.Arm64*/ 0: return "Arm64";
+                case /*UnityEditor.EmbeddedLinuxArchitecture.Arm32*/ 1: return "Arm32";
+                case /*UnityEditor.EmbeddedLinuxArchitecture.X64*/   2: return "X64";
+                case /*UnityEditor.EmbeddedLinuxArchitecture.X86*/   3: return "X86";
+                default: return $"UNKNOWN_{value}";
+            }
         }
 
         /// <summary>

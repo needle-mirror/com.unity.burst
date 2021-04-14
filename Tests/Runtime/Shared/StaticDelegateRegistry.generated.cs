@@ -383,6 +383,7 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(uint), new Type[] { typeof(Burst.Compiler.IL.Tests.NativeContainers.NativeArrays.NativeArrayUInt4).MakeByRefType(), typeof(int) }, typeof(R_UInt32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayUInt4_Ref_1_Int32_Delegate), Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_NativeContainers_NativeArrays_NativeArrayUInt4_Ref_1_Int32_Delegate);
             Register(typeof(uint), new Type[] { typeof(Burst.Compiler.IL.Tests.Spmd.Data).MakeByRefType() }, typeof(R_UInt32_P_0_Burst_Compiler_IL_Tests_Spmd_Data_Ref_Delegate), Call_R_UInt32_P_0_Burst_Compiler_IL_Tests_Spmd_Data_Ref_Delegate);
             Register(typeof(uint), new Type[] { typeof(System.IntPtr).MakeByRefType() }, typeof(R_UInt32_P_0_IntPtr_Ref_Delegate), Call_R_UInt32_P_0_IntPtr_Ref_Delegate);
+            Register(typeof(uint), new Type[] { typeof(float) }, typeof(R_UInt32_P_0_Single_Delegate), Call_R_UInt32_P_0_Single_Delegate);
             Register(typeof(uint), new Type[] { typeof(uint), typeof(uint) }, typeof(R_UInt32_P_0_UInt32_1_UInt32_Delegate), Call_R_UInt32_P_0_UInt32_1_UInt32_Delegate);
             Register(typeof(uint), new Type[] { typeof(uint), typeof(uint), typeof(uint) }, typeof(R_UInt32_P_0_UInt32_1_UInt32_2_UInt32_Delegate), Call_R_UInt32_P_0_UInt32_1_UInt32_2_UInt32_Delegate);
             Register(typeof(uint), new Type[] { typeof(uint), typeof(uint), typeof(uint*) }, typeof(R_UInt32_P_0_UInt32_1_UInt32_2_UInt32_Ptr_Delegate), Call_R_UInt32_P_0_UInt32_1_UInt32_2_UInt32_Ptr_Delegate);
@@ -436,6 +437,9 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType() }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_InMemoryValues_Ref_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsX86.TransposeResult*), typeof(float), typeof(float), typeof(float), typeof(float) }, typeof(R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate), Call_R_System_Void_P_0_Burst_Compiler_IL_Tests_X86_TestInstrinsicsX86_TransposeResult_Ptr_1_Single_2_Single_3_Single_4_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.f16*) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.f16*), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Single_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.f16*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX.InMemoryValues).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX_InMemoryValues_Ref_2_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v128*), typeof(Burst.Compiler.IL.Tests.X86.TestInstrinsicsAVX2.GatherScatterInts).MakeByRefType(), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v128_Ptr_1_Burst_Compiler_IL_Tests_X86_TestInstrinsicsAVX2_GatherScatterInts_Ref_2_Int32_Delegate);
@@ -488,38 +492,54 @@ namespace Burst.Compiler.IL.Tests
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(ulong) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_UInt64_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_UInt64_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v256*), typeof(ushort), typeof(ushort), typeof(ushort), typeof(ushort) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_UInt16_2_UInt16_3_UInt16_4_UInt16_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v256_Ptr_1_UInt16_2_UInt16_3_UInt16_4_UInt16_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v64*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Burst.Intrinsics.v64*), typeof(int), typeof(float) }, typeof(R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_2_Single_Delegate), Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_2_Single_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(Unity.Mathematics.double2).MakeByRefType(), typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_2_Unity_Mathematics_double2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_double2_Ref_2_Unity_Mathematics_double2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(Unity.Mathematics.half2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double2x2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double2x2_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*), typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*), typeof(Unity.Mathematics.double3).MakeByRefType(), typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_2_Unity_Mathematics_double3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_double3_Ref_2_Unity_Mathematics_double3_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double3*), typeof(Unity.Mathematics.half3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*) }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(Burst.Compiler.IL.Tests.VectorsMaths.DoublePointer).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(Burst.Compiler.IL.Tests.VectorsMaths.DoublePointer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.VectorsMaths.DoublePointer).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_2_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_2_Burst_Compiler_IL_Tests_VectorsMaths_DoublePointer_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(Unity.Mathematics.double4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(Unity.Mathematics.double4).MakeByRefType(), typeof(Unity.Mathematics.double4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_double4_Ref_2_Unity_Mathematics_double4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_double4_Ref_2_Unity_Mathematics_double4_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(Unity.Mathematics.half4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.double4*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float2_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2*), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2*), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2*), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.math.ShuffleComponent) }, typeof(R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float2*), typeof(Unity.Mathematics.half2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float3_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3*), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.math.ShuffleComponent) }, typeof(R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3*), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3*), typeof(Unity.Mathematics.float3).MakeByRefType(), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_float3_Ref_2_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float3*), typeof(Unity.Mathematics.half3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Burst.Compiler.IL.Tests.VectorsMaths.FloatPointer).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Burst.Compiler.IL.Tests.VectorsMaths.FloatPointer).MakeByRefType(), typeof(Burst.Compiler.IL.Tests.VectorsMaths.FloatPointer).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_2_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_2_Burst_Compiler_IL_Tests_VectorsMaths_FloatPointer_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.float2).MakeByRefType(), typeof(Unity.Mathematics.math.ShuffleComponent) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float2_Ref_2_Unity_Mathematics_float2_Ref_3_Unity_Mathematics_math_ShuffleComponent_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Unity.Mathematics.float4).MakeByRefType(), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_float4_Ref_2_Unity_Mathematics_float4_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(Unity.Mathematics.half4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4*), typeof(uint), typeof(Unity.Burst.Intrinsics.X86.MXCSRBits) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_UInt32_2_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_UInt32_2_Unity_Burst_Intrinsics_X86_MXCSRBits_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.float4x2*), typeof(int) }, typeof(R_System_Void_P_0_Unity_Mathematics_float4x2_Ptr_1_Int32_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_float4x2_Ptr_1_Int32_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half2*), typeof(Unity.Mathematics.double2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half2*), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half3*), typeof(Unity.Mathematics.double3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half3*), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half4*), typeof(Unity.Mathematics.double4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.half4*), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(Unity.Mathematics.quaternion*) }, typeof(R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.uint2*), typeof(Unity.Mathematics.float2).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_uint2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_uint2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.uint3*), typeof(Unity.Mathematics.float3).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_uint3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_uint3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate);
+            Register(typeof(void), new Type[] { typeof(Unity.Mathematics.uint4*), typeof(Unity.Mathematics.float4).MakeByRefType() }, typeof(R_System_Void_P_0_Unity_Mathematics_uint4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate), Call_R_System_Void_P_0_Unity_Mathematics_uint4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.DivisionByScalar).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_DivisionByScalar_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.IntToFloatPenalty).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_IntToFloatPenalty_Ref_Delegate);
             Register(typeof(void), new Type[] { typeof(UnityBenchShared.PartialWrite).MakeByRefType() }, typeof(R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate), Call_R_System_Void_P_0_UnityBenchShared_PartialWrite_Ref_Delegate);
@@ -5142,6 +5162,18 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private delegate uint R_UInt32_P_0_Single_Delegate(float arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_UInt32_P_0_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_UInt32_P_0_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (float)p[0];
+            result = d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private delegate uint R_UInt32_P_0_UInt32_1_UInt32_Delegate(uint arg0, uint arg1);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_UInt32_P_0_UInt32_1_UInt32_Delegate(object delegateObj, object[] p)
@@ -5800,6 +5832,44 @@ namespace Burst.Compiler.IL.Tests
             var arg3 = (float)p[3];
             var arg4 = (float)p[4];
             d(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_Delegate(Unity.Burst.Intrinsics.f16* arg0);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.f16*)(IntPtr)p[0];
+            d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Single_Delegate(Unity.Burst.Intrinsics.f16* arg0, float arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.f16*)(IntPtr)p[0];
+            var arg1 = (float)p[1];
+            d(arg0, arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Int32_Delegate(Unity.Burst.Intrinsics.f16* arg0, int arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_f16_Ptr_1_Int32_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.f16*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            d(arg0, arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -6534,6 +6604,20 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_2_Single_Delegate(Unity.Burst.Intrinsics.v64* arg0, int arg1, float arg2);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_2_Single_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Burst_Intrinsics_v64_Ptr_1_Int32_2_Single_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Burst.Intrinsics.v64*)(IntPtr)p[0];
+            var arg1 = (int)p[1];
+            var arg2 = (float)p[2];
+            d(arg0, arg1, arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate(Unity.Mathematics.double2* arg0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_Delegate(object delegateObj, object[] p)
@@ -6569,6 +6653,19 @@ namespace Burst.Compiler.IL.Tests
             var arg1 = (Unity.Mathematics.double2)p[1];
             var arg2 = (Unity.Mathematics.double2)p[2];
             d(arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate(Unity.Mathematics.double2* arg0, ref Unity.Mathematics.half2 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_double2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.double2*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half2)p[1];
+            d(arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -6637,6 +6734,19 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate(Unity.Mathematics.double3* arg0, ref Unity.Mathematics.half3 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_double3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.double3*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half3)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double4_Ptr_Delegate(Unity.Mathematics.double4* arg0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_Delegate(object delegateObj, object[] p)
@@ -6699,6 +6809,19 @@ namespace Burst.Compiler.IL.Tests
             var arg1 = (Unity.Mathematics.double4)p[1];
             var arg2 = (Unity.Mathematics.double4)p[2];
             d(arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate(Unity.Mathematics.double4* arg0, ref Unity.Mathematics.half4 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_double4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.double4*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half4)p[1];
+            d(arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -6770,6 +6893,19 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate(Unity.Mathematics.float2* arg0, ref Unity.Mathematics.half2 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_float2_Ptr_1_Unity_Mathematics_half2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float2*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half2)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float3_Ptr_Delegate(Unity.Mathematics.float3* arg0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_Delegate(object delegateObj, object[] p)
@@ -6820,6 +6956,19 @@ namespace Burst.Compiler.IL.Tests
             var arg1 = (Unity.Mathematics.float3)p[1];
             var arg2 = (Unity.Mathematics.float3)p[2];
             d(arg0, ref arg1, ref arg2);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate(Unity.Mathematics.float3* arg0, ref Unity.Mathematics.half3 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_float3_Ptr_1_Unity_Mathematics_half3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float3*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half3)p[1];
+            d(arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -6905,6 +7054,19 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate(Unity.Mathematics.float4* arg0, ref Unity.Mathematics.half4 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Unity_Mathematics_half4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.float4*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.half4)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate(Unity.Mathematics.float4* arg0, int arg1);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_float4_Ptr_1_Int32_Delegate(object delegateObj, object[] p)
@@ -6945,6 +7107,84 @@ namespace Burst.Compiler.IL.Tests
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate(Unity.Mathematics.half2* arg0, ref Unity.Mathematics.double2 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_double2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half2*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.double2)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate(Unity.Mathematics.half2* arg0, ref Unity.Mathematics.float2 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half2*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float2)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate(Unity.Mathematics.half3* arg0, ref Unity.Mathematics.double3 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_double3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half3*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.double3)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate(Unity.Mathematics.half3* arg0, ref Unity.Mathematics.float3 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half3*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float3)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate(Unity.Mathematics.half4* arg0, ref Unity.Mathematics.double4 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_double4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half4*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.double4)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate(Unity.Mathematics.half4* arg0, ref Unity.Mathematics.float4 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_half4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.half4*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float4)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate(Unity.Mathematics.quaternion* arg0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_quaternion_Ptr_Delegate(object delegateObj, object[] p)
@@ -6953,6 +7193,45 @@ namespace Burst.Compiler.IL.Tests
             object result = null;
             var arg0 = (Unity.Mathematics.quaternion*)(IntPtr)p[0];
             d(arg0);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_uint2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate(Unity.Mathematics.uint2* arg0, ref Unity.Mathematics.float2 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_uint2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_uint2_Ptr_1_Unity_Mathematics_float2_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint2*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float2)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_uint3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate(Unity.Mathematics.uint3* arg0, ref Unity.Mathematics.float3 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_uint3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_uint3_Ptr_1_Unity_Mathematics_float3_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint3*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float3)p[1];
+            d(arg0, ref arg1);
+            return result;
+        }
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe delegate void R_System_Void_P_0_Unity_Mathematics_uint4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate(Unity.Mathematics.uint4* arg0, ref Unity.Mathematics.float4 arg1);
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        private unsafe static object Call_R_System_Void_P_0_Unity_Mathematics_uint4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate(object delegateObj, object[] p)
+        {
+            var d = (R_System_Void_P_0_Unity_Mathematics_uint4_Ptr_1_Unity_Mathematics_float4_Ref_Delegate)delegateObj;
+            object result = null;
+            var arg0 = (Unity.Mathematics.uint4*)(IntPtr)p[0];
+            var arg1 = (Unity.Mathematics.float4)p[1];
+            d(arg0, ref arg1);
             return result;
         }
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

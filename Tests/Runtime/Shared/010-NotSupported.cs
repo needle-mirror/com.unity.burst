@@ -18,7 +18,7 @@ namespace Burst.Compiler.IL.Tests
             return 1;
         }
 
-        [TestCompiler(1, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_LoadingFromManagedNonReadonlyStaticFieldNotSupported)]
+        [TestCompiler(1, ExpectCompilerException = true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_CallingManagedMethodNotSupported, DiagnosticId.ERR_FunctionPointerMethodAndTypeMissingBurstCompileAttribute })]
         public static int TestDelegate(int data)
         {
             return ProcessData(i => i + 1, data);
@@ -62,10 +62,10 @@ namespace Burst.Compiler.IL.Tests
         }
 
         [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnReturnTypeNotSupported)]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static bool TestMethodWithMarshalAsReturnType()
+        [return: MarshalAs(UnmanagedType.I8)]
+        public static int TestMethodWithMarshalAsReturnType()
         {
-            return true;
+            return 42;
         }
 
         private static float3 a = new float3(1, 2, 3);
@@ -148,16 +148,19 @@ namespace Burst.Compiler.IL.Tests
             return fp.FunctionPointer.Invoke(c);
         }
 
-        private static readonly half3 h3_h = new half3(new half(42.0f));
-        private static readonly half3 h3_d = new half3(0.5);
-        private static readonly half3 h3_v2s = new half3(new half2(new half(1.0f), new half(2.0f)), new half(0.5f));
-        private static readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
-        private static readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
+        struct Halfs
+        {
+            public static readonly half3 h3_h = new half3(new half(42.0f));
+            public static readonly half3 h3_d = new half3(0.5);
+            public static readonly half3 h3_v2s = new half3(new half2(new half(1.0f), new half(2.0f)), new half(0.5f));
+            public static readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
+            public static readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
+        }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InternalCompilerErrorInInstruction)]
+        [TestCompiler]
         public static float TestStaticHalf3()
         {
-            var result = (float3)h3_h + h3_d + h3_v2s + h3_sv2 + h3_v3;
+            var result = (float3)Halfs.h3_h + Halfs.h3_d + Halfs.h3_v2s + Halfs.h3_sv2 + Halfs.h3_v3;
             return result.x + result.y + result.z;
         }
 
@@ -221,23 +224,26 @@ namespace Burst.Compiler.IL.Tests
             }
         }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_StaticConstantArrayInStaticConstructor)]
+        [TestCompiler]
         public unsafe static int TestStaticArrayWrapper()
         {
             return StaticArrayWrapper.StaticArray[0];
         }
 
-        private static readonly int4[][] SomeOffsetThing =
+        class NestedArrayHolder
         {
-            new []{ new int4(0), new int4(0, 0, 1, 0), new int4(0, 1, 0, 0), new int4(0, 1, 1, 0) },
-            new []{ new int4(0), new int4(1, 0, 0, 0), new int4(0, 0, 1, 0), new int4(1, 0, 1, 0) },
-            new []{ new int4(0), new int4(0, 1, 0, 0), new int4(1, 0, 0, 0), new int4(1, 1, 0, 0) },
-        };
+            public static readonly int4[][] SomeOffsetThing =
+            {
+                new[] {new int4(0), new int4(0, 0, 1, 0), new int4(0, 1, 0, 0), new int4(0, 1, 1, 0)},
+                new[] {new int4(0), new int4(1, 0, 0, 0), new int4(0, 0, 1, 0), new int4(1, 0, 1, 0)},
+                new[] {new int4(0), new int4(0, 1, 0, 0), new int4(1, 0, 0, 0), new int4(1, 1, 0, 0)},
+            };
+        }
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingNestedManagedArrayNotSupported)]
+        [TestCompiler()]
         public unsafe static int TestNestedManagedArrays()
         {
-            return SomeOffsetThing[0][0].x;
+            return NestedArrayHolder.SomeOffsetThing[0][0].x;
         }
     }
 }

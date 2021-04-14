@@ -233,7 +233,9 @@ namespace Unity.Burst.Intrinsics
         private static void BurstIntrinsicSetCSRFromManaged(int bits) { }
         private static int BurstIntrinsicGetCSRFromManaged() { return 0;  }
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void SetCSRDelegate(int bits);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int GetCSRDelegate();
 
         private static GetCSRDelegate ManagedGetCSRTrampoline;

@@ -5,9 +5,7 @@ using System.Diagnostics;
 #if BURST_UNITY_MOCK
 using System.Runtime.CompilerServices;
 #endif
-using Unity.Burst.LowLevel;
 using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine;
 
 namespace Unity.Burst
 {
@@ -122,7 +120,7 @@ namespace Unity.Burst
                 sizeOf, alignment);
 
         }
-            
+
         private static long GetSafeHashCode64(Type type)
         {
             var hash = BurstRuntime.GetHashCode64(type);
@@ -164,8 +162,8 @@ namespace Unity.Burst
         public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
         {
             CheckSizeOf(sizeOf);
-            var hash128 = new Hash128((ulong)getHashCode64, (ulong)getSubHashCode64);
-            var result = BurstCompilerService.GetOrCreateSharedMemory(ref hash128, sizeOf, alignment);
+            var hash128 = new UnityEngine.Hash128((ulong)getHashCode64, (ulong)getSubHashCode64);
+            var result = Unity.Burst.LowLevel.BurstCompilerService.GetOrCreateSharedMemory(ref hash128, sizeOf, alignment);
             CheckResult(result);
             return result;
         }

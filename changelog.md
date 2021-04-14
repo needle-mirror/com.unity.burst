@@ -1,52 +1,59 @@
 # Changelog
 
-## [1.5.1] - 2021-03-29
-
-
-### Added
-- Automatically add [UnmanagedFunctionPointer(CallingConvention.Cdecl)] to any delegates that are used for BurstCompiler.CompileFunctionPointer<>() or error if the delegate has the attribute and it is not Cdecl.
-
-### Removed
-
-### Changed
-
-### Fixed
-- Dots runtime function pointer transform has been simplified, making it less brittle and fixing some bad IL generation.
-- Fixed crashes on 32 bit windows when calling function pointers from managed code and using IL2CPP.
-- Fixed a bug where the multi-CPU dispatcher (used for player builds targetting multiple CPU architectures) could end up generating invalid instructions.
-
-### Known Issues
-
-## [1.5.0] - 2021-03-08
+## [1.6.0-pre.2] - 2021-04-15
 
 
 ### Fixed
-- Fixed some intrinsics not checking target CPU against required CPU, so it was possible to use some intrinsics without an IsXXXSupported check
-- Fixed a bug where having any `[DllImport]` in a class that used the Direct Call mechanism could result in an illegal `CompileFunctionPointer` call being produced by our post processor.
-- PDB debug information for instance methods that also used struct return were incorrect.
-- When generating Line Table only debug information, an unreachable could occur due to a missing check.
-- Internal Compiler Error if a call was discarded (via BurstDiscard for example), but the callsites required an ABI transform e.g. struct return.
-- Broken link restored for known issues with debugging and profiling.
+- Fixed obsolete API in package code.
+
+
+## [1.6.0-pre.1] - 2021-04-14
+
 
 ### Changed
+- Start 1.6 release cycle
+- Changed how we resolve function references in the compiler to improve resolving an existing function reference by 3x.
+- Improve how we handle generic resolution in Cecil to cache the strictly resolved generic types and save a bunch of time in the compiler.
+- Exception strings no longer contain the entry-point name of the job/function-pointer that caused the throw. This change was required because the Burst compiler has to produce deterministic results from any given compile, which is fundamentally opposed to per-entry-point function derivations.
+- Changed how SLEEF global variables for trig functions are pulled into Burst to reduce duplications.
+- Changed how exceptions throw types and messages are stored in our Burst binaries to reduce binary size.
+- Constant array data is now named after the static field it belongs to in assembly
+- Upgraded Burst to use LLVM Version 11.0.1 by default, bringing the latest optimization improvements from the LLVM project.
+- The `Unity.Burst.Intrinsics.Common.Pause` intrinsic is no longer experimental.
+- DOTS Runtime shares the logging code path with the general case
+- Armv8.2 Neon intrinsics are now fully supported
+- Disable threading within the `lld` linker instances we use for in-editor and desktop cross compilation, because we're already threading seperate process instances of `lld` and it results in lot of OS context switching.
 - Tweaked how the IL Post Processed 'direct call' Burst function pointers are compiled so that the compilation is deferred until they are needed (previously we'd enqueue them all for compilation on a domain reload).
-
-### Known Issues
-- Direct Call methods only execute using Burst after an initial execution of them on the main-thread.
-
-### Added
-- Known issue with Windows Native Debuggers and Dll numbers + workarounds.
-
-### Removed
-
-## [1.5.0-pre.5] - 2021-02-22
-
+- Changed Burst minimum editor version to 2019.4
+- Use rpmalloc as our native allocator on Windows to speed up concurrently executing LLVM work.
+- When Burst has previously compiled a method, and neither the assembly containing that method nor any of that assembly's dependencies have changed, it was possible after a domain reload for the Mono version of the method to be used for a short time before being replaced by the Burst version. This has now been improved such that the Burst version will be used immediately.
+- Improved iteration speed by reducing the time it takes for Burst to check if any Burst-compilable code has changed
+- Change our link step to not use response files if the command line was smaller enough, saving the cost of the round-trip to the disk.
+- Made half <-> float / double conversions use native hardware where possible (Arm or AVX2 targets).
+- In order to prevent conflicts with the main Unity process, Burst is now inactive in secondary Unity processes, including the asset import worker and out-of-process profiler. This means that in those secondary processes, code that would normally be Burst-compiled will now run under Mono. In a future release of Burst, we hope to lift this restriction and allow Burst-compiled code to run in secondary Unity processes.
 
 ### Fixed
+- Fixed a bug in LLVM that it would incorrectly convert some memset -> memcpy if both pointers derived from the same memory address, and where one indexed into the 0th element of the pointer.
+- Fixed namespace issue triggering a warning in the editor.
+- Made `math.shuffle` compile correctly when non-constant `ShuffleComponent`'s are used.
+- Fixed alignment issues associated with xxHash3 on ArmV7 (case 1288992)
+- Fixed managed implementation of sub_ss intrinsic
+- Fixed a bug that occurred when an explicitly laid out struct was used by a `dup` instruction, which caused an internal compiler error.
+- Fixes DOTS Runtime JobProducer Bursting code to support JobProducers with multiple generic arguments, complex job wrapper and generic jobs.
+- Fixed a bug where if a user had defined multiple implicit or explicit casts, the compiler could resolve to the wrong cast.
+- Fixed a bug where explicitly casting from an int to `IntPtr` would not sign extend the value.
+- String interpolation issues when using Dots / Tiny runtime.
+- Fixed managed implementations of blend_epi32 and mm256_blend_epi32 intrinsics on Mono
+- Fixed a bug where loading from a vector within a struct, that was got from a `NativeArray` using an indexer, would cause the compiler to crash.
+- Fixed an issue where Burst would erroneously error on `BurstCompile.CompileFunctionPointer ` calls when building for the DOTS Runtime.
+- clang segmentation fault on iOS when member function debug information was emitted, it is disabled for this platform now.
+- Intrinsics: Neon - fixed vget_low and vget_high producing suboptimal code
+- Private `[BurstCompile]` methods no longer throw `MethodAccessException`
 - Fixed a bug where the Burst post-processing for direct call would cause duplicate function pointers to be compiled, wasting compile time in the editor and caused an Editor launch stall.
 - Corrected 'Enable safety checks tooltip`.
-- String interpolation issues when using Dots / Tiny runtime.
+- Fixed a minor debug information bug where built-in types with methods (like `System.Int32`) would generate incorrect debug information.
 - Fixed a very obscure bug where if you had a function-pointer that was called from another function-pointer of job, and that function-pointer happened to be compiled in a player build in the same bucket as the caller, and the no-alias cloning analysis identified that it could clone the original function-pointer to enable more aliasing optimizations, it could create a duplicate symbol error.
+- Revert to internal linkage for Android X86 (32bit) to ensure ABI compliance.
 - Fixed compilation errors when targeting Arm CPUs and using some of the Intel intrinsics
 - Added PreserveAttribute to prevent the internal log from being stripped in il2cpp builds.
 - IL Function Pointer Invoke Transformation updated to handle transforms that affect instructions that are the destination of a branch.
@@ -54,53 +61,53 @@
 - Fixed compilation errors when targeting Intel CPUs and using some of the Arm Neon intrinsics
 - Fixed a bug where eager-compilation could pick up out-of-date global Burst menu options for compiling.
 - Fixed a bug where the progress bar would report double the amount of pending compile jobs if a user changed the Burst options while background compilation was going on.
+- Fixed some intrinsics not checking target CPU against required CPU, so it was possible to use some intrinsics without an IsXXXSupported check
+- Fixed a bug where having any `[DllImport]` in a class that used the Direct Call mechanism could result in an illegal `CompileFunctionPointer` call being produced by our post processor.
+- Fixed an issue where if a user used a math function (like `cos`, `sin`, etc) then LLVM would preserve both the scalar and vector implementations even if they were trivially dead, causing us to inject otherwise dead functions into the resulting binary.
+- PDB debug information for instance methods that also used struct return were incorrect.
+- When generating Line Table only debug information, an unreachable could occur due to a missing check.
+- Fixed the 1.5 restriction that Direct Call methods can only be called from the main thread, now they work when called from any thread.
+- Internal Compiler Error if a call was discarded (via BurstDiscard for example), but the callsites required an ABI transform e.g. struct return.
+- Fixed a bug with using multiple `IsXXXSupported` intrinsics in the same boolean condition would fail.
+- Broken link restored for known issues with debugging and profiling.
+- The Direct Call injected delegate now has a unique suffix to avoid type-name clashes.
+- Dots runtime function pointer transform has been simplified, making it less brittle and fixing some bad IL generation.
+- Fixed crashes on 32 bit windows when calling function pointers from managed code and using IL2CPP.
+- Fixed a possible DivideByZeroException due to race condition in TermInfoDriver initialization code.
+- Fixed a bug where the multi-CPU dispatcher (used for player builds targetting multiple CPU architectures) could end up generating invalid instructions.
+- Gracefully handle failing to find a particular assembly in the ILPP to prevent an ICE.
+- function calls using in modifiers on blittable structs where being treated as non blittable.
+- crash when extracting sequence point information for error reporting/debug information generation.
+- Direct Call extension methods that only differ on argument types are now supported (previously Burst's `AssemblyLoader` would complain about multiple matches).
+- Fixed a regression where managed static fields, in static constructors that would also be compiled with Burst, could cause a compile time failure for mixing managed and unmanaged state.
 
 ### Added
-
-### Removed
-
-### Changed
-- DOTS Runtime shares the logging code path with the general case
-
-### Known Issues
-
-## [1.5.0-pre.4] - 2021-01-27
-
-
-### Changed
-- Exception strings no longer contain the entry-point name of the job/function-pointer that caused the throw. This change was required because the Burst compiler has to produce deterministic results from any given compile, which is fundamentally opposed to per-entry-point function derivations.
-- Changed how exceptions throw types and messages are stored in our Burst binaries to reduce binary size.
-- Upgraded Burst to use LLVM Version 11.0.1 by default, bringing the latest optimization improvements from the LLVM project.
-
-### Fixed
-- Fixed alignment issues associated with xxHash3 on ArmV7 (case 1288992)
-- Fixed managed implementation of sub_ss intrinsic
-- Fixes DOTS Runtime JobProducer Bursting code to support JobProducers with multiple generic arguments, complex job wrapper and generic jobs.
-- Fixed a bug that occurred when an explicitly laid out struct was used by a `dup` instruction, which caused an internal compiler error.
-- Fixed a bug where if a user had defined multiple implicit or explicit casts, the compiler could resolve to the wrong cast.
-- Fixed a bug where explicitly casting from an int to `IntPtr` would not sign extend the value.
-- Fixed a bug where loading from a vector within a struct, that was got from a `NativeArray` using an indexer, would cause the compiler to crash.
-- Fixed managed implementations of blend_epi32 and mm256_blend_epi32 intrinsics on Mono
-- Fixed an issue where Burst would erroneously error on `BurstCompile.CompileFunctionPointer ` calls when building for the DOTS Runtime.
-- clang segmentation fault on iOS when member function debug information was emitted, it is disabled for this platform now.
-- Intrinsics: Neon - fixed vget_low and vget_high producing suboptimal code
-- Private `[BurstCompile]` methods no longer throw `MethodAccessException`
-
-### Added
+- Added links to blog posts from the burst team to the Burst documentation.
 - Intrinsics: Neon - Added support for basic vld1 APIs
+- Can now call BurstCompiler.CompileFunctionPointer() in Burst code
 - Add support for the C# 8.0 construct `default(T) is null` to Burst by transforming the generated `Box` + 'is the box non-null?' at compile time.
+- Make it possible to get a pointer to UTF-8 encoded string literal data in HPC# code via StringLiteral.UTF8()
+- Add an `OptimizeFor` option to `[BurstCompile]`, allowing users to say they want fast code, small code, or fastly compiled code.
+- Known issue with Windows Native Debuggers and Dll numbers + workarounds.
+- Assemblies are now allowed to have an `[assembly: BurstCompile()]` attribute to let users specify compile options that should apply assembly wide (for instance `[assembly: BurstCompile(OptimizeFor = OptimizeFor.FastCompilation)]`).
+- Automatically add [UnmanagedFunctionPointer(CallingConvention.Cdecl)] to any delegates that are used for BurstCompiler.CompileFunctionPointer<>() or error if the delegate has the attribute and it is not Cdecl.
+- Source location metadata into hash cache.
+- Added support for having `[return: MarshalAs(UnmanagedType.U1)]` or `[return: MarshalAs(UnmanagedType.I1)]` on a `bool` return external function.
+- An additional warning about delegates being used by `BurstCompiler.CompileFunctionPointer` that are not decorated as expected. In most cases, Burst will automatically add the C-declaration attribute in IL Post Processing, but if the usage of CompileFunctionPointer is abstracted away behind an open generic implementation, then Burst will not be able to automatically correct the delegate declaration, and thus this warning will fire.
+- new `burst_TargetPlatform_EmbeddedLinux`
+- new `AotNativeLinkEmbeddedLinux` for EmbeddedLinux
+- Added a new `OptimizeFor` mode `Balanced`. This becomes the default optimization mode, and trades off slightly lower maximum performance for much faster compile times.
+- Added experimental half precision floating point type f16
+- Added experimental support for half precision floating point Arm Neon intrinsics
 
 ### Removed
 
 ### Known Issues
+- Direct Call methods only execute using Burst after an initial execution of them on the main-thread.
 
-## [1.5.0-pre.3] - 2020-12-04
-
-
-### Fixed
-- Fixed a bug in LLVM that it would incorrectly convert some memset -> memcpy if both pointers derived from the same memory address, and where one indexed into the 0th element of the pointer.
-- Fixed namespace issue triggering a warning in the editor.
-- Made `math.shuffle` compile correctly when non-constant `ShuffleComponent`'s are used.
+### Notes
+- BurstAotCompiler integration done using reflection and raw values, since the platform will only be officially available for 2021.2+ and we special customer versions (shadow branches) for 2019.4 & 2020.3.
+- AotNativeLinkEmbeddedLinux implementation gets the toolchain from environment vars.
 
 ## [1.5.0-pre.2] - 2020-12-01
 
@@ -114,6 +121,8 @@
 - Fixed a failure on linux builds where libdl.so cannot be found.
 
 ### Known Issues
+
+
 ## [1.5.0-pre.1] - 2020-11-26
 
 

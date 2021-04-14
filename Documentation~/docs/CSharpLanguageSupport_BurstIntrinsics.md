@@ -8,11 +8,9 @@ The `Unity.Burst.Intrinsics.Common` intrinsics are for functionality that is sha
 
 ### Pause
 
-The `Unity.Burst.Intrinsics.Common.Pause` is an **experimental** intrinsic that provides a hint that the current thread should pause. It maps to `pause` on x86, and `yield` on ARM.
+The `Unity.Burst.Intrinsics.Common.Pause` is an intrinsic that provides a hint that the current thread should pause. It maps to `pause` on x86, and `yield` on ARM.
 
-It is primarily used to stop spin locks over contending on an atomic access, reduce contention, and power on that section of code.
-
-The intrinsic is **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_PAUSE_INTRINSIC` preprocessor define.
+It is primarily used to stop spin locks over contending on an atomic access - reduce contention and power on that section of code.
 
 ### Prefetch
 
@@ -28,7 +26,7 @@ The `Unity.Burst.Intrinsics.Common.umul128` is an intrinsic that enables users t
 
 Burst exposes all Intel SIMD intrinsics from SSE up to and including AVX2
 by means of the `Unity.Burst.Intrinsics.X86` family of nested classes, 
-Arm Neon intrinsics for Armv7 and Armv8, and **experimental** Armv8.2 Neon intrinsics (RDMA, crypto, dotprod) by means of the `Unity.Burst.Intrinsics.Arm.Neon` class.
+Arm Neon intrinsics for Armv7 and Armv8, and Armv8.2 Neon intrinsics (RDMA, crypto, dotprod) by means of the `Unity.Burst.Intrinsics.Arm.Neon` class.
 These are intended to be statically imported as they contain plain static functions:
 
 ```c#
@@ -60,6 +58,10 @@ if (IsAvx2Supported)
 else if (IsSse42Supported)
 {
     // Code path for SSE4.2 instructions
+}
+else if (IsNeonArmv82FeaturesSupported)
+{
+    // Code path for Armv8.2 Neon instructions
 }
 else if (IsNeonSupported)
 {
@@ -117,8 +119,6 @@ with the following differences:
 * poly* types are not supported.
 * reinterpret* functions are not supported (they are not needed because of the usage of `v64` and `v128` vector types).
 * Intrinsic usage is only supported on Armv8 (64-bit) hardware.
-
-The Armv8.2 Neon intrinsics are **experimental** and so guarded by the `UNITY_BURST_EXPERIMENTAL_NEON_INTRINSICS` preprocessor define.
 
 # `DllImport` and internal calls
 

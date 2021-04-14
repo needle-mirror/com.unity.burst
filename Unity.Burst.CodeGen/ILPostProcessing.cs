@@ -20,7 +20,8 @@ namespace zzzUnity.Burst.CodeGen
         private AssemblyDefinition _burstAssembly;
         private TypeDefinition _burstCompilerTypeDefinition;
         private MethodReference _burstCompilerIsEnabledMethodDefinition;
-        private MethodReference _burstCompilerCompileUnsafeStaticMethodMethodDefinition;
+        private MethodReference _burstCompilerCompileILPPMethod;
+        private MethodReference _burstCompilerGetILPPMethodFunctionPointer;
         private MethodReference _burstDiscardAttributeConstructor;
         private MethodReference _burstCompilerCompileUnsafeStaticMethodReinitialiseAttributeCtor;
         private TypeSystem _typeSystem;
@@ -109,6 +110,7 @@ namespace zzzUnity.Burst.CodeGen
                     if (!method.IsStatic || method.HasGenericParameters || !TryGetBurstCompilerAttribute(method, out var methodBurstCompileAttribute)) continue;
 
                     bool isDirectCallDisabled = false;
+                    bool foundProperty = false;
                     if (methodBurstCompileAttribute.HasProperties)
                     {
                         foreach (var property in methodBurstCompileAttribute.Properties)
@@ -116,7 +118,24 @@ namespace zzzUnity.Burst.CodeGen
                             if (property.Name == "DisableDirectCall")
                             {
                                 isDirectCallDisabled = (bool)property.Argument.Value;
+                                foundProperty = true;
                                 break;
+                            }
+                        }
+                    }
+
+                    // If the method doesn't have a direct call specified, try the assembly level, do one last check for any assembly level [BurstCompile] instead.
+                    if (foundProperty == false && TryGetBurstCompilerAttribute(method.Module.Assembly, out var assemblyBurstCompileAttribute))
+                    {
+                        if (assemblyBurstCompileAttribute.HasProperties)
+                        {
+                            foreach (var property in assemblyBurstCompileAttribute.Properties)
+                            {
+                                if (property.Name == "DisableDirectCall")
+                                {
+                                    isDirectCallDisabled = (bool)property.Argument.Value;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -138,9 +157,9 @@ namespace zzzUnity.Burst.CodeGen
             }
         }
 
-        private TypeDefinition InjectDelegate(TypeDefinition declaringType, string originalName, MethodDefinition managed)
+        private TypeDefinition InjectDelegate(TypeDefinition declaringType, string originalName, MethodDefinition managed, string uniqueSuffix)
         {
-            var injectedDelegateType = new TypeDefinition(declaringType.Namespace, $"{originalName}{PostfixBurstDelegate}",
+            var injectedDelegateType = new TypeDefinition(declaringType.Namespace, $"{originalName}{uniqueSuffix}{PostfixBurstDelegate}",
                 TypeAttributes.NestedPublic |
                 TypeAttributes.AutoLayout |
                 TypeAttributes.AnsiClass |
@@ -241,14 +260,14 @@ namespace zzzUnity.Burst.CodeGen
             return injectedDelegateType;
         }
 
-        private MethodDefinition CreateGetFunctionPointerDiscardMethod(TypeDefinition cls, FieldDefinition pointerField, MethodDefinition burstCompileMethod, TypeDefinition injectedDelegate)
+        private MethodDefinition CreateGetFunctionPointerDiscardMethod(TypeDefinition cls, FieldDefinition pointerField, FieldDefinition deferredCompilationField, MethodDefinition burstCompileMethod)
         {
             // Create GetFunctionPointer method:
             //
             // [BurstDiscard]
             // public static void GetFunctionPointerDiscard(ref IntPtr ptr) {
             //   if (Pointer == null) {
-            //     Pointer = BurstCompiler.CompileUnsafeStaticMethod(burstCompileMethod);
+            //     Pointer = BurstCompiler.GetILPPMethodFunctionPointer(DeferredCompilation);
             //   }
             //
             //   ptr = Pointer
@@ -265,8 +284,8 @@ namespace zzzUnity.Burst.CodeGen
             processor.Emit(OpCodes.Ldsfld, pointerField);
             var branchPosition = processor.Body.Instructions[processor.Body.Instructions.Count - 1];
 
-            processor.Emit(OpCodes.Ldtoken, burstCompileMethod);
-            processor.Emit(OpCodes.Call, _burstCompilerCompileUnsafeStaticMethodMethodDefinition);
+            processor.Emit(OpCodes.Ldsfld, deferredCompilationField);
+            processor.Emit(OpCodes.Call, _burstCompilerGetILPPMethodFunctionPointer);
             processor.Emit(OpCodes.Stsfld, pointerField);
 
             processor.Emit(OpCodes.Ldarg_0);
@@ -319,7 +338,9 @@ namespace zzzUnity.Burst.CodeGen
         {
             var declaringType = burstCompileMethod.DeclaringType;
 
-            var injectedDelegate = InjectDelegate(declaringType, burstCompileMethod.Name, burstCompileMethod);
+            var uniqueSuffix = $"_{burstCompileMethod.MetadataToken.RID:X8}";
+
+            var injectedDelegate = InjectDelegate(declaringType, burstCompileMethod.Name, burstCompileMethod, uniqueSuffix);
 
             // Create a copy of the original method that will be the actual managed method
             // The original method is patched at the end of this method to call
@@ -379,7 +400,7 @@ namespace zzzUnity.Burst.CodeGen
             managedFallbackMethod.Attributes |= MethodAttributes.Public;
 
             // private static class (Name_RID.$Postfix)
-            var cls = new TypeDefinition(declaringType.Namespace, $"{burstCompileMethod.Name}_{burstCompileMethod.MetadataToken.RID:X8}{PostfixBurstDirectCall}",
+            var cls = new TypeDefinition(declaringType.Namespace, $"{burstCompileMethod.Name}{uniqueSuffix}{PostfixBurstDirectCall}",
                 TypeAttributes.NestedPrivate |
                 TypeAttributes.AutoLayout |
                 TypeAttributes.AnsiClass |
@@ -397,19 +418,31 @@ namespace zzzUnity.Burst.CodeGen
             // Create Field:
             //
             // private static IntPtr Pointer;
-            var intPtr = _typeSystem.IntPtr;
-            var pointerField = new FieldDefinition("Pointer", FieldAttributes.Static | FieldAttributes.Private, intPtr)
+            var pointerField = new FieldDefinition("Pointer", FieldAttributes.Static | FieldAttributes.Private, _typeSystem.IntPtr)
             {
                 DeclaringType = cls
             };
             cls.Fields.Add(pointerField);
 
-            var getFunctionPointerDiscardMethod = CreateGetFunctionPointerDiscardMethod(cls, pointerField, burstCompileMethod, injectedDelegate);
+            // Create Field:
+            //
+            // private static IntPtr DeferredCompilation;
+            var deferredCompilationField = new FieldDefinition("DeferredCompilation", FieldAttributes.Static | FieldAttributes.Private, _typeSystem.IntPtr)
+            {
+                DeclaringType = cls
+            };
+            cls.Fields.Add(deferredCompilationField);
+
+            var getFunctionPointerDiscardMethod = CreateGetFunctionPointerDiscardMethod(cls, pointerField, deferredCompilationField, burstCompileMethod);
             var getFunctionPointerMethod = CreateGetFunctionPointerMethod(cls, getFunctionPointerDiscardMethod);
 
+            var asmAttribute = new CustomAttribute(_burstCompilerCompileUnsafeStaticMethodReinitialiseAttributeCtor);
+            asmAttribute.ConstructorArguments.Add(new CustomAttributeArgument(_systemType, cls));
+            _assemblyDefinition.CustomAttributes.Add(asmAttribute);
+
             // Create the static Constructor Method (called via .cctor and via reflection on burst compilation enable)
-            // private static Constructor() {
-            //   ret
+            // private static void Constructor() {
+            //   deferredCompilation = CompileILPPMethod(burstCompileMethod, managedFallbackMethod, DelegateType);
             // }
 
             var constructor = new MethodDefinition("Constructor", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Static, _typeSystem.Void)
@@ -419,26 +452,14 @@ namespace zzzUnity.Burst.CodeGen
             };
 
             var processor = constructor.Body.GetILProcessor();
-
-            // If we are in the editor we just want to null out the pointer field. Otherwise we need to actually get the function pointer now,
-            // because we need this to happen on the main thread outwith the editor.
-            if (IsForEditor)
-            {
-                processor.Emit(OpCodes.Ldc_I4_0);
-                processor.Emit(OpCodes.Conv_I);
-            }
-            else
-            {
-                processor.Emit(OpCodes.Call, getFunctionPointerMethod);
-            }
-
-            processor.Emit(OpCodes.Stsfld, pointerField);
+            processor.Emit(OpCodes.Ldtoken, burstCompileMethod);
+            processor.Emit(OpCodes.Ldtoken, managedFallbackMethod);
+            processor.Emit(OpCodes.Ldtoken, injectedDelegate);
+            processor.Emit(OpCodes.Call, _burstCompilerCompileILPPMethod);
+            processor.Emit(OpCodes.Stsfld, deferredCompilationField);
             processor.Emit(OpCodes.Ret);
-            cls.Methods.Add(FixDebugInformation(constructor));
 
-            var asmAttribute = new CustomAttribute(_burstCompilerCompileUnsafeStaticMethodReinitialiseAttributeCtor);
-            asmAttribute.ConstructorArguments.Add(new CustomAttributeArgument(_systemType, cls));
-            _assemblyDefinition.CustomAttributes.Add(asmAttribute);
+            cls.Methods.Add(FixDebugInformation(constructor));
 
             // Create an Initialize method
             //
@@ -454,9 +475,6 @@ namespace zzzUnity.Burst.CodeGen
             };
 
             processor = initializeOnLoadMethod.Body.GetILProcessor();
-            processor.Emit(OpCodes.Ldc_I4_0);
-            processor.Emit(OpCodes.Conv_I);
-            processor.Emit(OpCodes.Stsfld, pointerField);
             processor.Emit(OpCodes.Ret);
             cls.Methods.Add(FixDebugInformation(initializeOnLoadMethod));
 
@@ -475,7 +493,6 @@ namespace zzzUnity.Burst.CodeGen
             //
             // public static .cctor() {
             //   Constructor();
-            //   ret
             // }
             var cctor = new MethodDefinition(".cctor", MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Static, _typeSystem.Void)
             {
@@ -585,7 +602,8 @@ namespace zzzUnity.Burst.CodeGen
             _burstCompilerTypeDefinition = burstAssembly.MainModule.GetType("Unity.Burst", "BurstCompiler");
 
             _burstCompilerIsEnabledMethodDefinition = _assemblyDefinition.MainModule.ImportReference(_burstCompilerTypeDefinition.Methods.FirstOrDefault(x => x.Name == "get_IsEnabled"));
-            _burstCompilerCompileUnsafeStaticMethodMethodDefinition = _assemblyDefinition.MainModule.ImportReference(_burstCompilerTypeDefinition.Methods.FirstOrDefault(x => x.Name == "CompileUnsafeStaticMethod"));
+            _burstCompilerCompileILPPMethod = _assemblyDefinition.MainModule.ImportReference(_burstCompilerTypeDefinition.Methods.FirstOrDefault(x => x.Name == "CompileILPPMethod"));
+            _burstCompilerGetILPPMethodFunctionPointer = _assemblyDefinition.MainModule.ImportReference(_burstCompilerTypeDefinition.Methods.FirstOrDefault(x => x.Name == "GetILPPMethodFunctionPointer"));
 
             var reinitializeAttribute = _burstCompilerTypeDefinition.NestedTypes.FirstOrDefault(x => x.Name == "StaticTypeReinitAttribute");
             _burstCompilerCompileUnsafeStaticMethodReinitialiseAttributeCtor = _assemblyDefinition.MainModule.ImportReference(reinitializeAttribute.Methods.FirstOrDefault(x=>x.Name == ".ctor" && x.HasParameters));
