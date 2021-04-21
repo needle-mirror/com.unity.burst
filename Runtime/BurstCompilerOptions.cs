@@ -37,8 +37,10 @@ namespace Unity.Burst
 
         internal const string BurstInitializeName = "burst.initialize";
 
+#if BURST_COMPILER_SHARED || UNITY_EDITOR
         internal static readonly string DefaultCacheFolder = Path.Combine(Environment.CurrentDirectory, "Library", "BurstCache", "JIT");
         internal const string DeleteCacheMarkerFileName = "DeleteCache.txt";
+#endif
 
         internal const string OptionDoNotEagerCompile = "do-not-eager-compile";
         internal const string DoNotEagerCompile = "--" + OptionDoNotEagerCompile;
@@ -117,8 +119,8 @@ namespace Unity.Burst
         internal const string OptionAotUsePlatformSDKLinkers = "use-platform-sdk-linkers";
         internal const string OptionAotOnlyStaticMethods = "only-static-methods";
         internal const string OptionMethodPrefix = "method-prefix=";
-        internal const string OptionAotNoNativeToolchain = "no-native-toolchain";        
-        internal const string OptionAotEmitLlvmObjects = "emit-llvm-objects";        
+        internal const string OptionAotNoNativeToolchain = "no-native-toolchain";
+        internal const string OptionAotEmitLlvmObjects = "emit-llvm-objects";
         internal const string OptionAotKeyFolder = "key-folder=";
         internal const string OptionAotDecodeFolder = "decode-folder=";
         internal const string OptionVerbose = "verbose";
@@ -155,6 +157,7 @@ namespace Unity.Burst
         // These fields are only setup at startup
         internal static readonly bool ForceDisableBurstCompilation;
         private static readonly bool ForceBurstCompilationSynchronously;
+        internal static readonly bool IsSecondaryUnityProcess;
 
 #if UNITY_EDITOR
         internal bool IsInitializing;
@@ -333,7 +336,7 @@ namespace Unity.Burst
                 }
             }
         }
-		/// <summary> 
+		/// <summary>
 		/// Enable debugging mode
 		/// </summary>
         public bool EnableBurstDebug
@@ -682,13 +685,14 @@ namespace Unity.Burst
                 }
             }
 
-            if (IsSecondaryUnityProcess())
+            if (CheckIsSecondaryUnityProcess())
             {
                 ForceDisableBurstCompilation = true;
+                IsSecondaryUnityProcess = true;
             }
         }
 
-        private static bool IsSecondaryUnityProcess()
+        private static bool CheckIsSecondaryUnityProcess()
         {
 #if UNITY_EDITOR
 #if UNITY_2021_1_OR_NEWER
@@ -735,6 +739,7 @@ namespace Unity.Burst
         Switch = 10,
         Stadia = 11,
         tvOS = 12,
+        EmbeddedLinux = 13,
     }
 #endif
 

@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.3] - 2021-04-22
+
+
+### Fixed
+- Fixed an issue whereby default initializing the first field in a static readonly struct, but explicitly initializing a subsequent field, would result in the wrong constant data being written.
+- Fixed a bug where methods with the same name and namespace, but in different assemblies, could resolve to the wrong method.
+- Burst no longer logs a warning when opening the standalone Profiler
+- Fixed an `UnauthorizedAccessException` that could occur when using Burst in players built for the macOS App Sandbox
+
+### Added
+- EmbeddedLinux Platform support added.
+- Add Android x86_64 and re-enable x86 support
+
+### Changed
+- Revert to internal linkage for Android X86 (32bit) to ensure ABI compliance.
+
 ## [1.5.2] - 2021-04-14
 
 

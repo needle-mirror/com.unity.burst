@@ -102,7 +102,7 @@ namespace Unity.Burst.Editor
 
         static BurstLoader()
         {
-            if (BurstCompilerOptions.ForceDisableBurstCompilation)
+            if (BurstCompilerOptions.ForceDisableBurstCompilation && !BurstCompilerOptions.IsSecondaryUnityProcess)
             {
                 UnityEngine.Debug.LogWarning("[com.unity.burst] Burst is disabled entirely, either from the command line or because this is not the main Unity process");
                 return;
@@ -302,8 +302,24 @@ namespace Unity.Burst.Editor
         // Don't initialize to 0 because that could be a valid progress ID.
         private static int BurstProgressId = -1;
 
+        // If this enum changes, update the benchmarks tool accordingly as we rely on integer value related to this enum
+        internal enum BurstEagerCompilationStatus
+        {
+            NotScheduled,
+            Scheduled,
+            Completed
+        }
+
+        // For the time being, this field is only read through reflection
+        internal static BurstEagerCompilationStatus EagerCompilationStatus;
+
         private static void OnProgress(int current, int total)
         {
+            if (current == total)
+            {
+                EagerCompilationStatus = BurstEagerCompilationStatus.Completed;
+            }
+
             // OnProgress is called from a background thread,
             // but we need to update the progress UI on the main thread.
             EditorApplication.CallDelayed(() =>
@@ -643,6 +659,9 @@ namespace Unity.Burst.Editor
                 }
 
                 BurstCompiler.EagerCompileMethods(methodsToCompile);
+#if UNITY_2020_1_OR_NEWER
+                EagerCompilationStatus = BurstEagerCompilationStatus.Scheduled;
+#endif
 
                 if (DebuggingLevel > 2)
                 {
