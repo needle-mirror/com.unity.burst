@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.8] - 2021-04-27
+
+
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+- Crash due to member function debug information on tvOS.
+- Fixed an `UnauthorizedAccessException` that could occur when using Burst in players built for the macOS App Sandbox
+
+### Known Issues
+
 ## [1.4.7] - 2021-03-29
 
 

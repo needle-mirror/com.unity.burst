@@ -35,8 +35,10 @@ namespace Unity.Burst
 
         internal const string BurstInitializeName = "burst.initialize";
 
+#if BURST_COMPILER_SHARED || UNITY_EDITOR
         internal static readonly string DefaultCacheFolder = Path.Combine(Environment.CurrentDirectory, "Library", "BurstCache", "JIT");
         internal const string DeleteCacheMarkerFileName = "DeleteCache.txt";
+#endif
 
         internal const string OptionDoNotEagerCompile = "do-not-eager-compile";
         internal const string DoNotEagerCompile = "--" + OptionDoNotEagerCompile;
