@@ -740,6 +740,8 @@ namespace Unity.Burst
         Stadia = 11,
         tvOS = 12,
         EmbeddedLinux = 13,
+        GameCoreXboxOne = 14,
+        GameCoreXboxSeries = 15,
     }
 #endif
 

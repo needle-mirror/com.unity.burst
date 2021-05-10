@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.Android;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Compilation;
@@ -95,6 +96,19 @@ namespace Unity.Burst.Editor
             }
 
             return copy;
+        }
+    }
+
+    internal class BurstAndroidGradlePostprocessor : IPostGenerateGradleAndroidProject
+    {
+        int IOrderedCallback.callbackOrder => 1;
+
+        void IPostGenerateGradleAndroidProject.OnPostGenerateGradleAndroidProject(string path)
+        {
+            // Copy bursted .so's from tempburstlibs to the actual location in the gradle project
+            var sourceLocation = Path.GetFullPath(Path.Combine("Temp", "StagingArea", "tempburstlibs"));
+            var targetLocation = Path.GetFullPath(Path.Combine(path, "src", "main", "jniLibs"));
+            FileUtil.CopyDirectoryRecursive(sourceLocation, targetLocation, true);
         }
     }
 
@@ -202,7 +216,11 @@ extern ""C""
             // --------------------------------------------------------------------------------------------------------
             var assemblyFolders = new List<string> { stagingFolder };
             if (buildTarget == BuildTarget.WSAPlayer
-                || buildTarget == BuildTarget.XboxOne)
+                || buildTarget == BuildTarget.XboxOne
+#if UNITY_2019_4_OR_NEWER
+                || buildTarget == BuildTarget.GameCoreXboxOne || buildTarget == BuildTarget.GameCoreXboxSeries
+#endif
+                )
             {
                 // On UWP, not all assemblies are copied to StagingArea, so we want to
                 // find all directories that we can reference assemblies from
@@ -576,30 +594,33 @@ extern ""C""
 
                 Environment.SetEnvironmentVariable("BURST_ANDROID_MIN_API_LEVEL", $"{targetAPILevel}");
 
-                var androidTargetArch = UnityEditor.PlayerSettings.Android.targetArchitectures;
+                // Setting tempburstlibs/ as the interim target directory
+                // Don't target libs/ directly because incremental build pipeline doesn't expect the so's at that path
+                // Rather, so's are copied to the actual location in the gradle project in BurstAndroidGradlePostprocessor
+                var androidTargetArch = PlayerSettings.Android.targetArchitectures;
                 if ((androidTargetArch & AndroidArchitecture.ARMv7) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/armeabi-v7a", new TargetCpus(BurstTargetCpu.ARMV7A_NEON32)));
+                    combinations.Add(new BurstOutputCombination("tempburstlibs/armeabi-v7a", new TargetCpus(BurstTargetCpu.ARMV7A_NEON32)));
                 }
 
                 if ((androidTargetArch & AndroidArchitecture.ARM64) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/arm64-v8a", new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
+                    combinations.Add(new BurstOutputCombination("tempburstlibs/arm64-v8a", new TargetCpus(BurstTargetCpu.ARMV8A_AARCH64)));
                 }
 #if !UNITY_2019_2_OR_NEWER
                 if ((androidTargetArch & AndroidArchitecture.X86) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/x86", new TargetCpus(BurstTargetCpu.X86_SSE2)));
+                    combinations.Add(new BurstOutputCombination("tempburstlibs/x86", new TargetCpus(BurstTargetCpu.X86_SSE2)));
                 }
 #endif
 #if UNITY_2021_2_OR_NEWER
-                if ((androidTargetArch & AndroidArchitecture.x86) != 0)
+                if ((androidTargetArch & AndroidArchitecture.X86) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/x86", new TargetCpus(BurstTargetCpu.X86_SSE4)));
+                    combinations.Add(new BurstOutputCombination("tempburstlibs/x86", new TargetCpus(BurstTargetCpu.X86_SSE4)));
                 }
-                if ((androidTargetArch & AndroidArchitecture.x86_64) != 0)
+                if ((androidTargetArch & AndroidArchitecture.X86_64) != 0)
                 {
-                    combinations.Add(new BurstOutputCombination("libs/x86_64", new TargetCpus(BurstTargetCpu.X64_SSE4)));
+                    combinations.Add(new BurstOutputCombination("tempburstlibs/x86_64", new TargetCpus(BurstTargetCpu.X64_SSE4)));
                 }
 #endif
             }
@@ -915,6 +936,14 @@ extern ""C""
                 case BuildTarget.XboxOne:
                     targetCpus = new TargetCpus(BurstTargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
+#if UNITY_2019_4_OR_NEWER
+                case BuildTarget.GameCoreXboxOne:
+                    targetCpus = new TargetCpus(BurstTargetCpu.AVX);
+                    return TargetPlatform.GameCoreXboxOne;
+                case BuildTarget.GameCoreXboxSeries:
+                    targetCpus = new TargetCpus(BurstTargetCpu.AVX2);
+                    return TargetPlatform.GameCoreXboxSeries;
+#endif
                 case BuildTarget.PS4:
                     targetCpus = new TargetCpus(BurstTargetCpu.X64_SSE4);
                     return TargetPlatform.PS4;

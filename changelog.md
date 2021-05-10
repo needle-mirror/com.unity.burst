@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.5.4] - 2021-05-11
+
+
+### Added
+- Added support for having `[MarshalAs(UnmanagedType.U1)]` or `[MarshalAs(UnmanagedType.I1)]` on a `bool` external function parameter.
+
+### Removed
+
+### Changed
+- Fixed enums to match trunk AndroidArchitecture enums
+
+### Fixed
+- Crash due to member function debug information on tvOS.
+- Fixed DOTS Runtime Job Marshalling behaviour to properly handle marshalling generic Job types when not all closed forms of the generic type require marshalling.
+- Fixed a `NullReferenceException` in the Burst compiler when multi-dimensional arrays were used. The compiler now produces a correct error message telling users that multi-dimensional arrays are not supported by Burst.
+
+### Known Issues
+
 ## [1.5.3] - 2021-04-22
 
 

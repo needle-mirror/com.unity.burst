@@ -56,8 +56,8 @@ namespace Burst.Compiler.IL.Tests
 #pragma warning restore 0219
         }
 
-        [TestCompiler(true, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnParameterNotSupported)]
-        public static void TestMethodWithMarshalAsParameter([MarshalAs(UnmanagedType.U1)] bool x)
+        [TestCompiler(42, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnParameterNotSupported)]
+        public static void TestMethodWithMarshalAsParameter([MarshalAs(UnmanagedType.I8)] int x)
         {
         }
 
@@ -154,7 +154,7 @@ namespace Burst.Compiler.IL.Tests
         private static readonly half3 h3_sv2 = new half3(new half(0.5f), new half2(new half(1.0f), new half(2.0f)));
         private static readonly half3 h3_v3 = new half3(new half(0.5f), new half(42.0f), new half(13.0f));
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_InternalCompilerErrorInInstruction)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_ConstructorNotSupported)]
         public static float TestStaticHalf3()
         {
             var result = (float3)h3_h + h3_d + h3_v2s + h3_sv2 + h3_v3;
@@ -234,10 +234,19 @@ namespace Burst.Compiler.IL.Tests
             new []{ new int4(0), new int4(0, 1, 0, 0), new int4(1, 0, 0, 0), new int4(1, 1, 0, 0) },
         };
 
-        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_AccessingNestedManagedArrayNotSupported)]
+        [TestCompiler(ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_ConstructorNotSupported)]
         public unsafe static int TestNestedManagedArrays()
         {
             return SomeOffsetThing[0][0].x;
         }
+
+        public static readonly int[,] SomeMultiDimensionalThing = new int[2, 4]
+        {
+            { 1, 2, 3, 4 },
+            { -1, -2, -3, -4 },
+        };
+
+        [TestCompiler(ExpectCompilerException =  true, ExpectedDiagnosticIds = new[] { DiagnosticId.ERR_ConstructorNotSupported, DiagnosticId.ERR_MultiDimensionalArrayUnsupported })]
+        public static int TestMultiDimensionalArray() => SomeMultiDimensionalThing[1, 1];
     }
 }

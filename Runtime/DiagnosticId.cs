@@ -211,5 +211,7 @@ namespace Unity.Burst
 
         // Loading from a non-pointer / non-reference is not supported
         ERR_LdobjFromANonPointerNonReference = 1381,
+
+        ERR_MultiDimensionalArrayUnsupported = 1383,
     }
 }

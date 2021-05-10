@@ -69,6 +69,57 @@ namespace Burst.Compiler.IL.Tests
             return BoolMarshalAsR4(value);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool BoolMarshalAsU1Param([MarshalAs(UnmanagedType.U1)] bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsU1CallParam(bool value)
+        {
+            return BoolMarshalAsU1Param(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool BoolMarshalAsI1Param([MarshalAs(UnmanagedType.I1)] bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsI1CallParam(bool value)
+        {
+            return BoolMarshalAsI1Param(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool BoolMarshalAsR4Param([MarshalAs(UnmanagedType.R4)] bool b) => b;
+
+        [TestCompiler(true, ExpectCompilerException = true, ExpectedDiagnosticId = DiagnosticId.ERR_MarshalAsOnParameterNotSupported)]
+        public static bool BoolMarshalAsR4CallParam(bool value)
+        {
+            return BoolMarshalAsR4Param(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static bool BoolMarshalAsU1AndI1Param([MarshalAs(UnmanagedType.I1)] bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsU1AndI1CallParam(bool value)
+        {
+            return BoolMarshalAsU1AndI1Param(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        private static bool BoolMarshalAsI1AndU1Param([MarshalAs(UnmanagedType.U1)] bool b) => b;
+
+        [TestCompiler(true)]
+        [TestCompiler(false)]
+        public static bool BoolMarshalAsI1AndU1CallParam(bool value)
+        {
+            return BoolMarshalAsI1AndU1Param(value);
+        }
+
         [TestCompiler]
         public static int Char()
         {

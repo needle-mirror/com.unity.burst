@@ -92,6 +92,7 @@ Accessing a static readonly managed array has with the following restrictions:
 - Array of structs are also supported on the condition that the struct constructor doesn't have any control flow (e.g `if`/`else`) and/or does not throw an exception.
 - You cannot assign to static readonly array fields more than once in a static constructor.
 - You cannot use explicitly laid out structs in static readonly array types.
+- You cannot use multi-dimensional arrays, these are unsupported by Burst.
 
 Burst will produce the error `BC1361` for any of these static constructors that we cannot support.
 
