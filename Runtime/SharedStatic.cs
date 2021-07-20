@@ -161,6 +161,10 @@ namespace Unity.Burst
             if (result == null) throw new InvalidOperationException("Unable to create a SharedStatic for this key. It is likely that the same key was used to allocate a shared memory with a smaller size while the new size requested is bigger");
         }
 
+        // Prevent GetOrCreateSharedMemory from being stripped, by preventing GetOrCreateSharedStaticInteranl fromm being stripped.
+        internal class PreserveAttribute : System.Attribute {}
+
+        [Preserve]
         public static unsafe void* GetOrCreateSharedStaticInternal(long getHashCode64, long getSubHashCode64, uint sizeOf, uint alignment)
         {
             CheckSizeOf(sizeOf);

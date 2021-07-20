@@ -98,8 +98,7 @@ namespace Unity.Burst.Editor
         [NonSerialized]
         private int _fontSizeIndex = -1;
 
-        [NonSerialized]
-        private int _previousTargetIndex = -1;
+        [SerializeField] private int _previousTargetIndex = -1;
 
         [SerializeField] private bool _safetyChecks = false;
         [SerializeField] private bool _enhancedDisassembly = true;
@@ -108,7 +107,7 @@ namespace Unity.Burst.Editor
 
         private int _assemblyKindPrior = -1;
         private bool _sameTargetButDifferentAssemblyKind = false;
-        private Vector2 _scrollPos;
+        [SerializeField] private Vector2 _scrollPos;
         private SearchField _searchField;
 
         [SerializeField] private string _selectedItem;
@@ -177,9 +176,10 @@ namespace Unity.Burst.Editor
                         _treeView.Targets = _targets;
                         _treeView.Reload();
 
-                        if (_selectedItem != null)
+                        if (_selectedItem == null || !_treeView.TrySelectByDisplayName(_selectedItem))
                         {
-                            _treeView.TrySelectByDisplayName(_selectedItem);
+                            _previousTargetIndex = -1;
+                            _scrollPos = Vector2.zero;
                         }
 
                         _requiresRepaint = true;
@@ -606,20 +606,23 @@ namespace Unity.Burst.Editor
             return root;
         }
 
-        internal void TrySelectByDisplayName(string name)
+        internal bool TrySelectByDisplayName(string name)
         {
             var id = 1;
             foreach (var t in Targets)
+            {
                 if (t.GetDisplayName() == name)
                 {
-                    SetSelection(new[] {id});
+                    SetSelection(new[] { id });
                     FrameItem(id);
-                    break;
+                    return true;
                 }
                 else
                 {
                     ++id;
                 }
+            }
+            return false;
         }
 
         protected override void RowGUI(RowGUIArgs args)

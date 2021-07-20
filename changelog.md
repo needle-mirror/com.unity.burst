@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.5.5] - 2021-07-21
+
+
+### Changed
+- Fixed a regression that caused eager-compilation at Editor startup to be slower than it should have been
+- Burst Inspector now remembers scroll position between domain reloads
+
+### Fixed
+- Fixed a Burst package warning in our editor compiler integration with respect to `BuildOptions.EnableHeadlessMode`.
+- tvOS/iOS and other statically linked platforms would fail to burst compile if the burst compiled code contained references to functions that were `[DllImport("__Internal")]`, due to a mismatch in calling convention.
+- Fixed an error that could occur with the form "System.InvalidOperationException: Could not find `burst.initialize` function in library 'SomeLibrary'"
+- Fixed a bug where stackalloc's could be wrongly hoisted out of loops.
+- Added [Preserve] attribute to prevent stripping a compiler service call
+- Fixed incorrect runtime behavior that could occur when casting a pointer to a generic type
+- Fixed incorrect compiler error that could occur when casting a pointer to a generic type and then calling a method with generic parameters
+
+### Added
+- Additional notes about `BurstCompiler.CompileFunctionPointer<T>` regarding ; avoid wrapping in another open generic method, and interoperability with IL2CPP.
+
+### Removed
+
+### Known Issues
+
 ## [1.5.4] - 2021-05-11
 
 

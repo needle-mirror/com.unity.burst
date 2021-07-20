@@ -130,6 +130,8 @@ Note that you can also use these function pointers from regular C# as well, but 
 > - Using Burst-compiled function pointers from C# could be slower than their pure C# version counterparts if the function is too small compared to the cost of P/Invoke interop.
 > - Function pointers don't support generic delegates.
 > - Argument and return types are subject to the same restrictions as described for [`DllImport` and internal calls](CSharpLanguageSupport_BurstIntrinsics.md#dllimport-and-internal-calls).
+> - You are strongly advised NOT to wrap `BurstCommpiler.CompileFunctionPointer<T>` within another open generic method, doing so prevents burst from being able to apply required attributes to the delegate and perform additional safety analysis, (and potential optimizations). 
+> - Interoperability of function pointers with IL2CPP requires `System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute` on the delegate, with the calling convention set to `CallingConvention.Cdecl`, burst will automatically add this attribute to delegates that are used with `BurstCompiler.CompileFunctionPointer<T>`.
 
 ## Performance Considerations
 

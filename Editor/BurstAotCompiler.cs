@@ -803,7 +803,16 @@ extern ""C""
 #if UNITY_2021_1_OR_NEWER
                 // Workaround that with 'Server Build' ticked in the build options, since there is no 'AssembliesType.Server'
                 // enum, we need to manually add the BuildingForHeadlessPlayer compilation option.
-                if (report.summary.options.HasFlag(BuildOptions.EnableHeadlessMode))
+
+#if UNITY_2021_2_OR_NEWER
+                // A really really really gross hack - thanks Cristian Mazo! Querying the BuildOptions.EnableHeadlessMode is
+                // obselete, but accessing its integer value is not... Note: this is just the temporary workaround to unblock
+                // us (as of 1st June 2021, I say this with **much hope** that it is indeed temporary!).
+                var flag = (BuildOptions)16384;
+#else
+                var flag = BuildOptions.EnableHeadlessMode;
+#endif
+                if (report.summary.options.HasFlag(flag))
                 {
                     var compilationOptions = EditorCompilationInterface.GetAdditionalEditorScriptCompilationOptions();
                     compilationOptions |= EditorScriptCompilationOptions.BuildingForHeadlessPlayer;
