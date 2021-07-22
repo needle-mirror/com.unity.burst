@@ -311,7 +311,7 @@ namespace Burst.Compiler.IL.Tests
                 var delegateType = CreateNativeDelegateType(_originalMethod.Method.MethodInfo.ReturnType, nativeArgTypes, out isInRegistry, out nativeDelegateCaller);
                 if (!isInRegistry)
                 {
-                    Console.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
+                    TestContext.Out.WriteLine($"Warning, the delegate for the method `{_originalMethod.Method}` has not been generated");
                 }
 
                 Delegate compiledFunction;
@@ -377,7 +377,7 @@ namespace Burst.Compiler.IL.Tests
                     var overrideManagedResult = _originalMethod.Properties.Get("OverrideManagedResult");
                     if (overrideManagedResult != null)
                     {
-                        Console.WriteLine($"Using OverrideManagedResult: `{overrideManagedResult}` to compare to burst `{resultNative}`, managed version not run");
+                        TestContext.Out.WriteLine($"Using OverrideManagedResult: `{overrideManagedResult}` to compare to burst `{resultNative}`, managed version not run");
                         resultClr = overrideManagedResult;
                     }
                     else
@@ -393,7 +393,7 @@ namespace Burst.Compiler.IL.Tests
                     var overrideResultOnMono = _originalMethod.Properties.Get("OverrideResultOnMono");
                     if (overrideResultOnMono != null)
                     {
-                        Console.WriteLine($"Using OverrideResultOnMono: `{overrideResultOnMono}` instead of `{resultClr}` compare to burst `{resultNative}`");
+                        TestContext.Out.WriteLine($"Using OverrideResultOnMono: `{overrideResultOnMono}` instead of `{resultClr}` compare to burst `{resultNative}`");
                         resultClr = overrideResultOnMono;
                     }
 

@@ -201,7 +201,11 @@ extern ""C""
             // --------------------------------------------------------------------------------------------------------
             var assemblyFolders = new List<string> { stagingFolder };
             if (buildTarget == BuildTarget.WSAPlayer
-                || buildTarget == BuildTarget.XboxOne)
+                || buildTarget == BuildTarget.XboxOne
+#if UNITY_2019_4_OR_NEWER
+                || buildTarget == BuildTarget.GameCoreXboxOne || buildTarget == BuildTarget.GameCoreXboxSeries
+#endif
+                )
             {
                 // On UWP, not all assemblies are copied to StagingArea, so we want to
                 // find all directories that we can reference assemblies from
@@ -816,6 +820,14 @@ extern ""C""
                 case BuildTarget.XboxOne:
                     targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.XboxOne;
+#if UNITY_2019_4_OR_NEWER
+                case BuildTarget.GameCoreXboxOne:
+                    targetCpus = new TargetCpus(TargetCpu.AVX);
+                    return TargetPlatform.GameCoreXboxOne;
+                case BuildTarget.GameCoreXboxSeries:
+                    targetCpus = new TargetCpus(TargetCpu.AVX2);
+                    return TargetPlatform.GameCoreXboxSeries;
+#endif
                 case BuildTarget.PS4:
                     targetCpus = new TargetCpus(TargetCpu.X64_SSE4);
                     return TargetPlatform.PS4;

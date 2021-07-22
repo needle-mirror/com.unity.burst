@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.9] - 2021-07-23
+
+
+### Added
+
+### Removed
+
+### Changed
+- Platform updates.
+
+### Fixed
+
+### Known Issues
+
 ## [1.4.8] - 2021-04-27
 
 

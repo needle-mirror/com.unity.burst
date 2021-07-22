@@ -692,6 +692,8 @@ namespace Unity.Burst
         Switch = 10,
         Stadia = 11,
         tvOS = 12,
+        GameCoreXboxOne = 13,
+        GameCoreXboxSeries = 14,
     }
 
     // NOTE: This must be synchronized with Backend.TargetCpu
