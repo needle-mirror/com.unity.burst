@@ -742,6 +742,7 @@ namespace Unity.Burst
         EmbeddedLinux = 13,
         GameCoreXboxOne = 14,
         GameCoreXboxSeries = 15,
+        PS5 = 16,
     }
 #endif
 
