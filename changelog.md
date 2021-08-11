@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.6] - 2021-08-12
+
+
+### Changed
+
+### Fixed
+- Fixed compiler error that occurred when calling `BurstCompiler.CompileFunctionPointer` with a delegate type that was decorated with a custom attribute
+- Fixed the "could not find path tempburstlibs" error message popping up when building for Android and Burst is disabled
+
+### Added
+- Platform updates.
+
+### Removed
+
+### Known Issues
+
 ## [1.5.6-preview.1] - 2021-08-05
 
 

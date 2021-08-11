@@ -105,6 +105,13 @@ namespace Unity.Burst.Editor
 
         void IPostGenerateGradleAndroidProject.OnPostGenerateGradleAndroidProject(string path)
         {
+            var aotSettingsForTarget = BurstPlatformAotSettings.GetOrCreateSettings(BuildTarget.Android);
+            // Early exit if burst is not activated
+            if (!aotSettingsForTarget.EnableBurstCompilation)
+            {
+                return;
+            }
+
             // Copy bursted .so's from tempburstlibs to the actual location in the gradle project
             var sourceLocation = Path.GetFullPath(Path.Combine("Temp", "StagingArea", "tempburstlibs"));
             var targetLocation = Path.GetFullPath(Path.Combine(path, "src", "main", "jniLibs"));

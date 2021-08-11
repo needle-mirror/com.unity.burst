@@ -160,7 +160,7 @@ namespace zzzUnity.Burst.CodeGen
                 var method = kp.Value.method;
                 var delegateDef = delegateType.Resolve();
 
-                var hasAttributeAlready = delegateDef.CustomAttributes.FirstOrDefault(x => x.AttributeType.MetadataType == _unmanagedFunctionPointerAttributeCtorDef.DeclaringType.MetadataType);
+                var hasAttributeAlready = delegateDef.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == _unmanagedFunctionPointerAttributeCtorDef.DeclaringType.FullName);
 
                 // If there is already an an attribute present
                 if (hasAttributeAlready!=null)

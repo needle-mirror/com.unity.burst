@@ -575,35 +575,6 @@ public class EditModeTest
     }
 #endif
 
-    private sealed class ManagedClass
-    {
-        public int A;
-    }
-
-    [BurstCompile]
-    private static class StaticFunctionWithManagedParameterContainer
-    {
-        [BurstCompile(CompileSynchronously = true
-#if UNITY_2019_3_OR_NEWER
-            , DisableDirectCall = true
-#endif
-        )]
-        public static void StaticFunctionWithManagedParameter(ref ManagedClass c)
-        {
-            c.A++;
-        }
-    }
-
-    private delegate void StaticFunctionWithManagedParameterDelegate(ref ManagedClass c);
-
-    [Test]
-    public static void TestCompileFunctionPointerManagedParameter()
-    {
-        LogAssert.Expect(LogType.Error, new Regex("Unsupported parameter"));
-
-        BurstCompiler.CompileFunctionPointer<StaticFunctionWithManagedParameterDelegate>(StaticFunctionWithManagedParameterContainer.StaticFunctionWithManagedParameter);
-    }
-
 #if UNITY_2020_2_OR_NEWER
     [BurstCompile]
     private static class ProfilerMarkerWrapper

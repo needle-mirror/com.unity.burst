@@ -129,4 +129,25 @@ public class FunctionPointerTests
         Assert.AreNotEqual((IntPtr)i, null);
     }
 #endif
+
+    [Test]
+    public void TestDelegateWithCustomAttributeThatIsNotUnmanagedFunctionPointerAttribute()
+    {
+        var fp = BurstCompiler.CompileFunctionPointer<TestDelegateWithCustomAttributeThatIsNotUnmanagedFunctionPointerAttributeDelegate>(TestDelegateWithCustomAttributeThatIsNotUnmanagedFunctionPointerAttributeHelper);
+
+        var result = fp.Invoke(42);
+
+        Assert.AreEqual(43, result);
+    }
+
+    [BurstCompile(CompileSynchronously = true)]
+    private static int TestDelegateWithCustomAttributeThatIsNotUnmanagedFunctionPointerAttributeHelper(int x) => x + 1;
+
+    [MyCustomAttribute("Foo")]
+    private delegate int TestDelegateWithCustomAttributeThatIsNotUnmanagedFunctionPointerAttributeDelegate(int x);
+
+    private sealed class MyCustomAttributeAttribute : Attribute
+    {
+        public MyCustomAttributeAttribute(string param) { }
+    }
 }
