@@ -850,6 +850,9 @@ extern ""C""
                 case BuildTarget.Stadia:
                     targetCpus = new TargetCpus(TargetCpu.AVX2);
                     return TargetPlatform.Stadia;
+                case BuildTarget.PS5:
+                    targetCpus = new TargetCpus(TargetCpu.AVX2);
+                    return TargetPlatform.PS5;
 #endif
             }
 

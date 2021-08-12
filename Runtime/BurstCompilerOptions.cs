@@ -694,6 +694,7 @@ namespace Unity.Burst
         tvOS = 12,
         GameCoreXboxOne = 13,
         GameCoreXboxSeries = 14,
+        PS5 = 15,
     }
 
     // NOTE: This must be synchronized with Backend.TargetCpu
